@@ -29,3 +29,21 @@ CREATE SEQUENCE ADMIN_LOG_SEQ
   
 commit;
 SELECT * FROM admin_log;
+
+-- 등록 (임시)
+INSERT INTO admin_log(admin_log_no, adm_no, admin_log_ip, admin_log_date)
+VALUES(admin_log_seq.nextval, 3, '123.111.10.142', sysdate);
+
+INSERT INTO admin_log(admin_log_no, adm_no, admin_log_ip, admin_log_date)
+VALUES(admin_log_seq.nextval, 4, '123.111.10.142', sysdate);
+
+
+-- 관리자 로그인한 내역 조회
+SELECT admin_log_no, adm_no, admin_log_ip, admin_log_date
+FROM admin_log;
+
+
+-- 특정 관리자 계정/IP가 로그인한 내역 조회
+SELECT admin_log_no, adm_no, admin_log_ip, admin_log_date
+FROM admin_log
+WHERE admin_log_ip='123.111.10.142';

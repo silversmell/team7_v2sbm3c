@@ -6,5 +6,7 @@
     INSERT INTO category(cate_no, cate_name, cate_cnt, cate_seqno, cate_visible)
     VALUES(category_seq.nextval, #{cate_name}, 0, #{cate_seqno}, 'Y');
   </insert>
+   
+  <!-- 코드 추가 예정. -->
   
  </mapper>
