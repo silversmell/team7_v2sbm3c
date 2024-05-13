@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.mvc.share_contents.dto.share_contents.DAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
+ 
+ <!--  전체 목록  -->
+  <select id="list_all" resultType="dev.mvc.share_contents.dto.share_contentsVO">
+		SELECT scon_no, scon_name, scon_contents, scon_views, scon_comment, scon_date,scon_priority
+		FROM share_contents;
+  </select>
+  <!--  사진 전체 목록  -->
+  <select id = "list_all_image" resultType="dev.mvc.share_contents.dto.share_imageVO">
+   SELECT file_no,scon_no,file_origin_name,file_upload_name,file_thumb_name,file_size,file_date
+		FROM share_image;
+  </select>
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
