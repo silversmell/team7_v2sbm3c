@@ -1,4 +1,4 @@
-package dev.mvc.share_contents.dto;
+package dev.mvc.share_contentsdto;
 
 import lombok.Getter;
 import lombok.Setter;
