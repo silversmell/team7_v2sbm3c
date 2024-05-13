@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Setter @Getter
-public class share_contentsVO {
+public class Share_contentsVO {
 	private int scon_no;
 	
 	private int catno;

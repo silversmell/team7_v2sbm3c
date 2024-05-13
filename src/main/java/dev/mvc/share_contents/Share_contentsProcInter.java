@@ -2,7 +2,7 @@ package dev.mvc.share_contents;
 
 import java.util.ArrayList;
 
-public interface share_contentsDAOInter {
+public interface Share_contentsProcInter {
 	/**
 	 * 목록
 	 * @return ArrayList<share_contentsVO>

@@ -51,10 +51,15 @@ INSERT INTO share_contents(scon_no, scon_title, scon_contents,scon_bookmark,scon
 VALUES(share_contents_SEQ.nextval,'블랙계열로 꾸미기','블랙 ',3,0,0,sysdate,1,3,1);
 
 --목록--
-SELECT scon_no, scon_name, scon_contents, scon_views, scon_date, pro_no ,cate_no 
-FROM share_contents;
-
+SELECT scon_no, scon_title, scon_contents, scon_views, scon_date, pro_no ,cate_no 
+FROM share_contents
+where cate_no=1;
 commit;
+
+-- 해당 컨텐츠 조회
+SELECT scon_no, scon_title, scon_contents, scon_views, scon_date, pro_no ,cate_no 
+FROM share_contents
+where scon_no=1;
 
 --모두 삭제
 delete from share_contents;

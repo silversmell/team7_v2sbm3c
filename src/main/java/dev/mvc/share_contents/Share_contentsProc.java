@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("dev.mvc.share_contents.share_contentsProc")
-public class share_contentsProc implements share_contentsProcInter {
+public class Share_contentsProc implements Share_contentsProcInter {
 	@Autowired
-	private share_contentsDAOInter share_contentsDAO;
+	private Share_contentsDAOInter share_contentsDAO;
 
 	@Override
 	public ArrayList list_all() {

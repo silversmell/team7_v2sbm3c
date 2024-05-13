@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class share_commentsVO {
+public class Share_commentsVO {
 	private int scmt_no;
 	
 	private int pro_no;
