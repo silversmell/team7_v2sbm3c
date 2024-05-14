@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import dev.mvc.share_contentsdto.Share_contentsVO;
 
@@ -30,9 +32,6 @@ public class Share_contentsCont {
 		//System.out.println("list_all 생성");
 		ArrayList<Share_contentsVO> list = this.sconProc.list_all();
 		model.addAttribute("list",list);
-		for(int i = 0;i<list.size();i++) {
-			System.out.println(list.get(i).getScon_title());
-		}
 		
 		return "scontents/list_all";
 	}
@@ -40,9 +39,9 @@ public class Share_contentsCont {
 	@GetMapping("/read")
 	public String read(Model model,int scon_no) {
 		int cnt = this.sconProc.update_view(scon_no);
-		if(cnt==1) {
-			System.out.println("조회수 +1");
-		}
+		//if(cnt==1) {
+			//System.out.println("조회수 +1");
+		//}
 		model.addAttribute("scon_views",cnt);
 		//System.out.println("read 생성");
 		Share_contentsVO scontentsVO = this.sconProc.read(scon_no);
@@ -50,6 +49,27 @@ public class Share_contentsCont {
 		
 		return "scontents/read";
 	}
+	@GetMapping("/update_text")
+	public String update_text_form(Model model, int scon_no) {
+	   Share_contentsVO scontentsVO = this.sconProc.read(scon_no);
+	    model.addAttribute("scontentsVO",scontentsVO);
+	    
+	   return "scontents/update_text"; 
+	  
+	}
+	 @PostMapping("/update_text")
+	  public String update_text(Model model, Share_contentsVO scontentsVO
+	                                    ,RedirectAttributes ra) {
+	      
+	     int cnt = this.sconProc.update_text(scontentsVO);
+	     if(cnt==1) {
+	       System.out.println("업데이트 성공");
+	     }
+//	     System.out.println("scontentsVO.getScon_no -> " + scontentsVO.getScon_no());
+	     ra.addAttribute("scon_no",scontentsVO.getScon_no());
+	     return "redirect:/scontents/read"; 
+	    
+	  }
 	
 	
 

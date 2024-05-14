@@ -31,4 +31,11 @@ public interface Share_contentsProcInter {
 	  * @return int
 	  */	
 	public int update_view(int scon_no);
+	
+  /**
+   * 해당 게시글의 제목, 내용 수정
+   * @param share_contentsVO
+   * @return int
+   */
+  public int update_text(Share_contentsVO share_contentsVO);
 }

@@ -37,4 +37,10 @@ public class Share_contentsProc implements Share_contentsProcInter {
 		return cnt;
 	}
 
+  @Override
+  public int update_text(Share_contentsVO share_contentsVO) {
+    int cnt = this.scontentsDAO.update_text(share_contentsVO);
+    return cnt;
+  }
+
 }
