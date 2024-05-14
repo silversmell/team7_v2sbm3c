@@ -6,26 +6,19 @@
     <span th:text="${scontentsVO.scon_title}" class="title_line_text"></span > 
     > 글 조회
   </div>
-  <!--  
-  <aside class="aside_right" th:if="${session.grade == 'admin'}">
-    <a href="./create?cateno=${cateno }">등록</a>
+  
+  <aside class="aside_right" >
+    <a href="@{|/scontents/create?scon_no=${scontentsVO.scon_no}|}">등록</a>
     <span class='menu_divide' >│</span>
-    <a th:href="@{|/scontents/update_text?scontentsno=${scontentsVO.scontentsno}&now_page=${now_page}&word=${word }|}">글 수정</a>
+    <a th:href="@{|/scontents/update_text?scon_no=${scontentsVO.scon_no}|}">글 수정</a>
     <span class='menu_divide' >│</span>
-    <a th:href="@{|./update_file?scontentsno=${scontentsVO.scontentsno}&word=${word}&now_page=${now_page}|}">파일 수정</a>  
+    <a th:href="@{|./update_file?scon_no=${scontentsVO.scon_no}|}">파일 수정</a>  
     <span class='menu_divide' >│</span>
-    <a th:href="@{|/scontents/map?cateno=${scontentsVO.cateno }&scontentsno=${scontentsVO.scontentsno}|}">지도</a>
-    <span class='menu_divide' >│</span>
-    <a th:href="@{|/scontents/youtube?cateno=${scontentsVO.cateno }&scontentsno=${scontentsVO.scontentsno}&word=${word}&now_page=${now_page}|}">Youtube</a>
-    <span class='menu_divide' >│</span>
-    <a th:href="@{|./delete?scontentsno=${scontentsVO.scontentsno}&word=${word}&now_page=${now_page}&cateno=${scontentsVO.cateno}|}">삭제</a>  
+    <a th:href="@{|./delete?scon_no=${scontentsVO.scon_no}|}">삭제</a>  
     <span class='menu_divide' >│</span>
 
     <a href="javascript:location.reload();">새로고침</a>
-    <span class='menu_divide' >│</span>    
-    <a th:href="@{|./list_by_cateno?cateno=${cateVO.cateno }&word=${word }&now_page=${now_page}|}">목록형</a>    
-    <span class='menu_divide' >│</span>
-    <a th:href="@{|./list_by_cateno_grid?cateno=${cateno }&word=${word }&now_page=${now_page}|}">갤러리형</a>
+
   </aside> 
 <!--  
   <aside class="aside_right" th:if="${session.grade != 'admin'}">

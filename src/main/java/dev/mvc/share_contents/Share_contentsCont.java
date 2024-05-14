@@ -39,15 +39,14 @@ public class Share_contentsCont {
 	
 	@GetMapping("/read")
 	public String read(Model model,int scon_no) {
-		//System.out.println("read 생성");
-		Share_contentsVO scontentsVO = this.sconProc.read(scon_no);
-		model.addAttribute("scontentsVO",scontentsVO);
-		
 		int cnt = this.sconProc.update_view(scon_no);
 		if(cnt==1) {
 			System.out.println("조회수 +1");
 		}
 		model.addAttribute("scon_views",cnt);
+		//System.out.println("read 생성");
+		Share_contentsVO scontentsVO = this.sconProc.read(scon_no);
+		model.addAttribute("scontentsVO",scontentsVO);
 		
 		return "scontents/read";
 	}
