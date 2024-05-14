@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service("dev.mvc.share_contents.share_contentsProc")
+@Service("dev.mvc.share_contents.Share_contentsProc")
 public class Share_contentsProc implements Share_contentsProcInter {
 	@Autowired
-	private Share_contentsDAOInter share_contentsDAO;
+	private Share_contentsDAOInter scontentsDAO;
 
 	@Override
 	public ArrayList list_all() {
