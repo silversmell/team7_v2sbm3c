@@ -38,5 +38,11 @@ public interface Share_contentsDAOInter {
 	  * @return int
 	  */
 	 public int update_text(Share_contentsVO share_contentsVO);
+	 /**
+	  * 등록
+	  * @param share_contentsVO
+	  * @return int
+	  */
+	 public int create(Share_contentsVO share_contentsVO);
 
 }

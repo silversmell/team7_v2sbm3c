@@ -31,6 +31,12 @@
   set scon_title=#{scon_title},scon_contents=#{scon_contents}
   where scon_no=#{scon_no}
   </update>
+  <insert id="create" parameterType="dev.mvc.share_contentsdto.Share_contentsVO">
+  INSERT INTO share_contents(scon_no, scon_title, scon_contents,scon_bookmark, 
+                     scon_views,scon_date, pro_no,cate_no)
+  VALUES(share_contents_SEQ.nextval,scon_title=#{scon_title}, scon_contents=#{scon_contents},
+              scon_bookmark=#{scon_bookmark},scon_views=#{scon_views},sysdate,1,1)
+</insert>
   
 </mapper>
 

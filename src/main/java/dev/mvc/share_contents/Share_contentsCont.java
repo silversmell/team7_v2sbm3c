@@ -70,6 +70,12 @@ public class Share_contentsCont {
 	     return "redirect:/scontents/read"; 
 	    
 	  }
+	 @GetMapping("/create")
+	 public String create_form(Model model,Share_contentsVO scontentsVO) {
+	   model.addAttribute("scontentsVO",scontentsVO);
+	   
+	   return "scontents/create";
+	 }
 	
 	
 
