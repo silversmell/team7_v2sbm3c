@@ -5,7 +5,7 @@
  
  <!--  전체 목록  -->
   <select id="list_all" resultType="dev.mvc.share_contentsdto.Share_contentsVO">
-		SELECT scon_no, scon_name, scon_contents, scon_views, scon_comment, scon_date,scon_priority
+		SELECT scon_no, scon_title, scon_contents, scon_views, scon_comment, scon_date,scon_priority
 		FROM share_contents
   </select>
   <!--  사진 전체 목록  -->

@@ -11,7 +11,7 @@ public class Share_contentsVO {
 	
 	private int pro_no;
 	
-	private String socn_name="";
+	private String scon_title="";
 	
 	private String scon_contents="";
 	
