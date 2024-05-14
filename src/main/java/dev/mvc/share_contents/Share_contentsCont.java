@@ -14,14 +14,16 @@ import dev.mvc.share_contentsdto.Share_contentsVO;
 @RequestMapping("/scontents")
 @Controller
 public class Share_contentsCont {
+
 	
 	@Autowired
 	@Qualifier("dev.mvc.share_contents.Share_contentsProc")
-	private Share_contentsProc sconProc;
+	private  Share_contentsProc sconProc;
 	
 	public Share_contentsCont() {
 		System.out.println(" ->Share_contentsCont created");
 	}
+
 	
 	@GetMapping("/list_all")
 	public String list_all(Model model) {
@@ -40,10 +42,16 @@ public class Share_contentsCont {
 		//System.out.println("read 생성");
 		Share_contentsVO scontentsVO = this.sconProc.read(scon_no);
 		model.addAttribute("scontentsVO",scontentsVO);
-
+		
+		int cnt = this.sconProc.update_view(scon_no);
+		if(cnt==1) {
+			System.out.println("조회수 +1");
+		}
+		model.addAttribute("scon_views",cnt);
 		
 		return "scontents/read";
 	}
+	
 	
 
 }

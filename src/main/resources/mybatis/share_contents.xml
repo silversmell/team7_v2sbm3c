@@ -20,6 +20,12 @@
   FROM share_contents
   where scon_no=#{scon_no}
   </select>
+  
+   <update id="update_view" parameterType="dev.mvc.share_contentsdto.Share_contentsVO">
+   UPDATE share_contents
+	 SET scon_views=scon_views+1
+	 WHERE scon_no=#{scon_no}
+ 	</update>
 
 </mapper>
 

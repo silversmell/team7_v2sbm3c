@@ -25,6 +25,7 @@
          th:attr="onclick=|location.href='/scontents/read?scon_no=${scontentsVO.scon_no}'|"
          style="cursor: pointer;">
       <td class='td_left'>
+      <span style="font-size: 1em;" th:text="${scontentsVO.scon_views}"></span><br><br>
         <span th:text="${scontentsVO.scon_title}" style="font-weight: bold;"></span><br>
         <span th:if="${scontentsVO.scon_contents.length() > 160 }" 
                   th:text="|${scontentsVO.scon_contents.substring(0, 160) }...|"></span>

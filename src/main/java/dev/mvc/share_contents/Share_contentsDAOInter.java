@@ -24,4 +24,12 @@ public interface Share_contentsDAOInter {
 	 * @return scon_no에 해댕하는 게시글
 	 */
 	public Share_contentsVO read(int scon_no);
+	
+	 /**
+	  * 조회(read) 할 때마다 조회수 올리기
+	  * @param scon_no
+	  * @return int
+	  */	 	
+	 public int update_view(int scon_no);
+
 }
