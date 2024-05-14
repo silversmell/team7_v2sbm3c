@@ -25,7 +25,7 @@ public class Share_contentsCont {
 	
 	@GetMapping("/list_all")
 	public String list_all(Model model) {
-		System.out.println("list_all 생성");
+		//System.out.println("list_all 생성");
 		ArrayList<Share_contentsVO> list = this.sconProc.list_all();
 		model.addAttribute("list",list);
 		for(int i = 0;i<list.size();i++) {
@@ -33,6 +33,16 @@ public class Share_contentsCont {
 		}
 		
 		return "scontents/list_all";
+	}
+	
+	@GetMapping("/read")
+	public String read(Model model,int scon_no) {
+		//System.out.println("read 생성");
+		Share_contentsVO scontentsVO = this.sconProc.read(scon_no);
+		model.addAttribute("scontentsVO",scontentsVO);
+
+		
+		return "scontents/read";
 	}
 	
 

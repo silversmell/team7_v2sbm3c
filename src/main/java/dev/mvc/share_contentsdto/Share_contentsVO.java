@@ -17,6 +17,8 @@ public class Share_contentsVO {
 	
 	private int scon_views;
 	
+	private String scon_date;
+	
 	private int scon_bookmark;
 	
 	private int scon_comment;

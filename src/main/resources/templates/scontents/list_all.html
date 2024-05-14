@@ -22,7 +22,7 @@
     </tr>
    
     <tr th:each="scontentsVO, status:${list}" 
-         th:attr="onclick=|location.href='/scontents/read?scontentsno=${scontentsVO.scon_no}'|"
+         th:attr="onclick=|location.href='/scontents/read?scon_no=${scontentsVO.scon_no}'|"
          style="cursor: pointer;">
       <td class='td_left'>
         <span th:text="${scontentsVO.scon_title}" style="font-weight: bold;"></span><br>
