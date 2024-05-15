@@ -49,11 +49,16 @@
     VALUES(share_comment_SEQ.nextval,#{scon_no},#{scmt_comment},sysdate,1)
   </insert>
   
-    <select id="read_comment" resultType="dev.mvc.share_contentsdto.Share_commentsVO" parameterType="Integer">
-      SELECT scmt_comment,scmt_date,pro_no
-      FROM share_comment
-      WHERE  scon_no=#{scon_no}
-     </select>
+  <select id="read_comment" resultType="dev.mvc.share_contentsdto.Share_commentsVO" parameterType="Integer">
+    SELECT scmt_comment,scmt_date,pro_no
+    FROM share_comment
+    WHERE  scon_no=#{scon_no}
+   </select>
+   
+   <insert id="create_image" parameterType="dev.mvc.share_contentsdto.Share_imageVO">
+     INSERT INTO share_image(file_no, scon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date)
+    VALUES(share_image_seq.nextval, #{scon_no}, #{file_origin_name} , #{file_upload_name}, #{file_thumb_name}, #{file_size} sysdate)
+   </insert>
 
   
 </mapper>

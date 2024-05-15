@@ -2,6 +2,7 @@
 
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
 <div layout:fragment="content">
+  
     <script>
     function submit_comment() {
       let today = new Date();
@@ -32,7 +33,6 @@
           if(rdata.cnt>0){
           let commentSection=document.getElementById("commentSection");
           let comment_value = document.getElementById("comment").value;
-          
           
           let new_Comment = document.createElement("div");
           new_Comment.classList.add("td_left");
@@ -139,7 +139,7 @@
   
       <div>
        <label for="comment">댓글</label>
-       <input type="text" id="scon_no" name="scon_no" th:value="${scontentsVO.scon_no}">
+       <input type="hidden" id="scon_no" name="scon_no" th:value="${scontentsVO.scon_no}">
        <textarea name='scmt_comment' id="comment" required="required" value="" class="form-control" rows="5" style='width: 100%;'></textarea>
       <button type='button' onclick="submit_comment();" 
              class="btn btn-primary btn-sm" style="margin-top: 4px;">등록</button>

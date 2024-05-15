@@ -68,6 +68,12 @@ public class Share_contentsProc implements Share_contentsProcInter {
     ArrayList<Share_commentsVO> list = this.scontentsDAO.read_comment(scon_no);
     return list;
   }
+
+  @Override
+  public int create_image(Share_imageVO share_imageVO) {
+    int cnt = this.scontentsDAO.create_image(share_imageVO);
+    return cnt;
+  }
   
 
 }

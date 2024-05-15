@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import dev.mvc.share_contentsdto.Share_commentsVO;
 import dev.mvc.share_contentsdto.Share_contentsVO;
+import dev.mvc.share_contentsdto.Share_imageVO;
 
 public interface Share_contentsProcInter {
 	/**
@@ -68,4 +69,11 @@ public interface Share_contentsProcInter {
    * @return int
    */
   public ArrayList read_comment(int scon_no);
+  
+  /**
+   * 이미지 등록
+   * @param share_imageVO
+   * @return int
+   */
+  public int create_image(Share_imageVO share_imageVO);
 }

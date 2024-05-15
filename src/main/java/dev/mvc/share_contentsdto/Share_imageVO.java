@@ -1,10 +1,15 @@
 package dev.mvc.share_contentsdto;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
 public class Share_imageVO {
+  
+  private MultipartFile file1MF = null;
+  
 	private int file_no;
 	
 	private int scon_no;

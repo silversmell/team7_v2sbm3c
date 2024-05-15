@@ -82,10 +82,8 @@ public class Share_contentsCont {
 	 @PostMapping("/create")
 	 public String create(Model model,Share_contentsVO scontentsVO
 	                             ,RedirectAttributes ra) {
-	   int cnt = this.sconProc.create(scontentsVO);
-//	   if(cnt==1) {
-//	     System.out.println("create 성공");
-//	   }
+	   this.sconProc.create(scontentsVO);
+	   
 	   return "redirect:/scontents/list_all";
 	 }
 	 
@@ -110,9 +108,6 @@ public class Share_contentsCont {
 	 @GetMapping("/create_comment")
 	 @ResponseBody
 	 public String create_comment_form(String scmt_comment,int scon_no) {
-     System.out.println("scon_no ->" + scon_no);
-     System.out.println("scmt_comment ->" + scmt_comment);
-	   
 	   HashMap<String, Object> map = new HashMap<String, Object>();
 	   map.put("scmt_comment",scmt_comment);
 	   map.put("scon_no", scon_no);
