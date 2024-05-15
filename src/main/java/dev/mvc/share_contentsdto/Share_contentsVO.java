@@ -27,4 +27,6 @@ public class Share_contentsVO {
 	
 	private int scon_priority;
 	
+	private String word="";
+	
 }

@@ -59,6 +59,50 @@
      INSERT INTO share_image(file_no, scon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date)
     VALUES(share_image_seq.nextval, #{scon_no}, #{file_origin_name} , #{file_upload_name}, #{file_thumb_name}, #{file_size} sysdate)
    </insert>
+    
+  <!-- 카테고리별 검색 + 페이징 목록 -->
+  <select id="list_by_contents_search_paging" resultType="dev.mvc.share_contentsdto.Share_contentsVO" parameterType="HashMap">
+   SELECT scon_no, scon_title, scon_contents, scon_views, scon_comment, scon_date,scon_priority, r
+   FROM (
+              SELECT scon_no, scon_title, scon_contents, scon_views, scon_comment, scon_date,scon_priority,rownum as r
+              FROM (
+                        SELECT scon_no, scon_title, scon_contents, scon_views, scon_comment, scon_date,scon_priority
+                        FROM share_contents
+                        <choose>
+                          <when test="word != null or word != ''"> 
+                              WHERE (UPPER(scon_title) LIKE '%' || UPPER(#{word}) || '%' 
+                                    OR UPPER(scon_contents) LIKE '%' || UPPER(#{word}) || '%' 
+                                    OR UPPER(word) LIKE '%' || UPPER(#{word}) || '%')
+                          </when>
+                          <otherwise>
+                                <!-- 조건이 없으면 모든 레코드 선택 -->
+                        </otherwise>
+                        </choose>
+                        ORDER BY scon_no DESC
+               )
+    )
+    WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>
+     
+    <!-- 1 page: WHERE r >= 1 AND r <= 10; 
+          2 page: WHERE r >= 11 AND r <= 20;
+          3 page: WHERE r >= 21 AND r <= 30; -->
+  </select>
+  
+    <!-- 카테고리별 검색 레코드 갯수 -->
+  <select id="list_by_cateno_search_count" resultType="int" parameterType="HashMap">
+    SELECT COUNT(*) as cnt
+    FROM share_contents
+    <choose>
+      <when test="word != null or word != ''"> 
+          WHERE (UPPER(scon_title) LIKE '%' || UPPER(#{word}) || '%' 
+                OR UPPER(scon_contents) LIKE '%' || UPPER(#{word}) || '%' 
+                OR UPPER(word) LIKE '%' || UPPER(#{word}) || '%')
+      </when>
+      <otherwise>
+            <!-- 조건이 없으면 모든 레코드 선택 -->
+    </otherwise>
+    </choose>
+  </select>   
 
   
 </mapper>

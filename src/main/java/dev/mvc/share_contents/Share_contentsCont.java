@@ -11,11 +11,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import dev.mvc.share_contents.Contents;
 import dev.mvc.share_contentsdto.Share_commentsVO;
 import dev.mvc.share_contentsdto.Share_contentsVO;
+import dev.mvc.tool.Tool;
 
 @RequestMapping("/scontents")
 @Controller
@@ -82,7 +85,9 @@ public class Share_contentsCont {
 	 @PostMapping("/create")
 	 public String create(Model model,Share_contentsVO scontentsVO
 	                             ,RedirectAttributes ra) {
-	   this.sconProc.create(scontentsVO);
+	   
+	   int cnt = this.sconProc.create(scontentsVO);
+
 	   
 	   return "redirect:/scontents/list_all";
 	 }
@@ -118,6 +123,42 @@ public class Share_contentsCont {
 	    obj.put("cnt", cnt);
 	   
 	   return obj.toString();
+	 }
+	 @GetMapping("/list_by_search")
+	 public String list_by_search(Model model, 
+	     @RequestParam(name = "word", defaultValue = "") String word,
+      @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
+	   
+	   /**
+	   Share_contentsVO scontentsVO = this.sconProc.read(scon_no);
+	    model.addAttribute("scontentsVO",scontentsVO);
+	    **/
+	    word = Tool.checkNull(word).trim();
+	    
+	    HashMap<String, Object> map = new HashMap<>();
+	    map.put("word", word);
+	    map.put("now_page", now_page);
+	    
+	    ArrayList<Share_contentsVO> list = this.sconProc.list_by_contents_search_paging(map);
+	    model.addAttribute("list", list);
+	    
+	    model.addAttribute("word", word);
+	    
+	    int search_count = this.sconProc.list_by_cateno_search_count(map);
+	    String paging = this.sconProc.pagingBox(now_page, word, "/scontents/list_by_search", search_count, 
+	        Contents.RECORD_PER_PAGE, Contents.PAGE_PER_BLOCK);
+	    
+	    model.addAttribute("paging", paging);
+	    model.addAttribute("now_page", now_page);
+
+	    model.addAttribute("search_count", search_count);
+	    
+	    // 일련 변호 생성: 레코드 갯수 - ((현재 페이지수 -1) * 페이지당 레코드 수)
+	    int no = search_count - ((now_page - 1) * Contents.RECORD_PER_PAGE);
+	    model.addAttribute("no", no);
+	    
+	    return "scontents/list_by_search_paging";
+	   
 	 }
 	 
 	

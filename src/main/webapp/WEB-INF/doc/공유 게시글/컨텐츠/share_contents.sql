@@ -15,6 +15,7 @@ CREATE TABLE share_contents (
   scon_priority    NUMBER(10)       NULL, -- 우선순위
   pro_no           NUMBER(10)             NOT NULL, -- 회원번호    
   cate_no          NUMBER(10)     NOT NULL, -- 카테번호
+  word             VARCHAR(20),  
   
   FOREIGN KEY (pro_no) REFERENCES profile(pro_no),
   FOREIGN KEY (cate_no) REFERENCES category(cate_no)

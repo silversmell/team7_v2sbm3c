@@ -75,5 +75,19 @@ public interface Share_contentsDAOInter {
 	  * @return int
 	  */
 	 public int create_image(Share_imageVO share_imageVO);
+	 
+	 /**
+	  * 검색에 따른 컨텐츠 목록, 페이징
+	  * @param word
+	  * @return arrayList
+	  */
+	 public ArrayList list_by_contents_search_paging(HashMap<String,Object> map);
+	 
+   /**
+    * 검색에 따른 컨텐츠 목록, 페이징 개수
+    * @param word
+    * @return int
+    */
+	 public int list_by_cateno_search_count(HashMap<String,Object> map);
 
 }
