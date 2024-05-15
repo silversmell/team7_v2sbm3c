@@ -1,10 +1,12 @@
 package dev.mvc.share_contents;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import dev.mvc.share_contentsdto.Share_commentsVO;
 import dev.mvc.share_contentsdto.Share_contentsVO;
 import dev.mvc.share_contentsdto.Share_imageVO;
 
@@ -54,7 +56,18 @@ public class Share_contentsProc implements Share_contentsProcInter {
     int cnt = this.scontentsDAO.delete(scon_no);
     return cnt;
   }
-  
+
+  @Override
+  public int create_comment(HashMap<String, Object> map) {
+    int cnt = this.scontentsDAO.create_comment(map);
+    return cnt;
+  }
+
+  @Override
+  public ArrayList  read_comment(int scon_no) {
+    ArrayList<Share_commentsVO> list = this.scontentsDAO.read_comment(scon_no);
+    return list;
+  }
   
 
 }

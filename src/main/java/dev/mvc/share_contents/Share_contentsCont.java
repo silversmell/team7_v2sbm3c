@@ -1,7 +1,9 @@
 package dev.mvc.share_contents;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -9,8 +11,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import dev.mvc.share_contentsdto.Share_commentsVO;
 import dev.mvc.share_contentsdto.Share_contentsVO;
 
 @RequestMapping("/scontents")
@@ -46,9 +50,11 @@ public class Share_contentsCont {
 		//System.out.println("read 생성");
 		Share_contentsVO scontentsVO = this.sconProc.read(scon_no);
 		model.addAttribute("scontentsVO",scontentsVO);
-		
+	  ArrayList<Share_commentsVO> list =this.sconProc.read_comment(scon_no);
+	  model.addAttribute("list",list);
 		return "scontents/read";
 	}
+	
 	@GetMapping("/update_text")
 	public String update_text_form(Model model, int scon_no) {
 	   Share_contentsVO scontentsVO = this.sconProc.read(scon_no);
@@ -101,6 +107,24 @@ public class Share_contentsCont {
 	   
 
 	 }
+	 @GetMapping("/create_comment")
+	 @ResponseBody
+	 public String create_comment_form(String scmt_comment,int scon_no) {
+     System.out.println("scon_no ->" + scon_no);
+     System.out.println("scmt_comment ->" + scmt_comment);
+	   
+	   HashMap<String, Object> map = new HashMap<String, Object>();
+	   map.put("scmt_comment",scmt_comment);
+	   map.put("scon_no", scon_no);
+
+	   int cnt = this.sconProc.create_comment(map);
+	   
+	    JSONObject obj = new JSONObject();
+	    obj.put("cnt", cnt);
+	   
+	   return obj.toString();
+	 }
+	 
 	
 	
 

@@ -2,6 +2,70 @@
 
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
 <div layout:fragment="content">
+    <script>
+    function submit_comment() {
+      let today = new Date();
+      let year = today.getFullYear(); // 연도를 가져옵니다
+      let month = today.getMonth() + 1; // 월을 가져옵니다 (0부터 시작하므로 +1을 해줍니다)
+      let date = today.getDate(); // 일을 가져옵니다
+      let hours = today.getHours(); // 시간을 가져옵니다
+      let minutes = today.getMinutes(); // 분을 가져옵니다
+      let seconds = today.getSeconds(); // 초를 가져옵니다
+      
+      // 원하는 형식으로 조합합니다
+      let formattedDate = year + '-' + month + '-' + date + ' ' + hours + ':' + minutes + ':' + seconds;
+      
+      let comment = document.getElementById("comment")
+      
+      let comment_value = comment.value;
+      console.log(comment.value)
+     
+      let scon_no = document.getElementById("scon_no")
+      console.log(scon_no.value)
+      let url = './create_comment?scmt_comment='+comment.value+'&scon_no='+scon_no.value ;
+      
+      fetch(url,{
+        method: 'GET'
+      })
+      .then(response => response.json())
+      .then(rdata=>{
+          if(rdata.cnt>0){
+          let commentSection=document.getElementById("commentSection");
+          let comment_value = document.getElementById("comment").value;
+          
+          
+          let new_Comment = document.createElement("div");
+          new_Comment.classList.add("td_left");
+          new_Comment.style.borderBottom = "none"; 
+          
+          new_Comment.appendChild(document.createElement("br"));
+          
+          let scmtDateSpan = document.createElement("span");
+          scmtDateSpan.textContent =  formattedDate;
+          new_Comment.appendChild(scmtDateSpan);
+          
+          new_Comment.appendChild(document.createElement("br"));
+          
+          let new_commentSpan = document.createElement("span");
+          new_commentSpan.textContent = comment_value;
+          new_commentSpan.fontWeight = "bold";
+          
+          
+          new_Comment.appendChild(new_commentSpan);
+          commentSection.appendChild(new_Comment);
+          }
+          else{
+           id_msg.innerHTML= '댓글 등록이 안됩니다.';
+        }
+
+      })
+      .catch(error =>{
+        console.error("Error")
+      });
+      
+    }
+  </script>
+
   <div class='title_line'>
     <span th:text="${scontentsVO.scon_title}" class="title_line_text"></span > 
     > 글 조회
@@ -40,6 +104,7 @@
             <img th:src="@{|/scontents/storage/${scontentsVO.file1saved}|}" style='width: 50%; float: left; margin-top: 0.5%; margin-right: 1%;'>
           </div>
 					-->
+					
           <span style="font-size: 1.5em; font-weight: bold;" th:text="${scontentsVO.scon_title}"></span>
           <span style="font-size: 1em;" th:text="${scontentsVO.scon_date}"></span><br><br>
           <span style="font-size: 1em;" th:text="${scontentsVO.scon_views}"></span><br><br>
@@ -52,7 +117,7 @@
       <!-- 
       <li class="li_none" th:if="${scontentsVO.size1 > 0}">
         <div >
-          <!-- ServletRegister.java: registrationBean.addUrlMappings("/download"); --> 
+          <! ServletRegister.java: registrationBean.addUrlMappings("/download"); --> 
          <!--  
           첨부 파일: <a th:href='@{|/download?dir=/scontents/storage&filename=${scontentsVO.file1saved}&downname=${scontentsVO.file1}|}'
                              th:text='|${scontentsVO.file1}|'></a> <span th:text="|(${scontentsVO.size1_label})|"></span>  
@@ -61,7 +126,26 @@
       </li>  
        -->
     </ul>
+    <div id="commentSection">
+        <tr th:each="scommentVO, status:${list}">      
+      <td class='td_left'>
+      <span id="scmt_date" style="font-size: 1em;" th:text="${scommentVO.scmt_date}"></span><br>
+      <span id="pro_no"style="font-size: 1em;" th:text="${scommentVO.pro_no}"></span><br>
+        <span id="scmt_comment" th:text="${scommentVO.scmt_comment}" style="font-weight: bold;"></span><br><br>
+      </td>
+    </tr>
+    </div>
   </fieldset>
+  
+      <div>
+       <label for="comment">댓글</label>
+       <input type="text" id="scon_no" name="scon_no" th:value="${scontentsVO.scon_no}">
+       <textarea name='scmt_comment' id="comment" required="required" value="" class="form-control" rows="5" style='width: 100%;'></textarea>
+      <button type='button' onclick="submit_comment();" 
+             class="btn btn-primary btn-sm" style="margin-top: 4px;">등록</button>
+    </div>
+    
+    <span id='id_msg'></span>  
 
 </div>
 

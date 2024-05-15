@@ -1,7 +1,9 @@
 package dev.mvc.share_contents;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import dev.mvc.share_contentsdto.Share_commentsVO;
 import dev.mvc.share_contentsdto.Share_contentsVO;
 
 public interface Share_contentsDAOInter {
@@ -51,5 +53,19 @@ public interface Share_contentsDAOInter {
 	  * @return int
 	  */
 	 public int delete(int scon_no);
+	 
+	 /**
+	  * 댓글 작성
+	  * @param share_commentsVO
+	  * @return int
+	  */
+	 public int create_comment(HashMap<String, Object> map);
+	 
+	 /**
+	  * 해당 게시글의 댓글 목록
+	  * @param scon_no
+	  * @return int
+	  */
+	 public ArrayList read_comment(int scon_no);
 
 }
