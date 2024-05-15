@@ -48,6 +48,13 @@ public class Share_contentsProc implements Share_contentsProcInter {
     int cnt = this.scontentsDAO.create(share_contentsVO);
     return cnt;
   }
+
+  @Override
+  public int delete(int scon_no) {
+    int cnt = this.scontentsDAO.delete(scon_no);
+    return cnt;
+  }
+  
   
 
 }

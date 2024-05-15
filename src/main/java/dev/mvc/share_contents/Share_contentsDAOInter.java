@@ -44,5 +44,12 @@ public interface Share_contentsDAOInter {
 	  * @return int
 	  */
 	 public int create(Share_contentsVO share_contentsVO);
+	 
+	 /**
+	  * 해당 게시글 삭제
+	  * @param scon_no
+	  * @return int
+	  */
+	 public int delete(int scon_no);
 
 }

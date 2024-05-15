@@ -62,9 +62,6 @@ public class Share_contentsCont {
 	                                    ,RedirectAttributes ra) {
 	      
 	     int cnt = this.sconProc.update_text(scontentsVO);
-	     if(cnt==1) {
-	       System.out.println("업데이트 성공");
-	     }
 //	     System.out.println("scontentsVO.getScon_no -> " + scontentsVO.getScon_no());
 	     ra.addAttribute("scon_no",scontentsVO.getScon_no());
 	     return "redirect:/scontents/read"; 
@@ -75,6 +72,34 @@ public class Share_contentsCont {
 	   model.addAttribute("scontentsVO",scontentsVO);
 	   
 	   return "scontents/create";
+	 }
+	 @PostMapping("/create")
+	 public String create(Model model,Share_contentsVO scontentsVO
+	                             ,RedirectAttributes ra) {
+	   int cnt = this.sconProc.create(scontentsVO);
+//	   if(cnt==1) {
+//	     System.out.println("create 성공");
+//	   }
+	   return "redirect:/scontents/list_all";
+	 }
+	 
+	 @GetMapping("/delete")
+	 public String delete(int scon_no,Model model) {
+	   Share_contentsVO scontentsVO = this.sconProc.read(scon_no);
+	   model.addAttribute("scontentsVO",scontentsVO);
+	   
+	   return "scontents/delete";
+	   
+	 }
+	 @PostMapping("/delete")
+	 public String delete(int scon_no ,RedirectAttributes ra) {
+	   int cnt = this.sconProc.delete(scon_no);
+	   if(cnt==1) {
+	     System.out.println("삭제 성공");
+	   }
+	   return "redirect:/scontents/list_all";
+	   
+
 	 }
 	
 	
