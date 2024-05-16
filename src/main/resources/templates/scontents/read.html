@@ -6,14 +6,13 @@
     <script>
     function submit_comment() {
       let today = new Date();
-      let year = today.getFullYear(); // 연도를 가져옵니다
-      let month = today.getMonth() + 1; // 월을 가져옵니다 (0부터 시작하므로 +1을 해줍니다)
-      let date = today.getDate(); // 일을 가져옵니다
-      let hours = today.getHours(); // 시간을 가져옵니다
-      let minutes = today.getMinutes(); // 분을 가져옵니다
-      let seconds = today.getSeconds(); // 초를 가져옵니다
+      let year = today.getFullYear(); 
+      let month = today.getMonth() + 1; 
+      let date = today.getDate(); 
+      let hours = today.getHours(); 
+      let minutes = today.getMinutes(); 
+      let seconds = today.getSeconds(); 
       
-      // 원하는 형식으로 조합합니다
       let formattedDate = year + '-' + month + '-' + date + ' ' + hours + ':' + minutes + ':' + seconds;
       
       let comment = document.getElementById("comment")
@@ -131,7 +130,7 @@
         <tr th:each="scommentVO, status:${list}">      
       <td class='td_left'>
       <span id="scmt_date" style="font-size: 1em;" th:text="${scommentVO.scmt_date}"></span><br>
-      <span id="pro_no"style="font-size: 1em;" th:text="${scommentVO.pro_no}"></span><br>
+      <span id="acc_no"style="font-size: 1em;" th:text="${scommentVO.acc_no}"></span><br>
         <span id="scmt_comment" th:text="${scommentVO.scmt_comment}" style="font-weight: bold;"></span><br><br>
       </td>
     </tr>
@@ -145,7 +144,7 @@
       <button type='button' onclick="submit_comment();" 
              class="btn btn-primary btn-sm" style="margin-top: 4px;">등록</button>
     </div>
-    
+    <A href="http://daum.net"> 다음 사이트로 연결 </A>
     <span id='id_msg'></span>  
 
 </div>

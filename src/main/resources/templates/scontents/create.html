@@ -14,7 +14,6 @@
   <div class='menu_line'></div>
   
   <form name='frm' method='post' th:object="${scontentsVO}" action='./create' enctype="multipart/form-data">
-    
     <div>
        <label>제목</label>
        <input type='text' name='scon_title' value=' ' required="required" 
@@ -43,6 +42,24 @@
        <input type='password' name='passwd' value='1234' required="required" 
                  class="form-control" style='width: 50%;'>
     </div>   -->
+        <div>
+       <label>url1</label>
+       <input type='text' name='url_link'  value=' ' required="required" 
+                 autofocus="autofocus" class="form-control" style='width: 100%;'>
+       <label>url2</label>
+       <input type='text' name='url_link'  value=' ' required="required" 
+                 autofocus="autofocus" class="form-control" style='width: 100%;'>
+       <label>url3</label>
+       <input type='text' name='url_link'  value=' ' required="required" 
+                 autofocus="autofocus" class="form-control" style='width: 100%;'>
+       <label>url4</label>
+       <input type='text' name='url_link'  value=' ' required="required" 
+                 autofocus="autofocus" class="form-control" style='width: 100%;'>
+       <label>url5</label>
+       <input type='text' name='url_link'  value=' ' required="required" 
+                 autofocus="autofocus" class="form-control" style='width: 100%;'>
+    	</div>
+    	
     <div class="content_body_bottom">
       <button type="submit" class="btn btn-secondary btn-sm">등록</button>
       <button type="button" th:attr="onclick=|location.href='./list_by_search'|" class="btn btn-secondary btn-sm">목록</button>

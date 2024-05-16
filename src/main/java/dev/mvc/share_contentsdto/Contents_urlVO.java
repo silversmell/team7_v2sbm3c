@@ -9,5 +9,5 @@ public class Contents_urlVO {
 	
 	private int scon_no;
 	
-	private String url_link;
+	private String url_link;  //5개
 }

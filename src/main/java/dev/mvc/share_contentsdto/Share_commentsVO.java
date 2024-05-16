@@ -7,7 +7,7 @@ import lombok.Setter;
 public class Share_commentsVO {
 	private int scmt_no;
 	
-	private int pro_no;
+	private int acc_no;
 	
 	private int scon_no;
 	
@@ -23,12 +23,12 @@ public class Share_commentsVO {
 		this.scmt_no = scmt_no;
 	}
 
-	public int getPro_no() {
-		return pro_no;
+	public int getacc_no() {
+		return acc_no;
 	}
 
-	public void setPro_no(int pro_no) {
-		this.pro_no = pro_no;
+	public void setacc_no(int acc_no) {
+		this.acc_no = acc_no;
 	}
 
 	public int getScon_no() {

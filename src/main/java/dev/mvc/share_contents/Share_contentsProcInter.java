@@ -3,6 +3,7 @@ package dev.mvc.share_contents;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import dev.mvc.share_contentsdto.Contents_urlVO;
 import dev.mvc.share_contentsdto.Share_commentsVO;
 import dev.mvc.share_contentsdto.Share_contentsVO;
 import dev.mvc.share_contentsdto.Share_imageVO;
@@ -113,6 +114,22 @@ public interface Share_contentsProcInter {
 	  * @return int count
 	  */
 	 public int comment_search(int scon_no);
+	 
+	 /**
+	  * url create
+	  * @param HashMap
+	  * @return int
+	  */
+	 public int create_url(HashMap<String,Object> map);
+	 
+	 /**
+	  * url 조회
+	  * @param scon_no
+	  * @return ArrayList
+	  */
+	 public ArrayList url_read(int scon_no);
+
+
 
 
 

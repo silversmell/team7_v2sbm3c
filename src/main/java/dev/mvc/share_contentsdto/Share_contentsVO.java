@@ -9,7 +9,7 @@ public class Share_contentsVO {
 	
 	private int catno;
 	
-	private int pro_no;
+	private int acc_no;
 	
 	private String scon_title="";
 	
@@ -45,12 +45,12 @@ public class Share_contentsVO {
 		this.catno = catno;
 	}
 
-	public int getPro_no() {
-		return pro_no;
+	public int getacc_no() {
+		return acc_no;
 	}
 
-	public void setPro_no(int pro_no) {
-		this.pro_no = pro_no;
+	public void setacc_no(int acc_no) {
+		this.acc_no = acc_no;
 	}
 
 	public String getScon_title() {
