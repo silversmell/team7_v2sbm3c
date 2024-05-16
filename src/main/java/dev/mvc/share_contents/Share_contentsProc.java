@@ -229,4 +229,10 @@ public class Share_contentsProc implements Share_contentsProcInter {
 		return list;
 	}
 
+	@Override
+	public ArrayList only_url(int scon_no) {
+		ArrayList<Contents_urlVO> list = this.scontentsDAO.only_url(scon_no);
+		return list;
+	}
+
 }

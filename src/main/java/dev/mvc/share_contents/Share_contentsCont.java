@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import dev.mvc.share_contents.Contents;
+import dev.mvc.share_contentsdto.Contents_urlVO;
 import dev.mvc.share_contentsdto.Share_commentsVO;
 import dev.mvc.share_contentsdto.Share_contentsVO;
 import dev.mvc.tool.Tool;
@@ -51,10 +52,20 @@ public class Share_contentsCont {
 		// System.out.println("read 생성");
 		Share_contentsVO scontentsVO = this.sconProc.read(scon_no);
 		model.addAttribute("scontentsVO", scontentsVO);
+		
 		int cnt1 = this.sconProc.comment_search(scon_no);
 		model.addAttribute("cnt", cnt1);
+		
 		ArrayList<Share_commentsVO> list = this.sconProc.read_comment(scon_no);
 		model.addAttribute("list", list);
+		//ArrayList<Contents_urlVO> url_list1 = this.sconProc.url_read(scon_no);
+		
+		ArrayList<Contents_urlVO> url_list = this.sconProc.only_url(scon_no);
+		for(int i = 0;i<url_list.size();i++) {
+			model.addAttribute("url_list"+i,url_list.get(i).getUrl_link());
+			
+		}
+
 		return "scontents/read";
 	}
 
@@ -103,6 +114,7 @@ public class Share_contentsCont {
 			map.put("url_link", list[i]);
 			map.put("scon_no", scon_no);
 			int cnt1 = this.sconProc.create_url(map);
+			//System.out.println(list[i]);
 		}
 
 		return "redirect:/scontents/list_by_search";

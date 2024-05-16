@@ -128,6 +128,13 @@ public interface Share_contentsProcInter {
 	  * @return ArrayList
 	  */
 	 public ArrayList url_read(int scon_no);
+	 
+	 /**
+	  * url만 갖고옴
+	  * @param scon_no
+	  * @return 
+	  */
+	 public ArrayList only_url(int scon_no);
 
 
 

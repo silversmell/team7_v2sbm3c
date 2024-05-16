@@ -111,6 +111,13 @@
           <div style="white-space: pre-wrap;"><span th:text="${scontentsVO.scon_contents}"></span></div>
         </div>
       </li>
+      <div>
+      <a style="font-size: 1em;" th:href="${url_list0}">Link1</a>
+      <a style="font-size: 1em;" th:href="@{|${url_list1}|}">Link2</a>
+      <a style="font-size: 1em;" th:href="@{|${url_list2}|}">Link3</a>
+      <a style="font-size: 1em;" th:href="@{|${url_list3}|}">Link4</a>
+      <a style="font-size: 1em;" th:href="@{|${url_list4}|}">Link5</a>
+      </div>
        <!--  
       <li class="li_none" th:text="|검색어(키워드): ${scontentsVO.word }|">
       </li>-->
@@ -144,7 +151,7 @@
       <button type='button' onclick="submit_comment();" 
              class="btn btn-primary btn-sm" style="margin-top: 4px;">등록</button>
     </div>
-    <A href="http://daum.net"> 다음 사이트로 연결 </A>
+    
     <span id='id_msg'></span>  
 
 </div>
