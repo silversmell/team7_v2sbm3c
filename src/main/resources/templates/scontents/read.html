@@ -48,17 +48,20 @@
           
           new_Comment.appendChild(document.createElement("br"));
           
-          let new_commentSpan = document.createElement("span");
-          new_commentSpan.textContent = comment_value;
-          new_commentSpan.fontWeight = "bold";
-          
-          new_Comment.appendChild(document.createElement("br"));
-          
           let acc_noSpan = document.createElement("span");
           acc_noSpan.textContent = accno_value;
           new_Comment.appendChild(acc_noSpan);
+          new_Comment.appendChild(document.createElement("br"));
           
+          let new_commentSpan = document.createElement("span");
+          new_commentSpan.textContent = comment_value;
+          new_commentSpan.fontWeight = "bold";
           new_Comment.appendChild(new_commentSpan);
+          
+          new_Comment.appendChild(document.createElement("br"));
+          
+
+          
           commentSection.appendChild(new_Comment);
           
           }
