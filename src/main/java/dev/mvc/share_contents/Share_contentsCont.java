@@ -58,15 +58,15 @@ public class Share_contentsCont {
 		model.addAttribute("cnt", cnt1);
 		
 		ArrayList<Share_commentsVO> list = this.sconProc.read_comment(scon_no);
-		for(int i =0;i<list.size();i++) {
-			System.out.println(list.get(i).getacc_no());
-		}
+//		for(int i =0;i<list.size();i++) {
+//			System.out.println(list.get(i).getacc_no());
+//		}
 		model.addAttribute("list", list);
 		model.addAttribute("acc_no",1);
 		//ArrayList<Contents_urlVO> url_list1 = this.sconProc.url_read(scon_no);
 		ArrayList<Contents_urlVO> url_list = this.sconProc.only_url(scon_no);
 		
-		System.out.println("url_list create");
+		//System.out.println("url_list create");
 		for(int i = 0;i<url_list.size();i++) {
 			//System.out.println(url_list.get(i).getUrl_link());
 			model.addAttribute("url_list"+i,url_list.get(i).getUrl_link());
@@ -74,6 +74,21 @@ public class Share_contentsCont {
 
 		return "scontents/read";
 	}
+	
+	 @GetMapping("/create_comment")
+	  @ResponseBody
+	  public String create_comment_form(String scmt_comment, int scon_no, int acc_no) {
+	    HashMap<String, Object> map = new HashMap<String, Object>();
+	    map.put("scmt_comment", scmt_comment);
+	    map.put("scon_no", scon_no);
+	    map.put("acc_no", acc_no);
+	    int cnt = this.sconProc.create_comment(map);
+	    
+	    JSONObject obj = new JSONObject();
+	    obj.put("cnt", cnt);
+	    
+	    return obj.toString();
+	  }
 
 	@GetMapping("/update_text")
 	public String update_text_form(Model model, int scon_no) {
@@ -139,7 +154,7 @@ public class Share_contentsCont {
 			map.put("url_link", list[i]);
 			map.put("scon_no", scon_no);
 			this.sconProc.create_url(map);
-			System.out.println(list[i]);
+			//System.out.println(list[i]);
 		}
 
 		return "redirect:/scontents/list_by_search";
@@ -156,7 +171,8 @@ public class Share_contentsCont {
 
 	@PostMapping("/delete")
 	public String delete(int scon_no, RedirectAttributes ra) {
-		int cnt1 = this.sconProc.delete_url(scon_no);
+	  this.sconProc.delete_comments(scon_no);
+		this.sconProc.delete_url(scon_no);
 		int cnt = this.sconProc.delete(scon_no);
 //		if (cnt == 1) {
 //			System.out.println("삭제 성공");
@@ -164,25 +180,7 @@ public class Share_contentsCont {
 		return "redirect:/scontents/list_by_search";
 	}
 
-	@GetMapping("/create_comment")
-	@ResponseBody
-	public String create_comment_form(String scmt_comment, int scon_no, int acc_no) {
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("scmt_comment", scmt_comment);
-		map.put("scon_no", scon_no);
-		map.put("acc_no", acc_no);
-		int cnt = this.sconProc.create_comment(map);
-		
-		if(cnt==1) {
-			System.out.println("댓글 등록 성공");
-		}
-		
-		JSONObject obj = new JSONObject();
-		obj.put("cnt", cnt);
 
-
-		return obj.toString();
-	}
 
 	@GetMapping("/list_by_search")
 	public String list_by_search(Model model, @RequestParam(name = "word", defaultValue = "") String word,

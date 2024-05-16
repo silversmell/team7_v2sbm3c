@@ -247,4 +247,10 @@ public class Share_contentsProc implements Share_contentsProcInter {
 		return cnt;
 	}
 
+  @Override
+  public int delete_comments(int scon_no) {
+    int cnt = this.scontentsDAO.delete_comments(scon_no);
+    return cnt;
+  }
+
 }

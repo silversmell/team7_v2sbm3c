@@ -179,6 +179,12 @@
 		delete from contents_url
 		where scon_no=#{scon_no}
 	</delete>
+	
+	<delete id = "delete_comments" parameterType="int">
+	   delete from share_comment
+     where scon_no=#{scon_no}
+	</delete>
+	
 </mapper>
 
 

@@ -14,14 +14,12 @@
       let seconds = today.getSeconds(); 
       
       let formattedDate = year + '-' + month + '-' + date + ' ' + hours + ':' + minutes + ':' + seconds;
-      
+      let accno = document.getElementById("acc_no")
       let comment = document.getElementById("comment")
       
-      let accno = document.getElementById("accno")
       console.log(accno.value);
-      
       let comment_value = comment.value;
-      
+      let accno_value = accno.value;
       let scon_no = document.getElementById("scon_no")
       
       let url = './create_comment?scmt_comment='+comment.value+'&scon_no='+scon_no.value+'&acc_no='+accno.value;
@@ -34,6 +32,9 @@
           if(rdata.cnt>0){
           let commentSection=document.getElementById("commentSection");
           let comment_value = document.getElementById("comment").value;
+          let accno_value = document.getElementById("acc_no").value;
+          console.log(comment_value);
+          console.log(accno_value);
           
           let new_Comment = document.createElement("div");
           new_Comment.classList.add("td_left");
@@ -52,10 +53,11 @@
           new_commentSpan.fontWeight = "bold";
           
           new_Comment.appendChild(document.createElement("br"));
-          let account_span = document.createElement("span");
-          account_span.textContent = accno_value;
           
-          new_Comment.appendChild(account_span);        
+          let acc_noSpan = document.createElement("span");
+          acc_noSpan.textContent = accno_value;
+          new_Comment.appendChild(acc_noSpan);
+          
           new_Comment.appendChild(new_commentSpan);
           commentSection.appendChild(new_Comment);
           
@@ -150,7 +152,7 @@
       <tr th:each="scommentVO, status:${list}">      
       <td class='td_left'>
       	<span id="scmt_date" style="font-size: 1em;" th:text="${scommentVO.scmt_date}"></span><br>
-     		<span id="accno"style="font-size: 1em;" th:text="${accno}"></span><br>
+     		<span id="accno"style="font-size: 1em;" th:text="${acc_no}" th:value="${acc_no}"></span><br>
         <span id="scmt_comment" th:text="${scommentVO.scmt_comment}" style="font-weight: bold;"></span><br><br>
       </td>
     </tr>
@@ -159,7 +161,7 @@
   
       <div>
        <label for="comment">댓글</label>
-       <input type="text" id="accno" name="accno" th:value="${accno}">
+       <input type="text" id="acc_no" name="acc_no" th:value="${acc_no}">
        <input type="hidden" id="scon_no" name="scon_no" th:value="${scontentsVO.scon_no}">
        <textarea name='scmt_comment' id="comment" required="required" value="" class="form-control" rows="5" style='width: 100%;'></textarea>
       <button type='button' onclick="submit_comment();" 
