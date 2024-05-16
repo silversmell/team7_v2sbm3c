@@ -89,5 +89,13 @@ public interface Share_contentsDAOInter {
     * @return int
     */
 	 public int list_by_cateno_search_count(HashMap<String,Object> map);
+	 
+	 /**
+	  * 각 게시글의 댓글 개수
+	  * @param scon_no
+	  * @return int count
+	  */
+	 public int comment_search(int scon_no);
+
 
 }

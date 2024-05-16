@@ -103,6 +103,12 @@
     </otherwise>
     </choose>
   </select>   
+  
+  <select id="comment_search" resultType="int" parameterType="int">
+		select count(*)
+		from share_comment
+		where scon_no=#{scon_no}
+  </select>
 
   
 </mapper>

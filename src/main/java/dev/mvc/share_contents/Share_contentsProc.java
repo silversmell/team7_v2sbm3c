@@ -209,6 +209,12 @@ public class Share_contentsProc implements Share_contentsProcInter {
     int cnt = this.scontentsDAO.list_by_cateno_search_count(map);
     return cnt;
   }
+
+@Override
+public int comment_search(int scon_no) {
+	int cnt = this.scontentsDAO.comment_search(scon_no);
+	return cnt;
+}
   
 
 }

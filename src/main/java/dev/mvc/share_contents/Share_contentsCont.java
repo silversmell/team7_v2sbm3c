@@ -53,6 +53,8 @@ public class Share_contentsCont {
 		//System.out.println("read 생성");
 		Share_contentsVO scontentsVO = this.sconProc.read(scon_no);
 		model.addAttribute("scontentsVO",scontentsVO);
+		int cnt1 = this.sconProc.comment_search(scon_no);
+		model.addAttribute("cnt",cnt1);
 	  ArrayList<Share_commentsVO> list =this.sconProc.read_comment(scon_no);
 	  model.addAttribute("list",list);
 		return "scontents/read";
@@ -71,9 +73,9 @@ public class Share_contentsCont {
 	                                    ,RedirectAttributes ra) {
 	      
 	     int cnt = this.sconProc.update_text(scontentsVO);
-//	     System.out.println("scontentsVO.getScon_no -> " + scontentsVO.getScon_no());
-	     ra.addAttribute("scon_no",scontentsVO.getScon_no());
-	     return "redirect:/scontents/read"; 
+	     //ra.addFlashAttribute("scon_no",scontentsVO.getScon_no());
+	     //ra.addAttribute("scon_no", scon_no1);
+	     return "redirect:/scontents/list_by_search"; 
 	    
 	  }
 	 @GetMapping("/create")
@@ -89,7 +91,7 @@ public class Share_contentsCont {
 	   int cnt = this.sconProc.create(scontentsVO);
 
 	   
-	   return "redirect:/scontents/list_all";
+	   return "redirect:/scontents/list_by_search";
 	 }
 	 
 	 @GetMapping("/delete")
@@ -106,7 +108,7 @@ public class Share_contentsCont {
 	   if(cnt==1) {
 	     System.out.println("삭제 성공");
 	   }
-	   return "redirect:/scontents/list_all";
+	   return "redirect:/scontents/list_by_search";
 	   
 
 	 }
@@ -138,6 +140,7 @@ public class Share_contentsCont {
 	    HashMap<String, Object> map = new HashMap<>();
 	    map.put("word", word);
 	    map.put("now_page", now_page);
+	    
 	    
 	    ArrayList<Share_contentsVO> list = this.sconProc.list_by_contents_search_paging(map);
 	    model.addAttribute("list", list);
