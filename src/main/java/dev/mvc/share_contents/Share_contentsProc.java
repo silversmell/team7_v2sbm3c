@@ -235,4 +235,10 @@ public class Share_contentsProc implements Share_contentsProcInter {
 		return list;
 	}
 
+	@Override
+	public int update_url(HashMap<String, Object> map) {
+		int cnt = this.scontentsDAO.update_url(map);
+		return cnt;
+	}
+
 }

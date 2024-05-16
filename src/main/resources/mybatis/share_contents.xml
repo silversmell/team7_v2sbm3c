@@ -146,6 +146,13 @@
 		where scon_no=#{scon_no}
 		</select>
 		
+	<update id="update_url"
+		parameterType="HashMap">
+		update contents_url
+		set url_link=#{url_link}
+		where scon_no=#{scon_no}
+	</update>
+		
 </mapper>
 
 

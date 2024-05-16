@@ -30,13 +30,25 @@
        <textarea name='scon_contents'  required="required" class="form-control" rows="12" style='width: 100%;' 
                       th:text='${scontentsVO.scon_contents}'></textarea>
     </div>
-    <!--
-    <div>
-       <label>검색어</label>
-       <input type='text' name='word' th:value='${scontentsVO.word}' required="required" 
-                 class="form-control" style='width: 100%;'>
-    </div> 
-    -->  
+    
+       <div>
+       <label>url1</label>
+       <input type='text' name='url_link'  th:value="${url_list0}" required
+                 autofocus="autofocus" class="form-control" style='width: 100%;'/>
+       <label>url2</label>
+       <input type='text' name='url_link'  th:value="${url_list1}" 
+                 autofocus="autofocus" class="form-control" style='width: 100%;'>
+       <label>url3</label>
+       <input type='text' name='url_link'  th:value="${url_list2}" 
+                 autofocus="autofocus" class="form-control" style='width: 100%;'>
+       <label>url4</label>
+       <input type='text' name='url_link'  th:value="${url_list3}" 
+                 autofocus="autofocus" class="form-control" style='width: 100%;'>
+       <label>url5</label>
+       <input type='text' name='url_link'   th:value="${url_list4}" 
+                 autofocus="autofocus" class="form-control" style='width: 100%;'>
+    	</div>
+
     <!--
     <div>
        <label>패스워드</label>

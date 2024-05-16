@@ -135,6 +135,13 @@ public interface Share_contentsProcInter {
 	  * @return 
 	  */
 	 public ArrayList only_url(int scon_no);
+	 
+	 /**
+	  * url 수정
+	  * @param map
+	  * @return int
+	  */
+	 public int update_url(HashMap<String,Object> map);
 
 
 

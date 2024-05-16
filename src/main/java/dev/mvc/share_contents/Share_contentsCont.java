@@ -63,7 +63,6 @@ public class Share_contentsCont {
 		ArrayList<Contents_urlVO> url_list = this.sconProc.only_url(scon_no);
 		for(int i = 0;i<url_list.size();i++) {
 			model.addAttribute("url_list"+i,url_list.get(i).getUrl_link());
-			
 		}
 
 		return "scontents/read";
@@ -73,17 +72,33 @@ public class Share_contentsCont {
 	public String update_text_form(Model model, int scon_no) {
 		Share_contentsVO scontentsVO = this.sconProc.read(scon_no);
 		model.addAttribute("scontentsVO", scontentsVO);
+		
+		ArrayList<Contents_urlVO> url_list = this.sconProc.only_url(scon_no);
+		for(int i = 0;i<url_list.size();i++) {
+			model.addAttribute("url_list"+i,url_list.get(i).getUrl_link());
+		}
 
 		return "scontents/update_text";
 
 	}
 
 	@PostMapping("/update_text")
-	public String update_text(Model model, Share_contentsVO scontentsVO, RedirectAttributes ra) {
+	public String update_text(Model model, Share_contentsVO scontentsVO, RedirectAttributes ra,int scon_no,String url_link) {
 
 		int cnt = this.sconProc.update_text(scontentsVO);
-		// ra.addFlashAttribute("scon_no",scontentsVO.getScon_no());
-		// ra.addAttribute("scon_no", scon_no1);
+		System.out.println("url_link -> " + url_link);
+
+		HashMap<String, Object> map = new HashMap<>();
+		
+		String[] list = url_link.split(",");
+		for (int i = 0; i < list.length; i++) {
+			list[i] = list[i].trim();
+			map.put("url_link", list[i]);
+			map.put("scon_no", scon_no);
+			int cnt1 = this.sconProc.update_url(map);
+			//System.out.println(list[i]);
+		}
+		
 		return "redirect:/scontents/list_by_search";
 
 	}
@@ -136,7 +151,6 @@ public class Share_contentsCont {
 			System.out.println("삭제 성공");
 		}
 		return "redirect:/scontents/list_by_search";
-
 	}
 
 	@GetMapping("/create_comment")
@@ -158,10 +172,6 @@ public class Share_contentsCont {
 	public String list_by_search(Model model, @RequestParam(name = "word", defaultValue = "") String word,
 			@RequestParam(name = "now_page", defaultValue = "1") int now_page) {
 
-		/**
-		 * Share_contentsVO scontentsVO = this.sconProc.read(scon_no);
-		 * model.addAttribute("scontentsVO",scontentsVO);
-		 **/
 		word = Tool.checkNull(word).trim();
 
 		HashMap<String, Object> map = new HashMap<>();
