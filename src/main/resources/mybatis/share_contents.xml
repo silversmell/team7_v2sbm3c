@@ -22,7 +22,8 @@
 	<select id="read"
 		resultType="dev.mvc.share_contentsdto.Share_contentsVO"
 		parameterType="Integer">
-		SELECT scon_no, scon_title, scon_contents, scon_views, scon_date, acc_no
+		SELECT scon_no, scon_title, scon_contents, scon_views,
+		scon_date, acc_no
 		,cate_no
 		FROM share_contents
 		where scon_no=#{scon_no}
@@ -32,19 +33,23 @@
 		parameterType="dev.mvc.share_contentsdto.Share_contentsVO">
 		UPDATE share_contents
 		SET scon_views=scon_views+1
-		WHERE scon_no=#{scon_no}
+		WHERE
+		scon_no=#{scon_no}
 	</update>
 
 	<update id="update_text"
 		parameterType="dev.mvc.share_contentsdto.Share_contentsVO">
 		update share_contents
-		set scon_title=#{scon_title},scon_contents=#{scon_contents}
-		where scon_no=#{scon_no}
+		set
+		scon_title=#{scon_title},scon_contents=#{scon_contents}
+		where
+		scon_no=#{scon_no}
 	</update>
 
 	<insert id="create"
 		parameterType="dev.mvc.share_contentsdto.Share_contentsVO">
-		INSERT INTO share_contents(scon_no, scon_title, scon_contents,scon_bookmark,
+		INSERT INTO share_contents(scon_no, scon_title,
+		scon_contents,scon_bookmark,
 		scon_views,scon_date, acc_no,cate_no)
 		VALUES(share_contents_SEQ.nextval,#{scon_title},#{scon_contents},1,0,sysdate,1,1)
 	</insert>
@@ -55,7 +60,8 @@
 	</delete>
 
 	<insert id="create_comment" parameterType="HashMap">
-		INSERT INTO share_comment(scmt_no, scon_no, scmt_comment,scmt_date, acc_no)
+		INSERT INTO
+		share_comment(scmt_no, scon_no, scmt_comment,scmt_date, acc_no)
 		VALUES(share_comment_SEQ.nextval,#{scon_no},#{scmt_comment},sysdate,1)
 	</insert>
 
@@ -69,10 +75,14 @@
 
 	<insert id="create_image"
 		parameterType="dev.mvc.share_contentsdto.Share_imageVO">
-		INSERT INTO share_image(file_no, scon_no, file_origin_name,
-		file_upload_name, file_thumb_name, file_size, file_date)
-		VALUES(share_image_seq.nextval, #{scon_no}, #{file_origin_name} ,
-		#{file_upload_name}, #{file_thumb_name}, #{file_size} sysdate)
+		INSERT INTO share_image(file_no, scon_no,
+		file_origin_name,
+		file_upload_name, file_thumb_name, file_size,
+		file_date)
+		VALUES(share_image_seq.nextval, #{scon_no},
+		#{file_origin_name} ,
+		#{file_upload_name}, #{file_thumb_name},
+		#{file_size} sysdate)
 	</insert>
 
 	<!-- 카테고리별 검색 + 페이징 목록 -->
@@ -82,17 +92,22 @@
 		SELECT scon_no, scon_title, scon_contents, scon_views, scon_comment,
 		scon_date,scon_priority, r
 		FROM (
-		SELECT scon_no, scon_title, scon_contents, scon_views, scon_comment,
+		SELECT scon_no, scon_title,
+		scon_contents, scon_views, scon_comment,
 		scon_date,scon_priority,rownum as r
 		FROM (
-		SELECT scon_no, scon_title, scon_contents, scon_views, scon_comment,
+		SELECT scon_no, scon_title,
+		scon_contents, scon_views, scon_comment,
 		scon_date,scon_priority
-		FROM share_contents
+		FROM
+		share_contents
 		<choose>
 			<when test="word != null or word != ''">
-				WHERE (UPPER(scon_title) LIKE '%' || UPPER(#{word}) || '%'
+				WHERE (UPPER(scon_title) LIKE '%' || UPPER(#{word})
+				|| '%'
 				OR UPPER(scon_contents) LIKE '%' || UPPER(#{word}) || '%'
-				OR UPPER(word) LIKE '%' || UPPER(#{word}) || '%')
+				OR
+				UPPER(word) LIKE '%' || UPPER(#{word}) || '%')
 			</when>
 			<otherwise>
 				<!-- 조건이 없으면 모든 레코드 선택 -->
@@ -114,9 +129,11 @@
 		FROM share_contents
 		<choose>
 			<when test="word != null or word != ''">
-				WHERE (UPPER(scon_title) LIKE '%' || UPPER(#{word}) || '%'
+				WHERE (UPPER(scon_title) LIKE '%' || UPPER(#{word})
+				|| '%'
 				OR UPPER(scon_contents) LIKE '%' || UPPER(#{word}) || '%'
-				OR UPPER(word) LIKE '%' || UPPER(#{word}) || '%')
+				OR
+				UPPER(word) LIKE '%' || UPPER(#{word}) || '%')
 			</when>
 			<otherwise>
 				<!-- 조건이 없으면 모든 레코드 선택 -->
@@ -129,30 +146,39 @@
 		from share_comment
 		where scon_no=#{scon_no}
 	</select>
-	<insert id="create_url"
-		parameterType="HashMap">
-		INSERT INTO contents_url(url_no,scon_no,url_link)
+	<insert id="create_url" parameterType="HashMap">
+		INSERT INTO
+		contents_url(url_no,scon_no,url_link)
 		VALUES(contents_url_SEQ.nextval,#{scon_no},#{url_link})
 	</insert>
 
-	<select id="url_read" resultType="dev.mvc.share_contentsdto.Contents_urlVO" parameterType="int">
+	<select id="url_read"
+		resultType="dev.mvc.share_contentsdto.Contents_urlVO"
+		parameterType="int">
 		SELECT url_no,scon_no,url_link
 		FROM contents_url
-		where scon_no=#{scon_no}
+		where
+		scon_no=#{scon_no}
 	</select>
-	<select id="only_url" resultType="dev.mvc.share_contentsdto.Contents_urlVO" parameterType="int">
+	<select id="only_url"
+		resultType="dev.mvc.share_contentsdto.Contents_urlVO"
+		parameterType="int">
 		SELECT url_link
 		FROM contents_url
 		where scon_no=#{scon_no}
-		</select>
-		
-	<update id="update_url"
-		parameterType="HashMap">
+	</select>
+
+	<update id="update_url" parameterType="HashMap">
 		update contents_url
-		set url_link=#{url_link}
-		where scon_no=#{scon_no}
+		set
+		url_link=#{url_link}
+		where scon_no=#{scon_no} AND url_no=#{url_no}
 	</update>
-		
+
+	<delete id="delete_url" parameterType="int">
+		delete from contents_url
+		where scon_no=#{scon_no}
+	</delete>
 </mapper>
 
 

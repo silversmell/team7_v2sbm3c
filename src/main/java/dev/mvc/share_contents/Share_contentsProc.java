@@ -241,4 +241,10 @@ public class Share_contentsProc implements Share_contentsProcInter {
 		return cnt;
 	}
 
+	@Override
+	public int delete_url(int scon_no) {
+		int cnt = this.scontentsDAO.delete_url(scon_no);
+		return cnt;
+	}
+
 }

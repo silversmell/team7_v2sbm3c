@@ -125,5 +125,12 @@ public interface Share_contentsDAOInter {
 	  * @return int
 	  */
 	 public int update_url(HashMap<String,Object> map);
+	 
+	 /**
+	  * 해당하는 게시글 url 삭제
+	  * @param scon_no
+	  * @return int
+	  */
+	 public int delete_url(int scon_no);
 
 }

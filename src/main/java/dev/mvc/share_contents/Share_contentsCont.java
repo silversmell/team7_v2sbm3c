@@ -48,6 +48,7 @@ public class Share_contentsCont {
 		// if(cnt==1) {
 		// System.out.println("조회수 +1");
 		// }
+		//System.out.println("read create");
 		model.addAttribute("scon_views", cnt);
 		// System.out.println("read 생성");
 		Share_contentsVO scontentsVO = this.sconProc.read(scon_no);
@@ -59,9 +60,11 @@ public class Share_contentsCont {
 		ArrayList<Share_commentsVO> list = this.sconProc.read_comment(scon_no);
 		model.addAttribute("list", list);
 		//ArrayList<Contents_urlVO> url_list1 = this.sconProc.url_read(scon_no);
-		
 		ArrayList<Contents_urlVO> url_list = this.sconProc.only_url(scon_no);
+		
+		System.out.println("url_list create");
 		for(int i = 0;i<url_list.size();i++) {
+			//System.out.println(url_list.get(i).getUrl_link());
 			model.addAttribute("url_list"+i,url_list.get(i).getUrl_link());
 		}
 
@@ -86,17 +89,22 @@ public class Share_contentsCont {
 	public String update_text(Model model, Share_contentsVO scontentsVO, RedirectAttributes ra,int scon_no,String url_link) {
 
 		int cnt = this.sconProc.update_text(scontentsVO);
-		System.out.println("url_link -> " + url_link);
+		//System.out.println("url_link -> " + url_link);
 
 		HashMap<String, Object> map = new HashMap<>();
 		
 		String[] list = url_link.split(",");
+		ArrayList<Contents_urlVO> arr = this.sconProc.url_read(scon_no);
+		for(int i = 0;i<arr.size();i++) {
+			System.out.println("i :"+arr.get(i).getUrl_no());
+		}
 		for (int i = 0; i < list.length; i++) {
 			list[i] = list[i].trim();
 			map.put("url_link", list[i]);
 			map.put("scon_no", scon_no);
-			int cnt1 = this.sconProc.update_url(map);
-			//System.out.println(list[i]);
+			map.put("url_no", arr.get(i).getUrl_no());
+				
+			this.sconProc.update_url(map);
 		}
 		
 		return "redirect:/scontents/list_by_search";
@@ -128,8 +136,8 @@ public class Share_contentsCont {
 			list[i] = list[i].trim();
 			map.put("url_link", list[i]);
 			map.put("scon_no", scon_no);
-			int cnt1 = this.sconProc.create_url(map);
-			//System.out.println(list[i]);
+			this.sconProc.create_url(map);
+			System.out.println(list[i]);
 		}
 
 		return "redirect:/scontents/list_by_search";
@@ -146,10 +154,11 @@ public class Share_contentsCont {
 
 	@PostMapping("/delete")
 	public String delete(int scon_no, RedirectAttributes ra) {
+		int cnt1 = this.sconProc.delete_url(scon_no);
 		int cnt = this.sconProc.delete(scon_no);
-		if (cnt == 1) {
-			System.out.println("삭제 성공");
-		}
+//		if (cnt == 1) {
+//			System.out.println("삭제 성공");
+//		}
 		return "redirect:/scontents/list_by_search";
 	}
 
