@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public interface Qna_contentsProcInter {
   
   /**
-   * 질문게시글 등록
+   * 질문게시글 등록1
    * insert id="qna_create" parameterType="dev.mvc.qna_contents"
    * @param qna_contentsVO
    * @return
@@ -18,4 +18,6 @@ public interface Qna_contentsProcInter {
    * @return
    */
   public ArrayList<Qna_contentsVO> list_all();
+
+  
 }
