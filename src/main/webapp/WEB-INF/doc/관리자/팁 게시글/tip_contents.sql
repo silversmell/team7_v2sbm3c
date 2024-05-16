@@ -7,10 +7,10 @@ CREATE TABLE TIP_CONTENTS(
 		TCON_NO NUMBER(10) NOT NULL PRIMARY KEY,
 		CATE_NO NUMBER(10), -- FK
 		ADM_NO NUMBER(10),  -- FK
-		TCON_IMAGE VARCHAR2(100),
-		TCON_SAVED_IMAGE VARCHAR2(100),
-		TCON_THUMB_IMAGE VARCHAR2(100),
-		TCON_IMAGE_SIZE NUMBER(10) DEFAULT 0 NULL,
+		TCON_IMG VARCHAR2(100),
+		TCON_SAVED_IMG VARCHAR2(100),
+		TCON_THUMB_IMG VARCHAR2(100),
+		TCON_IMG_SIZE NUMBER(10) DEFAULT 0 NULL,
 		YOUTUBE VARCHAR2(1000),
   FOREIGN KEY (CATE_NO) REFERENCES CATEGORY (CATE_NO),
   FOREIGN KEY (ADM_NO) REFERENCES ADMIN (ADM_NO)
@@ -20,10 +20,10 @@ COMMENT ON TABLE TIP_CONTENTS is '팁 게시글';
 COMMENT ON COLUMN TIP_CONTENTS.TCON_NO is '팁게시글 번호';
 COMMENT ON COLUMN TIP_CONTENTS.CATE_NO is '카테고리 번호';
 COMMENT ON COLUMN TIP_CONTENTS.ADM_NO is '관리자 번호';
-COMMENT ON COLUMN TIP_CONTENTS.TCON_IMAGE is '이미지';
-COMMENT ON COLUMN TIP_CONTENTS.TCON_SAVED_IMAGE is '저장된 이미지';
-COMMENT ON COLUMN TIP_CONTENTS.TCON_THUMB_IMAGE is 'THUMB 이미지';
-COMMENT ON COLUMN TIP_CONTENTS.TCON_IMAGE_SIZE is '이미지 크기';
+COMMENT ON COLUMN TIP_CONTENTS.TCON_IMG is '이미지';
+COMMENT ON COLUMN TIP_CONTENTS.TCON_SAVED_IMG is '저장된 이미지';
+COMMENT ON COLUMN TIP_CONTENTS.TCON_THUMB_IMG is 'THUMB 이미지';
+COMMENT ON COLUMN TIP_CONTENTS.TCON_IMG_SIZE is '이미지 크기';
 COMMENT ON COLUMN TIP_CONTENTS.YOUTUBE is '유튜브 링크';
 
 
@@ -39,25 +39,25 @@ CREATE SEQUENCE TIP_CONTENTS_SEQ
 commit;
 SELECT * FROM tip_contents;
 -- 등록 화면 유형 1: 커뮤니티(tip)글 등록
-INSERT INTO tip_contents(tcon_no, cate_no, adm_no, tcon_image, tcon_saved_image, tcon_thumb_image, tcon_image_size) 
+INSERT INTO tip_contents(tcon_no, cate_no, adm_no, tcon_img, tcon_saved_img, tcon_thumb_img, tcon_img_size) 
 VALUES(tip_contents_seq.nextval, 1, 1, 'desktour.jpg', 'desktour_1.jpg', 'desktour_t.jpg', 1000);
 
-INSERT INTO tip_contents(tcon_no, cate_no, adm_no, tcon_image, tcon_saved_image, tcon_thumb_image, tcon_image_size) 
+INSERT INTO tip_contents(tcon_no, cate_no, adm_no, tcon_img, tcon_saved_img, tcon_thumb_img, tcon_img_size) 
 VALUES(tip_contents_seq.nextval, 2, 1, 'deskitem.jpg', 'deskitem_1.jpg', 'deskitem_t.jpg', 1000);
 
 
 -- 전체 목록, 내림차순
-SELECT tcon_no, cate_no, adm_no, tcon_image, tcon_saved_image, tcon_thumb_image, tcon_image_size
+SELECT tcon_no, cate_no, adm_no, tcon_img, tcon_saved_img, tcon_thumb_img, tcon_img_size
 FROM tip_contents
 ORDER BY tcon_no DESC;
 
 
 -- 카테고리별(공유) 목록 등록
-INSERT INTO tip_contents(tcon_no, cate_no, adm_no, tcon_image, tcon_saved_image, tcon_thumb_image, tcon_image_size) 
+INSERT INTO tip_contents(tcon_no, cate_no, adm_no, tcon_img, tcon_saved_img, tcon_thumb_img, tcon_img_size) 
 VALUES(tip_contents_seq.nextval, 1, 1, 'desktour.jpg', 'desktour_1.jpg', 'desktour_t.jpg', 1000);
 
 -- 카테고리별(질문) 목록 등록
-INSERT INTO tip_contents(tcon_no, cate_no, adm_no, tcon_image, tcon_saved_image, tcon_thumb_image, tcon_image_size) 
+INSERT INTO tip_contents(tcon_no, cate_no, adm_no, tcon_img, tcon_saved_img, tcon_thumb_img, tcon_img_size) 
 VALUES(tip_contents_seq.nextval, 2, 1, 'deskitem.jpg', 'deskitem_1.jpg', 'deskitem_t.jpg', 1000);
 
 
@@ -65,18 +65,18 @@ COMMIT;
 
 
 -- tip 게시글 전체 목록, 내림차순
-SELECT tcon_no, cate_no, adm_no, tcon_image, tcon_saved_image, tcon_thumb_image, tcon_image_size, youtube
+SELECT tcon_no, cate_no, adm_no, tcon_img, tcon_saved_img, tcon_thumb_img, tcon_img_size, youtube
 FROM tip_contents
 ORDER BY tcon_no DESC;
 
 -- 1번 cate_no만 출력 = 공유 글만 출력, 내림차순
-SELECT tcon_no, cate_no, adm_no, tcon_image, tcon_saved_image, tcon_thumb_image, tcon_image_size, youtube
+SELECT tcon_no, cate_no, adm_no, tcon_img, tcon_saved_img, tcon_thumb_img, tcon_img_size, youtube
 FROM tip_contents
 WHERE cate_no=1
 ORDER BY tcon_no DESC;
 
 -- 2번 cateno만 출력 = 질문 글만 출력, 내림차순
-SELECT tcon_no, cate_no, adm_no, tcon_image, tcon_saved_image, tcon_thumb_image, tcon_image_size, youtube
+SELECT tcon_no, cate_no, adm_no, tcon_img, tcon_saved_img, tcon_thumb_img, tcon_img_size, youtube
 FROM tip_contents
 WHERE cate_no=2
 ORDER BY tcon_no DESC;
