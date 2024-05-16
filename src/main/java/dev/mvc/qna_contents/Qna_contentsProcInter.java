@@ -11,4 +11,5 @@ public interface Qna_contentsProcInter {
   public int create(Qna_contentsVO qna_contentsVO);
 
   
+  public ArrayList<Qna_contentsVO> read(qcon_no);
 }
