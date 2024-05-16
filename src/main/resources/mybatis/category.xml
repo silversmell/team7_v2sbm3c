@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
  
  <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
- <mapper namespace="dev.mvc.categpry.CategoryDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
+ <mapper namespace="dev.mvc.category.CategoryDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
   
   <!-- 카테고리 등록 -->
   <insert id="create" parameterType="dev.mvc.category.CategoryVO"> <!-- public int create(CategoryVO categoryVO) {...-->
@@ -65,10 +65,10 @@
   </update>
   
   <!-- 회원/비회원에게 공개할 카테고리 목록 -->
-  <select id="list_all_cate_name" resultType="dev.mvc.category.CategoryVO" parameterType="String">
+  <select id="list_all_cate_name" resultType="dev.mvc.category.CategoryVO" parameterType="Map">
     SELECT cate_no, cate_name, cate_cnt, cate_seqno, cate_visible
     FROM category
-    WHERE cate_name= #{cate_name} AND cate_visible= 'Y'
+    WHERE cate_name = #{cate_name} AND cate_visible = 'Y'
     ORDER BY cate_seqno ASC
   </select>
   
@@ -86,21 +86,18 @@
   
   <!-- 관리자용 검색 목록 페이지 -->
   <select id="list_search_paging" resultType="dev.mvc.category.CategoryVO" parameterType="Map">
-    SELECT cate_no, cate_name, cate_cnt, cate_seqno, cate_visible, r
+    SELECT cate_no, cate_name, cate_cnt, cate_seqno, cate_visible, rownum as r
     FROM (
-        SELECT  cate_no, cate_name, cate_cnt, cate_seqno, cate_visible, rownum as r
-        FROM (
-            SELECT  cate_no, cate_name, cate_cnt, cate_seqno, cate_visible,
-            FROM category
-            
-            <if test="word != null and word != ''">
-              WHERE UPPER(cate_name) LIKE '%' || UPPER(#{word}) || '%'
-            </if>
-         
-            ORDER BY cate_seqno ASC
-        )
+      SELECT cate_no, cate_name, cate_cnt, cate_seqno, cate_visible
+      FROM category
+      
+      <if test="word != null and word != ''">
+        WHERE UPPER(cate_name) LIKE '%' || UPPER(#{word}) || '%'
+      </if>
+      
+      ORDER BY cate_seqno ASC
     )
-    WHERE r &gt; = #{start_num} AND r &lt; = #{end_num} <!-- WHERE r >= 1 AND r <= 3 -->
+    WHERE rownum &gt;= #{start_num} AND rownum &lt;= #{end_num} <!-- WHERE rownum >= 1 AND rownum <= 3 -->
   </select>
   
   <!-- 검색된 레코드 갯수 -->
