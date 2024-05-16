@@ -17,12 +17,14 @@
       
       let comment = document.getElementById("comment")
       
+      let accno = document.getElementById("accno")
+      console.log(accno.value);
+      
       let comment_value = comment.value;
-      console.log(comment.value)
-     
+      
       let scon_no = document.getElementById("scon_no")
-      console.log(scon_no.value)
-      let url = './create_comment?scmt_comment='+comment.value+'&scon_no='+scon_no.value ;
+      
+      let url = './create_comment?scmt_comment='+comment.value+'&scon_no='+scon_no.value+'&acc_no='+accno.value;
       
       fetch(url,{
         method: 'GET'
@@ -49,13 +51,19 @@
           new_commentSpan.textContent = comment_value;
           new_commentSpan.fontWeight = "bold";
           
+          new_Comment.appendChild(document.createElement("br"));
+          let account_span = document.createElement("span");
+          account_span.textContent = accno_value;
           
+          new_Comment.appendChild(account_span);        
           new_Comment.appendChild(new_commentSpan);
           commentSection.appendChild(new_Comment);
+          
           }
           else{
            id_msg.innerHTML= '댓글 등록이 안됩니다.';
         }
+          document.getElementById("comment").value="";
 
       })
       .catch(error =>{
@@ -137,11 +145,12 @@
       </li>  
        -->
     </ul>
+    
     <div id="commentSection">
-        <tr th:each="scommentVO, status:${list}">      
+      <tr th:each="scommentVO, status:${list}">      
       <td class='td_left'>
-      <span id="scmt_date" style="font-size: 1em;" th:text="${scommentVO.scmt_date}"></span><br>
-      <span id="acc_no"style="font-size: 1em;" th:text="${scommentVO.acc_no}"></span><br>
+      	<span id="scmt_date" style="font-size: 1em;" th:text="${scommentVO.scmt_date}"></span><br>
+     		<span id="accno"style="font-size: 1em;" th:text="${accno}"></span><br>
         <span id="scmt_comment" th:text="${scommentVO.scmt_comment}" style="font-weight: bold;"></span><br><br>
       </td>
     </tr>
@@ -150,6 +159,7 @@
   
       <div>
        <label for="comment">댓글</label>
+       <input type="text" id="accno" name="accno" th:value="${accno}">
        <input type="hidden" id="scon_no" name="scon_no" th:value="${scontentsVO.scon_no}">
        <textarea name='scmt_comment' id="comment" required="required" value="" class="form-control" rows="5" style='width: 100%;'></textarea>
       <button type='button' onclick="submit_comment();" 

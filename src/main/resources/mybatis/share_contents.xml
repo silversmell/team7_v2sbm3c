@@ -61,8 +61,8 @@
 
 	<insert id="create_comment" parameterType="HashMap">
 		INSERT INTO
-		share_comment(scmt_no, scon_no, scmt_comment,scmt_date, acc_no)
-		VALUES(share_comment_SEQ.nextval,#{scon_no},#{scmt_comment},sysdate,1)
+		share_comment(scmt_no, scon_no, scmt_comment,scmt_date,acc_no)
+		VALUES(share_comment_SEQ.nextval,#{scon_no},#{scmt_comment},sysdate,#{acc_no})
 	</insert>
 
 	<select id="read_comment"

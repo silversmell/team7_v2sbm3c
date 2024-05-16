@@ -32,20 +32,20 @@
     </div>
     
        <div>
-       <label>url1</label>
-       <input type='text' name='url_link'  th:value="${url_list0}" required
+       <label th:if="${url_list0!= null}"label>url1</label>
+       <input type='text' name='url_link' th:if="${url_list0 != null}" th:value="${url_list0}" required
                  autofocus="autofocus" class="form-control" style='width: 100%;'/>
-       <label>url2</label>
-       <input type='text' name='url_link'  th:value="${url_list1}" 
+       <label th:if="${url_list1 != null}">url2</label>
+       <input type='text' name='url_link'  th:if="${url_list1 != null}"  th:value="${url_list1}" 
                  autofocus="autofocus" class="form-control" style='width: 100%;'>
-       <label>url3</label>
-       <input type='text' name='url_link'  th:value="${url_list2}" 
+       <label th:if="${url_list2 != null}">url3</label>
+       <input type='text' name='url_link'  th:if="${url_list2 != null}" th:value="${url_list2}" 
                  autofocus="autofocus" class="form-control" style='width: 100%;'>
-       <label>url4</label>
-       <input type='text' name='url_link'  th:value="${url_list3}" 
+       <label th:if="${url_list3 != null}">url4</label>
+       <input type='text' name='url_link' th:if="${url_list3 != null}" th:value="${url_list3}"  
                  autofocus="autofocus" class="form-control" style='width: 100%;'>
-       <label>url5</label>
-       <input type='text' name='url_link'   th:value="${url_list4}" 
+       <label th:if="${url_list4 != null}">url5</label>
+       <input type='text' name='url_link' th:if="${url_list4 != null}"  th:value="${url_list4}" 
                  autofocus="autofocus" class="form-control" style='width: 100%;'>
     	</div>
 

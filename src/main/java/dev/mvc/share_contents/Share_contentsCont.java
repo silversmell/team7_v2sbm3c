@@ -58,7 +58,11 @@ public class Share_contentsCont {
 		model.addAttribute("cnt", cnt1);
 		
 		ArrayList<Share_commentsVO> list = this.sconProc.read_comment(scon_no);
+		for(int i =0;i<list.size();i++) {
+			System.out.println(list.get(i).getacc_no());
+		}
 		model.addAttribute("list", list);
+		model.addAttribute("acc_no",1);
 		//ArrayList<Contents_urlVO> url_list1 = this.sconProc.url_read(scon_no);
 		ArrayList<Contents_urlVO> url_list = this.sconProc.only_url(scon_no);
 		
@@ -95,9 +99,7 @@ public class Share_contentsCont {
 		
 		String[] list = url_link.split(",");
 		ArrayList<Contents_urlVO> arr = this.sconProc.url_read(scon_no);
-		for(int i = 0;i<arr.size();i++) {
-			System.out.println("i :"+arr.get(i).getUrl_no());
-		}
+		
 		for (int i = 0; i < list.length; i++) {
 			list[i] = list[i].trim();
 			map.put("url_link", list[i]);
@@ -126,12 +128,12 @@ public class Share_contentsCont {
 
 		Share_contentsVO scontentsVO1 = list1.get(list1.size() - 1); //바로 등록한 Share_contentsVO 가져오기 ->scon_no를 사용하기 위해
 		int scon_no = scontentsVO1.getScon_no();
-		System.out.println("scon_no->" + scon_no);
-
-		System.out.println("url_link -> " + url_link);
+//		System.out.println("scon_no->" + scon_no);
+//		System.out.println("url_link -> " + url_link);
 
 		HashMap<String, Object> map = new HashMap<>();
 		String[] list = url_link.split(",");
+		
 		for (int i = 0; i < list.length; i++) {
 			list[i] = list[i].trim();
 			map.put("url_link", list[i]);
@@ -164,15 +166,20 @@ public class Share_contentsCont {
 
 	@GetMapping("/create_comment")
 	@ResponseBody
-	public String create_comment_form(String scmt_comment, int scon_no) {
+	public String create_comment_form(String scmt_comment, int scon_no, int acc_no) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("scmt_comment", scmt_comment);
 		map.put("scon_no", scon_no);
-
+		map.put("acc_no", acc_no);
 		int cnt = this.sconProc.create_comment(map);
-
+		
+		if(cnt==1) {
+			System.out.println("댓글 등록 성공");
+		}
+		
 		JSONObject obj = new JSONObject();
 		obj.put("cnt", cnt);
+
 
 		return obj.toString();
 	}
