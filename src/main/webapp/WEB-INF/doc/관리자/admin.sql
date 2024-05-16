@@ -6,24 +6,16 @@ DROP TABLE ADMIN;
 
 CREATE TABLE ADMIN(
 		ADM_NO NUMBER(10) NOT NULL PRIMARY KEY,
-		CATE_NO NUMBER(10), -- FK
-		ADM_ID VARCHAR2(30) NOT NULL,
-		ADM_PW VARCHAR2(100) NOT NULL,
-		ADM_NAME VARCHAR2(10) NOT NULL,
-		ADM_DATE DATE NOT NULL,
-		ADM_GRADE NUMBER(2) NOT NULL, -- 등급(1~10: 관리자, 11~20: 회원, 40~49: 정지 회원, 99: 탈퇴 회원), 99까지 가능.
-  FOREIGN KEY (CATE_NO) REFERENCES CATEGORY (CATE_NO)
+        CATE_NO NUMBER(10), -- FK
+        ACC_NO NUMBER(10), -- FK  
+  FOREIGN KEY (CATE_NO) REFERENCES CATEGORY (CATE_NO),
+  FOREIGN KEY (ACC_NO) REFERENCES ACCOUNT (ACC_NO)
 );
 
 COMMENT ON TABLE ADMIN is '관리자';
 COMMENT ON COLUMN ADMIN.ADM_NO is '관리자 번호';
 COMMENT ON COLUMN ADMIN.CATE_NO is '카테고리 번호';
-COMMENT ON COLUMN ADMIN.ADM_ID is '관리자 아이디';
-COMMENT ON COLUMN ADMIN.ADM_PW is '관리자 비밀번호';
-COMMENT ON COLUMN ADMIN.ADM_NAME is '관리자 이름';
-COMMENT ON COLUMN ADMIN.ADM_DATE is '가입일';
-COMMENT ON COLUMN ADMIN.ADM_GRADE is '등급';
-
+COMMENT ON COLUMN ADMIN.CATE_NO is '회원 번호';
 
 DROP SEQUENCE ADMIN_SEQ;
 
@@ -38,8 +30,7 @@ CREATE SEQUENCE ADMIN_SEQ
 commit;
 SELECT * FROM admin;
 -- Create, 등록: 1건 이상(임시 통합 관리자 계정)
-INSERT INTO admin(adm_no, cate_no, adm_id, adm_pw, adm_name, adm_date, adm_grade)
-VALUES(admin_seq.nextval, 1, 'admin1@gmail.com', '1234', '박은향', sysdate, 1);
+
 
 INSERT INTO admin(adm_no, cate_no, adm_id, adm_pw, adm_name, adm_date, adm_grade)
 VALUES(admin_seq.nextval, 2, 'admin1@gmail.com', '1234', '박은향', sysdate, 1);
@@ -58,7 +49,7 @@ VALUES(admin_seq.nextval, 2, 'admin3@gmail.com', '1234', '장영은', sysdate, 1
 
 -- 목록
 -- 검색을 하지 않는 경우, 전체 목록 출력, 오름차순
-SELECT adm_no, cate_no, adm_id, adm_pw, adm_name, adm_date, adm_grade
+SELECT adm_no, cate_no, adm_id, adm_pw, adm_name, adm_date
 FROM admin
 ORDER BY adm_grade ASC, adm_id ASC;
      

@@ -44,8 +44,7 @@ CREATE SEQUENCE QNA_CONTENTS_SEQ
 commit;
 SELECT * FROM qna_contents;
 -- Create, 등록: 1건 이상
-INSERT INTO QNA_CONTENTS(qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_comment, qcon_date, 
-                        word)
+INSERT INTO QNA_CONTENTS(qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_comment, qcon_date, word)
 VALUES(qna_contents_seq.nextval, 2, 1, '찾아주세요!', '사진 속 물건과 비슷한게 있을까요?', 0, 0, 0, sysdate, '질문');
 
 INSERT INTO QNA_CONTENTS(qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_comment, qcon_date, word)
