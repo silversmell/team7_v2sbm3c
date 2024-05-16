@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import dev.mvc.admin.AdminProcInter;
 import dev.mvc.tool.Tool;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -25,13 +24,8 @@ public class CategoryCont {
   
   // 카테고리 참조
   @Autowired
-  @Qualifier("dev.mvc.catrgory.CategoryProc")
+  @Qualifier("dev.mvc.category.CategoryProc")
   private CategoryProcInter categoryProc;
-  
-  // 관리자 참조
-  @Autowired
-  @Qualifier("dev.mvc.admin.AdminProc")
-  private AdminProcInter adminProc;
   
   // 회원 참조
   
@@ -140,187 +134,7 @@ public class CategoryCont {
     return "category/read";  // /templates/category/read.html
   }
   
-  /**
-   * 수정
-   * @param session
-   * @param model
-   * @param cate_no 조회할 카테고리 번호
-   * @param word 검색어
-   * @param now_page 현재 페이지
-   * @return
-   */
-  @GetMapping(value="/update/{cate_no}")
-  public String update(HttpSession session,
-                              Model model,
-                              @PathVariable("cate_no") Integer cate_no,
-                              @RequestParam(name = "word", defaultValue = "") String word,
-                              @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
-    
-    if (this.adminProc.isAdmin(session)) { // 관리자 계정일 경우
-      // 카테고리 메뉴 목록
-      ArrayList<CategoryVOMenu> menu = this.categoryProc.menu();
-      model.addAttribute("menu", menu);
-      
-      CategoryVO categoryVO = this.categoryProc.read(cate_no);
-      model.addAttribute("categoryVO", categoryVO);
-      
-      // 페이징 목록
-      ArrayList<CategoryVO> list = this.categoryProc.list_search_paging(word, now_page, this.record_per_page);    
-      model.addAttribute("list", list);
-      
-      // 페이징 버튼 목록
-      int search_count = this.categoryProc.list_search_count(word);
-      String paging = this.categoryProc.pagingBox(now_page, 
-          word, "/category/list_search", search_count, this.record_per_page, this.page_per_block);
-      model.addAttribute("paging", paging);
-      model.addAttribute("now_page", now_page);
-      model.addAttribute("word", word);
-      
-      // 일련 변호 생성: 레코드 갯수 - ((현재 페이지수 -1) * 페이지당 레코드 수)
-      int no = search_count - ((now_page - 1) * this.record_per_page);
-      model.addAttribute("no", no);
-      
-      return "category/update"; // templates/category/update.html   
-    } else { // 관리자 아닐 경우
-      return ""; // 로그인 폼으로 이동
-    }    
-  }
   
-  /**
-   * 수정 처리
-   * @param session
-   * @param model
-   * @param categoryVO
-   * @param bindingResult
-   * @param word
-   * @param now_page
-   * @return
-   */
-  @PostMapping(value="/update") // /http://localhost:9093/category/update.html
-  public String update_proc(HttpSession session,
-                                    Model model,
-                                    @Valid CategoryVO categoryVO,
-                                    BindingResult bindingResult,
-                                    @RequestParam(name = "word", defaultValue = "") String word,
-                                    @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
-    
-    if (this.adminProc.isAdmin(session)) { // 관리자 계정일 경우
-      // 카테고리 메뉴 목록
-      ArrayList<CategoryVOMenu> menu = this.categoryProc.menu();
-      model.addAttribute("menu", menu);
-      
-      if (bindingResult.hasErrors()) {
-     // 페이징 목록
-        ArrayList<CategoryVO> list = this.categoryProc.list_search_paging(word, now_page, this.record_per_page);    
-        model.addAttribute("list", list);
-        
-        // 페이징 버튼 목록
-        int search_count = this.categoryProc.list_search_count(word);
-        String paging = this.categoryProc.pagingBox(now_page, 
-            word, "/category/list_search", search_count, this.record_per_page, this.page_per_block);
-        model.addAttribute("paging", paging);
-        model.addAttribute("now_page", now_page);
-        model.addAttribute("word", word);
-        
-        return "category/update"; // /templates/category/update.html
-      }
-      
-      int cnt = this.categoryProc.update(categoryVO);
-      model.addAttribute("cnt", cnt);
-      
-      if (cnt==1) { // 성공
-        // model.addAttribute("code",  "update_success");
-        return "redirect:/category/update/" + categoryVO.getCate_no() + "?word=" + Tool.encode(word) + "&now_page=" + now_page;
-      } else { // 실패
-        model.addAttribute("code",  "update_fail");
-        return "category/msg"; // /templates/category/msg.html
-      }
-    } else { // 관리자 아닐 경우
-      return ""; // 로그인 폼으로 이동
-    }
-  }
-  
-  /**
-   * 삭제
-   * @param session
-   * @param model
-   * @param cate_no
-   * @param word
-   * @param now_page
-   * @return
-   */
-  @GetMapping(value="/delete/{cate_no}")
-  public String delete(HttpSession session,
-                            Model model,
-                            @PathVariable("cate_no") Integer cate_no,
-                            @RequestParam(name="word", defaultValue = "") String word,
-                            @RequestParam(name="now_page", defaultValue = "1") int now_page) {
-    
-    if (this.adminProc.isAdmin(session)) { // 관리자 계정일 경우
-      // 카테고리 메뉴 목록
-      ArrayList<CategoryVOMenu> menu = this.categoryProc.menu();
-      model.addAttribute("menu", menu);
-      
-      CategoryVO categoryVO = this.categoryProc.read(cate_no);
-      model.addAttribute("categoryVO", categoryVO);
-      
-      // 페이징 목록
-      ArrayList<CategoryVO> list = this.categoryProc.list_search_paging(word, now_page, this.record_per_page);    
-      model.addAttribute("list", list);
-      
-      // 페이징 버튼 목록
-      int search_count = this.categoryProc.list_search_count(word);
-      String paging = this.categoryProc.pagingBox(now_page, 
-          word, "/category/list_search", search_count, this.record_per_page, this.page_per_block);
-      model.addAttribute("paging", paging);
-      model.addAttribute("now_page", now_page);
-      model.addAttribute("word", word);
-      
-      // 일련 변호 생성: 레코드 갯수 - ((현재 페이지수 -1) * 페이지당 레코드 수)
-      int no = search_count - ((now_page - 1) * this.record_per_page);
-      model.addAttribute("no", no);
-      
-      return "category/delete"; // /templates/category/delete.html
-    } else { // 관리자 아닐 경우
-      return ""; // 로그인 폼으로 이동
-    }
-  }
-  
-  /**
-   * 삭제 처리
-   * @param model
-   * @param cate_no 삭제할 카테고리
-   * @param word
-   * @param now_page
-   * @return
-   */
-  @PostMapping(value="/delete")
-  public String delete_proc(Model model,
-                                   Integer cate_no,
-                                  @RequestParam(name="word", defaultValue = "") String word,
-                                  @RequestParam(name="now_page", defaultValue = "1") int now_page) {
-    
-    int cnt = this.categoryProc.delete(cate_no);
-    model.addAttribute("cnt", cnt);
-    
-    // ----------------------------------------------------------------------------------------------------------
-    // 마지막 페이지에서 모든 레코드가 삭제되면 페이지수를 1 감소 시켜야함.
-    int search_cnt = this.categoryProc.list_search_count(word);
-    if (search_cnt % this.record_per_page == 0) {
-      now_page = now_page - 1;
-      if (now_page < 1) {
-        now_page = 1; // 최소 시작 페이지
-      }
-    }
-    // ----------------------------------------------------------------------------------------------------------
-    
-    if (cnt==1) { // 삭제 성공
-      return "redirect:/category/list_search?word=" + Tool.encode(word) + "&now_page=" + now_page;
-    } else { // 삭제 실패
-      model.addAttribute("code", "delete_fail");
-      return "category/msg";
-    }
-  }
   
   /**
    * 우선순위 높임(10->1)
@@ -392,53 +206,6 @@ public class CategoryCont {
     this.categoryProc.update_visible_n(cate_no);
     
     return "redirect:/category/list_search?word=" + Tool.encode(word);
-  }
-  
-  /**
-   * 등록 + 검색 목록
-   * @param session
-   * @param model
-   * @param categoryVO
-   * @param word
-   * @param now_page
-   * @return
-   */
-  @GetMapping(value="/list_search")
-  public String list_search(HttpSession session,
-                                Model model,
-                                CategoryVO categoryVO,
-                                String word,
-                                @RequestParam(name="now_page", defaultValue = "1") int now_page) {
-    
-    if (this.adminProc.isAdmin(session)) { // 관리자일 경우
-      // 검색어 공백 검사
-      word = Tool.checkNull(word).trim();
-      
-      // 카테고리 메뉴 목록
-      ArrayList<CategoryVOMenu> menu = this.categoryProc.menu();
-      model.addAttribute("menu", menu);
-      
-      
-      // 페이징 목록
-      ArrayList<CategoryVO> list = this.categoryProc.list_search_paging(word, now_page, this.record_per_page);    
-      model.addAttribute("list", list);
-      
-      // 페이징 버튼 목록
-      int search_count = this.categoryProc.list_search_count(word);
-      String paging = this.categoryProc.pagingBox(now_page, 
-          word, "/category/list_search", search_count, this.record_per_page, this.page_per_block);
-      model.addAttribute("paging", paging);
-      model.addAttribute("now_page", now_page);
-      model.addAttribute("word", word);
-      
-      // 일련 변호 생성: 레코드 갯수 - ((현재 페이지수 -1) * 페이지당 레코드 수)
-      int no = search_count - ((now_page - 1) * this.record_per_page);
-      model.addAttribute("no", no);
-      
-      return "category/list_search";
-    } else {
-      return ""; // 로그인 폼으로 이동
-    }
   }
   
   

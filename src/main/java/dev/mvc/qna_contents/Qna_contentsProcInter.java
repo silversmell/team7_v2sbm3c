@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public interface Qna_contentsProcInter {
   
   /**
-   * 질문게시글 등록1
+   * 질문게시글 등록
    * insert id="qna_create" parameterType="dev.mvc.qna_contents"
    * @param qna_contentsVO
    * @return
@@ -19,5 +19,11 @@ public interface Qna_contentsProcInter {
    */
   public ArrayList<Qna_contentsVO> list_all();
 
+  /**
+   * 특정 질문게시글 삭제
+   * @param qcon_no
+   * @return
+   */
+  public int delete(int qcon_no);
   
 }
