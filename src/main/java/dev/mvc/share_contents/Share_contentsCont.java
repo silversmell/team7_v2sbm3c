@@ -92,6 +92,7 @@ public class Share_contentsCont {
 
 	@GetMapping("/update_text")
 	public String update_text_form(Model model, int scon_no) {
+		
 		Share_contentsVO scontentsVO = this.sconProc.read(scon_no);
 		model.addAttribute("scontentsVO", scontentsVO);
 		
@@ -99,6 +100,7 @@ public class Share_contentsCont {
 		for(int i = 0;i<url_list.size();i++) {
 			model.addAttribute("url_list"+i,url_list.get(i).getUrl_link());
 		}
+		
 
 		return "scontents/update_text";
 
@@ -124,6 +126,8 @@ public class Share_contentsCont {
 			this.sconProc.update_url(map);
 		}
 		
+
+		
 		return "redirect:/scontents/list_by_search";
 
 	}
@@ -137,10 +141,12 @@ public class Share_contentsCont {
 
 	@PostMapping("/create")
 	public String create(Model model, Share_contentsVO scontentsVO, String url_link, RedirectAttributes ra) {
-
+		
+		String[] url_sub_link = {"1","1","1","1","1"};
+		
 		int cnt = this.sconProc.create(scontentsVO);
 		ArrayList<Share_contentsVO> list1 = this.sconProc.list_all();
-
+		System.out.println("create post 생성");
 		Share_contentsVO scontentsVO1 = list1.get(list1.size() - 1); //바로 등록한 Share_contentsVO 가져오기 ->scon_no를 사용하기 위해
 		int scon_no = scontentsVO1.getScon_no();
 //		System.out.println("scon_no->" + scon_no);
@@ -148,14 +154,31 @@ public class Share_contentsCont {
 
 		HashMap<String, Object> map = new HashMap<>();
 		String[] list = url_link.split(",");
-		
+		System.out.println("list.length: "+ list.length);
+//		for(int i =0;i<list.length;i++) {
+//			System.out.println("list[i]: " + list[i]);
+//		}
 		for (int i = 0; i < list.length; i++) {
+			//System.out.println("list[i]=>"+list[i]);
+//			if(list[i]==null || list[i].equals(" ")) {
+//				url_sub_link[i]=url_sub_link[i].trim();
+//				map.put("url_link", url_sub_link[i]);
+//				map.put("scon_no", scon_no);
+//				this.sconProc.create_url(map);
+//			}
 			list[i] = list[i].trim();
 			map.put("url_link", list[i]);
 			map.put("scon_no", scon_no);
 			this.sconProc.create_url(map);
-			//System.out.println(list[i]);
+	}
+		if(list.length<url_sub_link.length) {
+			for(int i = list.length;i<url_sub_link.length;i++) {
+				map.put("url_link", url_sub_link[i]);
+				map.put("scon_no",scon_no);
+				this.sconProc.create_url(map);
+			}
 		}
+		
 
 		return "redirect:/scontents/list_by_search";
 	}
