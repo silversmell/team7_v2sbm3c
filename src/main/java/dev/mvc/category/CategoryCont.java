@@ -185,6 +185,110 @@ public class CategoryCont {
     return "category/cate_read"; // /templates/category/read.html
   }
   
+  /**
+   * 카테고리 수정 폼
+   * @param session
+   * @param model
+   * @param cate_no
+   * @param word
+   * @param now_page
+   * @return
+   */
+  @GetMapping(value="/cate_update/{cate_no}")
+  public String cate_update(HttpSession session,
+                               Model model,
+                               @PathVariable("cate_no") Integer cate_no,
+                               @RequestParam(name="word", defaultValue = "") String word,
+                               @RequestParam(name="now_page", defaultValue = "1") int now_page) {
+    
+    // 카테고리 전체 메뉴
+    ArrayList<CategoryVOMenu> menu = new ArrayList<CategoryVOMenu>();
+    model.addAttribute("menu", menu);
+    
+    // 카테고리 가져오기
+    CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
+    model.addAttribute("categoryVO", categoryVO);
+    
+    // 페이징 목록
+    ArrayList<CategoryVO> list = this.categoryProc.cate_list_search_paging(word, now_page, this.record_per_page);
+    model.addAttribute("list", list);
+    
+    // 페이징 버튼 목록
+    int search_count = this.categoryProc.cate_list_search_count(word);
+    
+    String paging = this.categoryProc.pagingBox(now_page, 
+                                                            word, 
+                                                            "category/cate_list_search", 
+                                                            search_count, 
+                                                            this.record_per_page, 
+                                                            this.page_per_block);
+
+    model.addAttribute("paging", paging);
+    model.addAttribute("now_page", now_page);
+    
+    model.addAttribute("word", word);
+    
+    // 일련번호 생성: 레코드 갯수 - ((현재 페이지 수 - 1) * 페이지당 레코드 수)
+    int no = search_count - ((now_page -1) * this.record_per_page);
+    model.addAttribute("no", no);
+    
+    return "category/cate_update"; // /templates/category/cate_update.html
+  }
+  
+  /**
+   * 수정 처리
+   * @param session
+   * @param model
+   * @param bindingResult
+   * @param categoryVO
+   * @param cate_no
+   * @param word
+   * @param now_page
+   * @return
+   */
+  @PostMapping(value="/cate_update")
+  public String cate_update(HttpSession session,
+                                    Model model,
+                                    @Valid CategoryVO categoryVO, BindingResult bindingResult,
+                                    @RequestParam(name="word", defaultValue = "") String word,
+                                    @RequestParam(name="now_page", defaultValue = "1") int now_page) {
+    
+    // 카테고리 전체 메뉴
+    ArrayList<CategoryVOMenu> menu = new ArrayList<CategoryVOMenu>();
+    model.addAttribute("menu", menu);
+    
+    if (bindingResult.hasErrors()) {
+      // 페이징 목록
+      ArrayList<CategoryVO> list = this.categoryProc.cate_list_search_paging(word, now_page, this.record_per_page);
+      model.addAttribute("list", list);
+      
+      // 페이징 버튼 목록
+      int search_count = this.categoryProc.cate_list_search_count(word);
+      
+      String paging = this.categoryProc.pagingBox(now_page, 
+                                                              word, 
+                                                              "category/cate_list_search", 
+                                                              search_count, 
+                                                              this.record_per_page, 
+                                                              this.page_per_block);
+
+      model.addAttribute("paging", paging);
+      model.addAttribute("now_page", now_page);
+      
+      return "category/cate_update"; // /templates/category/cate_update.html
+    }
+    
+    int cnt = this.categoryProc.cate_update(categoryVO);
+    model.addAttribute("cnt", cnt);
+    
+    if (cnt == 1) { // 수정 성공
+      return "redirect:/category/cate_update/" + categoryVO.getCate_no() + "?word=" + Tool.encode(word) + "&now_page=" + now_page;
+    } else { // 수정 실패
+      model.addAttribute("code", "update_fail");
+      return "category/msg"; // /templates/category/msg.html
+    }  
+  }
+  
   
   
 }

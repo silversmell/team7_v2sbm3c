@@ -23,7 +23,7 @@
                   
                  <li class="nav-item dropdown">
                       <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
-                           role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="카테고리">                                                            
+                           role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="관리자">                                                            
                       </a>
                       <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <li class="nav-item"><a class="nav-link" href="/category/cate_list_search">카테고리 전체 목록</a></li>
@@ -37,7 +37,7 @@
                            role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="회원">                                                            
                       </a>
                       <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <li class="nav-item"><a class="nav-link" href="/member/create">회원 가입</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/account/create">회원 가입</a></li>
                         <li class="nav-item" th:if="${session.memberno != null}">
                             <a class="nav-link" th:href="@{|/member/read?memberno=${session.memberno}|}">회원 정보 조회</a>
                         </li>
