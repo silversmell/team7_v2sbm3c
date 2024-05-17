@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import dev.mvc.share_contents.Contents;
+import dev.mvc.share_contentsdto.Contents_tagVO;
 import dev.mvc.share_contentsdto.Contents_urlVO;
 import dev.mvc.share_contentsdto.Share_commentsVO;
 import dev.mvc.share_contentsdto.Share_contentsVO;
@@ -252,5 +253,17 @@ public class Share_contentsProc implements Share_contentsProcInter {
     int cnt = this.scontentsDAO.delete_comments(scon_no);
     return cnt;
   }
+
+@Override
+public int insert_tag(HashMap<String,Object> map) {
+	int cnt = this.scontentsDAO.insert_tag(map);
+	return cnt;
+}
+
+@Override
+public ArrayList read_contents_tag(int scon_no) {
+	ArrayList<Contents_tagVO> list = this.scontentsDAO.read_contents_tag(scon_no);
+	return list;
+}
 
 }

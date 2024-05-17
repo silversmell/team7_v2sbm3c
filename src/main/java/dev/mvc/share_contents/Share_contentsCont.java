@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import dev.mvc.share_contents.Contents;
+import dev.mvc.share_contentsdto.Contents_tagVO;
 import dev.mvc.share_contentsdto.Contents_urlVO;
 import dev.mvc.share_contentsdto.Share_commentsVO;
 import dev.mvc.share_contentsdto.Share_contentsVO;
@@ -45,30 +46,32 @@ public class Share_contentsCont {
 	@GetMapping("/read")
 	public String read(Model model, int scon_no) {
 		int cnt = this.sconProc.update_view(scon_no);
-		// if(cnt==1) {
-		// System.out.println("조회수 +1");
-		// }
-		//System.out.println("read create");
+		
 		model.addAttribute("scon_views", cnt);
-		// System.out.println("read 생성");
+
 		Share_contentsVO scontentsVO = this.sconProc.read(scon_no);
 		model.addAttribute("scontentsVO", scontentsVO);
+		
+		ArrayList<Contents_tagVO> list1 = this.sconProc.read_contents_tag(scon_no); //hashtag vo 들어오면 변경할 것
+		int[] list2 = new int[list1.size()];
+		for(int i = 0;i<list1.size();i++) {
+			list2[i]=list1.get(i).getTag_no();
+		}
+		model.addAttribute("list1",list2);
+		
 		
 		int cnt1 = this.sconProc.comment_search(scon_no);
 		model.addAttribute("cnt", cnt1);
 		
 		ArrayList<Share_commentsVO> list = this.sconProc.read_comment(scon_no);
-//		for(int i =0;i<list.size();i++) {
-//			System.out.println(list.get(i).getacc_no());
-//		}
+
 		model.addAttribute("list", list);
 		model.addAttribute("acc_no",1);
-		//ArrayList<Contents_urlVO> url_list1 = this.sconProc.url_read(scon_no);
+
 		ArrayList<Contents_urlVO> url_list = this.sconProc.only_url(scon_no);
 		
-		//System.out.println("url_list create");
+
 		for(int i = 0;i<url_list.size();i++) {
-			//System.out.println(url_list.get(i).getUrl_link());
 			model.addAttribute("url_list"+i,url_list.get(i).getUrl_link());
 		}
 
@@ -129,7 +132,6 @@ public class Share_contentsCont {
 
 		
 		return "redirect:/scontents/list_by_search";
-
 	}
 
 	@GetMapping("/create")
@@ -140,17 +142,29 @@ public class Share_contentsCont {
 	}
 
 	@PostMapping("/create")
-	public String create(Model model, Share_contentsVO scontentsVO, String url_link, RedirectAttributes ra) {
+	public String create(Model model, Share_contentsVO scontentsVO, String url_link, RedirectAttributes ra,String tag_no) {
 		
+		//System.out.println(tag_no);
+
 		String[] url_sub_link = {"1","1","1","1","1"};
 		
 		int cnt = this.sconProc.create(scontentsVO);
 		ArrayList<Share_contentsVO> list1 = this.sconProc.list_all();
-		System.out.println("create post 생성");
+		//System.out.println("create post 생성");
 		Share_contentsVO scontentsVO1 = list1.get(list1.size() - 1); //바로 등록한 Share_contentsVO 가져오기 ->scon_no를 사용하기 위해
 		int scon_no = scontentsVO1.getScon_no();
 //		System.out.println("scon_no->" + scon_no);
 //		System.out.println("url_link -> " + url_link);
+		HashMap<String, Object> map1 = new HashMap<>();
+		String[] tag = tag_no.split(",");
+		for(int i = 0;i<tag.length;i++) {
+			map1.put("tag_no",tag[i]);
+			map1.put("scon_no", scon_no);
+			int cnt1 = this.sconProc.insert_tag(map1);
+			if(cnt1 == 1) {
+				System.out.println("해시태그 등록 성공: "+tag[i]);
+			}
+		}
 
 		HashMap<String, Object> map = new HashMap<>();
 		String[] list = url_link.split(",");

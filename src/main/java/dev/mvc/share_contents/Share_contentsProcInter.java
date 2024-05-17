@@ -3,6 +3,7 @@ package dev.mvc.share_contents;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import dev.mvc.share_contentsdto.Contents_tagVO;
 import dev.mvc.share_contentsdto.Contents_urlVO;
 import dev.mvc.share_contentsdto.Share_commentsVO;
 import dev.mvc.share_contentsdto.Share_contentsVO;
@@ -156,6 +157,20 @@ public interface Share_contentsProcInter {
     * @return int
     */
    public int delete_comments(int scon_no);
+   
+	 /**
+	  * 해당 게시글의 해시태그 삽입
+	  * @param contents_tag
+	  * @return int
+	  */
+   public int insert_tag(HashMap<String,Object>map);
+   
+	 /**
+	  * 해당 게시글의 태그 조회
+	  * @param scon_no
+	  * @return ArrayList
+	  */
+	 public ArrayList read_contents_tag(int scon_no);
 
 
 

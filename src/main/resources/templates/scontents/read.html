@@ -117,6 +117,13 @@
           </div>
 					-->
 					
+					해시태그:  
+   		<tr th:each="item, status : ${list1}">
+        <td class='td_left'>
+            <span th:text="${item}" class="bold;"></span>
+        </td>
+    </tr>
+					<br>
           <span style="font-size: 1.5em; font-weight: bold;" th:text="${scontentsVO.scon_title}"></span>
           <span style="font-size: 1em;" th:text="${scontentsVO.scon_date}"></span><br><br>
           <span style="font-size: 1em;" th:text="|조회수: ${scon_views}|"></span><br><br>

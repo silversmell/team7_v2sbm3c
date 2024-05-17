@@ -185,6 +185,17 @@
      where scon_no=#{scon_no}
 	</delete>
 	
+	<insert id = "insert_tag" parameterType="HashMap" >
+		INSERT INTO contents_tag(contents_tag_no,scon_no,tag_no)
+		VALUES (contents_tag_SEQ.nextval,#{scon_no},#{tag_no})
+	</insert>
+	
+		 <select id = "read_contents_tag" parameterType="int" resultType="dev.mvc.share_contentsdto.Contents_tagVO" >
+		select tag_no
+		from contents_tag
+		where scon_no=#{scon_no}
+		</select>
+
 </mapper>
 
 
