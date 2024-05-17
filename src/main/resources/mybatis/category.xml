@@ -13,14 +13,14 @@
   <select id="cate_list_all" resultType="dev.mvc.category.CategoryVO">
     SELECT cate_no, cate_name, cate_cnt, cate_seqno, cate_visible
     FROM category
-    WHERE cate_no = #{cate_no}
+    ORDER BY cate_no ASC
   </select>
 
   <!-- 카테고리 조회 -->
   <select id="cate_read" resultType="dev.mvc.category.CategoryVO" parameterType="Integer">
     SELECT cate_no, cate_name, cate_cnt, cate_seqno, cate_visible
     FROM category
-    ORDER BY cate_no ASC
+    WHERE cate_no = #{cate_no}
   </select>
   
   <!-- 카테고리 수정, return: 수정한 레코드 갯수, parameterType: 수정할 레코드 정보 -->
@@ -67,11 +67,11 @@
   <!-- 회원/비회원에게 공개할 목록 -->
   <select id="list_all_cate_name_y" resultType="dev.mvc.category.CategoryVO">
     SELECT cate_no, cate_name, cate_seqno, cate_visible
-    FROM categpry 
+    FROM category 
     WHERE cate_name IN (
         SELECT DISTINCT cate_name
         FROM category
-    ) AND visible='Y'
+    ) AND cate_visible='Y'
     ORDER BY cate_seqno ASC
   </select>
 
@@ -115,7 +115,7 @@
       WHERE UPPER(cate_name) LIKE '%' || UPPER(#{word}) || '%'
     </if>
         
-    ORDER BY cat_eseqno ASC
+    ORDER BY cate_seqno ASC
   </select>
                 
 </mapper>

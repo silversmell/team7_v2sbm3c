@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import dev.mvc.tool.Tool;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 
@@ -69,7 +71,7 @@ public class CategoryCont {
       model.addAttribute("no", no);
       
       String paging = this.categoryProc.pagingBox(now_page, 
-                                                              word, 
+                                                              word,
                                                               "category/cate_list_search", 
                                                               search_count, 
                                                               this.record_per_page, 
@@ -94,7 +96,48 @@ public class CategoryCont {
   }
   
   /**
-   * 조회 _ 목록 폼
+   * 등록 + 검색 폼
+   * http://localhost:9093/category/list_search?word=${word}  ← GET Form
+   * @param session
+   * @param model
+   * @param categoeyVO
+   * @param word
+   * @param now_page
+   * @return
+   */
+  @GetMapping(value="/cate_list_search")
+  public String cate_list_search(HttpSession session, Model model, CategoryVO categoeyVO, String word, 
+                                     @RequestParam(name="now_page", defaultValue="1") int now_page) {
+    
+      word = Tool.checkNull(word).trim();
+      System.out.println("--> word: " + word);
+      
+      // 카테고리 메뉴
+      ArrayList<CategoryVOMenu> menu = this.categoryProc.menu();
+      model.addAttribute("menu", menu);
+      
+      // 페이징 목록
+      ArrayList<CategoryVO> list = this.categoryProc.cate_list_search_paging(word, now_page, this.record_per_page);    
+      model.addAttribute("list", list);
+      
+      // 페이징 버튼 목록
+      int search_count = this.categoryProc.cate_list_search_count(word);
+      String paging = this.categoryProc.pagingBox(now_page, 
+          word, "/category/cate_list_search", search_count, this.record_per_page, this.page_per_block);
+      model.addAttribute("paging", paging);
+      model.addAttribute("now_page", now_page);
+      
+      model.addAttribute("word", word);
+      
+      // 일련 변호 생성: 레코드 갯수 - ((현재 페이지수 -1) * 페이지당 레코드 수)
+      int no = search_count - ((now_page - 1) * this.record_per_page);
+      model.addAttribute("no", no);
+      
+      return "category/cate_list_search"; // /category/cate_list_search.html
+  }  
+  
+  /**
+   * 조회 + 목록 폼
    * http://localhost:9093/category/cate_read/1
    * @param model
    * @param cate_no
@@ -141,5 +184,7 @@ public class CategoryCont {
     
     return "category/cate_read"; // /templates/category/read.html
   }
+  
+  
   
 }
