@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+
+<div layout:fragment="content">
+
+	<script>
+		/* 아이디(이메일) 중복 확인 */
+		function checkID() {
+			let acc_id = document.getElementById("acc_id");
+			let acc_id_msg = document.getElementById("acc_id_msg");
+
+			if (acc_id.value.trim().length == 0) {
+				acc_id_msg.innerHTML = "아이디를 입력하세요.";
+				acc_id_msg.classList.add("span_warning");
+				acc_id.focus();
+
+				return false;	// 회원가입 진행 중지
+			} else {
+				acc_id_msg.classList.remove("span_warning");
+
+				/* */
+				/* fetch 시작 */
+				/* */
+				let url = "./checkID?acc_id=" + acc_id.value;
+
+				fetch(url, {
+					method: "GET",
+					// headers: {
+					//   'Content-Type': 'application/json' // JSON 형식으로 데이터 전송을 알림
+					// },
+					// body: JSON.stringify(dataToSend) // JSON 데이터를 문자열로 변환하여 요청 본문에 포함      
+				})
+					.then(response => response.json())
+					.then(rdata => {
+						if (rdata.cnt > 0) {	// 존재하는 아이디
+							acc_id_msg.innerHTML = "이미 사용 중인 이메일 입니다.";
+							acc_id_msg.classList.add("span_warning");
+							acc_id.focus();
+						} else {	// 존재하지 않은 아이디
+							acc_id_msg.innerHTML = "사용 가능한 이메일 입니다.";
+							acc_id_msg.classList.add("span_info");
+							document.getElementById("acc_pw").focus();
+						}
+					})
+					.catch(error => {	// 서버 다운 등 통신 에러
+						console.error("ERROR:", error);
+					});
+
+				/* 처리 중 출력 */
+				acc_id_msg.innerHTML = "확인 중입니다...";
+
+				/* */
+				/* fetch 종료 */
+				/* */
+
+			}
+
+		}
+
+		/* 회원 가입 처리 */
+		function send() {
+			let acc_id = document.getElementById("acc_id");
+			let acc_id_msg = document.getElementById("acc_id_msg");
+
+			// 아이디 미입력
+			if (acc_id.value.trim().length == 0) {
+				acc_id_msg.innerHTML = "아이디를 입력하세요.";
+				acc_id_msg.classList.add("span_warning");
+				acc_id.focus();
+
+				return false; // 회원가입 진행 중지
+			}
+
+			// 패스워드 확인
+			let acc_pw = document.getElementById("acc_pw");
+			let check_pw = document.getElementById("check_pw");
+			let check_pw_msg = document.getElementById("check_pw_msg");
+
+			if (acc_pw.value != check_pw.value) {
+				check_pw_msg.innerHTML = "입력된 패스워드와 일치하지 않습니다.";
+				check_pw_msg.classList.add("span_warning");
+				acc_pw.focus();
+
+				return false;	// 회원가입 진행 중지
+			}
+
+			// 이름(닉네임) 확인
+			let acc_name = document.getElementById("acc_name");
+			let acc_name_msg = document.getElementById("acc_name_msg");
+
+			if (acc_name.value.length == 0) {
+				acc_name_msg.innerHTML = "이름(닉네임)을 입력하세요.";
+				acc_name_msg.classList.add("span_warning");
+				acc_name.focus();
+
+				return false;	// 회원가입 진행 중지 
+			}
+
+			document.getElementById("create_frm").submit();
+		}
+
+		window.onload = () => {
+
+		}
+	</script>
+
+	<div class="title_line">회원가입</div>
+
+	<!-- 메뉴 -->
+	<aside class="aside_right">
+		<a href="javascript:location.reload();">새로고침</a>
+		<span class='menu_divide'>│</span>
+		<a href='./create'>회원 가입</a>
+		<span class='menu_divide'>│</span>
+		<a href='./list'>목록</a> <!-- 05.16 구현 미완 -->
+	</aside>
+
+	<div class="menu_line"></div>
+
+	<div style="width: 60%; margin: 0px auto">
+		<!-- 회원가입 폼 -->
+		<form name="create_frm" id="create_frm" th:object="${accountVO}" method="post" action="/account/create">
+
+			<!-- 아이디(이메일) -->
+			<div>
+				<label for="acc_id">아이디(이메일)</label>
+				<input type="text" name="acc_id" id="acc_id" value="create@test.com" autofocus="autofocus"
+					class="form-control fom-control-sm" style="width: 50%;" th:field="*{acc_id}">
+				<button type="button" id="btn_checkID" onclick="checkID()" class="btn btn-primary btn-sm"
+					style="margin-top: 4px;">중복확인</button>
+				<span id="acc_id_msg"></span>
+			</div>
+
+			<!-- 패스워드 -->
+			<div class="form-group">
+				<label for="acc_pw">패스워드</label>
+				<input type="password" name="acc_pw" id="acc_pw" value="1234" required="required" placeholder="패스워드"
+					class="form-control fom-control-sm" style="width: 30%;">
+			</div>
+
+			<!-- 패스워드 확인 -->
+			<div class="form-group">
+				<label for="check_pw">패스워드</label>
+				<input type="password" name="check_pw" id="check_pw" value="1234" required="required"
+					placeholder="패스워드 확" class="form-control fom-control-sm" style="width: 30%;">
+				<span id="check_pw_msg"></span>
+			</div>
+
+
+			<!-- 이름(닉네임) -->
+			<div class="form-group">
+				<label for="acc_name">이름(닉네임)</label>
+				<input type="text" name="acc_name" id="acc_name" value="테스트" required="required" placeholder="이름(닉네임)"
+					class="form-control fom-control-sm" style="width: 30%;">
+				<span id="acc_name_msg"></span>
+			</div>
+
+		</form>
+
+	</div>
+
+
+
+
+	<!-- 버튼 -->
+	<div class="content_body_bottom">
+		<button type="button" onclick="send();" class="btn btn-secondary btn-sm">가입</button>
+		<button type="button" onclick="history.back();" class="btn btn-secondary btn-sm">취소</button>
+	</div>
+
+
+
+</div>
+
+</html>

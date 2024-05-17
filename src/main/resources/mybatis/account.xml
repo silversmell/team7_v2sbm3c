@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- SB가 자동으로 구현하여 연동하는 interface -->
+<mapper namespace="dev.mvc.account.AccountDAOInter"> <!-- SB가 자동으로 구현하여 연동하는
+	interface -->
+
+	<!-- 아이디 중복 검사 -->
+	<select id="checkID" resultType="int" parameterType="String">
+		SELECT COUNT(acc_id) AS cnt
+		FROM account
+		WHERE acc_id=#{acc_id}
+	</select>
+
+	<!-- 회원 가입 -->
+	<insert id="create" parameterType="dev.mvc.account.AccountVO">
+		INSERT INTO ACCOUNT(acc_no, acc_id, acc_pw, acc_name, acc_date, acc_grade)
+		VALUES(ACCOUNT_SEQ.nextval, #{acc_id}, #{acc_pw}, #{acc_name}, sysdate, 15)
+	</insert>
+
+
+</mapper>
