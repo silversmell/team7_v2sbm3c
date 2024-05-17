@@ -13,12 +13,22 @@
           <!-- 메뉴 시작 -->
           <div class="collapse navbar-collapse" id="navbarNavDropdown">
               <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                  <li class="nav-item dropdown" th:each="cateVOMenu:${menu}">
+              
+                <li class="nav-item dropdown" th:each="categoryVOMenu: ${menu}">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="${categoryVOMenu.cate_name}"></a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                          <a class="dropdown-item" th:href="@{|/contents/list_by_cate_no?cate_no=${categoryVO.cate_no}|}" th:text="${categoryVO.cate_name}"></a>
+                     </ul>
+                </li>
+                  
+                 <li class="nav-item dropdown">
                       <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
-                           role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="${cateVOMenu.name}">                                                            
+                           role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="카테고리">                                                            
                       </a>
                       <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                          <li th:each="cateVO:${cateVOMenu.list_namesub}"><a class="dropdown-item" th:href="@{|/contents/list_by_cateno?cateno=${cateVO.cateno}|}" th:text="${cateVO.namesub}"></a></li>
+                        <li class="nav-item"><a class="nav-link" href="/category/cate_list_search">카테고리 전체 목록</a></li>
+                       <li class="nav-item">
+                      </li>
                       </ul>
                   </li>
                   
@@ -37,25 +47,15 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/scontents/list_all">공유 컨텐츠</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">질문 컨텐츠</a>
+                        </li>
                         <li class="nav-item"><a class="nav-link" href="#">아이디 찾기</a></li>         
                         <li class="nav-item"><a class="nav-link" href="#">비밀번호 찾기</a></li>
                         <li class="nav-item" th:if="${session.memberno!=null}"><a class="nav-link" href="#">로그인 내역</a></li>
                       </ul>
                   </li>
-                  
-                  <li class="nav-item dropdown" th:if="${session.grade=='admin'}">
-                      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
-                           role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="관리자">                                                            
-                      </a>
-                      <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <li class="nav-item"><a class="nav-link" href="/cate/list_search?now_page=1">카테고리 전체 목록</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/member/list">회원 목록</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/contents/list_all">전체 글 목록</a></li>
-                       <li class="nav-item">
-                      <span th:if="${session.id=='admin'}"><a class="nav-link" href="/member/list_owner">등급 변경</a></span>
-                  		</li>
-                      </ul>
-                  </li>
+            
 
                   <li class="nav-item">
                       <span th:if="${session.memberno == null}"><a class="nav-link" href="/member/login" th:text="@{|로그인|}"></a></span>
@@ -69,4 +69,3 @@
   </nav>
 
 </div>
-

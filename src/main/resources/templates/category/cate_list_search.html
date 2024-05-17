@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<title>http://localhost:9093/category/list_search?now_page=1</title>
+
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
 <div layout:fragment="content">
   
@@ -17,16 +17,16 @@
   <div class="menu_line"></div>
   
   <div style="display: flex; justify-content: center;">
-    <form name="frm" th:object="${categoryVO}" method="post" action="/category/create">
-      <div style="margin-right: 5px; width: 30%; float: left;">
+    <form name="frm" th:object="${categoryVO}" method="post" action="/category/cate_create">
+      <div style="margin-right: 5px; width: 38%; float: left;">
         <input type="text" name="cate_name" value="" 
-               class="form-control fom-control-sm" style="width: 100%;" th:field="*{cate_name}" placeholder="이름">
+               class="form-control fom-control-sm" style="width: 100%;" th:field="*{cate_name}" placeholder="카테고리명">
         <div th:if="${#fields.hasErrors('cate_name')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
           <div th:each="err : ${#lists.sort(#fields.errors('cate_name'))}" th:text="${err}"></div>
         </div>             
       </div>
 
-      <div style="margin-right: 5px; width: 25%; float: left;">
+      <div style="margin-right: 5px; width: 38%; float: left;">
         <input type="text" name="cate_seqno" value="" 
                class="form-control fom-control-sm" style="width: 100%;" th:field="*{cate_seqno}" placeholder="출력순서">
         <div th:if="${#fields.hasErrors('cate_seqno')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
@@ -34,9 +34,9 @@
         </div>             
       </div>
       
-      <div style="margin-top: 3px; width: 12%; float: left;">
+      <div style="margin-top: 3px; width: 18%; float: left;">
         <button type="submit" class="btn btn-secondary btn-sm">등록</button>
-        <button type="button" onclick="location.href='/category/list_search'" class="btn btn-secondary btn-sm">취소</button>
+        <button type="button" onclick="location.href='/category/cate_list_search'" class="btn btn-secondary btn-sm">취소</button>
       </div>
     
     </form> 
