@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+  <div class="title_line">카테고리</div>
+  <aside class="aside_right">
+    <a href="javascript: location.reload();">새로 고침</a>
+  </aside>
+  <div class="menu_line"></div>
+
+  <div style="width: 80%; margin: 0px auto;">
+    <form name="frm" th:object="${categoryVO}" method="post" action="/category/create">
+      <div style="margin-right: 5px; width: 30%; float: left;">
+      
+        <input type="text" name="cate_name" value="" autofocus="autofocus"
+               class="form-control fom-control-sm" style="width: 100%;" th:field="*{cate_name}" placeholder="카테고리 입력하세요.">
+        <div th:if="${#fields.hasErrors('cate_name')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+          <div th:each="err : ${#lists.sort(#fields.errors('cate_name'))}" th:text="${err}"></div>
+        </div>  
+      </div>
+      
+      <div style="margin-right: 5px; width: 25%; float: left;">
+        <input type="text" name="seqno" value="" 
+               class="form-control fom-control-sm" style="width: 100%;" th:field="*{cate_seqno}" placeholder="출력순서를 입력하세요.">
+        <div th:if="${#fields.hasErrors('cate_seqno')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+          <div th:each="err : ${#lists.sort(#fields.errors('cate_seqno'))}" th:text="${err}"></div>
+        </div>             
+      </div>
+      
+      <div style="width: 12%; float: left; margin-top: 3px; margin-left: 5px;">
+        <button type="submit" class="btn btn-secondary btn-sm">등록</button>
+        <button type="button" onclick="location.href='/category/list_all'" class="btn btn-secondary btn-sm">취소</button>
+      </div>
+    </form>  
+  </div>
+    
+  <!-- /category/list_all_component.html 파일의 list_all_fragment import -->
+  <div th:replace="~{category/list_all_component::list_all_fragment}"></div>
+  
+</div>
+</html>
+
+
+
+
+
+
+
