@@ -194,6 +194,12 @@
       SELECT tag_no,tag_code,tag_name 
       FROM hashtag
     </select>
+    
+    <select id="select_hashname" resultType="dev.mvc.recommend.HashtagVO">
+      select tag_name
+      from hashtag
+      where tag_no=#{tag_no}
+    </select>
     <!--
     <update id ="up_priority" parameterType="int" >
     update share_contents

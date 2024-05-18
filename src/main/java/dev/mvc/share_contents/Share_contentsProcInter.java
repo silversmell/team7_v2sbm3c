@@ -3,6 +3,7 @@ package dev.mvc.share_contents;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import dev.mvc.recommend.HashtagVO;
 import dev.mvc.share_contentsdto.Contents_tagVO;
 import dev.mvc.share_contentsdto.Contents_urlVO;
 import dev.mvc.share_contentsdto.Share_commentsVO;
@@ -175,10 +176,17 @@ public interface Share_contentsProcInter {
 	 public int attach_create(Share_imageVO share_imageVO);
 	 
    /**
-    * hashtag 이름 조회
+    * 모든 hashtag =조회
     * @return ArrayList
     */
    public ArrayList select_hashtag();
+   
+   /**
+    * 
+    * @param tag_no에 따른 hashtag 조회
+    * @return
+    */
+   public HashtagVO select_hashname(int tag_no);
 	 
 //	 /**
 //	  * 우선순위 올림

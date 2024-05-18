@@ -279,6 +279,12 @@ public class Share_contentsProc implements Share_contentsProcInter {
     return list;
   }
 
+  @Override
+  public HashtagVO select_hashname(int tag_no) {
+    HashtagVO hashtagVO = this.scontentsDAO.select_hashname(tag_no);
+    return hashtagVO;
+  }
+
 //@Override
 //public int up_priority(int scon_no) {
 //	int cnt = this.scontentsDAO.up_priority(scon_no);

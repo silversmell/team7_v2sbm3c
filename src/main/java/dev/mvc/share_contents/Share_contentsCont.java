@@ -58,11 +58,12 @@ public class Share_contentsCont {
 		model.addAttribute("scontentsVO", scontentsVO);
 		
 		ArrayList<Contents_tagVO> list1 = this.sconProc.read_contents_tag(scon_no); //hashtag vo 들어오면 변경할 것
-		int[] list2 = new int[list1.size()];
+		ArrayList<String> list2 = new ArrayList<>();
 		for(int i = 0;i<list1.size();i++) {
-			list2[i]=list1.get(i).getTag_no();
+			HashtagVO list3=this.sconProc.select_hashname(list1.get(i).getTag_no());
+			list2.add(list3.getTag_name());
 		}
-		model.addAttribute("list1",list2);
+		model.addAttribute("list2",list2);
 		
 		int cnt1 = this.sconProc.comment_search(scon_no);
 		model.addAttribute("cnt", cnt1);
@@ -136,12 +137,18 @@ public class Share_contentsCont {
 	@GetMapping("/create")
 	public String create_form(Model model, Share_contentsVO scontentsVO) {
 		model.addAttribute("scontentsVO", scontentsVO);
+		
+		ArrayList<HashtagVO> list = this.sconProc.select_hashtag();
+		System.out.println("-> tag_no :" +list.get(0).getTag_no());
+		model.addAttribute("list",list);
 
 		return "scontents/create";
 	}
 
 	@PostMapping("/create")
-	public String create(Model model, Share_contentsVO scontentsVO, String url_link, RedirectAttributes ra,String tag_no, List<MultipartFile> fnamesMF) {    
+	public String create(Model model, Share_contentsVO scontentsVO, String url_link, RedirectAttributes ra, List<MultipartFile> fnamesMF,
+	                          @RequestParam("tag_no") int[] tag_no) {   
+	  
 		String[] url_sub_link = {"1","1","1","1","1"};
 	      System.out.println(fnamesMF);
 		int cnt = this.sconProc.create(scontentsVO);
@@ -189,14 +196,11 @@ public class Share_contentsCont {
 	      
 
 		HashMap<String, Object> map1 = new HashMap<>();
-		String[] tag = tag_no.split(",");
-		for(int i = 0;i<tag.length;i++) {
-			map1.put("tag_no",tag[i]);
-			map1.put("scon_no", scon_no);
-			int cnt1 = this.sconProc.insert_tag(map1);
-			if(cnt1 == 1) {
-				//System.out.println("해시태그 등록 성공: "+tag[i]);
-			}
+		for(int i = 0;i<tag_no.length;i++) {
+		  map1.put("tag_no",tag_no[i]);
+      map1.put("scon_no", scon_no);
+      int cnt1 = this.sconProc.insert_tag(map1);
+      //System.out.println("해시태그 등록 성공: "+tag_no[i]);
 		}
 
 		HashMap<String, Object> map = new HashMap<>();

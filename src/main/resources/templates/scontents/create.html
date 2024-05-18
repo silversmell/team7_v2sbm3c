@@ -15,8 +15,15 @@
   
   <form name='frm' method='post' th:object="${scontentsVO}" action='./create' enctype="multipart/form-data">
   
-  <input type="checkbox" name="tag_no"  value=1>화이트
-  <input type="checkbox" name="tag_no" value=2>다크
+    <div>
+      <tr th:each="hashtag, status:${list}">      
+      <td class='td_left'>
+          <label>
+            <input type="checkbox" name="tag_no" th:value="${hashtag.tag_no}"> <span th:text="${hashtag.tag_name}"></span>
+          </label>
+      </td>
+    </tr>
+    </div>
 
     <div>
        <label>제목</label>
