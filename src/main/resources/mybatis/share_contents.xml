@@ -10,6 +10,15 @@
     scon_comment, scon_date,scon_priority
     FROM share_contents
   </select>
+  
+  <!-- scon에 따른 목록 -->
+    <select id="list_by_sconno"
+    resultType="dev.mvc.share_contentsdto.Share_contentsVO">
+    SELECT scon_no, scon_title, scon_contents, scon_views, scon_date, acc_no ,cate_no
+    FROM share_contents
+    where scon_no=#{scon_no}
+    </select>
+  
   <!-- 사진 전체 목록 -->
   <select id="list_all_image"
     resultType="dev.mvc.share_contentsdto.Share_imageVO">
@@ -198,6 +207,12 @@
     <select id="select_hashname" resultType="dev.mvc.recommend.HashtagVO">
       select tag_name
       from hashtag
+      where tag_no=#{tag_no}
+    </select>
+    
+    <select id ="select_sconno" resultType="dev.mvc.share_contentsdto.Contents_tagVO">
+      select scon_no
+      from contents_tag
       where tag_no=#{tag_no}
     </select>
     <!--

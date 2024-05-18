@@ -17,6 +17,12 @@ public interface Share_contentsProcInter {
 	 */
 	public ArrayList list_all(); 
 	
+	 /**
+   * scon_no에 따른 목록
+   * @param scon_no
+   * @return ArrayList<share_contentsVO>
+   */
+  public ArrayList list_by_sconno(int scon_no);
 	
 	/**
 	 * 목록
@@ -187,6 +193,13 @@ public interface Share_contentsProcInter {
     * @return
     */
    public HashtagVO select_hashname(int tag_no);
+   
+   /**
+    * tag_no에 따른 태그 scon_no
+    * @param tag_no
+    * @return
+    */
+   public ArrayList select_sconno(int tag_no);
 	 
 //	 /**
 //	  * 우선순위 올림

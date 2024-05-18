@@ -55,7 +55,7 @@
       </td>
       -->
             <tr th:each="hashtag, status:${list_hashtag}" 
-         th:attr="onclick=|location.href='/scontents/read_hashtag?tagno=${hashtag.tag_no}'|"
+         th:attr="onclick=|location.href='/scontents/read_hashtag?tag_no=${hashtag.tag_no}'|"
          style="cursor: pointer;">
       <td class='td_left'>
         <span th:text="${hashtag.tag_name}" style="font-weight: bold;"></span><br>

@@ -285,6 +285,18 @@ public class Share_contentsProc implements Share_contentsProcInter {
     return hashtagVO;
   }
 
+  @Override
+  public ArrayList select_sconno(int tag_no) {
+    ArrayList<Contents_tagVO> list = this.scontentsDAO.select_sconno(tag_no);
+    return list;
+  }
+
+  @Override
+  public ArrayList list_by_sconno(int scon_no) {
+    ArrayList<Share_contentsVO> list = this.scontentsDAO.list_by_sconno(scon_no);
+    return list;
+  }
+
 //@Override
 //public int up_priority(int scon_no) {
 //	int cnt = this.scontentsDAO.up_priority(scon_no);

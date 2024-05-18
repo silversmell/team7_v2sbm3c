@@ -17,9 +17,15 @@ public interface Share_contentsDAOInter {
 	 */
 	public ArrayList list_all(); 
 	
+	/**
+	 * scon_no에 따른 목록
+	 * @param scon_no
+	 * @return ArrayList<share_contentsVO>
+	 */
+	public ArrayList list_by_sconno(int scon_no);
 	
 	/**
-	 * 목록
+	 * 이미지 목록
 	 * @return ArrayList<share_imageVO>
 	 */
 	public ArrayList list_all_image();
@@ -159,16 +165,25 @@ public interface Share_contentsDAOInter {
 	 
 	 /**
 	  *  모든 hashtag 조회
-	  * @return
+	  * @return ArrayList
 	  */
 	 public ArrayList select_hashtag();
 	 
 	 /**
-	  * 
-	  * @param tag_no에 따른 hashtag 조회
-	  * @return
+	  * tag_no에 따른 hashtag 조회
+	  * @param tag_no
+	  * @return HashtagVO
 	  */
 	 public HashtagVO select_hashname(int tag_no);
+	 
+	 /**
+	  * tag_no에 따른 태그 scon_no
+	  * @param tag_no
+	  * @return
+	  */
+	 public ArrayList select_sconno(int tag_no);
+	 
+	 
 	 
 //	 /**
 //	  * 우선순위 올림

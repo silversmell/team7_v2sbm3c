@@ -83,6 +83,8 @@ public class Share_contentsCont {
 		return "scontents/read";
 	}
 	
+
+	
 	 @GetMapping("/create_comment")
 	  @ResponseBody
 	  public String create_comment_form(String scmt_comment, int scon_no, int acc_no) {
@@ -243,7 +245,23 @@ public class Share_contentsCont {
 
 		return "redirect:/scontents/list_by_search";
 	}
-
+	 @GetMapping("/read_hashtag")
+	  public String read_hashtag(int tag_no,Model model) {
+	   System.out.println("-> tag_not :" + tag_no);
+	    ArrayList<Contents_tagVO> sconno_list = this.sconProc.select_sconno(tag_no); //tag_no에 따른 scon_no
+	    int[] sconno = new int[sconno_list.size()];
+	    for(int i = 0;i<sconno.length;i++) {
+	      sconno[i] = sconno_list.get(i).getScon_no();
+	      System.out.println("-> sconno[i] :" + sconno[i]);
+	    }
+	    ArrayList<Share_contentsVO> list = new ArrayList<>(); //scon_no에 따른 Share_contentsVO
+	    for(int i = 0;i<sconno_list.size();i++) {
+	      list.addAll(this.sconProc.list_by_sconno(sconno[i]));
+	    }
+	    model.addAttribute("list",list);
+	    return "scontents/list_by_search_paging";
+	    
+	  }
 
 
 	@GetMapping("/list_by_search")
