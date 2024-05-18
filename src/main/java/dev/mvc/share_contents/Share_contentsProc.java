@@ -297,6 +297,12 @@ public class Share_contentsProc implements Share_contentsProcInter {
     return list;
   }
 
+  @Override
+  public ArrayList list_image() {
+    ArrayList<Share_imageVO> list = this.scontentsDAO.list_image();
+    return list;
+  }
+
 //@Override
 //public int up_priority(int scon_no) {
 //	int cnt = this.scontentsDAO.up_priority(scon_no);

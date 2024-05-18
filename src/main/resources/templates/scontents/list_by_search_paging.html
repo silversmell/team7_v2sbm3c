@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
 <div layout:fragment="content">
 
@@ -8,63 +7,56 @@
   </div>
 
   <aside class="aside_right">
-
       <a href="./create">등록</a>
       <span class="menu_devide">│</span>    
-    <a href="javascript:location.reload();">새로고침</a>
-    <span class='menu_divide' >│</span>    
-    <a th:href="@{|./list_by_search?word=${word }&now_page=${now_page}|}">목록형</a>    
-
+      <a href="javascript:location.reload();">새로고침</a>
+      <span class='menu_divide'>│</span>    
+      <a th:href="@{|./list_by_search?word=${word}&now_page=${now_page}|}">목록형</a>    
   </aside> 
 
   <!-- /contents/list_search_component.html 파일의 list_search_fragment import -->
   <div th:replace="~{scontents/list_search_component::list_search_fragment}"></div>
      
   <div class='menu_line'></div>
-       
+
   <table class="table table-striped" style='width: 100%;'>
-    
     <colgroup>
       <col style='width: 10%;'/>
       <col style='width: 90%;'/>
     </colgroup>
-    
-    <tr>
-      <th class='th_bs'>파일</TH>
-      <th class='th_bs'>제목</th>
-    </tr>
-    
-   <!--
-    <tr th:if="${list.size() > 0}" th:each="contentsVO, status:${list}" 
-         th:attr="onclick=|location.href='/contents/read?contentsno=${contentsVO.contentsno}&word=${word}&now_page=${now_page}'|"
-         style="cursor: pointer; height: 90px;">
-      <td class='td_basic' style="vertical-align: middle; text-align: center;">
-        <div th:if="${contentsVO.file1.endsWith('jpg') or contentsVO.file1.endsWith('png')  or contentsVO.file1.endsWith('gif')}">
-          <img th:src="@{|/contents/storage/${contentsVO.thumb1}|}" style="width: 120px; height: 90px;">
-        </div>
 
-        <div th:if="${((contentsVO.file1.endsWith('jpg') or contentsVO.file1.endsWith('png')  or contentsVO.file1.endsWith('gif')) == false) and (contentsVO.size1 > 0)}">
-          <span th:text="${contentsVO.file1}"></span>
-        </div>
+    <thead>
+      <tr>
+        <th class='th_bs'>파일</th>
+        <th class='th_bs'>제목</th>
+      </tr>
+    </thead>
 
-        <div th:if="${contentsVO.size1 == 0}">
-          <img src="/contents/images/none1.png" style="width: 120px; height: 90px;">
-        </div>
-                
-      </td>
-      </td>
-      -->
-            <tr th:each="hashtag, status:${list_hashtag}" 
-         th:attr="onclick=|location.href='/scontents/read_hashtag?tag_no=${hashtag.tag_no}'|"
-         style="cursor: pointer;">
-      <td class='td_left'>
-        <span th:text="${hashtag.tag_name}" style="font-weight: bold;"></span><br>
-
-      </td>
-    </tr>
-    <tr th:each="scontentsVO, status:${list}" 
+    <tbody>
+      <tr th:each="hashtag, status:${list_hashtag}" 
+          th:attr="onclick=|location.href='/scontents/read_hashtag?tag_no=${hashtag.tag_no}'|"
+          style="cursor: pointer;">
+        <td class='td_left'>
+          <span th:text="${hashtag.tag_name}" style="font-weight: bold;"></span>
+        </td>
+      </tr>
+      
+    <td>
+      <tr th:if="${list_image.size() > 0}" th:each="share_imageVO, status:${list_image}" >
+        
+        <td class='td_basic' style="vertical-align: middle; text-align: center;">
+          <div th:if="${share_imageVO.file_origin_name.endsWith('jpg') or share_imageVO.file_origin_name.endsWith('png') or share_imageVO.file_origin_name.endsWith('gif')}">
+            <img th:src="@{|/contents/storage/${share_imageVO.file_thumb_name}|}" style="width: 120px; height: 90px;">
+          </div>
+          <div th:if="${((share_imageVO.file_origin_name.endsWith('jpg') or share_imageVO.file_origin_name.endsWith('png') or share_imageVO.file_origin_name.endsWith('gif')) == false) and (share_imageVO.file_size > 0)}">
+            <span th:text="${share_imageVO.file_origin_name}"></span>
+          </div>
+        </td>
+        
+            <tr th:each="scontentsVO, status:${list}" 
          th:attr="onclick=|location.href='/scontents/read?scon_no=${scontentsVO.scon_no}'|"
          style="cursor: pointer;">
+
       <td class='td_left'>
       <span style="font-size: 1em;" th:text="${scontentsVO.scon_views}"></span><br><br>
         <span th:text="${scontentsVO.scon_title}" style="font-weight: bold;"></span><br>
@@ -75,12 +67,12 @@
 
       </td>
     </tr>
-    <!-- </tr> -->
+    </td>
 
-    <tr th:if="${list.size() == 0}">
-      <td colspan="2" style="text-align: center;">관련 글이 등록되지 않았습니다.</td>
-    </tr> 
-
+      <tr th:if="${list.size() == 0}">
+        <td colspan="2" style="text-align: center;">관련 글이 등록되지 않았습니다.</td>
+      </tr> 
+    </tbody>
   </table>
    
   <!-- 페이지 버튼 목록 출력 시작 -->
@@ -89,8 +81,3 @@
 
 </div>
 </html>
-
-
-
-
-

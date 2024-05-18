@@ -278,9 +278,16 @@ public class Share_contentsCont {
 		
 		ArrayList<Share_contentsVO> list = this.sconProc.list_by_contents_search_paging(map);
 		model.addAttribute("list", list);
-
+		
 		model.addAttribute("word", word);
-
+		
+		ArrayList<Share_imageVO> list_image = this.sconProc.list_all_image();
+		for(int i  =0 ;i<list_image.size();i++) {
+		  System.out.println("-> list_image:" + list_image.get(i).getFile_thumb_name());
+		}
+		
+		model.addAttribute("list_image",list_image);
+		
 		int search_count = this.sconProc.list_by_cateno_search_count(map);
 		String paging = this.sconProc.pagingBox(now_page, word, "/scontents/list_by_search", search_count,
 				Contents.RECORD_PER_PAGE, Contents.PAGE_PER_BLOCK);

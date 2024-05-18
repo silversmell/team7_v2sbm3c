@@ -200,6 +200,12 @@ public interface Share_contentsProcInter {
     * @return
     */
    public ArrayList select_sconno(int tag_no);
+   
+   /**
+    * 이미지 조회
+    * @return ArrayList
+    */
+   public ArrayList list_image();
 	 
 //	 /**
 //	  * 우선순위 올림

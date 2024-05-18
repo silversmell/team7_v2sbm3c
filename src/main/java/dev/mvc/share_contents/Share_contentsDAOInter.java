@@ -183,6 +183,12 @@ public interface Share_contentsDAOInter {
 	  */
 	 public ArrayList select_sconno(int tag_no);
 	 
+	 /**
+	  * 이미지 조회
+	  * @return ArrayList
+	  */
+	 public ArrayList list_image();
+	 
 	 
 	 
 //	 /**
