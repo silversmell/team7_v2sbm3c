@@ -153,4 +153,27 @@ public interface Share_contentsDAOInter {
 	  * @return ArrayList
 	  */
 	 public ArrayList read_contents_tag(int scon_no);
+	 
+	 public int attach_create(Share_imageVO share_imageVO);
+	 
+	 /**
+	  * hashtag 이름 조회
+	  * @return
+	  */
+	 public ArrayList select_hashtag();
+	 
+//	 /**
+//	  * 우선순위 올림
+//	  * @param scon_no 
+//	  * @return int
+//	  */
+//	 public int up_priority(int scon_no);
+//	 
+//	 /**
+//	  * 우선순위 내림
+//	  * @param scon_no
+//	  * @return int
+//	  */
+//	 public int down_priority(int scon_no);
+//	 
 }

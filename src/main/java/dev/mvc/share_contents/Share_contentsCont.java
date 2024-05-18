@@ -2,6 +2,7 @@ package dev.mvc.share_contents;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,14 +14,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import dev.mvc.recommend.HashtagVO;
 import dev.mvc.share_contents.Contents;
 import dev.mvc.share_contentsdto.Contents_tagVO;
 import dev.mvc.share_contentsdto.Contents_urlVO;
 import dev.mvc.share_contentsdto.Share_commentsVO;
 import dev.mvc.share_contentsdto.Share_contentsVO;
+import dev.mvc.share_contentsdto.Share_imageVO;
 import dev.mvc.tool.Tool;
+import dev.mvc.tool.Upload;
 
 @RequestMapping("/scontents")
 @Controller
@@ -58,7 +63,6 @@ public class Share_contentsCont {
 			list2[i]=list1.get(i).getTag_no();
 		}
 		model.addAttribute("list1",list2);
-		
 		
 		int cnt1 = this.sconProc.comment_search(scon_no);
 		model.addAttribute("cnt", cnt1);
@@ -103,10 +107,7 @@ public class Share_contentsCont {
 		for(int i = 0;i<url_list.size();i++) {
 			model.addAttribute("url_list"+i,url_list.get(i).getUrl_link());
 		}
-		
-
 		return "scontents/update_text";
-
 	}
 
 	@PostMapping("/update_text")
@@ -129,8 +130,6 @@ public class Share_contentsCont {
 			this.sconProc.update_url(map);
 		}
 		
-
-		
 		return "redirect:/scontents/list_by_search";
 	}
 
@@ -142,19 +141,53 @@ public class Share_contentsCont {
 	}
 
 	@PostMapping("/create")
-	public String create(Model model, Share_contentsVO scontentsVO, String url_link, RedirectAttributes ra,String tag_no) {
-		
-		//System.out.println(tag_no);
-
+	public String create(Model model, Share_contentsVO scontentsVO, String url_link, RedirectAttributes ra,String tag_no, List<MultipartFile> fnamesMF) {    
 		String[] url_sub_link = {"1","1","1","1","1"};
-		
+	      System.out.println(fnamesMF);
 		int cnt = this.sconProc.create(scontentsVO);
 		ArrayList<Share_contentsVO> list1 = this.sconProc.list_all();
-		//System.out.println("create post 생성");
-		Share_contentsVO scontentsVO1 = list1.get(list1.size() - 1); //바로 등록한 Share_contentsVO 가져오기 ->scon_no를 사용하기 위해
+
+		Share_contentsVO scontentsVO1 = list1.get(list1.size() - 1); //직전 등록한 Share_contentsVO 가져오기 ->scon_no를 사용하기 위해
 		int scon_no = scontentsVO1.getScon_no();
-//		System.out.println("scon_no->" + scon_no);
-//		System.out.println("url_link -> " + url_link);
+
+	      String file_origin_name="";
+	      String file_upload_name="";
+	      String file_thumb_name="";
+	      long file_size=0;
+	      
+		Share_imageVO share_imageVO = new Share_imageVO();
+	      String upDir = Contents.getUploadDir(); // 파일을 업로드할 폴더 준비
+
+	      System.out.println(fnamesMF);
+	      
+	      share_imageVO.setFnamesMF(fnamesMF);
+	      int count = fnamesMF.size();
+	      System.out.println("-> count: " +count);
+	      if(count>0) {
+	    	  for(MultipartFile multipartFile: fnamesMF) {
+	    		  file_size = multipartFile.getSize();
+	    		  System.out.println("-> file_size: " +file_size);
+	    		  
+	    		  if(file_size>0) {
+	    			  file_origin_name=multipartFile.getOriginalFilename();
+	    			  file_upload_name=Upload.saveFileSpring(multipartFile, upDir);
+	    			  
+	    			  if(Tool.isImage(file_origin_name)) {
+	    				  file_thumb_name=Tool.preview(upDir, file_upload_name, 200, 150);
+	    			  }
+	    		  }
+	    		  share_imageVO.setFile_no(scon_no);
+	    		  share_imageVO.setFile_origin_name(file_origin_name);
+	    		  share_imageVO.setFile_thumb_name(file_thumb_name);
+	    		  share_imageVO.setFile_upload_name(file_upload_name);
+	    		  share_imageVO.setFile_size(count);
+	    		  
+	    		  int image_cnt=this.sconProc.attach_create(share_imageVO);
+	    		  System.out.println("-> image_cnt: " + image_cnt);
+	    	  }
+	      }
+	      
+
 		HashMap<String, Object> map1 = new HashMap<>();
 		String[] tag = tag_no.split(",");
 		for(int i = 0;i<tag.length;i++) {
@@ -162,29 +195,21 @@ public class Share_contentsCont {
 			map1.put("scon_no", scon_no);
 			int cnt1 = this.sconProc.insert_tag(map1);
 			if(cnt1 == 1) {
-				System.out.println("해시태그 등록 성공: "+tag[i]);
+				//System.out.println("해시태그 등록 성공: "+tag[i]);
 			}
 		}
 
 		HashMap<String, Object> map = new HashMap<>();
 		String[] list = url_link.split(",");
 		System.out.println("list.length: "+ list.length);
-//		for(int i =0;i<list.length;i++) {
-//			System.out.println("list[i]: " + list[i]);
-//		}
+
 		for (int i = 0; i < list.length; i++) {
-			//System.out.println("list[i]=>"+list[i]);
-//			if(list[i]==null || list[i].equals(" ")) {
-//				url_sub_link[i]=url_sub_link[i].trim();
-//				map.put("url_link", url_sub_link[i]);
-//				map.put("scon_no", scon_no);
-//				this.sconProc.create_url(map);
-//			}
+
 			list[i] = list[i].trim();
 			map.put("url_link", list[i]);
 			map.put("scon_no", scon_no);
 			this.sconProc.create_url(map);
-	}
+		}
 		if(list.length<url_sub_link.length) {
 			for(int i = list.length;i<url_sub_link.length;i++) {
 				map.put("url_link", url_sub_link[i]);
@@ -211,9 +236,7 @@ public class Share_contentsCont {
 	  this.sconProc.delete_comments(scon_no);
 		this.sconProc.delete_url(scon_no);
 		int cnt = this.sconProc.delete(scon_no);
-//		if (cnt == 1) {
-//			System.out.println("삭제 성공");
-//		}
+
 		return "redirect:/scontents/list_by_search";
 	}
 
@@ -228,7 +251,9 @@ public class Share_contentsCont {
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("word", word);
 		map.put("now_page", now_page);
-
+		ArrayList<HashtagVO> list_hashtag = this.sconProc.select_hashtag();
+		model.addAttribute("list_hashtag", list_hashtag);
+		
 		ArrayList<Share_contentsVO> list = this.sconProc.list_by_contents_search_paging(map);
 		model.addAttribute("list", list);
 

@@ -16,7 +16,7 @@
   <form name='frm' method='post' th:object="${scontentsVO}" action='./create' enctype="multipart/form-data">
   
   <input type="checkbox" name="tag_no"  value=1>화이트
-	<input type="checkbox" name="tag_no" value=2>다크
+  <input type="checkbox" name="tag_no" value=2>다크
 
     <div>
        <label>제목</label>
@@ -37,16 +37,10 @@
 
     <div>
        <label>이미지</label>
-       <input type='file' class="form-control" name='file1MF' id='file1MF' value='' placeholder="파일 선택">
-    </div>
-      <div>
-       <label>이미지</label>
-       <input type='file' class="form-control" name='file1MF' id='file1MF' value='' placeholder="파일 선택">
-    </div>   
-       <div>
-       <label>이미지</label>
-       <input type='file' class="form-control" name='file1MF' id='file1MF' value='' placeholder="파일 선택">
-    </div>   
+                 <input type='file' class="form-control" name='fnamesMF'
+                     placeholder="파일 선택" multiple/>
+        </div>
+
        
 
     <!--
@@ -71,8 +65,8 @@
        <label>url5</label>
        <input type='url' name='url_link'  value=" "
                  autofocus="autofocus" class="form-control" style='width: 100%;'>
-    	</div>
-    	
+      </div>
+      
     <div class="content_body_bottom">
       <button type="submit" class="btn btn-secondary btn-sm">등록</button>
       <button type="button" th:attr="onclick=|location.href='./list_by_search'|" class="btn btn-secondary btn-sm">목록</button>

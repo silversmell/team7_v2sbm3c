@@ -3,198 +3,211 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="dev.mvc.share_contents.Share_contentsDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
 
-	<!-- 전체 목록 -->
-	<select id="list_all"
-		resultType="dev.mvc.share_contentsdto.Share_contentsVO">
-		SELECT scon_no, scon_title, scon_contents, scon_views,
-		scon_comment, scon_date,scon_priority
-		FROM share_contents
-	</select>
-	<!-- 사진 전체 목록 -->
-	<select id="list_all_image"
-		resultType="dev.mvc.share_contentsdto.Share_imageVO">
-		SELECT
-		file_no,scon_no,file_origin_name,file_upload_name,file_thumb_name,file_size,file_date
-		FROM share_image
-	</select>
+  <!-- 전체 목록 -->
+  <select id="list_all"
+    resultType="dev.mvc.share_contentsdto.Share_contentsVO">
+    SELECT scon_no, scon_title, scon_contents, scon_views,
+    scon_comment, scon_date,scon_priority
+    FROM share_contents
+  </select>
+  <!-- 사진 전체 목록 -->
+  <select id="list_all_image"
+    resultType="dev.mvc.share_contentsdto.Share_imageVO">
+    SELECT
+    file_no,scon_no,file_origin_name,file_upload_name,file_thumb_name,file_size,file_date
+    FROM share_image
+  </select>
 
-	<!-- 해당 컨텐츠 목록 -->
-	<select id="read"
-		resultType="dev.mvc.share_contentsdto.Share_contentsVO"
-		parameterType="Integer">
-		SELECT scon_no, scon_title, scon_contents, scon_views,
-		scon_date, acc_no
-		,cate_no
-		FROM share_contents
-		where scon_no=#{scon_no}
-	</select>
+  <!-- 해당 컨텐츠 목록 -->
+  <select id="read"
+    resultType="dev.mvc.share_contentsdto.Share_contentsVO"
+    parameterType="Integer">
+    SELECT scon_no, scon_title, scon_contents, scon_views,
+    scon_date, acc_no
+    ,cate_no
+    FROM share_contents
+    where scon_no=#{scon_no}
+  </select>
 
-	<update id="update_view"
-		parameterType="dev.mvc.share_contentsdto.Share_contentsVO">
-		UPDATE share_contents
-		SET scon_views=scon_views+1
-		WHERE
-		scon_no=#{scon_no}
-	</update>
+  <update id="update_view"
+    parameterType="dev.mvc.share_contentsdto.Share_contentsVO">
+    UPDATE share_contents
+    SET scon_views=scon_views+1
+    WHERE
+    scon_no=#{scon_no}
+  </update>
 
-	<update id="update_text"
-		parameterType="dev.mvc.share_contentsdto.Share_contentsVO">
-		update share_contents
-		set
-		scon_title=#{scon_title},scon_contents=#{scon_contents}
-		where
-		scon_no=#{scon_no}
-	</update>
+  <update id="update_text"
+    parameterType="dev.mvc.share_contentsdto.Share_contentsVO">
+    update share_contents
+    set
+    scon_title=#{scon_title},scon_contents=#{scon_contents}
+    where
+    scon_no=#{scon_no}
+  </update>
 
-	<insert id="create"
-		parameterType="dev.mvc.share_contentsdto.Share_contentsVO">
-		INSERT INTO share_contents(scon_no, scon_title,
-		scon_contents,scon_bookmark,
-		scon_views,scon_date, acc_no,cate_no)
-		VALUES(share_contents_SEQ.nextval,#{scon_title},#{scon_contents},1,0,sysdate,1,1)
-	</insert>
+  <insert id="create"
+    parameterType="dev.mvc.share_contentsdto.Share_contentsVO">
+    INSERT INTO share_contents(scon_no, scon_title,
+    scon_contents,scon_bookmark,
+    scon_views,scon_date, acc_no,cate_no)
+    VALUES(share_contents_SEQ.nextval,#{scon_title},#{scon_contents},1,0,sysdate,1,1)
+  </insert>
 
-	<delete id="delete" parameterType="int">
-		DELETE FROM share_contents
-		WHERE scon_no=#{scon_no}
-	</delete>
+  <delete id="delete" parameterType="int">
+    DELETE FROM share_contents
+    WHERE scon_no=#{scon_no}
+  </delete>
 
-	<insert id="create_comment" parameterType="HashMap">
-		INSERT INTO
-		share_comment(scmt_no, scon_no, scmt_comment,scmt_date,acc_no)
-		VALUES(share_comment_SEQ.nextval,#{scon_no},#{scmt_comment},sysdate,#{acc_no})
-	</insert>
+  <insert id="create_comment" parameterType="HashMap">
+    INSERT INTO
+    share_comment(scmt_no, scon_no, scmt_comment,scmt_date,acc_no)
+    VALUES(share_comment_SEQ.nextval,#{scon_no},#{scmt_comment},sysdate,#{acc_no})
+  </insert>
 
-	<select id="read_comment"
-		resultType="dev.mvc.share_contentsdto.Share_commentsVO"
-		parameterType="Integer">
-		SELECT scmt_comment,scmt_date,acc_no
-		FROM share_comment
-		WHERE scon_no=#{scon_no}
-	</select>
+  <select id="read_comment"
+    resultType="dev.mvc.share_contentsdto.Share_commentsVO"
+    parameterType="Integer">
+    SELECT scmt_comment,scmt_date,acc_no
+    FROM share_comment
+    WHERE scon_no=#{scon_no}
+  </select>
 
-	<insert id="create_image"
-		parameterType="dev.mvc.share_contentsdto.Share_imageVO">
-		INSERT INTO share_image(file_no, scon_no,
-		file_origin_name,
-		file_upload_name, file_thumb_name, file_size,
-		file_date)
-		VALUES(share_image_seq.nextval, #{scon_no},
-		#{file_origin_name} ,
-		#{file_upload_name}, #{file_thumb_name},
-		#{file_size} sysdate)
-	</insert>
 
-	<!-- 카테고리별 검색 + 페이징 목록 -->
-	<select id="list_by_contents_search_paging"
-		resultType="dev.mvc.share_contentsdto.Share_contentsVO"
-		parameterType="HashMap">
-		SELECT scon_no, scon_title, scon_contents, scon_views, scon_comment,
-		scon_date,scon_priority, r
-		FROM (
-		SELECT scon_no, scon_title,
-		scon_contents, scon_views, scon_comment,
-		scon_date,scon_priority,rownum as r
-		FROM (
-		SELECT scon_no, scon_title,
-		scon_contents, scon_views, scon_comment,
-		scon_date,scon_priority
-		FROM
-		share_contents
-		<choose>
-			<when test="word != null or word != ''">
-				WHERE (UPPER(scon_title) LIKE '%' || UPPER(#{word})
-				|| '%'
-				OR UPPER(scon_contents) LIKE '%' || UPPER(#{word}) || '%'
-				OR
-				UPPER(word) LIKE '%' || UPPER(#{word}) || '%')
-			</when>
-			<otherwise>
-				<!-- 조건이 없으면 모든 레코드 선택 -->
-			</otherwise>
-		</choose>
-		ORDER BY scon_no DESC
-		)
-		)
-		WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>
+  <!-- 카테고리별 검색 + 페이징 목록 -->
+  <select id="list_by_contents_search_paging"
+    resultType="dev.mvc.share_contentsdto.Share_contentsVO"
+    parameterType="HashMap">
+    SELECT scon_no, scon_title, scon_contents, scon_views, scon_comment,
+    scon_date,scon_priority, r
+    FROM (
+    SELECT scon_no, scon_title,
+    scon_contents, scon_views, scon_comment,
+    scon_date,scon_priority,rownum as r
+    FROM (
+    SELECT scon_no, scon_title,
+    scon_contents, scon_views, scon_comment,
+    scon_date,scon_priority
+    FROM
+    share_contents
+    <choose>
+      <when test="word != null or word != ''">
+        WHERE (UPPER(scon_title) LIKE '%' || UPPER(#{word})
+        || '%'
+        OR UPPER(scon_contents) LIKE '%' || UPPER(#{word}) || '%'
+        OR
+        UPPER(word) LIKE '%' || UPPER(#{word}) || '%')
+      </when>
+      <otherwise>
+        <!-- 조건이 없으면 모든 레코드 선택 -->
+      </otherwise>
+    </choose>
+    ORDER BY scon_no DESC
+    )
+    )
+    WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>
 
-		<!-- 1 page: WHERE r >= 1 AND r <= 10; 2 page: WHERE r >= 11 AND r <= 20; 
-			3 page: WHERE r >= 21 AND r <= 30; -->
-	</select>
+    <!-- 1 page: WHERE r >= 1 AND r <= 10; 2 page: WHERE r >= 11 AND r <= 20; 
+      3 page: WHERE r >= 21 AND r <= 30; -->
+  </select>
 
-	<!-- 카테고리별 검색 레코드 갯수 -->
-	<select id="list_by_cateno_search_count" resultType="int"
-		parameterType="HashMap">
-		SELECT COUNT(*) as cnt
-		FROM share_contents
-		<choose>
-			<when test="word != null or word != ''">
-				WHERE (UPPER(scon_title) LIKE '%' || UPPER(#{word})
-				|| '%'
-				OR UPPER(scon_contents) LIKE '%' || UPPER(#{word}) || '%'
-				OR
-				UPPER(word) LIKE '%' || UPPER(#{word}) || '%')
-			</when>
-			<otherwise>
-				<!-- 조건이 없으면 모든 레코드 선택 -->
-			</otherwise>
-		</choose>
-	</select>
+  <!-- 카테고리별 검색 레코드 갯수 -->
+  <select id="list_by_cateno_search_count" resultType="int"
+    parameterType="HashMap">
+    SELECT COUNT(*) as cnt
+    FROM share_contents
+    <choose>
+      <when test="word != null or word != ''">
+        WHERE (UPPER(scon_title) LIKE '%' || UPPER(#{word})
+        || '%'
+        OR UPPER(scon_contents) LIKE '%' || UPPER(#{word}) || '%'
+        OR
+        UPPER(word) LIKE '%' || UPPER(#{word}) || '%')
+      </when>
+      <otherwise>
+        <!-- 조건이 없으면 모든 레코드 선택 -->
+      </otherwise>
+    </choose>
+  </select>
 
-	<select id="comment_search" resultType="int" parameterType="int">
-		select count(*)
-		from share_comment
-		where scon_no=#{scon_no}
-	</select>
-	<insert id="create_url" parameterType="HashMap">
-		INSERT INTO
-		contents_url(url_no,scon_no,url_link)
-		VALUES(contents_url_SEQ.nextval,#{scon_no},#{url_link})
-	</insert>
+  <select id="comment_search" resultType="int" parameterType="int">
+    select count(*)
+    from share_comment
+    where scon_no=#{scon_no}
+  </select>
+  <insert id="create_url" parameterType="HashMap">
+    INSERT INTO
+    contents_url(url_no,scon_no,url_link)
+    VALUES(contents_url_SEQ.nextval,#{scon_no},#{url_link})
+  </insert>
 
-	<select id="url_read"
-		resultType="dev.mvc.share_contentsdto.Contents_urlVO"
-		parameterType="int">
-		SELECT url_no,scon_no,url_link
-		FROM contents_url
-		where
-		scon_no=#{scon_no}
-	</select>
-	<select id="only_url"
-		resultType="dev.mvc.share_contentsdto.Contents_urlVO"
-		parameterType="int">
-		SELECT url_link
-		FROM contents_url
-		where scon_no=#{scon_no}
-	</select>
+  <select id="url_read"
+    resultType="dev.mvc.share_contentsdto.Contents_urlVO"
+    parameterType="int">
+    SELECT url_no,scon_no,url_link
+    FROM contents_url
+    where
+    scon_no=#{scon_no}
+  </select>
+  <select id="only_url"
+    resultType="dev.mvc.share_contentsdto.Contents_urlVO"
+    parameterType="int">
+    SELECT url_link
+    FROM contents_url
+    where scon_no=#{scon_no}
+  </select>
 
-	<update id="update_url" parameterType="HashMap">
-		update contents_url
-		set
-		url_link=#{url_link}
-		where scon_no=#{scon_no} AND url_no=#{url_no}
-	</update>
+  <update id="update_url" parameterType="HashMap">
+    update contents_url
+    set
+    url_link=#{url_link}
+    where scon_no=#{scon_no} AND url_no=#{url_no}
+  </update>
 
-	<delete id="delete_url" parameterType="int">
-		delete from contents_url
-		where scon_no=#{scon_no}
-	</delete>
-	
-	<delete id = "delete_comments" parameterType="int">
-	   delete from share_comment
+  <delete id="delete_url" parameterType="int">
+    delete from contents_url
+    where scon_no=#{scon_no}
+  </delete>
+  
+  <delete id = "delete_comments" parameterType="int">
+     delete from share_comment
      where scon_no=#{scon_no}
-	</delete>
-	
-	<insert id = "insert_tag" parameterType="HashMap" >
-		INSERT INTO contents_tag(contents_tag_no,scon_no,tag_no)
-		VALUES (contents_tag_SEQ.nextval,#{scon_no},#{tag_no})
-	</insert>
-	
-		 <select id = "read_contents_tag" parameterType="int" resultType="dev.mvc.share_contentsdto.Contents_tagVO" >
-		select tag_no
-		from contents_tag
-		where scon_no=#{scon_no}
-		</select>
+  </delete>
+  
+  <insert id = "insert_tag" parameterType="HashMap" >
+    INSERT INTO contents_tag(contents_tag_no,scon_no,tag_no)
+    VALUES (contents_tag_SEQ.nextval,#{scon_no},#{tag_no})
+  </insert>
+  
+     <select id = "read_contents_tag" parameterType="int" resultType="dev.mvc.share_contentsdto.Contents_tagVO" >
+    select tag_no
+    from contents_tag
+    where scon_no=#{scon_no}
+    </select>
+    
+    <insert id="attach_create" parameterType="dev.mvc.share_contentsdto.Share_imageVO">
+    INSERT INTO share_image(file_no,scon_no,file_origin_name,file_upload_name,file_thumb_name,file_size,file_date)
+    VALUES(share_image_SEQ.nextval,#{scon_no},#{file_origin_name},#{file_upload_name},#{file_thumb_name},#{file_size},sysdate)
+    </insert>
+    
+    <select id="select_hashtag" resultType="dev.mvc.recommend.HashtagVO">
+      SELECT tag_no,tag_code,tag_name 
+      FROM hashtag
+    </select>
+    <!--
+    <update id ="up_priority" parameterType="int" >
+    update share_contents
+    set scon_priority=scon_priority+1
+    where scon_no=#{scon_no}
+    </update>
+
+  <update id ="down_priority" parameterType="int" >
+    update share_contents
+    set scon_priority=scon_priority-1
+    where scon_no=#{scon_no}
+    
+    </update> 
+    -->
 
 </mapper>
 

@@ -23,14 +23,17 @@
   <div class='menu_line'></div>
        
   <table class="table table-striped" style='width: 100%;'>
+    
     <colgroup>
       <col style='width: 10%;'/>
       <col style='width: 90%;'/>
     </colgroup>
+    
     <tr>
       <th class='th_bs'>파일</TH>
       <th class='th_bs'>제목</th>
     </tr>
+    
    <!--
     <tr th:if="${list.size() > 0}" th:each="contentsVO, status:${list}" 
          th:attr="onclick=|location.href='/contents/read?contentsno=${contentsVO.contentsno}&word=${word}&now_page=${now_page}'|"
@@ -51,6 +54,14 @@
       </td>
       </td>
       -->
+            <tr th:each="hashtag, status:${list_hashtag}" 
+         th:attr="onclick=|location.href='/scontents/read_hashtag?tagno=${hashtag.tag_no}'|"
+         style="cursor: pointer;">
+      <td class='td_left'>
+        <span th:text="${hashtag.tag_name}" style="font-weight: bold;"></span><br>
+
+      </td>
+    </tr>
     <tr th:each="scontentsVO, status:${list}" 
          th:attr="onclick=|location.href='/scontents/read?scon_no=${scontentsVO.scon_no}'|"
          style="cursor: pointer;">
