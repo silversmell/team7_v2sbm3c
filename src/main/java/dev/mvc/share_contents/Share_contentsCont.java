@@ -118,6 +118,10 @@ public class Share_contentsCont {
 		
 		ArrayList<Contents_urlVO> url_list = this.sconProc.only_url(scon_no);
 		for(int i = 0;i<url_list.size();i++) {
+		  String url =url_list.get(i).getUrl_link();
+		  if(url.equals("1")) {
+		    url_list.get(i).setUrl_link(" ");
+		  }
 			model.addAttribute("url_list"+i,url_list.get(i).getUrl_link());
 		}
 		return "scontents/update_text";
@@ -140,7 +144,6 @@ public class Share_contentsCont {
 			map.put("url_link", list[i]);
 			map.put("scon_no", scon_no);
 			map.put("url_no", arr.get(i).getUrl_no());
-				
 			this.sconProc.update_url(map);
 		}
 		
@@ -183,7 +186,7 @@ public class Share_contentsCont {
               file_thumb_name=Tool.preview(upDir, file_upload_name, 200, 150);
             }
           }
-          System.out.println("-> cnt1: " + cnt1 + ", image_list_old.size(): " + image_list_old.size());
+          //System.out.println("-> cnt1: " + cnt1 + ", image_list_old.size(): " + image_list_old.size());
           if(image_list_old.size()<=cnt1) { //수정할 이미지 갯수가 원래 이미지 갯수보다 많을 경우
             share_imageVO.setScon_no(scon_no);
             share_imageVO.setFile_origin_name(file_origin_name);
@@ -192,11 +195,9 @@ public class Share_contentsCont {
             share_imageVO.setFile_size(count);
             
             int image_cnt=this.sconProc.attach_create(share_imageVO);
-            System.out.println("image 수정 중 create 완료");
+            //System.out.println("image 수정 중 create 완료");
           }
           else {
-          System.out.println("file_no ->" +image_list_old.get(cnt1).getFile_no());
-          System.out.println("199까지 성공");
           share_imageVO.setFile_no(image_list_old.get(cnt1).getFile_no()); 
           share_imageVO.setFile_origin_name(file_origin_name);
           share_imageVO.setFile_thumb_name(file_thumb_name);
@@ -299,7 +300,6 @@ public class Share_contentsCont {
 			}
 		}
 		
-
 		return "redirect:/scontents/list_by_search";
 	}
 
