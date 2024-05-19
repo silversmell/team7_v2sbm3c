@@ -125,6 +125,10 @@
             <span th:text="${item}" class="bold;"></span>
         </td>
     </tr>
+      <div th:if="${share_imageVO.file_origin_name.endsWith('jpg') or share_imageVO.file_origin_name.endsWith('png')  or share_imageVO.file_origin_name.endsWith('gif')}">
+            <img th:src="@{|/contents/storage/${share_imageVO.file_upload_name}|}" style='width: 50%; float: left; margin-top: 0.5%; margin-right: 1%;'>
+          </div>
+    
 					<br>
           <span style="font-size: 1.5em; font-weight: bold;" th:text="${scontentsVO.scon_title}"></span>
           <span style="font-size: 1em;" th:text="${scontentsVO.scon_date}"></span><br><br>

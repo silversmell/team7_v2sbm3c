@@ -221,6 +221,12 @@
       FROM share_image
       ORDER BY scon_no DESC, file_no ASC
     </select>
+    
+    <select id="read_image" resultType="dev.mvc.share_contentsdto.Share_imageVO" parameterType="Integer">
+      SELECT file_no,scon_no,file_origin_name,file_upload_name,file_thumb_name,file_size,file_date
+      FROM share_image
+      where scon_no=#{scon_no}
+    </select>
     <!--
     <update id ="up_priority" parameterType="int" >
     update share_contents

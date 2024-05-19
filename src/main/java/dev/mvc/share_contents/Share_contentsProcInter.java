@@ -206,6 +206,14 @@ public interface Share_contentsProcInter {
     * @return ArrayList
     */
    public ArrayList list_image();
+   
+   /**
+    * scon_no에 따른 이미지 조회
+    * @param scon_no
+    * @return Share_imageVO
+    */
+   public Share_imageVO read_image(int scon_no);
+   
 	 
 //	 /**
 //	  * 우선순위 올림

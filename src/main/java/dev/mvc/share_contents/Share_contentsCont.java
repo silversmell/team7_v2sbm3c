@@ -79,6 +79,13 @@ public class Share_contentsCont {
 		for(int i = 0;i<url_list.size();i++) {
 			model.addAttribute("url_list"+i,url_list.get(i).getUrl_link());
 		}
+		
+		Share_imageVO simage = this.sconProc.read_image(scon_no);
+		long size = simage.getFile_size();
+		String silze_label = Tool.unit(size);
+		simage.setFlabel(silze_label);
+		
+		model.addAttribute("share_imageVO",simage);
 
 		return "scontents/read";
 	}
@@ -158,7 +165,7 @@ public class Share_contentsCont {
 
 		Share_contentsVO scontentsVO1 = list1.get(list1.size() - 1); //직전 등록한 Share_contentsVO 가져오기 ->scon_no를 사용하기 위해
 		int scon_no = scontentsVO1.getScon_no();
-
+	
 	      String file_origin_name="";
 	      String file_upload_name="";
 	      String file_thumb_name="";
@@ -169,6 +176,7 @@ public class Share_contentsCont {
 
 	      System.out.println(fnamesMF);
 	      
+	      //System.out.println("-> scon_no : " +scon_no);
 	      share_imageVO.setFnamesMF(fnamesMF);
 	      int count = fnamesMF.size();
 	      System.out.println("-> count: " +count);
@@ -185,7 +193,7 @@ public class Share_contentsCont {
 	    				  file_thumb_name=Tool.preview(upDir, file_upload_name, 200, 150);
 	    			  }
 	    		  }
-	    		  share_imageVO.setFile_no(scon_no);
+	    		  share_imageVO.setScon_no(scon_no);
 	    		  share_imageVO.setFile_origin_name(file_origin_name);
 	    		  share_imageVO.setFile_thumb_name(file_thumb_name);
 	    		  share_imageVO.setFile_upload_name(file_upload_name);
