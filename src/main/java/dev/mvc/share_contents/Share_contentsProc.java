@@ -304,8 +304,8 @@ public class Share_contentsProc implements Share_contentsProcInter {
   }
 
   @Override
-  public Share_imageVO read_image(int scon_no) {
-      Share_imageVO share_imageVO = this.scontentsDAO.read_image(scon_no);
+  public ArrayList read_image(int scon_no) {
+      ArrayList<Share_imageVO> share_imageVO = this.scontentsDAO.read_image(scon_no);
     return share_imageVO;
   }
 

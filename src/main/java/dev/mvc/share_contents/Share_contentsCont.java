@@ -80,10 +80,13 @@ public class Share_contentsCont {
 			model.addAttribute("url_list"+i,url_list.get(i).getUrl_link());
 		}
 		
-		Share_imageVO simage = this.sconProc.read_image(scon_no);
-		long size = simage.getFile_size();
+		ArrayList<Share_imageVO> simage = this.sconProc.read_image(scon_no);
+		for(int i = 0;i<simage.size();i++) {
+		  //long size = simage.getgetFile_size();
+		long size = simage.get(i).getFile_size();
 		String silze_label = Tool.unit(size);
-		simage.setFlabel(silze_label);
+		simage.get(i).setFlabel(silze_label);
+		}
 		
 		model.addAttribute("share_imageVO",simage);
 

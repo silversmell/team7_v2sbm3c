@@ -194,7 +194,7 @@ public interface Share_contentsDAOInter {
 	  * @param scon_no
 	  * @return Share_imageVO
 	  */
-	 public Share_imageVO read_image(int scon_no);
+	 public ArrayList read_image(int scon_no);
 	 
 	 
 	 
