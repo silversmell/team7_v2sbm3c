@@ -368,7 +368,8 @@ public class Share_contentsCont {
 		return "redirect:/scontents/list_by_search";
 	}
 	 @GetMapping("/read_hashtag")
-	  public String read_hashtag(int tag_no,Model model) {
+	  public String read_hashtag(int tag_no,Model model,@RequestParam(name = "word", defaultValue = "") String word,
+	      @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
 	    ArrayList<Contents_tagVO> sconno_list = this.sconProc.select_sconno(tag_no); //tag_no에 따른 scon_no
 	    int[] sconno = new int[sconno_list.size()];
 	    for(int i = 0;i<sconno.length;i++) {
@@ -379,7 +380,39 @@ public class Share_contentsCont {
 	      list.addAll(this.sconProc.list_by_sconno(sconno[i]));
 	    }
 	    model.addAttribute("list",list);
+	    
+	    word = Tool.checkNull(word).trim();
+
+	    HashMap<String, Object> map = new HashMap<>();
+	    map.put("word", word);
+	    map.put("now_page", now_page);
+	    
+	    ArrayList<Share_contentsVO> list1 = this.sconProc.list_by_contents_search_paging(map);
+	    model.addAttribute("list", list1);	    
+	    model.addAttribute("word", word);
+	    
+	    ArrayList<Contents_tagVO> tag_sconno=this.sconProc.select_sconno(tag_no);
+	    ArrayList<Share_imageVO> list_image = new ArrayList<>();
+	    for(Contents_tagVO scon: tag_sconno) {
+	      list_image.addAll(this.sconProc.read_image(scon.getScon_no()));
+	    }
+	    model.addAttribute("list_image",list_image);
+	    
+	    int search_count = this.sconProc.list_by_cateno_search_count(map);
+	    String paging = this.sconProc.pagingBox(now_page, word, "/scontents/list_by_search", search_count,
+	        Contents.RECORD_PER_PAGE, Contents.PAGE_PER_BLOCK);
+
+	    model.addAttribute("paging", paging);
+	    model.addAttribute("now_page", now_page);
+
+	    model.addAttribute("search_count", search_count);
+
+	    // 일련 변호 생성: 레코드 갯수 - ((현재 페이지수 -1) * 페이지당 레코드 수)
+	    int no = search_count - ((now_page - 1) * Contents.RECORD_PER_PAGE);
+	    model.addAttribute("no", no);
+
 	    return "scontents/list_by_search_paging";
+	    
 	    
 	  }
 
@@ -393,11 +426,11 @@ public class Share_contentsCont {
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("word", word);
 		map.put("now_page", now_page);
+		
+    ArrayList<Share_contentsVO> list = this.sconProc.list_by_contents_search_paging(map);
+    model.addAttribute("list", list);
 		ArrayList<HashtagVO> list_hashtag = this.sconProc.select_hashtag();
 		model.addAttribute("list_hashtag", list_hashtag);
-		
-		ArrayList<Share_contentsVO> list = this.sconProc.list_by_contents_search_paging(map);
-		model.addAttribute("list", list);
 		
 		model.addAttribute("word", word);
 		
