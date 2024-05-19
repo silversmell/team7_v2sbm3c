@@ -227,6 +227,12 @@
       FROM share_image
       where scon_no=#{scon_no}
     </select>
+    
+   <delete id = "delete_image" parameterType="int">
+        delete from share_image
+        where scon_no=#{scon_no}
+  </delete>
+
     <!--
     <update id ="up_priority" parameterType="int" >
     update share_contents

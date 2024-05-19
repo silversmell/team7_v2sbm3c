@@ -253,6 +253,20 @@ public class Share_contentsCont {
 	  this.sconProc.delete_comments(scon_no);
 		this.sconProc.delete_url(scon_no);
 		int cnt = this.sconProc.delete(scon_no);
+		
+		ArrayList<Share_imageVO> list = this.sconProc.read_image(scon_no);
+		for(Share_imageVO image: list) {
+		  String file_saved = image.getFile_upload_name();
+		  String thumb = image.getFile_thumb_name();
+		  
+		  String uploadDir = Contents.getUploadDir();
+		  Tool.deleteFile(uploadDir,file_saved);
+		  Tool.deleteFile(uploadDir,thumb);
+		}
+		int cnt_image=this.sconProc.delete_image(scon_no);
+		if(cnt_image>0) {
+		  System.out.println("이미지 삭제 성공");
+		}
 
 		return "redirect:/scontents/list_by_search";
 	}

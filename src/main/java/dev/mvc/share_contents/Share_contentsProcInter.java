@@ -214,7 +214,12 @@ public interface Share_contentsProcInter {
     */
    public ArrayList read_image(int scon_no);
    
-	 
+   /**
+    * scon_no에 따른 이미지 삭제
+    * @param scont_no
+    * @return
+    */
+   public int delete_image(int scon_no);
 //	 /**
 //	  * 우선순위 올림
 //	  * @param scon_no 
