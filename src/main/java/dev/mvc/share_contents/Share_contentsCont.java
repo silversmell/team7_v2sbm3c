@@ -124,8 +124,9 @@ public class Share_contentsCont {
 	}
 
 	@PostMapping("/update_text")
-	public String update_text(Model model, Share_contentsVO scontentsVO, RedirectAttributes ra,int scon_no,String url_link) {
-
+	public String update_text(Model model, Share_contentsVO scontentsVO, RedirectAttributes ra,int scon_no,String url_link,
+	                                    List<MultipartFile> fnamesMF) {
+	  System.out.println("-> fnamesMF: " + fnamesMF);
 		int cnt = this.sconProc.update_text(scontentsVO);
 		//System.out.println("url_link -> " + url_link);
 
@@ -133,6 +134,7 @@ public class Share_contentsCont {
 		
 		String[] list = url_link.split(",");
 		ArrayList<Contents_urlVO> arr = this.sconProc.url_read(scon_no);
+		
 		
 		for (int i = 0; i < list.length; i++) {
 			list[i] = list[i].trim();
@@ -143,6 +145,57 @@ public class Share_contentsCont {
 			this.sconProc.update_url(map);
 		}
 		
+		ArrayList<Share_imageVO> image_list_old = this.sconProc.read_image(scon_no);
+		for(Share_imageVO image:image_list_old) {
+		  
+		// 파일 삭제
+		  String file1saved = image.getFile_upload_name();
+		  String thumb = image.getFile_thumb_name();
+		  
+		  String upDir = Contents.getUploadDir();
+		  Tool.deleteFile(upDir,file1saved);
+		  Tool.deleteFile(upDir,thumb);
+		}
+		
+
+		long size1=0;
+		  //파일 전송
+		Share_imageVO share_imageVO = new Share_imageVO();
+		 String upDir = Contents.getUploadDir(); // 파일을 업로드할 폴더 준비
+      String file_origin_name="";
+      String file_upload_name="";
+      String file_thumb_name="";
+      
+      long file_size=0;
+      share_imageVO.setFnamesMF(fnamesMF);
+      int count = fnamesMF.size();
+      System.out.println("-> count: " +count);
+     
+      
+      if(count>0) {
+        for(MultipartFile multipartFile: fnamesMF) {
+          file_size = multipartFile.getSize();
+          System.out.println("-> file_size: " +file_size);
+          if(file_size>0) {
+            file_origin_name=multipartFile.getOriginalFilename();
+            file_upload_name=Upload.saveFileSpring(multipartFile, upDir);
+            
+            if(Tool.isImage(file_origin_name)) {
+              file_thumb_name=Tool.preview(upDir, file_upload_name, 200, 150);
+            }
+          }
+          share_imageVO.setFile_no(image_list_old.get(--count).getFile_no());
+          share_imageVO.setFile_origin_name(file_origin_name);
+          share_imageVO.setFile_thumb_name(file_thumb_name);
+          share_imageVO.setFile_upload_name(file_upload_name);
+          share_imageVO.setFile_size(count);
+          
+          int image_cnt = this.sconProc.update_file(share_imageVO);
+          System.out.println("-> image_cnt: " + image_cnt);
+        }
+        
+      }
+      
 		return "redirect:/scontents/list_by_search";
 	}
 
@@ -160,9 +213,9 @@ public class Share_contentsCont {
 	@PostMapping("/create")
 	public String create(Model model, Share_contentsVO scontentsVO, String url_link, RedirectAttributes ra, List<MultipartFile> fnamesMF,
 	                          @RequestParam("tag_no") int[] tag_no) {   
-	  
+	  System.out.println("-> fnamesMF :" +fnamesMF );
 		String[] url_sub_link = {"1","1","1","1","1"};
-	      System.out.println(fnamesMF);
+	      //System.out.println(fnamesMF);
 		int cnt = this.sconProc.create(scontentsVO);
 		ArrayList<Share_contentsVO> list1 = this.sconProc.list_all();
 

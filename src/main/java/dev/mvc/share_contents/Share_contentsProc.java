@@ -315,6 +315,12 @@ public class Share_contentsProc implements Share_contentsProcInter {
     return cnt;
   }
 
+  @Override
+  public int update_file(Share_imageVO share_imageVO) {
+    int cnt = this.scontentsDAO.update_file(share_imageVO);
+    return cnt;
+  }
+
 //@Override
 //public int up_priority(int scon_no) {
 //	int cnt = this.scontentsDAO.up_priority(scon_no);

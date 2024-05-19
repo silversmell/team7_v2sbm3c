@@ -203,6 +203,13 @@ public interface Share_contentsDAOInter {
 	  */
 	 public int delete_image(int scon_no);
 	 
+	 /**
+	  * share_imageVO 수정
+	  * @param share_imageVO
+	  * @return
+	  */
+	 public int update_file(Share_imageVO share_imageVO);
+	 
 	 
 	 
 //	 /**

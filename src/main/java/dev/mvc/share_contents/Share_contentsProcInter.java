@@ -220,6 +220,13 @@ public interface Share_contentsProcInter {
     * @return
     */
    public int delete_image(int scon_no);
+   
+   /**
+    * share_imageVO 수정
+    * @param share_imageVO
+    * @return
+    */
+   public int update_file(Share_imageVO share_imageVO);
 //	 /**
 //	  * 우선순위 올림
 //	  * @param scon_no 

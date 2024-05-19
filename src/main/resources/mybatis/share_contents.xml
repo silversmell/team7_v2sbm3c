@@ -49,10 +49,8 @@
   <update id="update_text"
     parameterType="dev.mvc.share_contentsdto.Share_contentsVO">
     update share_contents
-    set
-    scon_title=#{scon_title},scon_contents=#{scon_contents}
-    where
-    scon_no=#{scon_no}
+    set  scon_title=#{scon_title},scon_contents=#{scon_contents}
+    where  scon_no=#{scon_no}
   </update>
 
   <insert id="create"
@@ -232,6 +230,12 @@
         delete from share_image
         where scon_no=#{scon_no}
   </delete>
+  
+  <update id="update_file" parameterType="dev.mvc.share_contentsdto.Share_imageVO">
+     update share_image
+     set file_origin_name=#{file_origin_name}, file_upload_name=#{file_upload_name}, file_thumb_name=#{file_thumb_name},file_size=#{file_size}
+     where file_no=#{file_no} 
+  </update>
 
     <!--
     <update id ="up_priority" parameterType="int" >
