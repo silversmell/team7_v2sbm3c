@@ -126,7 +126,6 @@ public class Share_contentsCont {
 	@PostMapping("/update_text")
 	public String update_text(Model model, Share_contentsVO scontentsVO, RedirectAttributes ra,int scon_no,String url_link,
 	                                    List<MultipartFile> fnamesMF) {
-	  System.out.println("-> fnamesMF: " + fnamesMF);
 		int cnt = this.sconProc.update_text(scontentsVO);
 		//System.out.println("url_link -> " + url_link);
 
@@ -147,7 +146,7 @@ public class Share_contentsCont {
 		
 		ArrayList<Share_imageVO> image_list_old = this.sconProc.read_image(scon_no);
 		for(Share_imageVO image:image_list_old) {
-		  
+		 System.out.println(" -> image size : " + image_list_old.size());
 		// 파일 삭제
 		  String file1saved = image.getFile_upload_name();
 		  String thumb = image.getFile_thumb_name();
@@ -173,9 +172,9 @@ public class Share_contentsCont {
      
       
       if(count>0) {
+        int cnt1 =0;
         for(MultipartFile multipartFile: fnamesMF) {
           file_size = multipartFile.getSize();
-          System.out.println("-> file_size: " +file_size);
           if(file_size>0) {
             file_origin_name=multipartFile.getOriginalFilename();
             file_upload_name=Upload.saveFileSpring(multipartFile, upDir);
@@ -184,14 +183,30 @@ public class Share_contentsCont {
               file_thumb_name=Tool.preview(upDir, file_upload_name, 200, 150);
             }
           }
-          share_imageVO.setFile_no(image_list_old.get(--count).getFile_no());
+          System.out.println("-> cnt1: " + cnt1 + ", image_list_old.size(): " + image_list_old.size());
+          if(image_list_old.size()<=cnt1) { //수정할 이미지 갯수가 원래 이미지 갯수보다 많을 경우
+            share_imageVO.setScon_no(scon_no);
+            share_imageVO.setFile_origin_name(file_origin_name);
+            share_imageVO.setFile_thumb_name(file_thumb_name);
+            share_imageVO.setFile_upload_name(file_upload_name);
+            share_imageVO.setFile_size(count);
+            
+            int image_cnt=this.sconProc.attach_create(share_imageVO);
+            System.out.println("image 수정 중 create 완료");
+          }
+          else {
+          System.out.println("file_no ->" +image_list_old.get(cnt1).getFile_no());
+          System.out.println("199까지 성공");
+          share_imageVO.setFile_no(image_list_old.get(cnt1).getFile_no()); 
           share_imageVO.setFile_origin_name(file_origin_name);
           share_imageVO.setFile_thumb_name(file_thumb_name);
           share_imageVO.setFile_upload_name(file_upload_name);
           share_imageVO.setFile_size(count);
-          
           int image_cnt = this.sconProc.update_file(share_imageVO);
           System.out.println("-> image_cnt: " + image_cnt);
+          
+          }
+          cnt1++;
         }
         
       }
@@ -235,11 +250,10 @@ public class Share_contentsCont {
 	      //System.out.println("-> scon_no : " +scon_no);
 	      share_imageVO.setFnamesMF(fnamesMF);
 	      int count = fnamesMF.size();
-	      System.out.println("-> count: " +count);
+
 	      if(count>0) {
 	    	  for(MultipartFile multipartFile: fnamesMF) {
 	    		  file_size = multipartFile.getSize();
-	    		  System.out.println("-> file_size: " +file_size);
 	    		  
 	    		  if(file_size>0) {
 	    			  file_origin_name=multipartFile.getOriginalFilename();
@@ -256,7 +270,6 @@ public class Share_contentsCont {
 	    		  share_imageVO.setFile_size(count);
 	    		  
 	    		  int image_cnt=this.sconProc.attach_create(share_imageVO);
-	    		  System.out.println("-> image_cnt: " + image_cnt);
 	    	  }
 	      }
 	      
@@ -266,12 +279,10 @@ public class Share_contentsCont {
 		  map1.put("tag_no",tag_no[i]);
       map1.put("scon_no", scon_no);
       int cnt1 = this.sconProc.insert_tag(map1);
-      //System.out.println("해시태그 등록 성공: "+tag_no[i]);
 		}
 
 		HashMap<String, Object> map = new HashMap<>();
 		String[] list = url_link.split(",");
-		System.out.println("list.length: "+ list.length);
 
 		for (int i = 0; i < list.length; i++) {
 
@@ -325,12 +336,10 @@ public class Share_contentsCont {
 	}
 	 @GetMapping("/read_hashtag")
 	  public String read_hashtag(int tag_no,Model model) {
-	   System.out.println("-> tag_not :" + tag_no);
 	    ArrayList<Contents_tagVO> sconno_list = this.sconProc.select_sconno(tag_no); //tag_no에 따른 scon_no
 	    int[] sconno = new int[sconno_list.size()];
 	    for(int i = 0;i<sconno.length;i++) {
 	      sconno[i] = sconno_list.get(i).getScon_no();
-	      System.out.println("-> sconno[i] :" + sconno[i]);
 	    }
 	    ArrayList<Share_contentsVO> list = new ArrayList<>(); //scon_no에 따른 Share_contentsVO
 	    for(int i = 0;i<sconno_list.size();i++) {
@@ -360,9 +369,7 @@ public class Share_contentsCont {
 		model.addAttribute("word", word);
 		
 		ArrayList<Share_imageVO> list_image = this.sconProc.list_all_image();
-		for(int i  =0 ;i<list_image.size();i++) {
-		  System.out.println("-> list_image:" + list_image.get(i).getFile_thumb_name());
-		}
+
 		
 		model.addAttribute("list_image",list_image);
 		
