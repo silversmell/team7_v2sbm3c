@@ -79,21 +79,11 @@ public class Share_contentsCont {
 		for(int i = 0;i<url_list.size();i++) {
 			model.addAttribute("url_list"+i,url_list.get(i).getUrl_link());
 		}
+    ArrayList<Share_contentsVO> share_imageVO = this.sconProc.read_image(scon_no);
+    model.addAttribute("share_imageVO", share_imageVO);
 		
-		ArrayList<Share_imageVO> simage = this.sconProc.read_image(scon_no);
-		for(int i = 0;i<simage.size();i++) {
-		  //long size = simage.getgetFile_size();
-		long size = simage.get(i).getFile_size();
-		String silze_label = Tool.unit(size);
-		simage.get(i).setFlabel(silze_label);
-		}
-		
-		model.addAttribute("share_imageVO",simage);
-
 		return "scontents/read";
 	}
-	
-
 	
 	 @GetMapping("/create_comment")
 	  @ResponseBody
@@ -126,6 +116,114 @@ public class Share_contentsCont {
 		}
 		return "scontents/update_text";
 	}
+	
+	@GetMapping("/update_file") //파일 수정
+	public String update_file_form(Model model, int scon_no) {
+	   Share_contentsVO scontentsVO = this.sconProc.read(scon_no);
+	    model.addAttribute("scontentsVO", scontentsVO);
+	    
+	    ArrayList<Share_imageVO> simage = this.sconProc.read_image(scon_no);
+	    for(int i = 0;i<simage.size();i++) {
+	      //long size = simage.getgetFile_size();
+	    long size = simage.get(i).getFile_size();
+	    String silze_label = Tool.unit(size);
+	    simage.get(i).setFlabel(silze_label);
+	    }
+	    
+	    model.addAttribute("share_imageVO",simage);
+	    
+	    return "scontents/update_file";
+	  
+	}
+	
+	@PostMapping("/update_file")
+	 public String update_text(Model model, RedirectAttributes ra,int scon_no,
+       List<MultipartFile> fnamesMF) {
+
+	  if(fnamesMF.size()==0) {
+	    ArrayList<Share_imageVO> list = this.sconProc.read_image(scon_no);
+	    for(Share_imageVO image: list) {
+	      String file_saved = image.getFile_upload_name();
+	      String thumb = image.getFile_thumb_name();
+	      
+	      String uploadDir = Contents.getUploadDir();
+	      Tool.deleteFile(uploadDir,file_saved);
+	      Tool.deleteFile(uploadDir,thumb);
+	    }
+	    int cnt_image=this.sconProc.delete_image(scon_no);
+	    if(cnt_image>0) {
+	      System.out.println("이미지 삭제 성공");
+	    }
+	    return "redirect:/scontents/list_by_search";
+	  }
+	  
+	   ArrayList<Share_imageVO> image_list_old = this.sconProc.read_image(scon_no);
+	    for(Share_imageVO image:image_list_old) {
+	     System.out.println(" -> image size : " + image_list_old.size());
+	    // 파일 삭제
+	      String file1saved = image.getFile_upload_name();
+	      String thumb = image.getFile_thumb_name();
+	      
+	      String upDir = Contents.getUploadDir();
+	      Tool.deleteFile(upDir,file1saved);
+	      Tool.deleteFile(upDir,thumb);
+	    }
+	    
+	    long size1=0;
+	      //파일 전송
+	    Share_imageVO share_imageVO = new Share_imageVO();
+	     String upDir = Contents.getUploadDir(); // 파일을 업로드할 폴더 준비
+	      String file_origin_name="";
+	      String file_upload_name="";
+	      String file_thumb_name="";
+	      
+	      long file_size=0;
+	      share_imageVO.setFnamesMF(fnamesMF);
+	      int count = fnamesMF.size();
+	      System.out.println("-> count: " +count);
+	     
+	      
+	      if(count>0) {
+	        int cnt1 =0;
+	        for(MultipartFile multipartFile: fnamesMF) {
+	          file_size = multipartFile.getSize();
+	          if(file_size>0) {
+	            file_origin_name=multipartFile.getOriginalFilename();
+	            file_upload_name=Upload.saveFileSpring(multipartFile, upDir);
+	            
+	            if(Tool.isImage(file_origin_name)) {
+	              file_thumb_name=Tool.preview(upDir, file_upload_name, 200, 150);
+	            }
+	          }
+	          
+	          //System.out.println("-> cnt1: " + cnt1 + ", image_list_old.size(): " + image_list_old.size());
+	          if(image_list_old.size()<=cnt1) { //수정할 이미지 갯수가 원래 이미지 갯수보다 많을 경우
+	            share_imageVO.setScon_no(scon_no);
+	            share_imageVO.setFile_origin_name(file_origin_name);
+	            share_imageVO.setFile_thumb_name(file_thumb_name);
+	            share_imageVO.setFile_upload_name(file_upload_name);
+	            share_imageVO.setFile_size(count);
+	            
+	            int image_cnt=this.sconProc.attach_create(share_imageVO);
+	            //System.out.println("image 수정 중 create 완료");
+	          }
+	          else {
+	          share_imageVO.setFile_no(image_list_old.get(cnt1).getFile_no()); 
+	          share_imageVO.setFile_origin_name(file_origin_name);
+	          share_imageVO.setFile_thumb_name(file_thumb_name);
+	          share_imageVO.setFile_upload_name(file_upload_name);
+	          share_imageVO.setFile_size(count);
+	          int image_cnt = this.sconProc.update_file(share_imageVO);
+	          System.out.println("-> image_cnt: " + image_cnt);
+	          
+	          }
+	          cnt1++;
+	        }
+	        
+	      }
+	      return "redirect:/scontents/list_by_search";
+	}
+	
 
 	@PostMapping("/update_text")
 	public String update_text(Model model, Share_contentsVO scontentsVO, RedirectAttributes ra,int scon_no,String url_link,
@@ -146,71 +244,6 @@ public class Share_contentsCont {
 			map.put("url_no", arr.get(i).getUrl_no());
 			this.sconProc.update_url(map);
 		}
-		
-		ArrayList<Share_imageVO> image_list_old = this.sconProc.read_image(scon_no);
-		for(Share_imageVO image:image_list_old) {
-		 System.out.println(" -> image size : " + image_list_old.size());
-		// 파일 삭제
-		  String file1saved = image.getFile_upload_name();
-		  String thumb = image.getFile_thumb_name();
-		  
-		  String upDir = Contents.getUploadDir();
-		  Tool.deleteFile(upDir,file1saved);
-		  Tool.deleteFile(upDir,thumb);
-		}
-		
-
-		long size1=0;
-		  //파일 전송
-		Share_imageVO share_imageVO = new Share_imageVO();
-		 String upDir = Contents.getUploadDir(); // 파일을 업로드할 폴더 준비
-      String file_origin_name="";
-      String file_upload_name="";
-      String file_thumb_name="";
-      
-      long file_size=0;
-      share_imageVO.setFnamesMF(fnamesMF);
-      int count = fnamesMF.size();
-      System.out.println("-> count: " +count);
-     
-      
-      if(count>0) {
-        int cnt1 =0;
-        for(MultipartFile multipartFile: fnamesMF) {
-          file_size = multipartFile.getSize();
-          if(file_size>0) {
-            file_origin_name=multipartFile.getOriginalFilename();
-            file_upload_name=Upload.saveFileSpring(multipartFile, upDir);
-            
-            if(Tool.isImage(file_origin_name)) {
-              file_thumb_name=Tool.preview(upDir, file_upload_name, 200, 150);
-            }
-          }
-          //System.out.println("-> cnt1: " + cnt1 + ", image_list_old.size(): " + image_list_old.size());
-          if(image_list_old.size()<=cnt1) { //수정할 이미지 갯수가 원래 이미지 갯수보다 많을 경우
-            share_imageVO.setScon_no(scon_no);
-            share_imageVO.setFile_origin_name(file_origin_name);
-            share_imageVO.setFile_thumb_name(file_thumb_name);
-            share_imageVO.setFile_upload_name(file_upload_name);
-            share_imageVO.setFile_size(count);
-            
-            int image_cnt=this.sconProc.attach_create(share_imageVO);
-            //System.out.println("image 수정 중 create 완료");
-          }
-          else {
-          share_imageVO.setFile_no(image_list_old.get(cnt1).getFile_no()); 
-          share_imageVO.setFile_origin_name(file_origin_name);
-          share_imageVO.setFile_thumb_name(file_thumb_name);
-          share_imageVO.setFile_upload_name(file_upload_name);
-          share_imageVO.setFile_size(count);
-          int image_cnt = this.sconProc.update_file(share_imageVO);
-          System.out.println("-> image_cnt: " + image_cnt);
-          
-          }
-          cnt1++;
-        }
-        
-      }
       
 		return "redirect:/scontents/list_by_search";
 	}

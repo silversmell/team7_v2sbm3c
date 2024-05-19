@@ -30,13 +30,7 @@
        <textarea name='scon_contents'  required="required" class="form-control" rows="12" style='width: 100%;' 
                       th:text='${scontentsVO.scon_contents}'></textarea>
     </div>
-    <div>
-       <label>이미지</label>
-                 <input type='file' class="form-control" name='fnamesMF'
-                     placeholder="파일 선택" multiple/>
-        </div>
-    
-       <div>
+
        <label th:if="${url_list0!= null}"label>url1</label>
        <input type='url' name='url_link' th:if="${url_list0 != null}" th:value="${url_list0}" required
                  autofocus="autofocus" class="form-control" style='width: 100%;'/>
@@ -53,7 +47,6 @@
 			<input type='url'  name='url_link' th:if="${url_list4 != null}" th:value="${url_list4}" 
        autofocus="autofocus" class="form-control" style='width: 100%;'>
 
-    	</div>
 
     <!--
     <div>
