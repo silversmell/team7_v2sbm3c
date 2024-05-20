@@ -33,6 +33,50 @@ DROP SEQUENCE BOOKMARK_SEQ;
 
 --------------------------------------------------------------------------------
 
+-- 임시 데이터 추가
+-- 주의) FK 테이블에 데이터가 존재하는지 확인
+
+INSERT INTO BOOKMARK(mark_no, acc_no, scon_no, qcon_no)
+VALUES(BOOKMARK_SEQ.nextval, 1, 1, null);
+INSERT INTO BOOKMARK(mark_no, acc_no, scon_no, qcon_no)
+VALUES(BOOKMARK_SEQ.nextval, 1, 2, null);
+INSERT INTO BOOKMARK(mark_no, acc_no, scon_no, qcon_no)
+VALUES(BOOKMARK_SEQ.nextval, 1, null, 1);
+INSERT INTO BOOKMARK(mark_no, acc_no, scon_no, qcon_no)
+VALUES(BOOKMARK_SEQ.nextval, 1, null, 2);
+INSERT INTO BOOKMARK(mark_no, acc_no, scon_no, qcon_no)
+VALUES(BOOKMARK_SEQ.nextval, 1, null, 3);
+
+INSERT INTO BOOKMARK(mark_no, acc_no, scon_no, qcon_no)
+VALUES(BOOKMARK_SEQ.nextval, 2, null, 1);
+INSERT INTO BOOKMARK(mark_no, acc_no, scon_no, qcon_no)
+VALUES(BOOKMARK_SEQ.nextval, 2, 1, null);
+INSERT INTO BOOKMARK(mark_no, acc_no, scon_no, qcon_no)
+VALUES(BOOKMARK_SEQ.nextval, 2, 2, null);
+INSERT INTO BOOKMARK(mark_no, acc_no, scon_no, qcon_no)
+VALUES(BOOKMARK_SEQ.nextval, 2, 3, null);
+
+INSERT INTO BOOKMARK(mark_no, acc_no, scon_no, qcon_no)
+VALUES(BOOKMARK_SEQ.nextval, 3, null, 1);
+INSERT INTO BOOKMARK(mark_no, acc_no, scon_no, qcon_no)
+VALUES(BOOKMARK_SEQ.nextval, 3, null, 2);
+INSERT INTO BOOKMARK(mark_no, acc_no, scon_no, qcon_no)
+VALUES(BOOKMARK_SEQ.nextval, 3, 1, null);
+INSERT INTO BOOKMARK(mark_no, acc_no, scon_no, qcon_no)
+VALUES(BOOKMARK_SEQ.nextval, 3, 2, null);
+
+--------------------------------------------------------------------------------
+
+-- 전체 데이터 조회
+SELECT mark_no, acc_no, scon_no, qcon_no
+FROM bookmark;
+
+COMMIT;
+
+
+
+
+
 
 
 
