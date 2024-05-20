@@ -131,6 +131,8 @@
           </div>
     </tr>
 					<br>
+
+            <span><img src="/css/images/bookmark_off.png" class="icon"></span> <!-- /static/cate/images/show.png -->
           <span style="font-size: 1.5em; font-weight: bold;" th:text="${scontentsVO.scon_title}"></span>
           <span style="font-size: 1em;" th:text="${scontentsVO.scon_date}"></span><br><br>
           <span style="font-size: 1em;" th:text="|조회수: ${scon_views}|"></span><br><br>
@@ -138,6 +140,8 @@
           <div style="white-space: pre-wrap;"><span th:text="${scontentsVO.scon_contents}"></span></div>
         </div>
       </li>
+
+
       <div>
 <div>
 	<a style="font-size: 1em;" th:href="${url_list0}" th:text="${url_list0}" th:if="${url_list0 != '1'}">Link1</a><br><br>
