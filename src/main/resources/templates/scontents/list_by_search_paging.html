@@ -20,12 +20,19 @@
 		th:replace="~{scontents/list_search_component::list_search_fragment}"></div>
 
 	<div class='menu_line'></div>
-
+	
+<div style="display: flex;">
+    <div th:each="hashtag, status:${list_hashtag}" th:attr="onclick=|location.href='/scontents/read_hashtag?tag_no=${hashtag.tag_no}'|" style="cursor: pointer; margin-right: 10px;">
+        <span style="font-weight: bold;" th:text="${hashtag.tag_name}"></span>
+    </div>
+</div>
+    
 	<table class="table table-striped" style='width: 100%;'>
 		<colgroup>
 			<col style='width: 10%;' />
 			<col style='width: 90%;' />
 		</colgroup>
+		
 
     <thead>
         <tr>
@@ -36,11 +43,8 @@
 
     <tbody>
         <!-- 해시태그 -->
-        <tr th:each="hashtag, status:${list_hashtag}" th:attr="onclick=|location.href='/scontents/read_hashtag?tag_no=${hashtag.tag_no}'|" style="cursor: pointer;">
-            <td class='td_left'><span th:text="${hashtag.tag_name}" style="font-weight: bold;"></span></td>
-            <td></td> <!-- 게시글 칸은 비워둠 -->
-        </tr>
-        <!-- 이미지와 게시글 -->
+
+
 <tr th:if="${list_image.size() > 0}">
     <td class='td_basic' style="vertical-align: middle; text-align: center;">
         <div th:each="share_imageVO, status:${list_image}">

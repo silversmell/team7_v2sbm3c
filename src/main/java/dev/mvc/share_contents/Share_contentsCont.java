@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -56,6 +57,8 @@ public class Share_contentsCont {
 
 		Share_contentsVO scontentsVO = this.sconProc.read(scon_no);
 		model.addAttribute("scontentsVO", scontentsVO);
+		System.out.println("-> mark: " +scontentsVO.getMark());
+		System.out.println("-> priority :" + scontentsVO.getScon_priority());
 
 		ArrayList<Contents_tagVO> list1 = this.sconProc.read_contents_tag(scon_no); // hashtag vo 들어오면 변경할 것
 		ArrayList<String> list2 = new ArrayList<>();
@@ -83,6 +86,16 @@ public class Share_contentsCont {
 
 		return "scontents/read";
 	}
+	
+	@GetMapping("/up_priority/{scon_no}")
+	public String up_priority(Model model, @PathVariable("scon_no") Integer scon_no) {
+		
+		this.sconProc.up_priority(scon_no);
+		
+		return "redirect:/scontents/read?scon_no=" +scon_no;
+	}
+	
+	
 
 	@GetMapping("/create_comment")
 	@ResponseBody
@@ -242,7 +255,7 @@ public class Share_contentsCont {
 			List<MultipartFile> fnamesMF, @RequestParam("tag_no") int[] tag_no) {
 		System.out.println("-> fnamesMF :" + fnamesMF);
 		String[] url_sub_link = { "1", "1", "1", "1", "1" };
-
+		
 		int cnt = this.sconProc.create(scontentsVO);
 
 		if (cnt == 1) {
@@ -422,12 +435,13 @@ public class Share_contentsCont {
 
 		ArrayList<Share_contentsVO> list = this.sconProc.list_by_contents_search_paging(map);
 		model.addAttribute("list", list);
+
 		ArrayList<HashtagVO> list_hashtag = this.sconProc.select_hashtag();
 		model.addAttribute("list_hashtag", list_hashtag);
 
 		model.addAttribute("word", word);
-
-		ArrayList<Share_imageVO> list_image = this.sconProc.list_all_image();
+		
+		ArrayList<Share_imageVO> list_image = this.sconProc.list_all_image(); 
 		model.addAttribute("list_image", list_image);
 
 		int search_count = this.sconProc.list_by_cateno_search_count(map);

@@ -14,6 +14,10 @@ public class Share_commentsVO {
 	private String scmt_comment;
 	
 	private String scmt_date;
+	
+
+	
+
 
 	public int getScmt_no() {
 		return scmt_no;
@@ -54,5 +58,7 @@ public class Share_commentsVO {
 	public void setScmt_date(String scmt_date) {
 		this.scmt_date = scmt_date;
 	}
+	
+
 	
 }

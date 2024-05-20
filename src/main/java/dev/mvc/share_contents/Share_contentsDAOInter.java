@@ -210,6 +210,26 @@ public interface Share_contentsDAOInter {
 	  */
 	 public int update_file(Share_imageVO share_imageVO);
 	 
+	 /**
+	  * scon_no에 따른 이미지 갯수
+	  * @param scon_no
+	  * @return int
+	  */
+	 public int count_image(int scon_no);
+	 
+	 /**
+	  * 우선순위 증가
+	  * @param scon_no
+	  * @return  int
+	  */
+	 public int up_priority(int scon_no);
+	 
+	 /**
+	  * 우선순위 감소
+	  * @param scon_no
+	  * @return int
+	  */
+	 public int down_priority(int scon_no);
 	 
 	 
 //	 /**

@@ -321,6 +321,24 @@ public class Share_contentsProc implements Share_contentsProcInter {
     return cnt;
   }
 
+@Override
+public int count_image(int scon_no) {
+	int cnt = this.scontentsDAO.count_image(scon_no);
+	return cnt;
+}
+
+@Override
+public int up_priority(int scon_no) {
+	int cnt = this.scontentsDAO.up_priority(scon_no);
+	return cnt;
+}
+
+@Override
+public int down_priority(int scon_no) {
+	int cnt = this.scontentsDAO.down_priority(scon_no);
+	return cnt;
+}
+
 //@Override
 //public int up_priority(int scon_no) {
 //	int cnt = this.scontentsDAO.up_priority(scon_no);
