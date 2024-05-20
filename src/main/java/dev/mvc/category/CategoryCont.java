@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import dev.mvc.account.AccountProcInter;
 import dev.mvc.tool.Tool;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -26,7 +27,9 @@ public class CategoryCont {
   @Qualifier("dev.mvc.category.CategoryProc")
   private CategoryProcInter categoryProc;
   
-  // @@@@회원 자리@@@@
+  @Autowired
+  @Qualifier("dev.mvc.account.AccountProc")
+  private AccountProcInter accountProc;
   
   /** 페이지당 출력할 레코드 갯수, nowPage는 1부터 시작 */
   public int record_per_page = 10;
@@ -70,7 +73,6 @@ public class CategoryCont {
           word, "/category/cate_list_search", search_count, this.record_per_page, this.page_per_block);
       model.addAttribute("paging", paging);
       model.addAttribute("now_page", now_page);
-      
       model.addAttribute("word", word);
       
       // 일련 변호 생성: 레코드 갯수 - ((현재 페이지수 -1) * 페이지당 레코드 수)
@@ -374,8 +376,83 @@ public class CategoryCont {
       model.addAttribute("code", "delete_fail");
       return "category/msg"; // /templates/category/msg.html
     }
+  }                                                                               
+   
+  /**
+   * 카테고리 출력 순위 높임: cate_seqno 10 -> 1
+   * http://localhost:9093/category/cate_update_seqno_forward/1
+   * @param model
+   * @param cate_no
+   * @param word
+   * @param now_page
+   * @return
+   */
+  @GetMapping(value="/cate_update_seqno_forward/{cate_no}")
+  public String cate_update_seqno_forward(Model model,
+                                                    @PathVariable("cate_no") Integer cate_no,
+                                                    @RequestParam(name="word", defaultValue = "") String word,
+                                                    @RequestParam(name="now_page", defaultValue = "1") int now_page) {
+    
+    this.categoryProc.cate_update_seqno_forward(cate_no);
+    
+    return "redirect:/category/cate_list_search?word=" + Tool.encode(word) + "&now_page=" + now_page;
   }
   
+  /**
+   * 카테고리 출력 순위 높임: cate_seqno 1 -> 10
+   * http://localhost:9093/category/cate_update_seqno_backward/1
+   * @param model
+   * @param cate_no
+   * @param word
+   * @param now_page
+   * @return
+   */
+  @GetMapping(value="/cate_update_seqno_backward/{cate_no}")
+  public String cate_update_seqno_backward(Model model,
+                                                    @PathVariable("cate_no") Integer cate_no,
+                                                    @RequestParam(name="word", defaultValue = "") String word,
+                                                    @RequestParam(name="now_page", defaultValue = "1") int now_page) {
+    
+    this.categoryProc.cate_update_seqno_backward(cate_no);
+    
+    return "redirect:/category/cate_list_search?word=" + Tool.encode(word) + "&now_page=" + now_page;
+  }
   
+  /**
+   * 카테고리 공개 설정
+   * http:///localhost:9093/cateogry/cate_update_visible_y/1
+   * @param model1
+   * @param cate_no
+   * @param word
+   * @return
+   */
+  @GetMapping(value="/cate_update_visible_y/{cate_no}")
+  public String cate_update_visible_y(Model model,
+                                              @PathVariable("cate_no") Integer cate_no,
+                                              @RequestParam(name="word", defaultValue = "") String word) {
+    
+    this.categoryProc.cate_update_visible_y(cate_no);
+    
+    return "redirect:/category/cate_list_search?word=" + Tool.encode(word); // /templates/category/cate_list_search
+  }
   
+  /**
+   * 카테고리 비공개 설정
+   * http:///localhost:9093/cateogry/cate_update_visible_n/1
+   * @param model1
+   * @param cate_no
+   * @param word
+   * @return
+   */
+  @GetMapping(value="/cate_update_visible_n/{cate_no}")
+  public String cate_update_visible_n(Model model,
+                                              @PathVariable("cate_no") Integer cate_no,
+                                              @RequestParam(name="word", defaultValue = "") String word) {
+    
+    this.categoryProc.cate_update_visible_n(cate_no);
+    
+    return "redirect:/category/cate_list_search?word=" + Tool.encode(word); // /templates/category/cate_list_search
+  }
+
+
 }
