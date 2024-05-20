@@ -172,7 +172,6 @@
     VALUES(qna_image_seq.nextval, #{qcon_no}, #{file_origin_name}, #{file_upload_name}, #{file_thumb_name}, #{file_size}, sysdate)
   </insert>
   
-  
   <!-- FK cate_no 컬럼에 대응하는 필수 SQL -->
   <!-- 특정 카테고리에 속한 레코드 갯수를 리턴 -->
   <select id="count_by_cate_no" resultType="int" parameterType="int">
