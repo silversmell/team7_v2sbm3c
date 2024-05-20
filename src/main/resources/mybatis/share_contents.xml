@@ -6,10 +6,20 @@
 	<!-- 전체 목록 -->
 	<select id="list_all"
 		resultType="dev.mvc.share_contentsdto.Share_contentsVO">
-		SELECT scon_no, scon_title, scon_contents, scon_views,
+		SELECT scon_no, scon_title, scon_contents, scon_views,mark,
 		scon_comment, scon_date,scon_priority
-		FROM share_contents
+		FROM share_contents ORDER BY scon_no ASC
 	</select>
+
+	<!-- scon에 따른 목록 -->
+	<select id="list_by_sconno"
+		resultType="dev.mvc.share_contentsdto.Share_contentsVO">
+		SELECT scon_no, scon_title, scon_contents, scon_views, scon_date, acc_no,mark
+		,cate_no
+		FROM share_contents
+		where scon_no=#{scon_no}
+	</select>
+
 	<!-- 사진 전체 목록 -->
 	<select id="list_all_image"
 		resultType="dev.mvc.share_contentsdto.Share_imageVO">
@@ -22,9 +32,9 @@
 	<select id="read"
 		resultType="dev.mvc.share_contentsdto.Share_contentsVO"
 		parameterType="Integer">
-		SELECT scon_no, scon_title, scon_contents, scon_views,
+		SELECT scon_no, scon_title, scon_contents, scon_views,mark,
 		scon_date, acc_no
-		,cate_no
+		,cate_no,scon_priority
 		FROM share_contents
 		where scon_no=#{scon_no}
 	</select>
@@ -40,10 +50,8 @@
 	<update id="update_text"
 		parameterType="dev.mvc.share_contentsdto.Share_contentsVO">
 		update share_contents
-		set
-		scon_title=#{scon_title},scon_contents=#{scon_contents}
-		where
-		scon_no=#{scon_no}
+		set scon_title=#{scon_title},scon_contents=#{scon_contents}
+		where scon_no=#{scon_no}
 	</update>
 
 	<insert id="create"
@@ -73,17 +81,6 @@
 		WHERE scon_no=#{scon_no}
 	</select>
 
-	<insert id="create_image"
-		parameterType="dev.mvc.share_contentsdto.Share_imageVO">
-		INSERT INTO share_image(file_no, scon_no,
-		file_origin_name,
-		file_upload_name, file_thumb_name, file_size,
-		file_date)
-		VALUES(share_image_seq.nextval, #{scon_no},
-		#{file_origin_name} ,
-		#{file_upload_name}, #{file_thumb_name},
-		#{file_size} sysdate)
-	</insert>
 
 	<!-- 카테고리별 검색 + 페이징 목록 -->
 	<select id="list_by_contents_search_paging"
@@ -179,22 +176,111 @@
 		delete from contents_url
 		where scon_no=#{scon_no}
 	</delete>
-	
-	<delete id = "delete_comments" parameterType="int">
-	   delete from share_comment
-     where scon_no=#{scon_no}
+
+	<delete id="delete_comments" parameterType="int">
+		delete from share_comment
+		where scon_no=#{scon_no}
 	</delete>
-	
-	<insert id = "insert_tag" parameterType="HashMap" >
+
+	<insert id="insert_tag" parameterType="HashMap">
 		INSERT INTO contents_tag(contents_tag_no,scon_no,tag_no)
 		VALUES (contents_tag_SEQ.nextval,#{scon_no},#{tag_no})
 	</insert>
-	
-		 <select id = "read_contents_tag" parameterType="int" resultType="dev.mvc.share_contentsdto.Contents_tagVO" >
+
+	<select id="read_contents_tag" parameterType="int"
+		resultType="dev.mvc.share_contentsdto.Contents_tagVO">
 		select tag_no
 		from contents_tag
 		where scon_no=#{scon_no}
-		</select>
+	</select>
+
+	<insert id="attach_create"
+		parameterType="dev.mvc.share_contentsdto.Share_imageVO">
+		INSERT INTO
+		share_image(file_no,scon_no,file_origin_name,file_upload_name,file_thumb_name,file_size,file_date)
+		VALUES(share_image_SEQ.nextval,#{scon_no},#{file_origin_name},#{file_upload_name},#{file_thumb_name},#{file_size},sysdate)
+	</insert>
+
+	<select id="select_hashtag"
+		resultType="dev.mvc.recommend.HashtagVO">
+		SELECT tag_no,tag_code,tag_name
+		FROM hashtag
+	</select>
+
+	<select id="select_hashname"
+		resultType="dev.mvc.recommend.HashtagVO">
+		select tag_name
+		from hashtag
+		where tag_no=#{tag_no}
+	</select>
+
+	<select id="select_sconno"
+		resultType="dev.mvc.share_contentsdto.Contents_tagVO">
+		select scon_no
+		from contents_tag
+		where tag_no=#{tag_no}
+	</select>
+
+	<select id="list_image"
+		resultType="dev.mvc.share_contentsdto.Share_imageVO">
+		SELECT
+		file_no,scon_no,file_origin_name,file_upload_name,file_thumb_name,file_size,file_date
+		FROM share_image
+		ORDER BY scon_no DESC, file_no ASC
+	</select>
+
+	<select id="read_image"
+		resultType="dev.mvc.share_contentsdto.Share_imageVO"
+		parameterType="Integer">
+		SELECT
+		file_no,scon_no,file_origin_name,file_upload_name,file_thumb_name,file_size,file_date
+		FROM share_image
+		where scon_no=#{scon_no}
+	</select>
+
+	<delete id="delete_image" parameterType="int">
+		delete from share_image
+		where scon_no=#{scon_no}
+	</delete>
+
+	<update id="update_file"
+		parameterType="dev.mvc.share_contentsdto.Share_imageVO">
+		update share_image
+		set file_origin_name=#{file_origin_name},
+		file_upload_name=#{file_upload_name},
+		file_thumb_name=#{file_thumb_name},file_size=#{file_size}
+		where file_no=#{file_no}
+	</update>
+
+	<select id="count_image" resultType="int" parameterType="int">
+		select count(*)
+		from share_image
+		where scon_no=#{scon_no}
+	</select>
+
+	<update id="up_priority" parameterType="int">
+		update share_contents
+		set scon_priority=scon_priority+1
+		where scon_no=#{scon_no}
+	</update>
+
+	<update id="down_priority" parameterType="int">
+		update share_contents
+		set scon_priority=scon_priority-1
+		where scon_no=#{scon_no}
+	</update>
+	
+	<update id ="y_mark" parameterType="int">
+		update share_contents
+		set mark='Y'
+		where scon_no=#{scon_no}
+</update>
+
+<update id ="n_mark" parameterType="int">
+update share_contents
+set mark='N'
+where scon_no=#{scon_no}
+</update>
 
 </mapper>
 

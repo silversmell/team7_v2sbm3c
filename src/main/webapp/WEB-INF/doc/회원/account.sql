@@ -61,6 +61,7 @@ SELECT acc_no, acc_id, acc_pw, acc_name, acc_tel, acc_age, acc_date, acc_grade,
 FROM account
 ORDER BY acc_no ASC;
 
+SELECT ACCOUNT_SEQ.currval AS acc_no FROM dual;
 
 -- 특정 회원 조회
 

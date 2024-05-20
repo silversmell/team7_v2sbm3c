@@ -8,14 +8,22 @@
     <fieldset class="fieldset_basic">
       <ul>
         <li th:switch="${code}" class="li_none">
-          <div th:case="create_success">
-            <span class="span_success" th:text="|${acc_name}(${acc_id})님 회원 가입을 축하합니다.|"></span><br>
+          <div th:if="${code} == create_success">
+            <span class="span_success" th:text="|회원 가입이 완료 되었습니다.|"></span><br>
             <!--<button type='button' th:attr="onclick=|location.href='./login?id=${id}'|"
               class="btn btn-primary btn-sm">로그인</button>-->
           </div>
-          <div th:case="create_fail">
-            <span class="span_fail">회원 가입에 실패했습니다</span><br>
+          <div th:if="${code} == create_fail">
+            <span class="span_fail" th:text="|회원가입에 실패하였습니다.|"></span><br>
           </div>
+		  
+		  <div th:if="${code} == duplicate_id">
+		    <span class="span_fail" th:text="|이미 존재하는 아이디 입니다.|"></span><br>
+		  </div>
+		  
+		  <div th:if="${code} == duplicate_name">
+		    <span class="span_fail" th:text="|이미 존재하는 이름(닉네임) 입니다.|"></span><br>
+		  </div>
 
 		  <!--
           <div th:case="update_success">

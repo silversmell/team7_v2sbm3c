@@ -22,6 +22,16 @@
       <th class='th_bs'>파일</TH>
       <th class='th_bs'>제목</th>
     </tr>
+    
+      <tr th:each="hashtag, status:${list_hashtag}" 
+         th:attr="onclick=|location.href='/contents/read?contentsno=${contentsVO.contentsno}'|"
+         style="cursor: pointer;">
+      <td class='td_left'>
+        <span th:text="${hashtag.tag_name}" style="font-weight: bold;"></span><br>
+
+      </td>
+    </tr>
+  </table>
    
     <tr th:each="scontentsVO, status:${list}" 
          th:attr="onclick=|location.href='/scontents/read?scon_no=${scontentsVO.scon_no}'|"

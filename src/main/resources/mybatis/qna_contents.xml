@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.mvc.share_contents.Share_contentsDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
+
+  <!-- 전체 목록 -->
+  <select id="qna_list_all" resultType="dev.mvc.qna_contents.Qna_contentsVO">
+    SELECT qcon_no, qcon_name, qcon_contents, qcon_views, qcon_comment, qcon_date
+    FROM qna_contents
+    ORDER BY qcon_no ASC
+  </select>
+  
+  <!-- 등록 -->
+  <insert id="qna_create">
+    INSERT INTO QNA_CONTENTS(qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_comment, qcon_date, word, qcon_passwd)
+    VALUES(qna_contents_seq.nextval, #{cate_no}, #{acc_no}, #{qcon_name}, #{qcon_contents}, #{qcon_views}, #{qcon_bookmark}, #{qcon_comment}, sysdate, #{word}, #{qcon_passwd})
+  </insert>
+  
+  <!-- 댓글 등록 -->
+  <insert id="qna_create_comment" parameterType="HashMap">
+    INSERT INTO QNA_COMMENT(qcmt_no, acc_no, qcon_no, qcmt_contents, qcmt_date)
+    VALUES(qna_comment_seq.nextval, #{acc_no}, #{qcon_no}, #{qcmt_contents}, sysdate); 
+  </insert>
+  
+  <!-- 특정 글에 따른 목록 -->
+  <select id="list_by_qcon_no" resultType="dev.mvc.qna_contents.Qna_contentsVO">
+    SELECT qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_comment, qcon_date, qcon_passwd
+    FROM qna_contents
+    where qcon_no=#{qcon_no}
+  </select>
+  
+  <!-- 특정 글에 따른 댓글 -->
+  <select id="qna_read_comment" resultType="dev.mvc.qna_contents.Qna_commentVO" parameterType="Integer">
+    SELECT qcmt_contents, qcmt_date
+    FROM qna_comment
+    WHERE qcon_no=#{qcon_no}
+  </select>
+  
+  <!-- 댓글 수 -->
+  <select id="qna_search_count_comment" resultType="int" parameterType="int">
+    SELECT count(*)
+    FROM qna_comment
+    WHERE qcon_no=#{qcon_no}
+  </select>
+  
+  <!-- 댓글 삭제 -->
+  <delete id="qna_delete_comment" parameterType="int">
+    DELETE FROM qna_comment
+    WHERE qcon_no=#{qcon_no} AND acc_no=#{acc_no}
+  </delete>
+  
+  <!-- 전체 파일 목록 -->
+  <select id="qna_list_all_image" resultType="dev.mvc.qna_contents.Qna_imageVO">
+    SELECT file_no, qcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date
+    FROM qna_image
+    ORDER BY qcon_no DESC, file_no ASC
+  </select>
+  
+  <!-- 일반적인 조회 -->
+  <select id="qna_read" resultType="dev.mvc.qna_contents.Qna_contentsVO" parameterType="Integer">
+    SELECT qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_comment, qcon_date, word, qcon_passwd
+    FROM qna_contents
+    WHERE qcon_no= #{qcon_no}
+    ORDER BY sysdate desc
+  </select>  
+
+  <!-- 카테고리별 검색 목록 -->
+  <select id="list_by_qna_search" resultType="dev.mvc.qna_contents.Qna_contentsVO" parameterType="HashMap">
+    SELECT qcon_no, acc_no, cate_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_comment, qcon_date, word
+    FROM qna_contents
+    <choose>
+      <when test="word == null or word == ''"> <!-- 검색하지 않는 경우 -->
+        WHERE cate_no=#{cate_no}
+      </when>
+      <otherwise> <!-- 검색하는 경우 -->
+        WHERE cate_no=#{cate_no} AND (UPPER(qcon_name) LIKE '%' || UPPER(#{word}) || '%' 
+                                                  OR UPPER(qcon_contents) LIKE '%' || UPPER(#{word}) || '%' 
+                                                  OR UPPER(word) LIKE '%' || UPPER(#{word}) || '%')
+      </otherwise>
+    </choose>
+    ORDER BY qcon_no DESC
+  </select>
+
+  <!-- 카테고리별 검색 레코드 갯수 -->
+  <select id="list_by_qna_search_count" resultType="int" parameterType="HashMap">
+    SELECT COUNT(*) as cnt
+    FROM contents
+    <choose>
+      <when test="word == null or word == ''"> <!-- 검색하지 않는 경우의 레코드 갯수 -->
+        WHERE cate_no=#{cate_no}
+      </when>
+      <otherwise> <!-- 검색하는 경우의 레코드 갯수 -->
+        WHERE cate_no=#{cate_no} AND (UPPER(qcon_name) LIKE '%' || UPPER(#{word}) || '%' 
+                                                  OR UPPER(qcon_contents) LIKE '%' || UPPER(#{word}) || '%' 
+                                                  OR UPPER(word) LIKE '%' || UPPER(#{word}) || '%')
+      </otherwise>
+    </choose>
+  </select>   
+
+  <!-- 카테고리별 검색 + 페이징 목록 -->
+  <select id="list_by_qna_search_paging" resultType="dev.mvc.qna_contents.Qna_contentsVO" parameterType="HashMap">
+    SELECT qcon_no, acc_no, cate_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_comment, qcon_date, r
+    FROM (
+              SELECT qcon_no, acc_no, cate_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_comment, qcon_date, rownum as r
+              FROM (
+                        SELECT qcon_no, acc_no, cate_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_comment, qcon_date
+                        FROM contents
+                        <choose>
+                          <when test="word == null or word == ''"> <!-- 검색하지 않는 경우 -->
+                            WHERE cate_no=#{cate_no}
+                          </when>
+                          <otherwise>
+                            WHERE cate_no=#{cate_no} AND (UPPER(qcon_name) LIKE '%' || UPPER(#{word}) || '%' 
+                                                                      OR UPPER(qcon_contents) LIKE '%' || UPPER(#{word}) || '%' 
+                                                                      OR UPPER(word) LIKE '%' || UPPER(#{word}) || '%')
+                          </otherwise>
+                        </choose>
+                        ORDER BY qcon_no DESC
+               )
+    )
+    WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>
+     
+    <!-- 1 page: WHERE r >= 1 AND r <= 10; 
+          2 page: WHERE r >= 11 AND r <= 20;
+          3 page: WHERE r >= 21 AND r <= 30; -->
+  </select>
+  
+  
+  <!-- 패스워드 검사 -->
+  <select id="qna_password_check" resultType="int" parameterType="HashMap">
+    SELECT COUNT(*) as cnt 
+    FROM qna_contents
+    WHERE qcon_no = #{qcon_no} AND qcon_passwd=#{qcon_passwd} AND acc_no=#{acc_no}
+  </select>
+  
+  <!-- 조회수 증가 -->
+  <select id="update_qna_view" parameterType="dev.mvc.qna_contents.Qna_contentsVO">
+    UPDATE qna_contents
+    SET qna_views = qna_views+1
+    WHERE qcon_no=#{qcon_no}
+  </select>
+  
+  <!-- 글 수정 -->
+  <update id="qna_update_text" parameterType="dev.mvc.qna_contents.Qna_contentsVO">
+    UPDATE qna_contents
+    SET qcon_name=#{qcon_name}, qcon_contents=#{qcon_contents},  word=#{word}
+    WHERE qcon_no = #{qcon_no}
+  </update>
+  
+  <!-- 파일 수정 -->
+  <update id="qna_update_file" parameterType="dev.mvc.qna_contents.Qna_contentsVO">
+    UPDATE qna_image
+    SET file_origin_name=#{file_origin_name}, file_upload_name=#{file_upload_name}, file_thumb_name=#{file_thumb_name},file_size=#{file_size}
+    WHERE file_no=#{file_no} 
+  </update>
+  
+  <!-- 파일 삭제 -->
+  <delete id="qna_delete_image" parameterType="int">
+    DELETE FROM qna_image
+    WHERE qcon_no=#{qcon_no}
+  </delete>
+  
+   <!-- 글 삭제 -->
+  <delete id="qna_delete" parameterType="int">
+    DELETE FROM qna_contents
+    WHERE qcon_no=#{qcon_no}
+  </delete>
+  
+  <!-- 첨부 파일 등록 -->
+  <insert id="qna_attach_create" parameterType="dev.mvc.qna_contents.Qna_imageVO">
+    INSERT INTO QNA_IMAGE_SEQ(file_no, qcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date)
+    VALUES(qna_image_seq.nextval, #{qcon_no}, #{file_origin_name}, #{file_upload_name}, #{file_thumb_name}, #{file_size}, sysdate)
+  </insert>
+  
+  <!-- FK cate_no 컬럼에 대응하는 필수 SQL -->
+  <!-- 특정 카테고리에 속한 레코드 갯수를 리턴 -->
+  <select id="count_by_cate_no" resultType="int" parameterType="int">
+    SELECT COUNT(*) as cnt 
+    FROM qcon_no 
+    WHERE cate_no=#{cate_no}
+  </select>
+  
+  <!-- 특정 카테고리에 속한 모든 레코드 삭제 -->
+  <delete id="delete_by_cate_no" parameterType="int">
+    DELETE FROM qcon_no
+    WHERE cate_no=#{cate_no}
+  </delete>
+
+  <!-- FK acc_no 컬럼에 대응하는 필수 SQL -->
+  <!-- 특정 회원에 속한 레코드 갯수를 리턴 -->
+  <select id="count_by_acc_no" resultType="int" parameterType="int">
+    SELECT COUNT(*) as cnt 
+    FROM qcon_no 
+    WHERE acc_no=#{acc_no}
+  </select>
+  
+  <!-- 특정 회원에 속한 모든 레코드 삭제 -->
+  <delete id="delete_by_acc_no" parameterType="int">
+    DELETE FROM qcon_no
+    WHERE acc_no=#{acc_no}
+  </delete>
+  
+
+</mapper>
+
+
+
+
+
+
+
+
+
+

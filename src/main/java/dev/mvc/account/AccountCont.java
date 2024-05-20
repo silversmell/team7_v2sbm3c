@@ -1,91 +1,181 @@
 package dev.mvc.account;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import dev.mvc.recommend.HashtagVO;
+import dev.mvc.recommend.RecommendVO;
 
 @RequestMapping("/account")
 @Controller
 public class AccountCont {
-	
 	@Autowired
-	@Qualifier("dev.mvc.account.AccountProc")	// @Service("dev.mvc.account.AccountProc")
+	@Qualifier("dev.mvc.account.AccountProc") // @Service("dev.mvc.account.AccountProc")
 	private AccountProcInter accountProc;
-	
+
 	public AccountCont() {
 		System.out.println("-> AccountCont created.");
 	}
+
 	
 	/**
-	 * 아이디 중복 확인
+	 * 아이디(이메일) 중복 확인
 	 * 
 	 * @param acc_id
 	 * @return
 	 */
-	@GetMapping(value = "/checkID")	// http://localhost:9093/account/checkID?acc_id=user1
+	@GetMapping(value = "/checkID") // http://localhost:9093/account/checkID?acc_id=user1
 	@ResponseBody
 	public String checkID(String acc_id) {
-		System.out.println("---> acc_id: " + acc_id);
-		
+		//System.out.println("---> acc_id: " + acc_id);
+
 		int cnt = this.accountProc.checkID(acc_id);
 
 		JSONObject obj = new JSONObject();
-	    obj.put("cnt", cnt);
-		
+		obj.put("cnt", cnt);
+
 		return obj.toString();
 	}
+
 	
+	/**
+	 * 이름(닉네임) 중복 확인
+	 * 
+	 * @param acc_name
+	 * @return
+	 */
+	@GetMapping(value = "/checkName") // http://localhost:9093/account/checkName?acc_name=user1
+	@ResponseBody
+	public String checkName(String acc_name) {
+		//System.out.println("---> acc_name: " + acc_name);
+
+		int cnt = this.accountProc.checkName(acc_name);
+
+		JSONObject obj = new JSONObject();
+		obj.put("cnt", cnt);
+
+		return obj.toString();
+	}
+
 	/**
 	 * 회원 가입 폼
 	 * 
+	 * @param model
+	 * @param accountVO
+	 * @param recommendVO
 	 * @return
 	 */
-	@GetMapping(value="/create")	// http://localhost:9093/account/create
-	public String create_form(Model model, AccountVO accountVO) {
-		return "account/create";	// /templates/account/create.html
+	@GetMapping(value = "/create") // http://localhost:9093/account/create
+	public String create_form(Model model, AccountVO accountVO, RecommendVO recommendVO) {
+	    List<HashtagVO> hashtag_list = this.accountProc.hashtagList(); // 해시태그 목록 조회
+	    model.addAttribute("hashtag_list", hashtag_list); // 모델에 해시태그 목록 추가
+	    //System.out.println("hashtags: " + hashtag_list.get(0).getTag_name());	// '브라운'
+	    
+	    String[] tagCodeList = this.accountProc.tagCodeList().split(",");
+	    List<String> tag_codes = Arrays.asList(tagCodeList);
+	    model.addAttribute("tag_codes", tag_codes);
+	    
+	    //System.out.println("--> tag_codes: " + tag_codes.get(0));	// '분위기'
+
+
+		return "account/create"; // /templates/account/create.html
 	}
+	
 	
 	/**
 	 * 회원 가입 처리
 	 * 
-	 * @param model
 	 * @param accountVO
+	 * @param recommendVO
+	 * @param selected_hashtags
 	 * @return
 	 */
-	@PostMapping(value="/create")
-	public String create_proc(Model model, AccountVO accountVO) {
+	@PostMapping(value = "/create")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> create_proc(
+			AccountVO accountVO, RecommendVO recommendVO,
+			@RequestParam(value="selected_hashtags", required=false) List<Integer> selected_hashtags) {
+		Map<String, Object> response = new HashMap<>();
+		
 		int checkID_cnt = this.accountProc.checkID(accountVO.getAcc_id());
+		int checkName_cnt = this.accountProc.checkName(accountVO.getAcc_name());
 		
-		if(checkID_cnt == 0) {
-			accountVO.setAcc_grade(15);	// 15: 일반 회원
-		    int cnt = this.accountProc.create(accountVO);
+		System.out.println("====> selected_hashtags: " + selected_hashtags);
 
-			if(cnt == 1) {	// 회원 가입 성공
-				model.addAttribute("code", "create_success");
-				model.addAttribute("acc_id", accountVO.getAcc_id());
-				model.addAttribute("acc_name", accountVO.getAcc_name());
+		if ((checkID_cnt == 0) && (checkName_cnt == 0)) {
+			accountVO.setAcc_grade(15); // 15: 일반 회원
+			int acc_no = this.accountProc.create(accountVO);
+
+			if (acc_no != 0) { // 회원 가입 성공
+				response.put("code", "create_success");
+				response.put("acc_id", accountVO.getAcc_id());
+				response.put("acc_name", accountVO.getAcc_name());
 				// 암호화 미완
-				model.addAttribute("acc_pw", accountVO.getAcc_pw());
+				response.put("acc_pw", accountVO.getAcc_pw());
+				
+				// 선택된 해시태그 저장
+				System.out.println("====> selected_hashtags: " + selected_hashtags);
+	            for (Integer tag_no : selected_hashtags) {
+	            	System.out.println("accountVO.getAcc_no() = " + accountVO.getAcc_no());
+	            	System.out.println("tag_no = " + tag_no);
+	            	
+	                recommendVO.setAcc_no(accountVO.getAcc_no());
+	                recommendVO.setTag_no(tag_no);
+	                this.accountProc.insertRecommend(recommendVO);
+	            }
 			} else {
-		        model.addAttribute("code", "create_fail");
+				response.put("code", "create_fail");
+				response.put("cnt", 0);
 			}
-			
-	        model.addAttribute("cnt", cnt);
-		} else {	// 아이디 중복
-			model.addAttribute("code", "duplicate_fail");
-	        model.addAttribute("cnt", 0);
+			response.put("cnt", 1);
+		} else if(checkID_cnt != 0) { // 아이디 중복
+			response.put("code", "duplicate_id");
+			response.put("cnt", 0);
+		} else if(checkName_cnt != 0) {
+			response.put("code", "duplicate_name");
+			response.put("cnt", 0);
 		}
+
+		return ResponseEntity.ok(response);
+	}
+
+
+	/**
+	 * 회원가입 메시지
+	 * 
+	 * @param model
+	 * @param accountVO
+	 * @param code
+	 * @param cnt
+	 * @return
+	 */
+	@GetMapping(value = "/msg") // http://localhost:9093/account/msg
+	public String msg(Model model,
+			AccountVO accountVO,
+			@RequestParam(value="code") String code,
+			@RequestParam(value="cnt") int cnt) {
+		System.out.println("--> cnt: " + cnt);
 		
-		return "account/msg";	// /templates/account/msg.html
+		model.addAttribute("code", code);
+		model.addAttribute("cnt", cnt);
+		
+		return "account/msg"; // /templates/account/msg.html
 	}
 	
-	
-
 }
