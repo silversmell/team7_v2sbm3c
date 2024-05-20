@@ -399,7 +399,7 @@ public class CategoryCont {
   }
   
   /**
-   * 카테고리 출력 순위 높임: cate_seqno 1 -> 10
+   * 카테고리 출력 순위 낮춤: cate_seqno 1 -> 10
    * http://localhost:9093/category/cate_update_seqno_backward/1
    * @param model
    * @param cate_no
