@@ -55,7 +55,3 @@ WHERE file_no=1;
 DELETE FROM qna_image
 WHERE file_no=1;
 
--- 전체 이미지
-SELECT file_no, qcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date
-FROM qna_image;
-

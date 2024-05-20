@@ -32,3 +32,18 @@ CREATE SEQUENCE QNA_COMMENT_SEQ
 
 commit;
 SELECT * FROM qna_comment;
+
+-- 댓글 등록
+INSERT INTO QNA_COMMENT(qcmt_no, acc_no, qcon_no, qcmt_contents, qcmt_date)
+VALUES(qna_comment_seq.nextval, 1, 1, '저도 궁금하네요.', sysdate);
+
+INSERT INTO QNA_COMMENT(qcmt_no, acc_no, qcon_no, qcmt_contents, qcmt_date)
+VALUES(qna_comment_seq.nextval, 1, 2, '북마크하고 갑니다.', sysdate);
+
+INSERT INTO QNA_COMMENT(qcmt_no, acc_no, qcon_no, qcmt_contents, qcmt_date)
+VALUES(qna_comment_seq.nextval, 2, 1, '이거 아닐까요?', sysdate);
+
+-- 댓글 조회
+SELECT qcmt_contents, qcmt_date
+FROM qna_comment
+WHERE qcon_no=1;
