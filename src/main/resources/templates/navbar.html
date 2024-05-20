@@ -37,9 +37,9 @@
                            role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="회원">                                                            
                       </a>
                       <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <li class="nav-item"><a class="nav-link" href="/member/create">회원 가입</a></li>
-                        <li class="nav-item" th:if="${session.memberno != null}">
-                            <a class="nav-link" th:href="@{|/member/read?memberno=${session.memberno}|}">회원 정보 조회</a>
+                        <li class="nav-item"><a class="nav-link" href="/account/create">회원 가입</a></li>
+                        <li class="nav-item" th:if="${session.acc_no != null}">
+                            <a class="nav-link" th:href="@{|/account/read?acc_no=${session.acc_no}|}">회원 정보 조회</a>
                         </li>
                         <li class="nav-item" th:if="${session.memberno != null}">
                             <a class="nav-link" href="/member/passwd_update_form">비밀 번호 변경</a>
