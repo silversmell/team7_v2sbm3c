@@ -140,22 +140,6 @@ public class Share_contentsCont {
 	 public String update_text(Model model, RedirectAttributes ra,int scon_no,
        List<MultipartFile> fnamesMF) {
 
-	  if(fnamesMF.size()==0) {
-	    ArrayList<Share_imageVO> list = this.sconProc.read_image(scon_no);
-	    for(Share_imageVO image: list) {
-	      String file_saved = image.getFile_upload_name();
-	      String thumb = image.getFile_thumb_name();
-	      
-	      String uploadDir = Contents.getUploadDir();
-	      Tool.deleteFile(uploadDir,file_saved);
-	      Tool.deleteFile(uploadDir,thumb);
-	    }
-	    int cnt_image=this.sconProc.delete_image(scon_no);
-	    if(cnt_image>0) {
-	      System.out.println("이미지 삭제 성공");
-	    }
-	    return "redirect:/scontents/list_by_search";
-	  }
 	  
 	   ArrayList<Share_imageVO> image_list_old = this.sconProc.read_image(scon_no);
 	    for(Share_imageVO image:image_list_old) {
@@ -255,6 +239,7 @@ public class Share_contentsCont {
 		ArrayList<HashtagVO> list = this.sconProc.select_hashtag();
 		System.out.println("-> tag_no :" +list.get(0).getTag_no());
 		model.addAttribute("list",list);
+		
 
 		return "scontents/create";
 	}
@@ -264,12 +249,25 @@ public class Share_contentsCont {
 	                          @RequestParam("tag_no") int[] tag_no) {   
 	  System.out.println("-> fnamesMF :" +fnamesMF );
 		String[] url_sub_link = {"1","1","1","1","1"};
-	      //System.out.println(fnamesMF);
+	      
 		int cnt = this.sconProc.create(scontentsVO);
+		
+		if(cnt==1) {
+			System.out.println("등록 성공");
+		}
 		ArrayList<Share_contentsVO> list1 = this.sconProc.list_all();
+		for(Share_contentsVO list:list1) {
+			System.out.println("->scon_no: " + list.getScon_no());
+			
+		}
+		System.out.println(" -> list1.size : "+ list1.size());
+		
 
 		Share_contentsVO scontentsVO1 = list1.get(list1.size() - 1); //직전 등록한 Share_contentsVO 가져오기 ->scon_no를 사용하기 위해
+		
+		System.out.println("-> create 한 후 scon_no : " + scontentsVO1.getScon_no());
 		int scon_no = scontentsVO1.getScon_no();
+		System.out.println(" -> scon_no" + scon_no);
 	
 	      String file_origin_name="";
 	      String file_upload_name="";
@@ -311,7 +309,7 @@ public class Share_contentsCont {
 		HashMap<String, Object> map1 = new HashMap<>();
 		for(int i = 0;i<tag_no.length;i++) {
 		  map1.put("tag_no",tag_no[i]);
-      map1.put("scon_no", scon_no);
+		  map1.put("scon_no", scon_no);
       int cnt1 = this.sconProc.insert_tag(map1);
 		}
 
@@ -349,7 +347,7 @@ public class Share_contentsCont {
 	public String delete(int scon_no, RedirectAttributes ra) {
 	  this.sconProc.delete_comments(scon_no);
 		this.sconProc.delete_url(scon_no);
-		int cnt = this.sconProc.delete(scon_no);
+		
 		
 		ArrayList<Share_imageVO> list = this.sconProc.read_image(scon_no);
 		for(Share_imageVO image: list) {
@@ -364,9 +362,11 @@ public class Share_contentsCont {
 		if(cnt_image>0) {
 		  System.out.println("이미지 삭제 성공");
 		}
-
+		int cnt = this.sconProc.delete(scon_no);
+		System.out.println(" -> 삭제 한 scon_no:"+ scon_no);
 		return "redirect:/scontents/list_by_search";
 	}
+	
 	 @GetMapping("/read_hashtag")
 	  public String read_hashtag(int tag_no,Model model,@RequestParam(name = "word", defaultValue = "") String word,
 	      @RequestParam(name = "now_page", defaultValue = "1") int now_page) {

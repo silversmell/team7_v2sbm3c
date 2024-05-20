@@ -8,7 +8,7 @@
     resultType="dev.mvc.share_contentsdto.Share_contentsVO">
     SELECT scon_no, scon_title, scon_contents, scon_views,
     scon_comment, scon_date,scon_priority
-    FROM share_contents
+    FROM share_contents ORDER BY scon_no ASC
   </select>
   
   <!-- scon에 따른 목록 -->
