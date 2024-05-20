@@ -339,6 +339,21 @@ public int down_priority(int scon_no) {
 	return cnt;
 }
 
+@Override
+public int y_mark(int scon_no) {
+	int cnt = this.scontentsDAO.y_mark(scon_no);
+	return cnt;
+}
+
+@Override
+public int n_mark(int scon_no) {
+	int cnt = this.scontentsDAO.n_mark(scon_no);
+	return cnt;
+}
+
+
+
+
 //@Override
 //public int up_priority(int scon_no) {
 //	int cnt = this.scontentsDAO.up_priority(scon_no);

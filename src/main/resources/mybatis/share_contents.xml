@@ -32,9 +32,9 @@
 	<select id="read"
 		resultType="dev.mvc.share_contentsdto.Share_contentsVO"
 		parameterType="Integer">
-		SELECT scon_no, scon_title, scon_contents, scon_views,mark
+		SELECT scon_no, scon_title, scon_contents, scon_views,mark,
 		scon_date, acc_no
-		,cate_no
+		,cate_no,scon_priority
 		FROM share_contents
 		where scon_no=#{scon_no}
 	</select>
@@ -269,6 +269,18 @@
 		set scon_priority=scon_priority-1
 		where scon_no=#{scon_no}
 	</update>
+	
+	<update id ="y_mark" parameterType="int">
+		update share_contents
+		set mark='Y'
+		where scon_no=#{scon_no}
+</update>
+
+<update id ="n_mark" parameterType="int">
+update share_contents
+set mark='N'
+where scon_no=#{scon_no}
+</update>
 
 </mapper>
 

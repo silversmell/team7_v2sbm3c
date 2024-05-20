@@ -249,6 +249,20 @@ public interface Share_contentsProcInter {
 	  */
 	 public int down_priority(int scon_no);
 	 
+	 /**
+	  * -- Mark y로 변경
+	  * @param scon_no
+	  * @return int
+	  */
+	 public int y_mark(int scon_no);
+
+	 /**
+	  * mark n로 변경
+	  * @param scon_no
+	  * @return
+	  */
+	 public int n_mark(int scon_no);
+	 
 
 
 

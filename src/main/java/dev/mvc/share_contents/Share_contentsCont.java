@@ -58,7 +58,7 @@ public class Share_contentsCont {
 		Share_contentsVO scontentsVO = this.sconProc.read(scon_no);
 		model.addAttribute("scontentsVO", scontentsVO);
 		System.out.println("-> mark: " +scontentsVO.getMark());
-		System.out.println("-> priority :" + scontentsVO.getScon_priority());
+		System.out.println("-> priority : "+scontentsVO.getScon_priority());
 
 		ArrayList<Contents_tagVO> list1 = this.sconProc.read_contents_tag(scon_no); // hashtag vo 들어오면 변경할 것
 		ArrayList<String> list2 = new ArrayList<>();
@@ -88,13 +88,32 @@ public class Share_contentsCont {
 	}
 	
 	@GetMapping("/up_priority/{scon_no}")
-	public String up_priority(Model model, @PathVariable("scon_no") Integer scon_no) {
+	public String up_priority(@PathVariable("scon_no") Integer scon_no) {
 		
 		this.sconProc.up_priority(scon_no);
+		int cnt = this.sconProc.y_mark(scon_no);
 		
+		if(cnt==1) {
+			System.out.println("y_mark 성공");
+		}
+		
+		//System.out.println("up_priority created");
 		return "redirect:/scontents/read?scon_no=" +scon_no;
 	}
 	
+	@GetMapping("/down_priority/{scon_no}")
+	public String down_priority(@PathVariable("scon_no") Integer scon_no) {
+		int cnt = this.sconProc.down_priority(scon_no);
+		int mark_down = this.sconProc.n_mark(scon_no);
+		if(mark_down=='N') {
+			System.out.println("MARK_N 성공");
+		}
+		if(cnt==1) {
+			System.out.println("scon_priority down 성공");
+		}
+		System.out.println("down_priority created");
+		return "redirect:/scontents/read?scon_no=" +scon_no;
+	}
 	
 
 	@GetMapping("/create_comment")
