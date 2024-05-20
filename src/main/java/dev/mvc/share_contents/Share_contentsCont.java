@@ -317,7 +317,6 @@ public class Share_contentsCont {
 		String[] list = url_link.split(",");
 
 		for (int i = 0; i < list.length; i++) {
-
 			list[i] = list[i].trim();
 			map.put("url_link", list[i]);
 			map.put("scon_no", scon_no);
@@ -372,13 +371,18 @@ public class Share_contentsCont {
 	      @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
 	    ArrayList<Contents_tagVO> sconno_list = this.sconProc.select_sconno(tag_no); //tag_no에 따른 scon_no
 	    int[] sconno = new int[sconno_list.size()];
+	    
 	    for(int i = 0;i<sconno.length;i++) {
 	      sconno[i] = sconno_list.get(i).getScon_no();
+	      System.out.println("->read_hashtag: " + sconno[i]);
 	    }
+	    
 	    ArrayList<Share_contentsVO> list = new ArrayList<>(); //scon_no에 따른 Share_contentsVO
 	    for(int i = 0;i<sconno_list.size();i++) {
 	      list.addAll(this.sconProc.list_by_sconno(sconno[i]));
+	      System.out.println("-> list_by_sconno 이후 : " + list.get(i).getScon_no());
 	    }
+	    
 	    model.addAttribute("list",list);
 	    
 	    word = Tool.checkNull(word).trim();
@@ -387,8 +391,8 @@ public class Share_contentsCont {
 	    map.put("word", word);
 	    map.put("now_page", now_page);
 	    
-	    ArrayList<Share_contentsVO> list1 = this.sconProc.list_by_contents_search_paging(map);
-	    model.addAttribute("list", list1);	    
+	    //ArrayList<Share_contentsVO> list1 = this.sconProc.list_by_contents_search_paging(map);
+	    //model.addAttribute("list", list1);	    
 	    model.addAttribute("word", word);
 	    
 	    ArrayList<Contents_tagVO> tag_sconno=this.sconProc.select_sconno(tag_no);
@@ -412,7 +416,6 @@ public class Share_contentsCont {
 	    model.addAttribute("no", no);
 
 	    return "scontents/list_by_search_paging";
-	    
 	    
 	  }
 
