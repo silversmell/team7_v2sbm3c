@@ -1,5 +1,9 @@
 package dev.mvc.qna_contents;
 
+import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -38,4 +42,11 @@ public class Qna_imageVO {
   /** 파일 등록일 */
   private String file_date ="";
   
+  
+  /** Form의 파일을 MultipartFile로 변환하여 List에 저장  */
+  private List<MultipartFile> fnamesMF;
+  
+  // private MultipartFile fnamesMF;  // 하나의 파일 처리
+  /** 파일 단위 출력 */
+  private String flabel;   
 }

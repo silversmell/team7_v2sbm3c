@@ -37,13 +37,13 @@ commit;
 SELECT * FROM qna_image;
 
 -- 이미지 삽입
-INSERT INTO QNA_IMAGE_SEQ(file_no, qcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date)
+INSERT INTO QNA_IMAGE(file_no, qcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date)
 VALUES(qna_image_seq.nextval, 1, 'qna1.jpg', 'desk.jpg', 'desk.jpg_t', 100, sysdate);
 
-INSERT INTO QNA_IMAGE_SEQ(file_no, qcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date)
+INSERT INTO QNA_IMAGE(file_no, qcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date)
 VALUES(qna_image_seq.nextval, 1, 'qna2.jpg', 'arm.jpg', 'arm.jpg_t', 100, sysdate);
 
-INSERT INTO QNA_IMAGE_SEQ(file_no, qcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date)
+INSERT INTO QNA_IMAGE(file_no, qcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date)
 VALUES(qna_image_seq.nextval, 1, 'qna3.jpg', 'monitor.jpg', 'monitor.jpg_t', 100, sysdate);
 
 -- 특정 이미지 변경
@@ -58,4 +58,48 @@ WHERE file_no=1;
 -- 전체 이미지
 SELECT file_no, qcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date
 FROM qna_image;
+             
+-- 2) 목록
+SELECT file_no, qcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date
+FROM qna_image
+ORDER BY qcon_no DESC, file_no ASC;
+
+-- 3) 글별 파일 목록(contentsno 기준 내림 차순, attachfileno 기준 오르차순)
+SELECT file_no, qcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date
+FROM qna_image
+WHERE qcon_no = 1
+ORDER BY file_origin_name ASC;
+
+-- 4) 하나의 파일 삭제
+DELETE FROM qna_image
+WHERE file_no = 1;
+
+
+-- 5) FK contentsno 부모키 별 조회
+SELECT file_no, qcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date
+FROM qna_image
+WHERE qcon_no=1;
+
+-- 부모키별 갯수 산출
+SELECT COUNT(*) as cnt
+FROM qna_image
+WHERE qcon_no=1;
+  
+-- 6) FK 부모 테이블별 레코드 삭제
+DELETE FROM qna_image
+WHERE qcon_no=1;
+
+   
+-- 7) qna_contents, qna_image join
+    SELECT c.qcon_name, 
+               i.file_no, i.qcon_no, i.file_origin_name, i.file_upload_name, i.file_thumb_name, i.file_size, i.file_date
+    FROM qna_contents c, qna_image i
+    WHERE c.qcon_no = i.qcon_no
+    ORDER BY c.qcon_no DESC, i.file_no ASC;
+
+
+-- 8) 조회
+SELECT file_no, qcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date
+FROM qna_image
+WHERE file_no=1;
 
