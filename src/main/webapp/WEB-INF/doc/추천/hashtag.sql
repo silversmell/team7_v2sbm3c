@@ -66,26 +66,17 @@ SELECT tag_no, tag_code, tag_name
 FROM hashtag
 GROUP BY tag_code;
 
-SELECT LISTAGG(tag_code, ',') WITHIN GROUP (ORDER BY tag_code) AS tag_codes
+SELECT LISTAGG(tag_code, ',') WITHIN GROUP (ORDER BY tag_code DESC) AS tag_codes
 FROM (
     SELECT DISTINCT tag_code
     FROM hashtag
 );
 
+
 SELECT LISTAGG(tag_code, ',') WITHIN GROUP (ORDER BY tag_no) AS tag_codes
-FROM (
-    SELECT DISTINCT tag_code, tag_no
-    FROM hashtag
-);
-
-
+FROM hashtag;
 
 		
-
-
-
-
-
 
 commit;
 
