@@ -6,6 +6,7 @@ import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import dev.mvc.recommend.HashtagVO;
 import dev.mvc.share_contents.Contents;
 import dev.mvc.share_contentsdto.Contents_tagVO;
 import dev.mvc.share_contentsdto.Contents_urlVO;
@@ -219,7 +220,7 @@ public class Share_contentsProc implements Share_contentsProcInter {
 	}
 
 	@Override
-	public int create_url(HashMap<String,Object> map) {
+	public int create_url(HashMap<String, Object> map) {
 		int cnt = this.scontentsDAO.create_url(map);
 		return cnt;
 	}
@@ -248,22 +249,121 @@ public class Share_contentsProc implements Share_contentsProcInter {
 		return cnt;
 	}
 
+	@Override
+	public int delete_comments(int scon_no) {
+		int cnt = this.scontentsDAO.delete_comments(scon_no);
+		return cnt;
+	}
+
+	@Override
+	public int insert_tag(HashMap<String, Object> map) {
+		int cnt = this.scontentsDAO.insert_tag(map);
+		return cnt;
+	}
+
+	@Override
+	public ArrayList read_contents_tag(int scon_no) {
+		ArrayList<Contents_tagVO> list = this.scontentsDAO.read_contents_tag(scon_no);
+		return list;
+	}
+
+	@Override
+	public int attach_create(Share_imageVO share_imageVO) {
+		int cnt = this.scontentsDAO.attach_create(share_imageVO);
+		return cnt;
+	}
+
   @Override
-  public int delete_comments(int scon_no) {
-    int cnt = this.scontentsDAO.delete_comments(scon_no);
+  public ArrayList select_hashtag() {
+    ArrayList<HashtagVO> list = this.scontentsDAO.select_hashtag();
+    return list;
+  }
+
+  @Override
+  public HashtagVO select_hashname(int tag_no) {
+    HashtagVO hashtagVO = this.scontentsDAO.select_hashname(tag_no);
+    return hashtagVO;
+  }
+
+  @Override
+  public ArrayList select_sconno(int tag_no) {
+    ArrayList<Contents_tagVO> list = this.scontentsDAO.select_sconno(tag_no);
+    return list;
+  }
+
+  @Override
+  public ArrayList list_by_sconno(int scon_no) {
+    ArrayList<Share_contentsVO> list = this.scontentsDAO.list_by_sconno(scon_no);
+    return list;
+  }
+
+  @Override
+  public ArrayList list_image() {
+    ArrayList<Share_imageVO> list = this.scontentsDAO.list_image();
+    return list;
+  }
+
+  @Override
+  public ArrayList read_image(int scon_no) {
+      ArrayList<Share_imageVO> share_imageVO = this.scontentsDAO.read_image(scon_no);
+    return share_imageVO;
+  }
+
+  @Override
+  public int delete_image(int scon_no) {
+    int cnt = this.scontentsDAO.delete_image(scon_no);
+    return cnt;
+  }
+
+  @Override
+  public int update_file(Share_imageVO share_imageVO) {
+    int cnt = this.scontentsDAO.update_file(share_imageVO);
     return cnt;
   }
 
 @Override
-public int insert_tag(HashMap<String,Object> map) {
-	int cnt = this.scontentsDAO.insert_tag(map);
+public int count_image(int scon_no) {
+	int cnt = this.scontentsDAO.count_image(scon_no);
 	return cnt;
 }
 
 @Override
-public ArrayList read_contents_tag(int scon_no) {
-	ArrayList<Contents_tagVO> list = this.scontentsDAO.read_contents_tag(scon_no);
-	return list;
+public int up_priority(int scon_no) {
+	int cnt = this.scontentsDAO.up_priority(scon_no);
+	return cnt;
 }
+
+@Override
+public int down_priority(int scon_no) {
+	int cnt = this.scontentsDAO.down_priority(scon_no);
+	return cnt;
+}
+
+@Override
+public int y_mark(int scon_no) {
+	int cnt = this.scontentsDAO.y_mark(scon_no);
+	return cnt;
+}
+
+@Override
+public int n_mark(int scon_no) {
+	int cnt = this.scontentsDAO.n_mark(scon_no);
+	return cnt;
+}
+
+
+
+
+//@Override
+//public int up_priority(int scon_no) {
+//	int cnt = this.scontentsDAO.up_priority(scon_no);
+//	return cnt;
+//}
+//
+//@Override
+//public int down_priority(int scon_no) {
+//	int cnt = this.scontentsDAO.down_priority(scon_no);
+//	return cnt;
+//}
 
 }

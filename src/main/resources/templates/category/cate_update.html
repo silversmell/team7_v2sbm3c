@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+  <div class="title_line">
+    카테고리  >
+    <span th:text="${categoryVO.cate_name}" class="title_line_text"></span >
+    수정
+  </div>
+  <aside class="aside_right">
+    <a th:href="@{|/category/cate_list_search?word=${word}&now_page=${now_page}|}">목록</a>
+    <span class="menu_devide">│</span>
+    <a th:href="@{|/category/cate_delete/${categoryVO.cate_no}?word=${word}&now_page=${now_page}|}">삭제</a>
+    <span class="menu_devide">│</span>
+    <a href="/category/cate_list_search">등록</a>
+    <span class="menu_devide">│</span>
+    <a href="javascript: location.reload();">새로 고침</a>
+  </aside>
+  <div class="menu_line"></div>
+    
+  <form name="frm" th:object="${categoryVO}" method="post" action="/category/cate_update" style="width: 50%; margin: 5px auto;">
+    <input type="hidden" name="cate_no" th:value="${categoryVO.cate_no}">
+    <input type="hidden" name="word" th:value="${word}">
+    <input type="hidden" name="now_page" th:value="${now_page}">
+
+    <div>
+      <label>카테고리명</label>
+      <input type="text" name="cate_name" th:value="${categoryVO.cate_name}" autofocus="autofocus"
+             class="form-control fom-control-sm" th:field="*{cate_name}">
+      <div th:if="${#fields.hasErrors('cate_name')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+        <div th:each="err : ${#lists.sort(#fields.errors('cate_name'))}" th:text="${err}"></div>
+      </div>  
+    </div>
+    <div>
+      <label>관련 자료 수</label>
+      <input type="number" name="cate_cnt" th:value="${categoryVO.cate_cnt}" 
+             class="form-control fom-control-sm" th:field="*{cate_cnt}">
+      <div th:if="${#fields.hasErrors('cate_cnt')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+        <div th:each="err : ${#lists.sort(#fields.errors('cate_cnt'))}" th:text="${err}"></div>
+      </div>  
+    </div>
+    <div>
+      <label>출력 순서</label>
+      <input type="number" name="cate_seqno" th:value="${categoryVO.cate_seqno}" 
+             class="form-control fom-control-sm" th:field="*{cate_seqno}">
+      <div th:if="${#fields.hasErrors('cate_seqno')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+        <div th:each="err : ${#lists.sort(#fields.errors('cate_seqno'))}" th:text="${err}"></div>
+      </div>             
+    </div>
+    <div>
+      <label>모드</label>
+      <input type="text" name="cate_visible" th:value="${categoryVO.cate_visible}" 
+             class="form-control fom-control-sm" th:field="*{cate_visible}"> Y / N 만 입력 가능합니다.
+      <div th:if="${#fields.hasErrors('cate_visible')}" class="alert alert-danger" role="alert" style="margin-top: 5px;">
+        <div th:each="err : ${#lists.sort(#fields.errors('cate_visible'))}" th:text="${err}"></div>
+      </div>
+    </div>
+    
+    <div class="content_body_bottom">
+      <button type="submit" class="btn btn-secondary btn-sm">저장</button>
+      <button type="button" th:attr="onclick=|location.href='/category/cate_list_search?word=${word}&now_page=${now_page}'|" class="btn btn-secondary btn-sm">취소</button>      
+    </div>
+    
+  </form>  
+  
+  <!-- /templates/category/list_all_component.html 파일의 list_all_fragment import -->
+  <div th:replace="~{category/list_all_component::list_all_fragment}"></div>
+    
+</div>
+</html>
+

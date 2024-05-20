@@ -14,19 +14,21 @@
           <div class="collapse navbar-collapse" id="navbarNavDropdown">
               <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               
-                <li class="nav-item dropdown" th:each="categoryVOMenu: ${menu}">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="${categoryVOMenu.cate_name}"></a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                          <a class="dropdown-item" th:href="@{|/contents/list_by_cate_no?cate_no=${categoryVO.cate_no}|}" th:text="${categoryVO.cate_name}"></a>
-                     </ul>
-                </li>
+              <li class="nav-item dropdown" th:each="categoryVOMenu: ${menu}"  aria-labelledby="navbarDropdownMenuLink">
+                    <a class="nav-link dropdown-toggle" th:href="@{|/scontents/list_by_search|}" role="button" th:text="${categoryVOMenu.cate_name}"></a>
+              </li>
+
                   
                  <li class="nav-item dropdown">
                       <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
-                           role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="카테고리">                                                            
+                           role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="관리자">                                                            
                       </a>
                       <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <li class="nav-item"><a class="nav-link" href="/category/cate_list_search">카테고리 전체 목록</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">회원 목록</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">전체 글 목록</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">관리자 로그 내역</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">회원 로그 내역</a></li>
                        <li class="nav-item">
                       </li>
                       </ul>

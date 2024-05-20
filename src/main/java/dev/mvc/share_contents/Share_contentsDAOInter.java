@@ -3,6 +3,7 @@ package dev.mvc.share_contents;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import dev.mvc.recommend.HashtagVO;
 import dev.mvc.share_contentsdto.Contents_tagVO;
 import dev.mvc.share_contentsdto.Contents_urlVO;
 import dev.mvc.share_contentsdto.Share_commentsVO;
@@ -16,9 +17,15 @@ public interface Share_contentsDAOInter {
 	 */
 	public ArrayList list_all(); 
 	
+	/**
+	 * scon_no에 따른 목록
+	 * @param scon_no
+	 * @return ArrayList<share_contentsVO>
+	 */
+	public ArrayList list_by_sconno(int scon_no);
 	
 	/**
-	 * 목록
+	 * 이미지 목록
 	 * @return ArrayList<share_imageVO>
 	 */
 	public ArrayList list_all_image();
@@ -153,4 +160,104 @@ public interface Share_contentsDAOInter {
 	  * @return ArrayList
 	  */
 	 public ArrayList read_contents_tag(int scon_no);
+	 
+	 public int attach_create(Share_imageVO share_imageVO);
+	 
+	 /**
+	  *  모든 hashtag 조회
+	  * @return ArrayList
+	  */
+	 public ArrayList select_hashtag();
+	 
+	 /**
+	  * tag_no에 따른 hashtag 조회
+	  * @param tag_no
+	  * @return HashtagVO
+	  */
+	 public HashtagVO select_hashname(int tag_no);
+	 
+	 /**
+	  * tag_no에 따른 태그 scon_no
+	  * @param tag_no
+	  * @return
+	  */
+	 public ArrayList select_sconno(int tag_no);
+	 
+	 /**
+	  * 이미지 조회
+	  * @return ArrayList
+	  */
+	 public ArrayList list_image();
+	 
+	 /**
+	  * scon_no에 따른 이미지 조회
+	  * @param scon_no
+	  * @return Share_imageVO
+	  */
+	 public ArrayList read_image(int scon_no);
+	 
+	 /**
+	  * scon_no에 따른 이미지 삭제
+	  * @param scont_no
+	  * @return
+	  */
+	 public int delete_image(int scon_no);
+	 
+	 /**
+	  * share_imageVO 수정
+	  * @param share_imageVO
+	  * @return
+	  */
+	 public int update_file(Share_imageVO share_imageVO);
+	 
+	 /**
+	  * scon_no에 따른 이미지 갯수
+	  * @param scon_no
+	  * @return int
+	  */
+	 public int count_image(int scon_no);
+	 
+	 /**
+	  * 우선순위 증가
+	  * @param scon_no
+	  * @return  int
+	  */
+	 public int up_priority(int scon_no);
+	 
+	 /**
+	  * 우선순위 감소
+	  * @param scon_no
+	  * @return int
+	  */
+	 public int down_priority(int scon_no);
+	 
+	 /**
+	  * -- Mark y로 변경
+	  * @param scon_no
+	  * @return int
+	  */
+	 public int y_mark(int scon_no);
+	 
+	 /**
+	  * mark n로 변경
+	  * @param scon_no
+	  * @return
+	  */
+	 public int n_mark(int scon_no);
+	 
+	 
+//	 /**
+//	  * 우선순위 올림
+//	  * @param scon_no 
+//	  * @return int
+//	  */
+//	 public int up_priority(int scon_no);
+//	 
+//	 /**
+//	  * 우선순위 내림
+//	  * @param scon_no
+//	  * @return int
+//	  */
+//	 public int down_priority(int scon_no);
+//	 
 }

@@ -28,6 +28,16 @@ public class Share_contentsVO {
 	private int scon_priority;
 	
 	private String word="";
+	
+	private String mark="N";
+
+	public String getMark() {
+		return mark;
+	}
+
+	public void setMark(String mark) {
+		this.mark = mark;
+	}
 
 	public int getScon_no() {
 		return scon_no;

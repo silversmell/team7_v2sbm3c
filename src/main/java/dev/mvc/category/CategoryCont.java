@@ -38,6 +38,48 @@ public class CategoryCont {
     System.out.println("-> CategoryCont created.");
   }
   
+  
+  /**
+   * 카테고리 등록 + 검색 폼
+   * http://localhost:9093/category/list_search?word=${word}  ← GET Form
+   * @param session
+   * @param model
+   * @param categoeyVO
+   * @param word
+   * @param now_page
+   * @return
+   */
+  @GetMapping(value="/cate_list_search")
+  public String cate_list_search(HttpSession session, Model model, CategoryVO categoeyVO, String word, 
+                                     @RequestParam(name="now_page", defaultValue="1") int now_page) {
+    
+      word = Tool.checkNull(word).trim();
+      System.out.println("--> word: " + word);
+      
+      // 카테고리 메뉴
+      ArrayList<CategoryVOMenu> menu = this.categoryProc.menu();
+      model.addAttribute("menu", menu);
+      
+      // 페이징 목록
+      ArrayList<CategoryVO> list = this.categoryProc.cate_list_search_paging(word, now_page, this.record_per_page);    
+      model.addAttribute("list", list);
+      
+      // 페이징 버튼 목록
+      int search_count = this.categoryProc.cate_list_search_count(word);
+      String paging = this.categoryProc.pagingBox(now_page, 
+          word, "/category/cate_list_search", search_count, this.record_per_page, this.page_per_block);
+      model.addAttribute("paging", paging);
+      model.addAttribute("now_page", now_page);
+      
+      model.addAttribute("word", word);
+      
+      // 일련 변호 생성: 레코드 갯수 - ((현재 페이지수 -1) * 페이지당 레코드 수)
+      int no = search_count - ((now_page - 1) * this.record_per_page);
+      model.addAttribute("no", no);
+      
+      return "category/cate_list_search"; // /category/cate_list_search.html
+  }  
+  
   /**
    * 카테고리 등록 처리
    * http://localhost:9093/category/cate_list_search
@@ -96,48 +138,7 @@ public class CategoryCont {
   }
   
   /**
-   * 등록 + 검색 폼
-   * http://localhost:9093/category/list_search?word=${word}  ← GET Form
-   * @param session
-   * @param model
-   * @param categoeyVO
-   * @param word
-   * @param now_page
-   * @return
-   */
-  @GetMapping(value="/cate_list_search")
-  public String cate_list_search(HttpSession session, Model model, CategoryVO categoeyVO, String word, 
-                                     @RequestParam(name="now_page", defaultValue="1") int now_page) {
-    
-      word = Tool.checkNull(word).trim();
-      System.out.println("--> word: " + word);
-      
-      // 카테고리 메뉴
-      ArrayList<CategoryVOMenu> menu = this.categoryProc.menu();
-      model.addAttribute("menu", menu);
-      
-      // 페이징 목록
-      ArrayList<CategoryVO> list = this.categoryProc.cate_list_search_paging(word, now_page, this.record_per_page);    
-      model.addAttribute("list", list);
-      
-      // 페이징 버튼 목록
-      int search_count = this.categoryProc.cate_list_search_count(word);
-      String paging = this.categoryProc.pagingBox(now_page, 
-          word, "/category/cate_list_search", search_count, this.record_per_page, this.page_per_block);
-      model.addAttribute("paging", paging);
-      model.addAttribute("now_page", now_page);
-      
-      model.addAttribute("word", word);
-      
-      // 일련 변호 생성: 레코드 갯수 - ((현재 페이지수 -1) * 페이지당 레코드 수)
-      int no = search_count - ((now_page - 1) * this.record_per_page);
-      model.addAttribute("no", no);
-      
-      return "category/cate_list_search"; // /category/cate_list_search.html
-  }  
-  
-  /**
-   * 조회 + 목록 폼
+   * 카테고리 조회 + 카테고리 목록 폼
    * http://localhost:9093/category/cate_read/1
    * @param model
    * @param cate_no
@@ -183,6 +184,196 @@ public class CategoryCont {
     model.addAttribute("no", no);
     
     return "category/cate_read"; // /templates/category/read.html
+  }
+  
+  /**
+   * 카테고리 수정 폼
+   * @param session
+   * @param model
+   * @param cate_no
+   * @param word
+   * @param now_page
+   * @return
+   */
+  @GetMapping(value="/cate_update/{cate_no}")
+  public String cate_update(HttpSession session,
+                               Model model,
+                               @PathVariable("cate_no") Integer cate_no,
+                               @RequestParam(name="word", defaultValue = "") String word,
+                               @RequestParam(name="now_page", defaultValue = "1") int now_page) {
+    
+    // 카테고리 전체 메뉴
+    ArrayList<CategoryVOMenu> menu = new ArrayList<CategoryVOMenu>();
+    model.addAttribute("menu", menu);
+    
+    // 카테고리 가져오기
+    CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
+    model.addAttribute("categoryVO", categoryVO);
+    
+    // 페이징 목록
+    ArrayList<CategoryVO> list = this.categoryProc.cate_list_search_paging(word, now_page, this.record_per_page);
+    model.addAttribute("list", list);
+    
+    // 페이징 버튼 목록
+    int search_count = this.categoryProc.cate_list_search_count(word);
+    
+    String paging = this.categoryProc.pagingBox(now_page, 
+                                                            word, 
+                                                            "category/cate_list_search", 
+                                                            search_count, 
+                                                            this.record_per_page, 
+                                                            this.page_per_block);
+
+    model.addAttribute("paging", paging);
+    model.addAttribute("now_page", now_page);
+    
+    model.addAttribute("word", word);
+    
+    // 일련번호 생성: 레코드 갯수 - ((현재 페이지 수 - 1) * 페이지당 레코드 수)
+    int no = search_count - ((now_page -1) * this.record_per_page);
+    model.addAttribute("no", no);
+    
+    return "category/cate_update"; // /templates/category/cate_update.html
+  }
+  
+  /**
+   * 카테고리 수정 처리
+   * @param session
+   * @param model
+   * @param bindingResult
+   * @param categoryVO
+   * @param cate_no
+   * @param word
+   * @param now_page
+   * @return
+   */
+  @PostMapping(value="/cate_update")
+  public String cate_update(HttpSession session,
+                                    Model model,
+                                    @Valid CategoryVO categoryVO, BindingResult bindingResult,
+                                    @RequestParam(name="word", defaultValue = "") String word,
+                                    @RequestParam(name="now_page", defaultValue = "1") int now_page) {
+    
+    // 카테고리 전체 메뉴
+    ArrayList<CategoryVOMenu> menu = new ArrayList<CategoryVOMenu>();
+    model.addAttribute("menu", menu);
+    
+    if (bindingResult.hasErrors()) {
+      // 페이징 목록
+      ArrayList<CategoryVO> list = this.categoryProc.cate_list_search_paging(word, now_page, this.record_per_page);
+      model.addAttribute("list", list);
+      
+      // 페이징 버튼 목록
+      int search_count = this.categoryProc.cate_list_search_count(word);
+      
+      String paging = this.categoryProc.pagingBox(now_page, 
+                                                              word, 
+                                                              "category/cate_list_search", 
+                                                              search_count, 
+                                                              this.record_per_page, 
+                                                              this.page_per_block);
+
+      model.addAttribute("paging", paging);
+      model.addAttribute("now_page", now_page);
+      
+      return "category/cate_update"; // /templates/category/cate_update.html
+    }
+    
+    int cnt = this.categoryProc.cate_update(categoryVO);
+    model.addAttribute("cnt", cnt);
+    
+    if (cnt == 1) { // 수정 성공
+      return "redirect:/category/cate_update/" + categoryVO.getCate_no() + "?word=" + Tool.encode(word) + "&now_page=" + now_page;
+    } else { // 수정 실패
+      model.addAttribute("code", "update_fail");
+      return "category/msg"; // /templates/category/msg.html
+    }  
+  }
+  
+  /**
+   * 카테고리 삭제 폼
+   * @param session
+   * @param model
+   * @param cate_no
+   * @param word
+   * @param now_page
+   * @return
+   */
+  @GetMapping(value="/cate_delete/{cate_no}")
+  public String cate_delete(HttpSession session,
+                                   Model model,
+                                   @PathVariable("cate_no") Integer cate_no,
+                                   @RequestParam(name="word", defaultValue = "") String word,
+                                   @RequestParam(name="now_page", defaultValue = "1") int now_page) {
+    
+    // 카테고리 전체 메뉴
+    ArrayList<CategoryVOMenu> menu = new ArrayList<CategoryVOMenu>();
+    model.addAttribute("menu", menu);
+    
+    // 카테고리 가져오기
+    CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
+    model.addAttribute("categoryVO", categoryVO);
+    
+    // 페이징 목록
+    ArrayList<CategoryVO> list = this.categoryProc.cate_list_search_paging(word, now_page, this.record_per_page);
+    model.addAttribute("list", list);
+    
+    // 페이징 버튼 목록
+    int search_count = this.categoryProc.cate_list_search_count(word);
+    
+    String paging = this.categoryProc.pagingBox(now_page, 
+                                                            word, 
+                                                            "category/cate_list_search", 
+                                                            search_count, 
+                                                            this.record_per_page, 
+                                                            this.page_per_block);
+
+    model.addAttribute("paging", paging);
+    model.addAttribute("now_page", now_page);
+    
+    model.addAttribute("word", word);
+    
+    // 일련번호 생성: 레코드 갯수 - ((현재 페이지 수 - 1) * 페이지당 레코드 수)
+    int no = search_count - ((now_page -1) * this.record_per_page);
+    model.addAttribute("no", no);
+    
+    return "category/cate_delete"; // /templates/category/cate_delete.html
+  }
+  
+  /**
+   * 카테고리 삭제 처리
+   * @param model
+   * @param cate_no
+   * @param word
+   * @param now_page
+   * @return
+   */
+  @PostMapping(value="/cate_delete")
+  public String cate_delete(Model model,
+                                  Integer cate_no,
+                                  @RequestParam(name="word", defaultValue = "") String word,
+                                  @RequestParam(name="now_page", defaultValue = "1") int now_page) {
+    
+    int cnt = this.categoryProc.cate_delete(now_page);
+    model.addAttribute("cnt", cnt);
+    
+ // ----------------------------------------------------------------------------------------------------------
+    // 마지막 페이지에서 모든 레코드가 삭제되면 페이지수를 1 감소 시켜야함.
+    int search_cnt = this.categoryProc.cate_list_search_count(word);
+    if (search_cnt % this.record_per_page == 0) {
+      now_page = now_page - 1;
+      if (now_page < 1) {
+        now_page = 1; // 최소 시작 페이지
+      }
+    }
+    // ----------------------------------------------------------------------------------------------------------
+    
+    if (cnt == 1) { // 삭제 성공
+      return "redirect:/category/cate_list_search?word=" + Tool.encode(word) + "&now_page=" + now_page;
+    } else { // 삭제 실패
+      model.addAttribute("code", "delete_fail");
+      return "category/msg"; // /templates/category/msg.html
+    }
   }
   
   

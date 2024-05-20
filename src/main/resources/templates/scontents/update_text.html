@@ -15,7 +15,7 @@
   
   <div class='menu_line'></div>
   
-  <form name='frm' method='post' th:object="${scontentsVO}" action='./update_text'>
+  <form name='frm' method='post' th:object="${scontentsVO}" action='./update_text' enctype="multipart/form-data">
     <input type="hidden" name="scon_no" th:value="${scontentsVO.scon_no }">
     <!--<input type="hidden" name="now_page" th:value="${now_page}"> -->
     <!-- <input type="hidden" name="search_word" th:value="${word}"> -->
@@ -30,8 +30,7 @@
        <textarea name='scon_contents'  required="required" class="form-control" rows="12" style='width: 100%;' 
                       th:text='${scontentsVO.scon_contents}'></textarea>
     </div>
-    
-       <div>
+
        <label th:if="${url_list0!= null}"label>url1</label>
        <input type='url' name='url_link' th:if="${url_list0 != null}" th:value="${url_list0}" required
                  autofocus="autofocus" class="form-control" style='width: 100%;'/>
@@ -48,7 +47,6 @@
 			<input type='url'  name='url_link' th:if="${url_list4 != null}" th:value="${url_list4}" 
        autofocus="autofocus" class="form-control" style='width: 100%;'>
 
-    	</div>
 
     <!--
     <div>
