@@ -1,5 +1,6 @@
 package dev.mvc.account;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import dev.mvc.recommend.HashtagVO;
@@ -52,5 +53,34 @@ public interface AccountProcInter {
 	 * @return 추가된 레코드 갯수
 	 */
 	public int insertRecommend(RecommendVO recommendVO);
+	
+    /**
+     * 회원 목록
+     * 
+     * @return
+     */
+    public ArrayList<AccountVO> list();
+    
+    /**
+     * 회원 정보 조회(회원 목록, 마이페이지)
+     * @param acc_no
+     * @return
+     */
+    public AccountVO read(int acc_no);
+    
+    /**
+     * 회원 정보 수정(회원 목록, 마이페이지)
+     * @param accountVO
+     * @return
+     */
+    public int update(AccountVO accountVO);
+    
+    /** 
+     * 회원 정보 삭제(관리자, 회원 목록)
+     * 
+     * @param acc_no
+     * @return
+     */
+    public int delete(int acc_no);
 
 }

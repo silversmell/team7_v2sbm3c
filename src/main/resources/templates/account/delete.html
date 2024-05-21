@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+
+<div layout:fragment="content">
+	<script>
+		function send() { // 회원 가입 처리
+			document.getElementById('delete_frm').submit(); // required="required" 작동 안됨.
+		}    
+	</script>
+
+	<div class="title_line">회원 탈퇴<span th:text="@{|${accountVO.acc_name} (${accountVO.acc_id})|}"></span></div>
+	<aside class="aside_right">
+		<a href="javascript:location.reload();">새로고침</a>
+		<span class='menu_divide'>│</span>
+		<a href='./create'>회원 가입</a>
+		<span class='menu_divide'>│</span>
+		<a href='./list'>목록</a>
+	</aside>
+
+	<div class='menu_line'></div>
+	
+	<div style="width: 60%; margin: 0px auto ">
+	  <form name="delete_frm" id="delete_frm" th:object="${accountVO}" method="post" action="/account/delete">
+	    <input type="hidden" name="acc_no" th:value="${accountVO.acc_no}">
+	    
+	    <div class="msg_warning">회원 탈퇴 후 회원 정보는 복구 할 수 없습니다.<br>탈퇴하시겠습니까?</div>
+	    <div style='text-align: center;'>
+			<span th:text="${accountVO.acc_name}">님(</span>
+			<span th:text="${accountVO.acc_id}">)</span>
+		</div>
+	    
+	    <div class="content_body_bottom">
+	      <button type="button" onclick="send();" class="btn btn-secondary btn-sm">삭제</button>
+	      <button type="button" onclick="history.back();" class="btn btn-secondary btn-sm">취소</button>
+	    </div>
+
+	  </form>
+	</div>
+	
+</div>
+
+</html>

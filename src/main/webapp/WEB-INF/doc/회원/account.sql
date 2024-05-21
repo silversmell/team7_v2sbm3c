@@ -59,7 +59,7 @@ VALUES(ACCOUNT_SEQ.nextval,'user3','1111','김수진',sysdate,1);
 SELECT acc_no, acc_id, acc_pw, acc_name, acc_tel, acc_age, acc_date, acc_grade, 
        acc_img, acc_saved_img, acc_thumb_img, acc_img_size
 FROM account
-ORDER BY acc_no ASC;
+ORDER BY acc_grade ASC, acc_id ASC;
 
 SELECT ACCOUNT_SEQ.currval AS acc_no FROM dual;
 
@@ -83,12 +83,22 @@ WHERE acc_id='notExist';
 
 ------------
 
+-- 회원 정보 수정
+UPDATE account 
+SET acc_name='수정됨', acc_tel='010-9999-1110', acc_age='20대'
+WHERE acc_no=4;
+
+
+------------
+
 -- 회원 전체 삭제 
 DELETE FROM account;
  
--- 회원 탈퇴 (특정 회원 삭제)
+-- 특정 회원 삭제
 DELETE FROM account
 WHERE acc_no=4;
+
+-- 회원 탈퇴 (update문)
 
 SELECT * FROM account;
 
