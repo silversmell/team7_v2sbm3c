@@ -292,9 +292,16 @@ public interface Share_contentsProcInter {
 	 public int bookmark_delete(int scon_no);
 	 /**
 	  * share_image에 있는 scon_no 중복 제거
-	  * @return
+	  * @return ArrayList
 	  */
 	 public ArrayList<Share_imageVO> distinct_sconno();
+	 
+	 /**
+	  * scon_no 삭제시 태그도 함께 삭제
+	  * @param scon_no
+	  * @return int
+	  */
+	 public int delete_tag(int scon_no);
 	 
 	 
 

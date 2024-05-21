@@ -381,5 +381,11 @@ public ArrayList<Share_imageVO> distinct_sconno() {
 	return list;
 }
 
+@Override
+public int delete_tag(int scon_no) {
+	int cnt = this.scontentsDAO.delete_tag(scon_no);
+	return cnt;
+}
+
 
 }

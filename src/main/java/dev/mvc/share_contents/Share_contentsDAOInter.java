@@ -276,6 +276,13 @@ public interface Share_contentsDAOInter {
 	  * @return
 	  */
 	 public ArrayList<Share_imageVO> distinct_sconno();
+	 
+	 /**
+	  * scon_no 삭제시 태그도 함께 삭제
+	  * @param scon_no
+	  * @return int
+	  */
+	 public int delete_tag(int scon_no);
 //	 /**
 //	  * 우선순위 올림
 //	  * @param scon_no 

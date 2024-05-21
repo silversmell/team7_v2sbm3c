@@ -395,7 +395,8 @@ public class Share_contentsCont {
 	public String delete(int scon_no, RedirectAttributes ra) {
 		this.sconProc.delete_comments(scon_no);
 		this.sconProc.delete_url(scon_no);
-
+		this.sconProc.delete_tag(scon_no);
+		this.sconProc.bookmark_delete(scon_no);
 		ArrayList<Share_imageVO> list = this.sconProc.read_image(scon_no);
 		for (Share_imageVO image : list) {
 			String file_saved = image.getFile_upload_name();
@@ -424,10 +425,9 @@ public class Share_contentsCont {
 			sconno[i] = sconno_list.get(i).getScon_no();
 			// System.out.println("->read_hashtag: " + sconno[i]);
 		}
-
 		ArrayList<Share_contentsVO> list = new ArrayList<>(); // scon_no에 따른 Share_contentsVO
 		for (int i = 0; i < sconno_list.size(); i++) {
-			list.addAll(this.sconProc.list_by_sconno(sconno[i]));
+			list.addAll(this.sconProc.list_by_sconno(sconno[i])); //
 			// System.out.println("-> list_by_sconno 이후 : " + list.get(i).getScon_no());
 		}
 
@@ -448,7 +448,8 @@ public class Share_contentsCont {
 		
 		ArrayList<Share_imageVO> list_image = new ArrayList<>();
 		for (Contents_tagVO scon : tag_sconno) {
-			list_image.addAll(this.sconProc.read_image(scon.getScon_no()));
+			ArrayList<Share_imageVO> distinct_image = this.sconProc.read_image(scon.getScon_no());
+			list_image.add(distinct_image.get(0)); //첫번째 것
 		}
 		model.addAttribute("list_image", list_image);
 
@@ -474,27 +475,26 @@ public class Share_contentsCont {
 			@RequestParam(name = "now_page", defaultValue = "1") int now_page) {
 
 		word = Tool.checkNull(word).trim();
+		
+		ArrayList<HashtagVO> list_hashtag = this.sconProc.select_hashtag();
+		model.addAttribute("list_hashtag", list_hashtag);
 
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("word", word);
 		map.put("now_page", now_page);
 
 		ArrayList<Share_contentsVO> list = this.sconProc.list_by_contents_search_paging(map);
-		model.addAttribute("list", list);
-
-		ArrayList<HashtagVO> list_hashtag = this.sconProc.select_hashtag();
-		model.addAttribute("list_hashtag", list_hashtag);
+		model.addAttribute("list", list);	
 
 		model.addAttribute("word", word);
-		
 		// 사진 하나만 나오게 하기
-		ArrayList<Share_imageVO> list_image1 = this.sconProc.distinct_sconno();
 		ArrayList<Share_imageVO> list_image = new ArrayList<>();
-		for(Share_imageVO distinct_list: list_image1) {
-		System.out.println("->중복 아이디 :" + distinct_list.getScon_no() );
-		ArrayList<Share_imageVO> distinct_image = this.sconProc.read_image(distinct_list.getScon_no()) ;
-		list_image.add(distinct_image.get(0)); //첫번째 것
+		
+		for(Share_contentsVO list1:list) {
+			ArrayList<Share_imageVO> distinct_image = this.sconProc.read_image(list1.getScon_no());
+			list_image.add(distinct_image.get(0)); //첫번째 것
 		}
+		
 		model.addAttribute("list_image",list_image);
 		
 		int search_count = this.sconProc.list_by_cateno_search_count(map);

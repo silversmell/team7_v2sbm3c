@@ -98,6 +98,12 @@
       fetch(url,{
           method: 'GET'
         })
+      .then(response => response.json())
+      .then(rdata=>{
+          if(rdata.cnt>0){
+          let commentSection=document.getElementById("commentSection");
+          let comment_value = document.getElementById("comment").value;
+          comment_value
     }
   </script>
 

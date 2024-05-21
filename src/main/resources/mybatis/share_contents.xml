@@ -246,6 +246,7 @@
 		file_no,scon_no,file_origin_name,file_upload_name,file_thumb_name,file_size,file_date
 		FROM share_image
 		where scon_no=#{scon_no}
+		ORDER BY scon_no DESC
 	</select>
 
 	<delete id="delete_image" parameterType="int">
@@ -323,7 +324,13 @@
 	<select id ="distinct_sconno" resultType="dev.mvc.share_contentsdto.Share_imageVO">
 		select distinct scon_no
 		from share_image
+		ORDER BY scon_no DESC
 	</select>
+	
+	<delete id="delete_tag" parameterType="int">
+	delete from contents_tag
+	where scon_no=#{scon_no}
+	</delete>
 </mapper>
 
 
