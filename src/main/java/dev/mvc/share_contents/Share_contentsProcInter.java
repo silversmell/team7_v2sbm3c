@@ -290,6 +290,11 @@ public interface Share_contentsProcInter {
 	  * @return int
 	  */
 	 public int bookmark_delete(int scon_no);
+	 /**
+	  * share_image에 있는 scon_no 중복 제거
+	  * @return
+	  */
+	 public ArrayList<Share_imageVO> distinct_sconno();
 	 
 	 
 

@@ -271,6 +271,11 @@ public interface Share_contentsDAOInter {
 	  * @return int
 	  */
 	 public int bookmark_delete(int scon_no);
+	 /**
+	  * share_image에 있는 scon_no 중복 제거
+	  * @return
+	  */
+	 public ArrayList<Share_imageVO> distinct_sconno();
 //	 /**
 //	  * 우선순위 올림
 //	  * @param scon_no 

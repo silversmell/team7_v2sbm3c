@@ -375,5 +375,11 @@ public int bookmark_delete(int scon_no) {
 	return cnt;
 }
 
+@Override
+public ArrayList<Share_imageVO> distinct_sconno() {
+	ArrayList<Share_imageVO>list = this.scontentsDAO.distinct_sconno();
+	return list;
+}
+
 
 }

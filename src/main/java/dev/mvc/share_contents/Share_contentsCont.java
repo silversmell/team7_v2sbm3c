@@ -81,7 +81,8 @@ public class Share_contentsCont {
 		for (int i = 0; i < url_list.size(); i++) {
 			model.addAttribute("url_list" + i, url_list.get(i).getUrl_link());
 		}
-		ArrayList<Share_contentsVO> share_imageVO = this.sconProc.read_image(scon_no);
+		ArrayList<Share_imageVO> share_imageVO = this.sconProc.read_image(scon_no);
+
 		model.addAttribute("share_imageVO", share_imageVO);
 
 		return "scontents/read";
@@ -444,6 +445,7 @@ public class Share_contentsCont {
 		model.addAttribute("word", word);
 
 		ArrayList<Contents_tagVO> tag_sconno = this.sconProc.select_sconno(tag_no);
+		
 		ArrayList<Share_imageVO> list_image = new ArrayList<>();
 		for (Contents_tagVO scon : tag_sconno) {
 			list_image.addAll(this.sconProc.read_image(scon.getScon_no()));
@@ -485,9 +487,16 @@ public class Share_contentsCont {
 
 		model.addAttribute("word", word);
 		
-		ArrayList<Share_imageVO> list_image = this.sconProc.list_all_image(); 
-		model.addAttribute("list_image", list_image);
-
+		// 사진 하나만 나오게 하기
+		ArrayList<Share_imageVO> list_image1 = this.sconProc.distinct_sconno();
+		ArrayList<Share_imageVO> list_image = new ArrayList<>();
+		for(Share_imageVO distinct_list: list_image1) {
+		System.out.println("->중복 아이디 :" + distinct_list.getScon_no() );
+		ArrayList<Share_imageVO> distinct_image = this.sconProc.read_image(distinct_list.getScon_no()) ;
+		list_image.add(distinct_image.get(0)); //첫번째 것
+		}
+		model.addAttribute("list_image",list_image);
+		
 		int search_count = this.sconProc.list_by_cateno_search_count(map);
 		String paging = this.sconProc.pagingBox(now_page, word, "/scontents/list_by_search", search_count,
 				Contents.RECORD_PER_PAGE, Contents.PAGE_PER_BLOCK);
