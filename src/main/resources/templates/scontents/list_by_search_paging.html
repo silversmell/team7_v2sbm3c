@@ -9,7 +9,7 @@
 	</div>
 
 	<aside class="aside_right">
-		<a href="./create">등록</a> <span class="menu_devide">│</span> <a
+		<a th:href="@{|/scontents/create?cate_no=${categoryVO.cate_no}|}">등록</a> <span class="menu_devide">│</span> <a
 			href="javascript:location.reload();">새로고침</a> <span
 			class='menu_divide'>│</span> <a
 			th:href="@{|./list_by_search?word=${word}&now_page=${now_page}|}">목록형</a>

@@ -76,20 +76,20 @@
     }
     
     function update_comment_form(){
-    	var text_areaform = document.getElementById("hidden_form");
-    	text_areaform.style.display = 'block';   
+      var text_areaform = document.getElementById("hidden_form");
+      text_areaform.style.display = 'block';   
     }
     
     function cancel_update(){
-    	var text_areaform = document.getElementById("hidden_form");
-    	text_areaform.style.display='none';
+      var text_areaform = document.getElementById("hidden_form");
+      text_areaform.style.display='none';
     }
     
     function update_comment_submit(){
 
-    	let scon_no = document.getElementById("scon_no")
-    	console.log(scon_no.value);
-    	
+      let scon_no = document.getElementById("scon_no")
+      console.log(scon_no.value);
+      
       let update_comment =document.getElementById("update_comment");
       console.log(update_comment.value);
       
@@ -146,10 +146,10 @@
           <div th:if="${scontentsVO.file1.endsWith('jpg') or scontentsVO.file1.endsWith('png')  or scontentsVO.file1.endsWith('gif')}">
             <img th:src="@{|/scontents/storage/${scontentsVO.file1saved}|}" style='width: 50%; float: left; margin-top: 0.5%; margin-right: 1%;'>
           </div>
-					-->
-					
-					해시태그:  
-   		<tr th:each="item, status : ${list2}">
+        -->
+          
+          해시태그:  
+      <tr th:each="item, status : ${list2}">
         <td class='td_left'>
             <span th:text="${item}" class="bold;"></span>
         </td>
@@ -159,28 +159,28 @@
             <img th:src="@{|/contents/storage/${share_imageVO.file_upload_name}|}" style='width: 50%; float: left; margin-top: 0.5%; margin-right: 1%;'>
           </div>
     </tr>
-					<br> 
-					</span> 
-					<span style="font-size: 1.5em; font-weight: bold;" th:text="${scontentsVO.scon_title}"></span>
+          <br> 
+          </span> 
+          <span style="font-size: 1.5em; font-weight: bold;" th:text="${scontentsVO.scon_title}"></span>
           <span style="font-size: 1em;" th:text="${scontentsVO.scon_date}"></span><br><br>
           <span style="font-size: 1em;" th:text="|조회수: ${scon_views}|"></span><br><br>
           <span style="font-size: 1em;" th:text="|댓글수: ${cnt}|"></span><br><br>
           <div style="white-space: pre-wrap;"><span th:text="${scontentsVO.scon_contents}"></span></div>
-          	<span th:if="${scontentsVO.mark =='N'}"> <a th:href="@{|./up_priority/${scontentsVO.scon_no}|}">
-						<img 	src="/css/images/bookmark_off.png" class="icon"></a>	</span>
-					<span th:unless="${scontentsVO.mark =='N'}"> <a	 th:href="@{|./down_priority/${scontentsVO.scon_no}|}"><img
-							src="/css/images/bookmark_on.png" class="icon"></a> </span>
+            <span th:if="${scontentsVO.mark =='N'}"> <a th:href="@{|./up_priority/${scontentsVO.scon_no}|}">
+            <img  src="/css/images/bookmark_off.png" class="icon"></a>  </span>
+          <span th:unless="${scontentsVO.mark =='N'}"> <a  th:href="@{|./down_priority/${scontentsVO.scon_no}|}"><img
+              src="/css/images/bookmark_on.png" class="icon"></a> </span>
         </div>
       </li>
 
 
       <div>
 <div>
-	<a style="font-size: 1em;" th:href="${url_list0}" th:text="${url_list0}" th:if="${url_list0 != '1'}">Link1</a><br><br>
-	<a style="font-size: 1em;" th:href="${url_list1}" th:text="${url_list1}" th:if="${url_list1 != '1'}">Link2</a><br><br>
-	<a style="font-size: 1em;" th:href="${url_list2}" th:text="${url_list2}"  th:if="${url_list2 != '1'}">Link3</a><br><br>
-	<a style="font-size: 1em;" th:href="${url_list3}" th:text="${url_list3}"   th:if="${url_list3 != '1'}">Link4</a><br><br>
-	<a style="font-size: 1em;" th:href="${url_list4}" th:text="${url_list4}"  th:if="${url_list4 != '1'}">Link5</a><br><br>
+  <a style="font-size: 1em;" th:href="${url_list0}" th:text="${url_list0}" th:if="${url_list0 != '1'}">Link1</a><br><br>
+  <a style="font-size: 1em;" th:href="${url_list1}" th:text="${url_list1}" th:if="${url_list1 != '1'}">Link2</a><br><br>
+  <a style="font-size: 1em;" th:href="${url_list2}" th:text="${url_list2}"  th:if="${url_list2 != '1'}">Link3</a><br><br>
+  <a style="font-size: 1em;" th:href="${url_list3}" th:text="${url_list3}"   th:if="${url_list3 != '1'}">Link4</a><br><br>
+  <a style="font-size: 1em;" th:href="${url_list4}" th:text="${url_list4}"  th:if="${url_list4 != '1'}">Link5</a><br><br>
 
 </div>
 
@@ -204,9 +204,9 @@
     <div id="commentSection">
       <tr th:each="scommentVO, status:${list}">      
       <td class='td_left'>
-      	<span id="scmt_date" style="font-size: 1em;" th:text="${scommentVO.scmt_date}"></span><br>
-      	<span><div text="수정"  name="update_co"  style="cursor: pointer;" onclick="update_comment_form()" id="update_comment_form">수정</div></span>
-     		<span id="accno"style="font-size: 1em;" th:text="${acc_no}" th:value="${acc_no}"></span><br>
+        <span id="scmt_date" style="font-size: 1em;" th:text="${scommentVO.scmt_date}"></span><br>
+        <span><div text="수정"  name="update_co"  style="cursor: pointer;" onclick="update_comment_form()" id="update_comment_form">수정</div></span>
+        <span id="accno"style="font-size: 1em;" th:text="${acc_no}" th:value="${acc_no}"></span><br>
         <span id="scmt_comment" th:text="${scommentVO.scmt_comment}" style="font-weight: bold;"></span><br><br>
       </td>
     </tr>
@@ -222,14 +222,14 @@
       <button type='button' onclick="submit_comment();" 
              class="btn btn-primary btn-sm" style="margin-top: 4px;">등록</button>
     </div>
-    	
-    	<div id="hidden_form"  style="display:none;">
+      
+      <div id="hidden_form"  style="display:none;">
        <input type="hidden" id="scon_no" name="scon_no" th:value="${scontentsVO.scon_no}">
        <textarea name='update_comment' id="update_comment" required="required" value="" class="form-control" rows="5" style='width: 100%;'></textarea>
       <button type='button' onclick="update_comment_submit();" 
              class="btn btn-primary btn-sm" style="margin-top: 4px;">수정</button>
        <button type='button' onclick="cancel_update();" 
- 							class="btn btn-primary btn-sm" style="margin-top: 4px;">취소</button>
+              class="btn btn-primary btn-sm" style="margin-top: 4px;">취소</button>
     </div>
     
     <span id='id_msg'></span>  
@@ -237,4 +237,3 @@
 </div>
 
 </html>
-
