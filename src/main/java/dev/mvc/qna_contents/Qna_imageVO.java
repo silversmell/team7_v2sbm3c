@@ -37,7 +37,7 @@ public class Qna_imageVO {
   private String file_thumb_name="";
   
   /** 파일 크기 */
-  private Integer file_size;
+  private long file_size;
   
   /** 파일 등록일 */
   private String file_date ="";

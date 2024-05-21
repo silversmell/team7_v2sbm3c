@@ -175,6 +175,22 @@ public class CategoryProc implements CategoryProcInter {
     return cnt;
   }
   
+  @Override
+  public int cnt_plus(int cate_no) {
+    int cnt = this.categoryDAO.cnt_plus(cate_no);
+    
+    return cnt;
+  }
+
+  @Override
+  public int cnt_minus(int cate_no) {
+    int cnt = this.categoryDAO.cnt_minus(cate_no);
+    
+    return cnt;
+  }
+  
+
+  
   /** 
    * SPAN태그를 이용한 박스 모델의 지원, 1 페이지부터 시작 
    * 현재 페이지: 11 / 22   [이전] 11 12 13 14 15 16 17 18 19 20 [다음] 
@@ -273,6 +289,7 @@ public class CategoryProc implements CategoryProcInter {
      
     return str.toString(); 
   }
-  
+
+
   
 }

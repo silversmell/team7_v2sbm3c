@@ -44,7 +44,7 @@
   </update>
 
   <!-- 카테고리 우선 순위 낮춤, 1 등 -> 10 등 -->
-  <update id="update_seqno_backward" parameterType="Integer">
+  <update id="cate_update_seqno_backward" parameterType="Integer">
     UPDATE category
     SET cate_seqno = cate_seqno + 1
     WHERE cate_no = #{cate_no}
@@ -117,15 +117,21 @@
         
     ORDER BY cate_seqno ASC
   </select>
+  
+  <!-- 관련 자료 수 증가 -->
+  <update id="cnt_plus" parameterType="int">
+    UPDATE category
+    SET cate_cnt = #{cate_cnt} + 1
+    WHERE cate_no = #{cate_no}
+  </update>
+  
+  <!-- 관련 자료 수 감소 -->
+  <update id="cnt_minus" parameterType="int">
+    UPDATE category
+    SET cate_cnt = #{cate_cnt} - 1
+    WHERE cate_no = #{cate_no}
+  </update>
+    
+
                 
 </mapper>
-
-
-
-
-
-
-
-
-
-

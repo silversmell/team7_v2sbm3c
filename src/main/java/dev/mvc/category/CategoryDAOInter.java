@@ -107,4 +107,17 @@ public interface CategoryDAOInter {
    */
   public int cate_list_search_count(String word);
   
+  /**
+   * 카테고리별 관련 자료 수 증가
+   * @param cate_no
+   * @return
+   */
+   public int cnt_plus(int cate_no);
+   
+   /**
+    * 카테고리별 관련 자료 수 감소
+    * @param cate_no
+    * @return
+    */
+   public int cnt_minus(int cate_no);
 }

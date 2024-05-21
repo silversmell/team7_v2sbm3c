@@ -1,20 +1,27 @@
 package dev.mvc.qna_contents;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import dev.mvc.account.AccountProc;
 import dev.mvc.category.CategoryProcInter;
 import dev.mvc.category.CategoryVO;
 import dev.mvc.category.CategoryVOMenu;
+import dev.mvc.share_contents.Contents;
 import dev.mvc.tool.Tool;
+import dev.mvc.tool.Upload;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 
@@ -42,6 +49,22 @@ public class Qna_contentsCont {
   
   public Qna_contentsCont() {
     System.out.println("-> Qna_contentsCont created.");
+  }
+  
+  
+  /**
+   * POST 요청시 새로고침 방지, POST 요청 처리완료 -> redirect -> url -> GET -> forward -> html
+   * POST → url → GET → 데이터 전송
+   * @return
+   */
+  @GetMapping(value="/msg")
+  public String msg(Model model, String url){
+    
+    // 카테고리 전체 메뉴
+    ArrayList<CategoryVOMenu> menu = new ArrayList<CategoryVOMenu>();
+    model.addAttribute("menu", menu);
+
+    return url; // /forward, /templates/...
   }
   
   

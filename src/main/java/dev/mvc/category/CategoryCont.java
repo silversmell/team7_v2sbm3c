@@ -54,7 +54,8 @@ public class CategoryCont {
    */
   @GetMapping(value="/cate_list_search")
   public String cate_list_search(HttpSession session, Model model, CategoryVO categoeyVO, String word, 
-                                     @RequestParam(name="now_page", defaultValue="1") int now_page) {
+                                      @RequestParam(name="cate_no", defaultValue = "0") int cate_no,
+                                      @RequestParam(name="now_page", defaultValue="1") int now_page) {
     
       word = Tool.checkNull(word).trim();
       System.out.println("--> word: " + word);
@@ -184,6 +185,9 @@ public class CategoryCont {
     // 일련번호 생성: 레코드 갯수 - ((현재 페이지 수 - 1) * 페이지당 레코드 수)
     int no = search_count - ((now_page -1) * this.record_per_page);
     model.addAttribute("no", no);
+    
+    // cate_no도 함께 전달
+    model.addAttribute("cate_no", cate_no);
     
     return "category/cate_read"; // /templates/category/read.html
   }

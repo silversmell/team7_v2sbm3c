@@ -9,7 +9,7 @@ CREATE TABLE QNA_IMAGE(
 		FILE_ORIGIN_NAME VARCHAR2(100) NOT NULL,
 		FILE_UPLOAD_NAME VARCHAR2(100) NOT NULL,
 		FILE_THUMB_NAME VARCHAR2(100) NOT NULL,
-		FILE_SIZE INT DEFAULT 0 NOT NULL,
+		FILE_SIZE LONG DEFAULT 0 NOT NULL,
 		FILE_DATE DATE NOT NULL,
   FOREIGN KEY (QCON_NO) REFERENCES QNA_CONTENTS (QCON_NO)
 );
@@ -54,6 +54,11 @@ WHERE file_no=1;
 -- 특정 이미지 삭제
 DELETE FROM qna_image
 WHERE file_no=1;
+
+-- 이미지 조회
+SELECT file_no, qcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date
+FROM qna_image
+WHERE qcon_no=1;
 
 -- 전체 이미지
 SELECT file_no, qcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date

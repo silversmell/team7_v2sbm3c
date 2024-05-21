@@ -104,12 +104,27 @@ public interface CategoryProcInter {
   public ArrayList<CategoryVO> cate_list_search_paging(String word, int now_page, int record_per_page);
   
   /**
-   * 검색된 레코드 수
-   * select id="cate_list_search_count" resultType="int" parameterType="String"
+   * 카테고리별 관련 자료 수 갯수
    * @param word
    * @return
    */
   public int cate_list_search_count(String word);
+  
+  /**
+   * 카테고리별 관련 자료 수 증가
+   * @param cate_no
+   * @return
+   */
+   public int cnt_plus(int cate_no);
+   
+   /**
+    * 카테고리별 관련 자료 수 감소
+    * @param cate_no
+    * @return
+    */
+   public int cnt_minus(int cate_no);
+  
+  
   
   /** 
    * SPAN태그를 이용한 박스 모델의 지원, 1 페이지부터 시작 

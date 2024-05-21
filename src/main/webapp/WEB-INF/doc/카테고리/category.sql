@@ -108,6 +108,35 @@ WHERE cate_no=1;
 UPDATE category
 SET cate_visible='N'
 WHERE cate_no=1;
+/**
+-- 카테고리 관련 자료수 갯수
+SELECT 
+    CASE 
+        WHEN cate_no = 1 THEN (SELECT COUNT(*) FROM share_contents)
+        WHEN cate_no = 2 THEN (SELECT COUNT(*) FROM qna_contents)
+        ELSE 0 
+    END AS cnt
+FROM category
+WHERE cate_no = 1;
 
+-- 공유글 자료수 갯수
+SELECT COUNT(*) FROM share_contents
+WHERE cate_no=1;
 
+-- 질문글 자료수 갯수
+SELECT COUNT(*) FROM qna_contents
+WHERE cate_no=2;
+*/
+
+-- 관련 글수 증가
+UPDATE category
+SET cate_cnt = cate_cnt + 1
+WHERE cate_no = 1;
+
+-- 관련 글수 감소
+UPDATE category
+SET cate_cnt = cate_cnt - 1
+WHERE cate_no = 1;
+
+rollback;
 commit;

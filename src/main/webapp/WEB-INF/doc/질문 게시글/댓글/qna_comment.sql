@@ -47,3 +47,14 @@ VALUES(qna_comment_seq.nextval, 2, 1, '이거 아닐까요?', sysdate);
 SELECT qcmt_contents, qcmt_date
 FROM qna_comment
 WHERE qcon_no=1;
+
+-- 댓글 목록
+SELECT qcmt_no, acc_no, qcon_no, qcmt_contents, qcmt_date
+FROM qna_comment
+ORDER BY qcmt_no DESC;
+
+-- 질문글에 따른 댓글 목록
+SELECT qcmt_no, acc_no, qcon_no, qcmt_contents, qcmt_date
+FROM qna_comment
+WHERE qcon_no=1
+ORDER BY qcmt_no DESC;
