@@ -92,7 +92,14 @@ public class Share_contentsCont {
 		
 		this.sconProc.up_priority(scon_no);
 		int cnt = this.sconProc.y_mark(scon_no);
+		HashMap<String,Object> map = new HashMap<>();
+		map.put("scon_no", scon_no);
+		map.put("acc_no",1); // acc_no 들어오면 바꿔야 할 것!
+		int cnt1 = this.sconProc.bookmarK_create(map);
 		
+		if(cnt1 == 1) {
+			System.out.println("북마크에 등록 성공");
+		}
 //		if(cnt==1) {
 //			System.out.println("y_mark 성공");
 //		}

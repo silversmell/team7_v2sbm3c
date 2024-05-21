@@ -308,6 +308,11 @@
 		from share_comment
 		where scmt_comment=#{scmt_comment} AND scon_no=#{scon_no}
 	</select>
+	
+	<insert id ="bookmarK_create"  parameterType="HashMap" >
+		INSERT INTO BOOKMARK(mark_no, acc_no, scon_no, qcon_no)
+		VALUES(BOOKMARK_SEQ.nextval, #{acc_no}, #{scon_no}, null)
+</insert>
 
 </mapper>
 

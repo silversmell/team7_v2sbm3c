@@ -258,7 +258,12 @@ public interface Share_contentsDAOInter {
 	  * @return int
 	  */
 	 public int read_scmtno(HashMap<String,Object> map);
-	 
+	 /**
+	  * bookmark acc_no, 게시글 번호 등록
+	  * @param map
+	  * @return int
+	  */
+	 public int bookmarK_create(HashMap<String,Object> map);
 //	 /**
 //	  * 우선순위 올림
 //	  * @param scon_no 

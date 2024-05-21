@@ -363,5 +363,11 @@ public int read_scmtno(HashMap<String, Object> map) {
 	return cnt;
 }
 
+@Override
+public int bookmarK_create(HashMap<String, Object> map) {
+	int cnt = this.scontentsDAO.bookmarK_create(map);
+	return cnt;
+}
+
 
 }
