@@ -1,5 +1,6 @@
 package dev.mvc.account;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,12 @@ public class AccountProc implements AccountProcInter {
 	public int insertRecommend(RecommendVO recommendVO) {
 		int cnt = this.accountDAO.insertRecommend(recommendVO);
 		return cnt;
+	}
+
+	@Override
+	public ArrayList<AccountVO> list() {
+		ArrayList<AccountVO> list = this.accountDAO.list();
+		return list;
 	}
 
 	

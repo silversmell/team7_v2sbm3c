@@ -15,8 +15,8 @@
 		SELECT LISTAGG(tag_code, ',') WITHIN GROUP (ORDER BY tag_code DESC) AS
 		tag_codes
 		FROM (
-		SELECT DISTINCT tag_code
-		FROM hashtag
+			SELECT DISTINCT tag_code
+			FROM hashtag
 		)
 	</select>
 
@@ -38,17 +38,33 @@
 	<insert id="create" parameterType="dev.mvc.account.AccountVO">
 		<selectKey keyProperty="acc_no" resultType="int" order="AFTER">
 			SELECT ACCOUNT_SEQ.currval AS acc_no FROM dual
-		</selectKey> INSERT
-		INTO ACCOUNT(acc_no, acc_id, acc_pw, acc_name, acc_date, acc_grade)
-		VALUES(ACCOUNT_SEQ.nextval, #{acc_id}, #{acc_pw}, #{acc_name}, sysdate,
-		15) </insert>
-
+		</selectKey>
+		INSERT INTO ACCOUNT(acc_no, acc_id, acc_pw, acc_name, acc_date, acc_grade)
+		VALUES(ACCOUNT_SEQ.nextval, #{acc_id}, #{acc_pw}, #{acc_name}, sysdate, 15)
+	</insert>
 
 	<!-- 추천 데이터(해시태그) 저장 -->
 	<insert id="insertRecommend" parameterType="dev.mvc.recommend.RecommendVO">
 		INSERT INTO RECOMMEND(recom_no, acc_no, tag_no)
 		VALUES(RECOMMEND_SEQ.nextval, #{acc_no}, #{tag_no})
 	</insert>
+	
+	<!-- 회원 목록 조회 (관리자) -->
+	<select id="list" resultType="dev.mvc.account.AccountVO">
+		SELECT acc_no, acc_id, acc_pw, acc_name, acc_tel, acc_age, acc_date, acc_grade,
+		acc_img, acc_saved_img, acc_thumb_img, acc_img_size
+		FROM account
+		ORDER BY acc_grade ASC, acc_id ASC
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 
 </mapper>

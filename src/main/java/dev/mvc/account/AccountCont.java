@@ -1,5 +1,6 @@
 package dev.mvc.account;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -17,10 +18,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import dev.mvc.recommend.HashtagVO;
 import dev.mvc.recommend.RecommendVO;
+import dev.mvc.tool.Tool;
+import dev.mvc.tool.Upload;
 
 @RequestMapping("/account")
 @Controller
@@ -177,5 +181,24 @@ public class AccountCont {
 		
 		return "account/msg"; // /templates/account/msg.html
 	}
+	
+	/**
+	 * 전체 회원 조회 (미완 - 세션 구현 => 로그인한 회원이 관리자인지 확인 필요)
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@GetMapping(value="/list")                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+	public String list(Model model) {	// 아직 로그인 세션 구현 X, HttpSession session
+		ArrayList<AccountVO> list = this.accountProc.list();
+		
+		model.addAttribute("list", list);
+		
+		return "account/list";
+	}
+
+	
+	
+	
 	
 }

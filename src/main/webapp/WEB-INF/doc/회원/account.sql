@@ -59,7 +59,7 @@ VALUES(ACCOUNT_SEQ.nextval,'user3','1111','김수진',sysdate,1);
 SELECT acc_no, acc_id, acc_pw, acc_name, acc_tel, acc_age, acc_date, acc_grade, 
        acc_img, acc_saved_img, acc_thumb_img, acc_img_size
 FROM account
-ORDER BY acc_no ASC;
+ORDER BY acc_grade ASC, acc_id ASC;
 
 SELECT ACCOUNT_SEQ.currval AS acc_no FROM dual;
 

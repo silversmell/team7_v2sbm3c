@@ -1,5 +1,6 @@
 package dev.mvc.account;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import dev.mvc.recommend.HashtagVO;
@@ -52,5 +53,17 @@ public interface AccountDAOInter {
      * @return 추가된 레코드 갯수
      */
     public int insertRecommend(RecommendVO recommendVO);
+    
+    /**
+     * 전체 회원 조회
+     * 
+     * @return
+     */
+    public ArrayList<AccountVO> list();
+    
+    
+    
+    
+    
 
 }
