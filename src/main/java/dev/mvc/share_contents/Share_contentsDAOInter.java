@@ -245,6 +245,19 @@ public interface Share_contentsDAOInter {
 	  */
 	 public int n_mark(int scon_no);
 	 
+	 /**
+	  * 댓글 수정
+	  * @param map
+	  * @return int
+	  */
+	 public int update_comment(HashMap<String,Object>map);
+	 
+	 /**
+	  * 댓글로 scmt no 조회
+	  * @param map
+	  * @return int
+	  */
+	 public int read_scmtno(HashMap<String,Object> map);
 	 
 //	 /**
 //	  * 우선순위 올림

@@ -59,9 +59,7 @@
           new_Comment.appendChild(new_commentSpan);
           
           new_Comment.appendChild(document.createElement("br"));
-          
-
-          
+        
           commentSection.appendChild(new_Comment);
           
           }
@@ -75,6 +73,31 @@
         console.error("Error")
       });
       
+    }
+    
+    function update_comment_form(){
+    	var text_areaform = document.getElementById("hidden_form");
+    	text_areaform.style.display = 'block';   
+    }
+    
+    function cancel_update(){
+    	var text_areaform = document.getElementById("hidden_form");
+    	text_areaform.style.display='none';
+    }
+    
+    function update_comment_submit(){
+
+    	let scon_no = document.getElementById("scon_no")
+    	console.log(scon_no.value);
+    	
+      let update_comment =document.getElementById("update_comment");
+      console.log(update_comment.value);
+      
+      let url = './create_comment?scmt_comment='+update_comment.value+'&scon_no='+scon_no.value;
+      
+      fetch(url,{
+          method: 'GET'
+        })
     }
   </script>
 
@@ -176,6 +199,7 @@
       <tr th:each="scommentVO, status:${list}">      
       <td class='td_left'>
       	<span id="scmt_date" style="font-size: 1em;" th:text="${scommentVO.scmt_date}"></span><br>
+      	<span><div text="수정"  name="update_co"  style="cursor: pointer;" onclick="update_comment_form()" id="update_comment_form">수정</div></span>
      		<span id="accno"style="font-size: 1em;" th:text="${acc_no}" th:value="${acc_no}"></span><br>
         <span id="scmt_comment" th:text="${scommentVO.scmt_comment}" style="font-weight: bold;"></span><br><br>
       </td>
@@ -185,11 +209,21 @@
   
       <div>
        <label for="comment">댓글</label>
+       
        <input type="text" id="acc_no" name="acc_no" th:value="${acc_no}">
        <input type="hidden" id="scon_no" name="scon_no" th:value="${scontentsVO.scon_no}">
        <textarea name='scmt_comment' id="comment" required="required" value="" class="form-control" rows="5" style='width: 100%;'></textarea>
       <button type='button' onclick="submit_comment();" 
              class="btn btn-primary btn-sm" style="margin-top: 4px;">등록</button>
+    </div>
+    	
+    	<div id="hidden_form"  style="display:none;">
+       <input type="hidden" id="scon_no" name="scon_no" th:value="${scontentsVO.scon_no}">
+       <textarea name='update_comment' id="update_comment" required="required" value="" class="form-control" rows="5" style='width: 100%;'></textarea>
+      <button type='button' onclick="update_comment_submit();" 
+             class="btn btn-primary btn-sm" style="margin-top: 4px;">수정</button>
+       <button type='button' onclick="cancel_update();" 
+ 							class="btn btn-primary btn-sm" style="margin-top: 4px;">취소</button>
     </div>
     
     <span id='id_msg'></span>  

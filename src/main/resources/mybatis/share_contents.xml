@@ -8,16 +8,19 @@
 		resultType="dev.mvc.share_contentsdto.Share_contentsVO">
 		SELECT scon_no, scon_title, scon_contents, scon_views,mark,
 		scon_comment, scon_date,scon_priority
-		FROM share_contents ORDER BY scon_no ASC
+		FROM share_contents ORDER BY
+		scon_no ASC
 	</select>
 
 	<!-- scon에 따른 목록 -->
 	<select id="list_by_sconno"
 		resultType="dev.mvc.share_contentsdto.Share_contentsVO">
-		SELECT scon_no, scon_title, scon_contents, scon_views, scon_date, acc_no,mark
+		SELECT scon_no, scon_title, scon_contents, scon_views,
+		scon_date, acc_no,mark
 		,cate_no
 		FROM share_contents
-		where scon_no=#{scon_no}
+		where
+		scon_no=#{scon_no}
 	</select>
 
 	<!-- 사진 전체 목록 -->
@@ -32,10 +35,12 @@
 	<select id="read"
 		resultType="dev.mvc.share_contentsdto.Share_contentsVO"
 		parameterType="Integer">
-		SELECT scon_no, scon_title, scon_contents, scon_views,mark,
+		SELECT scon_no, scon_title, scon_contents,
+		scon_views,mark,
 		scon_date, acc_no
 		,cate_no,scon_priority
-		FROM share_contents
+		FROM
+		share_contents
 		where scon_no=#{scon_no}
 	</select>
 
@@ -50,8 +55,10 @@
 	<update id="update_text"
 		parameterType="dev.mvc.share_contentsdto.Share_contentsVO">
 		update share_contents
-		set scon_title=#{scon_title},scon_contents=#{scon_contents}
-		where scon_no=#{scon_no}
+		set
+		scon_title=#{scon_title},scon_contents=#{scon_contents}
+		where
+		scon_no=#{scon_no}
 	</update>
 
 	<insert id="create"
@@ -178,13 +185,16 @@
 	</delete>
 
 	<delete id="delete_comments" parameterType="int">
-		delete from share_comment
+		delete from
+		share_comment
 		where scon_no=#{scon_no}
 	</delete>
 
 	<insert id="insert_tag" parameterType="HashMap">
-		INSERT INTO contents_tag(contents_tag_no,scon_no,tag_no)
-		VALUES (contents_tag_SEQ.nextval,#{scon_no},#{tag_no})
+		INSERT INTO
+		contents_tag(contents_tag_no,scon_no,tag_no)
+		VALUES
+		(contents_tag_SEQ.nextval,#{scon_no},#{tag_no})
 	</insert>
 
 	<select id="read_contents_tag" parameterType="int"
@@ -246,21 +256,25 @@
 	<update id="update_file"
 		parameterType="dev.mvc.share_contentsdto.Share_imageVO">
 		update share_image
-		set file_origin_name=#{file_origin_name},
+		set
+		file_origin_name=#{file_origin_name},
 		file_upload_name=#{file_upload_name},
 		file_thumb_name=#{file_thumb_name},file_size=#{file_size}
-		where file_no=#{file_no}
+		where
+		file_no=#{file_no}
 	</update>
 
 	<select id="count_image" resultType="int" parameterType="int">
-		select count(*)
+		select
+		count(*)
 		from share_image
 		where scon_no=#{scon_no}
 	</select>
 
 	<update id="up_priority" parameterType="int">
 		update share_contents
-		set scon_priority=scon_priority+1
+		set
+		scon_priority=scon_priority+1
 		where scon_no=#{scon_no}
 	</update>
 
@@ -269,18 +283,31 @@
 		set scon_priority=scon_priority-1
 		where scon_no=#{scon_no}
 	</update>
-	
-	<update id ="y_mark" parameterType="int">
-		update share_contents
-		set mark='Y'
-		where scon_no=#{scon_no}
-</update>
 
-<update id ="n_mark" parameterType="int">
-update share_contents
-set mark='N'
-where scon_no=#{scon_no}
-</update>
+	<update id="y_mark" parameterType="int">
+		update share_contents
+		set
+		mark='Y'
+		where scon_no=#{scon_no}
+	</update>
+
+	<update id="n_mark" parameterType="int">
+		update share_contents
+		set mark='N'
+		where scon_no=#{scon_no}
+	</update>
+	
+	<update id ="update_comment" parameterType="HashMap">
+		update share_comment
+		set scmt_comment = #{scmt_comment}
+		where scmt_no=#{scmo_no}
+	</update>
+	
+	<select id = "read_scmtno" parameterType="HashMap">
+		select scmt_no
+		from share_comment
+		where scmt_comment=#{scmt_comment} AND scon_no=#{scon_no}
+	</select>
 
 </mapper>
 

@@ -351,19 +351,17 @@ public int n_mark(int scon_no) {
 	return cnt;
 }
 
+@Override
+public int update_comment(HashMap<String, Object> map) {
+	int cnt = this.scontentsDAO.update_comment(map);
+	return cnt;
+}
 
+@Override
+public int read_scmtno(HashMap<String, Object> map) {
+	int cnt = this.scontentsDAO.read_scmtno(map);
+	return cnt;
+}
 
-
-//@Override
-//public int up_priority(int scon_no) {
-//	int cnt = this.scontentsDAO.up_priority(scon_no);
-//	return cnt;
-//}
-//
-//@Override
-//public int down_priority(int scon_no) {
-//	int cnt = this.scontentsDAO.down_priority(scon_no);
-//	return cnt;
-//}
 
 }

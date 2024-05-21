@@ -93,9 +93,9 @@ public class Share_contentsCont {
 		this.sconProc.up_priority(scon_no);
 		int cnt = this.sconProc.y_mark(scon_no);
 		
-		if(cnt==1) {
-			System.out.println("y_mark 성공");
-		}
+//		if(cnt==1) {
+//			System.out.println("y_mark 성공");
+//		}
 		
 		//System.out.println("up_priority created");
 		return "redirect:/scontents/read?scon_no=" +scon_no;
@@ -105,12 +105,12 @@ public class Share_contentsCont {
 	public String down_priority(@PathVariable("scon_no") Integer scon_no) {
 		int cnt = this.sconProc.down_priority(scon_no);
 		int mark_down = this.sconProc.n_mark(scon_no);
-		if(mark_down=='N') {
-			System.out.println("MARK_N 성공");
-		}
-		if(cnt==1) {
-			System.out.println("scon_priority down 성공");
-		}
+//		if(mark_down=='N') {
+//			System.out.println("MARK_N 성공");
+//		}
+//		if(cnt==1) {
+//			System.out.println("scon_priority down 성공");
+//		}
 		System.out.println("down_priority created");
 		return "redirect:/scontents/read?scon_no=" +scon_no;
 	}
@@ -128,6 +128,20 @@ public class Share_contentsCont {
 		JSONObject obj = new JSONObject();
 		obj.put("cnt", cnt);
 
+		return obj.toString();
+	}
+	
+	@GetMapping("/update_comment")
+	@ResponseBody
+	public String update_comment_form(String scmt_comment,int scon_no) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("scmt_comment",scmt_comment);
+		map.put("scon_no", scon_no);
+		
+		int cnt = this.sconProc.read_scmtno(map);
+		JSONObject obj = new JSONObject();
+		obj.put("cnt", cnt);
+		
 		return obj.toString();
 	}
 
