@@ -55,7 +55,7 @@ public interface AccountProcInter {
 	public int insertRecommend(RecommendVO recommendVO);
 	
     /**
-     * 회원 목록 조회
+     * 회원 목록
      * 
      * @return
      */
@@ -74,5 +74,13 @@ public interface AccountProcInter {
      * @return
      */
     public int update(AccountVO accountVO);
+    
+    /** 
+     * 회원 정보 삭제(관리자, 회원 목록)
+     * 
+     * @param acc_no
+     * @return
+     */
+    public int delete(int acc_no);
 
 }

@@ -72,6 +72,12 @@ public class AccountProc implements AccountProcInter {
 		return cnt;
 	}
 
+	@Override
+	public int delete(int acc_no) {
+		int cnt = this.accountDAO.delete(acc_no);
+		return cnt;
+	}
+
 	
 	
 }

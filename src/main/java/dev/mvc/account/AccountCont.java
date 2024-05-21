@@ -84,7 +84,7 @@ public class AccountCont {
 	 * @return
 	 */
 	@GetMapping(value = "/create") // http://localhost:9093/account/create
-	public String create_form(Model model, AccountVO accountVO, RecommendVO recommendVO) {
+	public String create(Model model, AccountVO accountVO, RecommendVO recommendVO) {
 		List<HashtagVO> hashtag_list = this.accountProc.hashtagList(); // 해시태그 목록 조회
 		model.addAttribute("hashtag_list", hashtag_list); // 모델에 해시태그 목록 추가
 		// System.out.println("hashtags: " + hashtag_list.get(0).getTag_name()); //
@@ -176,7 +176,7 @@ public class AccountCont {
 	}
 
 	/**
-	 * 회원 목록 조회(관리자) (미완 - 세션 구현 => 로그인한 회원이 관리자인지 확인 필요)
+	 * 회원 목록(관리자) (미완 - 세션 구현 => 로그인한 회원이 관리자인지 확인 필요)
 	 * 
 	 * @param model
 	 * @return
@@ -236,6 +236,38 @@ public class AccountCont {
 		}
 
 		return "account/msg";
+	}
+	
+	/**
+	 * 회원 정보 삭제 페이지
+	 * @param model
+	 * @param acc_no
+	 * @return
+	 */
+	@GetMapping(value="/delete")
+	public String delete(Model model, int acc_no) {
+		AccountVO accountVO = this.accountProc.read(acc_no);
+		model.addAttribute("accountVO", accountVO);
+		
+		return "account/delete";
+	}
+	
+	/**
+	 * 회원 정보 삭제 처리
+	 * @param model
+	 * @param acc_no
+	 * @return
+	 */
+	@PostMapping(value="/delete")
+	public String delete_proc(Model model, Integer acc_no) {
+		int cnt = this.accountProc.delete(acc_no);
+		
+		if(cnt == 1) {	// 삭제 성공
+			return "redirect:/account/list";
+		} else {
+			model.addAttribute("code", "delete_fail");
+			return "account/msg";
+		}
 	}
 
 }

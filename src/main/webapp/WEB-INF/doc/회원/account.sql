@@ -89,15 +89,16 @@ SET acc_name='수정됨', acc_tel='010-9999-1110', acc_age='20대'
 WHERE acc_no=4;
 
 
-
 ------------
 
 -- 회원 전체 삭제 
 DELETE FROM account;
  
--- 회원 탈퇴 (특정 회원 삭제)
+-- 특정 회원 삭제
 DELETE FROM account
 WHERE acc_no=4;
+
+-- 회원 탈퇴 (update문)
 
 SELECT * FROM account;
 

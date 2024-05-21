@@ -55,7 +55,7 @@ public interface AccountDAOInter {
     public int insertRecommend(RecommendVO recommendVO);
     
     /**
-     * 회원 목록 조회(관리자)
+     * 회원 목록(관리자)
      * 
      * @return
      */
@@ -75,9 +75,12 @@ public interface AccountDAOInter {
      */
     public int update(AccountVO accountVO);
     
+    /** 
+     * 회원 정보 삭제(관리자, 회원 목록)
+     * 
+     * @param acc_no
+     * @return
+     */
+    public int delete(int acc_no);
     
-    
-    
-    
-
 }
