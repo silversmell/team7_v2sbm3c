@@ -49,13 +49,29 @@
 		VALUES(RECOMMEND_SEQ.nextval, #{acc_no}, #{tag_no})
 	</insert>
 	
-	<!-- 회원 목록 조회 (관리자) -->
+	<!-- 회원 목록 조회(관리자) -->
 	<select id="list" resultType="dev.mvc.account.AccountVO">
 		SELECT acc_no, acc_id, acc_pw, acc_name, acc_tel, acc_age, acc_date, acc_grade,
 		acc_img, acc_saved_img, acc_thumb_img, acc_img_size
 		FROM account
 		ORDER BY acc_grade ASC, acc_id ASC
 	</select>
+	
+	<!-- 회원 정보 조회(회원 목록, 마이페이지) -->
+	<select id="read" resultType="dev.mvc.account.AccountVO" parameterType="int">
+		SELECT acc_no, acc_id, acc_pw, acc_name, acc_tel, acc_age, acc_date, acc_grade,
+		acc_img, acc_saved_img, acc_thumb_img, acc_img_size
+		FROM account
+		WHERE acc_no = #{acc_no}
+	</select>
+	
+	<!-- 회원 정보 수정(회원 목록, 마이페이지) -->
+	<update id="update" parameterType="dev.mvc.account.AccountVO">
+		UPDATE account
+		SET acc_name=#{acc_name}, acc_tel=#{acc_tel}, acc_age=#{acc_age}
+		WHERE acc_no=#{acc_no}
+	</update>
+	
 	
 	
 	

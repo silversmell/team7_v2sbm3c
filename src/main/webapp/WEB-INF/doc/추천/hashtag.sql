@@ -45,19 +45,21 @@ INSERT INTO HASHTAG(tag_no, tag_code, tag_name)
 VALUES(HASHTAG_SEQ.nextval, '분위기', '모던');
 
 INSERT INTO HASHTAG(tag_no, tag_code, tag_name)
-VALUES(HASHTAG_SEQ.nextval, '연령대', '10대'); 
+VALUES(HASHTAG_SEQ.nextval, '컨셉', '키치'); 
 INSERT INTO HASHTAG(tag_no, tag_code, tag_name)
-VALUES(HASHTAG_SEQ.nextval, '연령대', '20대'); 
+VALUES(HASHTAG_SEQ.nextval, '컨셉', 'y2k'); 
 INSERT INTO HASHTAG(tag_no, tag_code, tag_name)
-VALUES(HASHTAG_SEQ.nextval, '연령대', '30대');
+VALUES(HASHTAG_SEQ.nextval, '컨셉', '레트로');
 INSERT INTO HASHTAG(tag_no, tag_code, tag_name)
-VALUES(HASHTAG_SEQ.nextval, '연령대', '40대');
+VALUES(HASHTAG_SEQ.nextval, '컨셉', '작업실');
 INSERT INTO HASHTAG(tag_no, tag_code, tag_name)
-VALUES(HASHTAG_SEQ.nextval, '연령대', '50대');
+VALUES(HASHTAG_SEQ.nextval, '컨셉', '서재');
 
 --------------------------------------------------------------------------------
 
 -- 조회
+
+SELECT * FROM hashtag;
 
 SELECT DISTINCT tag_code
 FROM hashtag;

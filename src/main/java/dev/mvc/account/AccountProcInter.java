@@ -55,10 +55,24 @@ public interface AccountProcInter {
 	public int insertRecommend(RecommendVO recommendVO);
 	
     /**
-     * 전체 회원 조회
+     * 회원 목록 조회
      * 
      * @return
      */
     public ArrayList<AccountVO> list();
+    
+    /**
+     * 회원 정보 조회(회원 목록, 마이페이지)
+     * @param acc_no
+     * @return
+     */
+    public AccountVO read(int acc_no);
+    
+    /**
+     * 회원 정보 수정(회원 목록, 마이페이지)
+     * @param accountVO
+     * @return
+     */
+    public int update(AccountVO accountVO);
 
 }

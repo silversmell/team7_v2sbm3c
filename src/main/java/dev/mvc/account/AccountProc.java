@@ -60,6 +60,18 @@ public class AccountProc implements AccountProcInter {
 		return list;
 	}
 
+	@Override
+	public AccountVO read(int acc_no) {
+		AccountVO accountVO = this.accountDAO.read(acc_no);
+		return accountVO;
+	}
+
+	@Override
+	public int update(AccountVO accountVO) {
+		int cnt = this.accountDAO.update(accountVO);
+		return cnt;
+	}
+
 	
 	
 }
