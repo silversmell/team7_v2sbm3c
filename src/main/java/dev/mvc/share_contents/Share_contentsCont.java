@@ -115,6 +115,10 @@ public class Share_contentsCont {
 //		if(mark_down=='N') {
 //			System.out.println("MARK_N 성공");
 //		}
+		int cnt1 = this.sconProc.bookmark_delete(scon_no);
+		if(cnt1==1) {
+			System.out.println("북마크 삭제 성공");
+		}
 //		if(cnt==1) {
 //			System.out.println("scon_priority down 성공");
 //		}

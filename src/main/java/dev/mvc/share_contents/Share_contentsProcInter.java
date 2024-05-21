@@ -284,6 +284,13 @@ public interface Share_contentsProcInter {
 	  */
 	 public int bookmarK_create(HashMap<String,Object> map);
 	 
+	 /**
+	  * scon_no에 따른 북마크 삭제
+	  * @param scon_no
+	  * @return int
+	  */
+	 public int bookmark_delete(int scon_no);
+	 
 	 
 
 

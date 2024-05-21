@@ -310,10 +310,15 @@
 	</select>
 	
 	<insert id ="bookmarK_create"  parameterType="HashMap" >
-		INSERT INTO BOOKMARK(mark_no, acc_no, scon_no, qcon_no)
+		INSERT INTO bookmark(mark_no, acc_no, scon_no, qcon_no)
 		VALUES(BOOKMARK_SEQ.nextval, #{acc_no}, #{scon_no}, null)
 </insert>
 
+	<delete id="bookmark_delete" parameterType="int">
+	DELETE FROM bookmark
+	WHERE scon_no=#{scon_no}
+	
+	</delete>
 </mapper>
 
 

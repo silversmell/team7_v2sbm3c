@@ -369,5 +369,11 @@ public int bookmarK_create(HashMap<String, Object> map) {
 	return cnt;
 }
 
+@Override
+public int bookmark_delete(int scon_no) {
+	int cnt = this.scontentsDAO.bookmark_delete(scon_no);
+	return cnt;
+}
+
 
 }
