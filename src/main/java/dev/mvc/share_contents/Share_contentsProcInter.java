@@ -107,7 +107,7 @@ public interface Share_contentsProcInter {
    * @return 페이징 생성 문자열
    */ 
   public String pagingBox(int now_page, String word, String list_file, int search_count, 
-                                      int record_per_page, int page_per_block);   
+                                      int cate_no,int record_per_page, int page_per_block);   
   
   /**
    * 검색에 따른 컨텐츠 목록, 페이징 개수
@@ -302,6 +302,8 @@ public interface Share_contentsProcInter {
 	  * @return int
 	  */
 	 public int delete_tag(int scon_no);
+
+
 	 
 	 
 

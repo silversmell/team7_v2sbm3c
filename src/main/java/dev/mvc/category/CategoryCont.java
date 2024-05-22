@@ -57,12 +57,13 @@ public class CategoryCont {
                                       @RequestParam(name="cate_no", defaultValue = "0") int cate_no,
                                       @RequestParam(name="now_page", defaultValue="1") int now_page) {
     
+//      // 카테고리 가져오기
+//      CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
+//      model.addAttribute("categoryVO", categoryVO);
+    
+    
       word = Tool.checkNull(word).trim();
       System.out.println("--> word: " + word);
-      
-      // 카테고리 메뉴
-      ArrayList<CategoryVOMenu> menu = this.categoryProc.menu();
-      model.addAttribute("menu", menu);
       
       // 페이징 목록
       ArrayList<CategoryVO> list = this.categoryProc.cate_list_search_paging(word, now_page, this.record_per_page);    
@@ -98,9 +99,6 @@ public class CategoryCont {
                                   @RequestParam(name="word", defaultValue = "") String word,
                                   @RequestParam(name="now_page", defaultValue = "1") int now_page) {
     
-    // 카테고리 메뉴 목록
-    ArrayList<CategoryVOMenu> menu = this.categoryProc.menu();
-    model.addAttribute("menu", menu);
     
     if (bindingResult.hasErrors()) {
       
@@ -155,10 +153,6 @@ public class CategoryCont {
                                 @RequestParam(name="word", defaultValue = "") String word,
                                 @RequestParam(name="now_page", defaultValue = "1") int now_page) {
     
-    // 카테고리 메뉴 목록
-    ArrayList<CategoryVOMenu> menu = this.categoryProc.menu();
-    model.addAttribute("menu", menu);
-    
     // 카테고리 가져오기
     CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
     model.addAttribute("categoryVO", categoryVO);
@@ -208,10 +202,6 @@ public class CategoryCont {
                                @RequestParam(name="word", defaultValue = "") String word,
                                @RequestParam(name="now_page", defaultValue = "1") int now_page) {
     
-    // 카테고리 전체 메뉴
-    ArrayList<CategoryVOMenu> menu = new ArrayList<CategoryVOMenu>();
-    model.addAttribute("menu", menu);
-    
     // 카테고리 가져오기
     CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
     model.addAttribute("categoryVO", categoryVO);
@@ -260,10 +250,6 @@ public class CategoryCont {
                                     @RequestParam(name="word", defaultValue = "") String word,
                                     @RequestParam(name="now_page", defaultValue = "1") int now_page) {
     
-    // 카테고리 전체 메뉴
-    ArrayList<CategoryVOMenu> menu = new ArrayList<CategoryVOMenu>();
-    model.addAttribute("menu", menu);
-    
     if (bindingResult.hasErrors()) {
       // 페이징 목록
       ArrayList<CategoryVO> list = this.categoryProc.cate_list_search_paging(word, now_page, this.record_per_page);
@@ -311,15 +297,7 @@ public class CategoryCont {
                                    @PathVariable("cate_no") Integer cate_no,
                                    @RequestParam(name="word", defaultValue = "") String word,
                                    @RequestParam(name="now_page", defaultValue = "1") int now_page) {
-    
-    // 카테고리 전체 메뉴
-    ArrayList<CategoryVOMenu> menu = new ArrayList<CategoryVOMenu>();
-    model.addAttribute("menu", menu);
-    
-    // 카테고리 가져오기
-    CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
-    model.addAttribute("categoryVO", categoryVO);
-    
+
     // 페이징 목록
     ArrayList<CategoryVO> list = this.categoryProc.cate_list_search_paging(word, now_page, this.record_per_page);
     model.addAttribute("list", list);

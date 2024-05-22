@@ -67,6 +67,14 @@ public class Qna_contentsCont {
     return url; // /forward, /templates/...
   }
   
-  
+  public String qna_create(Model model, Qna_contentsVO qna_contentsVO) {
+    
+    // 카테고리 전체 메뉴
+    ArrayList<CategoryVOMenu> menu = new ArrayList<CategoryVOMenu>();
+    model.addAttribute("menu", menu);
+ 
+    return null;
+      
+  }
 
 }

@@ -21,7 +21,7 @@
       let comment_value = comment.value;
       let accno_value = accno.value;
       let scon_no = document.getElementById("scon_no")
-      
+
       let url = './create_comment?scmt_comment='+comment.value+'&scon_no='+scon_no.value+'&acc_no='+accno.value;
       
       fetch(url,{
@@ -78,6 +78,8 @@
     function update_comment_form(){
     	var text_areaform = document.getElementById("hidden_form");
     	text_areaform.style.display = 'block';   
+    	let scmt_no = document.getElementById("scmt_no");
+    	console.log(scmt_no);
     }
     
     function cancel_update(){
@@ -95,15 +97,7 @@
       
       let url = './create_comment?scmt_comment='+update_comment.value+'&scon_no='+scon_no.value;
       
-      fetch(url,{
-          method: 'GET'
-        })
-      .then(response => response.json())
-      .then(rdata=>{
-          if(rdata.cnt>0){
-          let commentSection=document.getElementById("commentSection");
-          let comment_value = document.getElementById("comment").value;
-          comment_value
+ 
     }
   </script>
 
@@ -113,13 +107,13 @@
   </div>
   
   <aside class="aside_right" >
-    <a href="./create">등록</a>
+    <a href="./create?cate_no=1">등록</a>
     <span class='menu_divide' >│</span>
-    <a th:href="@{|./update_text?scon_no=${scontentsVO.scon_no}|}">글 수정</a>
+    <a th:href="@{|./update_text?scon_no=${scontentsVO.scon_no}&cate_no=1|}">글 수정</a>
     <span class='menu_divide' >│</span>
-    <a th:href="@{|./update_file?scon_no=${scontentsVO.scon_no}|}">파일 수정</a>  
+    <a th:href="@{|./update_file?scon_no=${scontentsVO.scon_no}&cate_no=1|}">파일 수정</a>  
     <span class='menu_divide' >│</span>
-    <a th:href="@{|./delete?scon_no=${scontentsVO.scon_no}|}">삭제</a>  
+    <a th:href="@{|./delete?scon_no=${scontentsVO.scon_no}&cate_no=1|}">삭제</a>  
     <span class='menu_divide' >│</span>
 
     <a href="javascript:location.reload();">새로고침</a>
@@ -163,12 +157,12 @@
 					</span> 
 					<span style="font-size: 1.5em; font-weight: bold;" th:text="${scontentsVO.scon_title}"></span>
           <span style="font-size: 1em;" th:text="${scontentsVO.scon_date}"></span><br><br>
-          <span style="font-size: 1em;" th:text="|조회수: ${scon_views}|"></span><br><br>
+          <span style="font-size: 1em;" th:text="|조회수: ${scontentsVO.scon_views}|"></span><br><br>
           <span style="font-size: 1em;" th:text="|댓글수: ${cnt}|"></span><br><br>
           <div style="white-space: pre-wrap;"><span th:text="${scontentsVO.scon_contents}"></span></div>
-          	<span th:if="${scontentsVO.mark =='N'}"> <a th:href="@{|./up_priority/${scontentsVO.scon_no}|}">
+          	<span th:if="${scontentsVO.mark =='N'}"> <a th:href="@{|./up_priority/${scontentsVO.scon_no}?cate_no=1|}">
 						<img 	src="/css/images/bookmark_off.png" class="icon"></a>	</span>
-					<span th:unless="${scontentsVO.mark =='N'}"> <a	 th:href="@{|./down_priority/${scontentsVO.scon_no}|}"><img
+					<span th:unless="${scontentsVO.mark =='N'}"> <a	 th:href="@{|./down_priority/${scontentsVO.scon_no}?cate_no=1|}"><img
 							src="/css/images/bookmark_on.png" class="icon"></a> </span>
         </div>
       </li>
@@ -205,12 +199,19 @@
       <tr th:each="scommentVO, status:${list}">      
       <td class='td_left'>
       	<span id="scmt_date" style="font-size: 1em;" th:text="${scommentVO.scmt_date}"></span><br>
-      	<span><div text="수정"  name="update_co"  style="cursor: pointer;" onclick="update_comment_form()" id="update_comment_form">수정</div></span>
+      	<span id="scmt_no" name="scmt_no" th:value="${scommentVO.scmt_no}" th:text="${scommentVO.scmt_no}"></span><br>
      		<span id="accno"style="font-size: 1em;" th:text="${acc_no}" th:value="${acc_no}"></span><br>
-        <span id="scmt_comment" th:text="${scommentVO.scmt_comment}" style="font-weight: bold;"></span><br><br>
+        <span id="scmt_comment" th:text="${scommentVO.scmt_comment}" style="font-weight: bold;"></span><br>
+        	<div name="update_co" style="cursor: pointer;" th:onclick="|location.href='./update_comment/${scommentVO.scmt_no}'|">수정</div>
+        	
+         <form name='frm' method='post'  th:action="@{|/scontents/delete_comment|}"class="btn btn-secondary btn-sm">
+          <input type="hidden" name="scmt_no" th:value="${scommentVO.scmt_no}">
+         <button type="submit" name="delete_co" >삭제</button>
+     			</form>
       </td>
     </tr>
     </div>
+    
   </fieldset>
   
       <div>
@@ -225,15 +226,19 @@
     	
     	<div id="hidden_form"  style="display:none;">
        <input type="hidden" id="scon_no" name="scon_no" th:value="${scontentsVO.scon_no}">
-       <textarea name='update_comment' id="update_comment" required="required" value="" class="form-control" rows="5" style='width: 100%;'></textarea>
-      <button type='button' onclick="update_comment_submit();" 
-             class="btn btn-primary btn-sm" style="margin-top: 4px;">수정</button>
-       <button type='button' onclick="cancel_update();" 
- 							class="btn btn-primary btn-sm" style="margin-top: 4px;">취소</button>
+			<textarea name='update_comment' id="update_comment" required="required" value="" class="form-control" rows="5" style='width: 100%;'></textarea>
+			<button type='button' onclick="update_comment_submit();" 
+			       class="btn btn-primary btn-sm" style="margin-top: 4px;">수정</button>
+			<button type='button' onclick="cancel_update();" 
+			       class="btn btn-primary btn-sm" style="margin-top: 4px;">취소</button>
     </div>
     
     <span id='id_msg'></span>  
 
 </div>
 
+<<<<<<< HEAD
 </html>
+=======
+</html>
+>>>>>>> 3a738c2459aca4fd45d54f45c32e394a84e1dfb3

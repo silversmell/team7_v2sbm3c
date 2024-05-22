@@ -15,56 +15,72 @@
               <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               
               <li class="nav-item dropdown" th:each="categoryVOMenu: ${menu}"  aria-labelledby="navbarDropdownMenuLink">
-                    <a class="nav-link dropdown-toggle" th:href="@{|/scontents/list_by_search|}" role="button" th:text="${categoryVOMenu.cate_name}"></a>
+                    <a class="nav-link dropdown-toggle" th:href="@{|/scontents/list_by_search?cate_no=${categoryVO.cate_no}|}" role="button" th:text="${categoryVOMenu.cate_name}"></a>
               </li>
-
-                  
-                 <li class="nav-item dropdown">
-                      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
-                           role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="관리자">                                                            
-                      </a>
-                      <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <li class="nav-item"><a class="nav-link" href="/category/cate_list_search">카테고리 전체 목록</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/account/list">회원 목록</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">전체 글 목록</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">관리자 로그 내역</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">회원 로그 내역</a></li>
-                       <li class="nav-item">
+              
+               <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
+                         role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="관리자">                                                            
+                    </a>
+                    
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                      <li class="nav-item"><a class="nav-link" href="/category/cate_list_search">카테고리 전체 목록</a></li>
+                      <li class="nav-item"><a class="nav-link" href="#">회원 목록</a></li>
+                      <li class="nav-item"><a class="nav-link" href="#">전체 글 목록</a></li>
+                      <li class="nav-item"><a class="nav-link" href="#">관리자 로그 내역</a></li>
+                      <li class="nav-item"><a class="nav-link" href="#">회원 로그 내역</a></li>
+                     <li class="nav-item">
+                    </li>
+                    </ul>
+                </li>
+                
+                
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
+                         role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="회원">                                                            
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                      <li class="nav-item"><a class="nav-link" href="/account/create">회원 가입</a></li>
+                      <li class="nav-item" th:if="${session.acc_no != null}">
+                          <a class="nav-link" th:href="@{|/account/read?acc_no=${session.acc_no}|}">회원 정보 조회</a>
                       </li>
-                      </ul>
-                  </li>
-                  
-                  <li class="nav-item dropdown">
-                      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
-                           role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="회원">                                                            
-                      </a>
-                      <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <li class="nav-item"><a class="nav-link" href="/account/create">회원 가입</a></li>
-                        <li class="nav-item" th:if="${session.acc_no != null}">
-                            <a class="nav-link" th:href="@{|/account/read?acc_no=${session.acc_no}|}">회원 정보 조회</a>
-                        </li>
-                        <li class="nav-item" th:if="${session.acc_no != null}">
-                            <a class="nav-link" href="/account/passwd_update_form">비밀 번호 변경</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/scontents/list_all">공유 컨텐츠</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">질문 컨텐츠</a>
-                        </li>
-                        <li class="nav-item"><a class="nav-link" href="#">아이디 찾기</a></li>         
-                        <li class="nav-item"><a class="nav-link" href="#">비밀번호 찾기</a></li>
-                        <li class="nav-item" th:if="${session.acc_no!=null}"><a class="nav-link" href="#">로그인 내역</a></li>
-                      </ul>
-                  </li>
-            
+                      <li class="nav-item" th:if="${session.memberno != null}">
+                          <a class="nav-link" href="/member/passwd_update_form">비밀 번호 변경</a>
+                      </li>
+                      <li class="nav-item"><a class="nav-link" href="#">아이디 찾기</a></li>         
+                      <li class="nav-item"><a class="nav-link" href="#">비밀번호 찾기</a></li>
+                      <li class="nav-item" th:if="${session.memberno!=null}"><a class="nav-link" href="#">로그인 내역</a></li>
+                    </ul>
+                </li>
+                
+                 <li class="nav-item">
+                      <span th:if="${session.memberno == null}"><a class="nav-link" href="/member/login" th:text="@{|로그인|}"></a></span>
+                      <span th:if="${session.memberno != null}"><a class="nav-link" href="/member/logout" th:text="@{|${session.id} 로그아웃|}"></a></span>
+                 </li>  
 
-                  <li class="nav-item">
-                      <span th:if="${session.acc_no == null}"><a class="nav-link" href="/account/login" th:text="@{|로그인|}"></a></span>
-                      <span th:if="${session.acc_no != null}"><a class="nav-link" href="/account/logout" th:text="@{|${session.acc_id} 로그아웃|}"></a></span>
-                  </li>
-              </ul>
-          </div>
+                
+                <li class="nav-item">
+                  <a class="nav-link" href="http://localhost:9093/scontents/list_by_search?cate_no=1" th:text="공유게시판"></a>
+                </li>
+                
+                <li class="nav-item">
+                  <a class="nav-link" href="http://localhost:9093/qcontents/list_by_search?cate_no=2" th:text="질문게시판"></a>
+                </li>
+                
+                <li class="nav-item">
+                  <a class="nav-link" href="http://localhost:9093/admin/list_by_search?cate_no=3" th:text="팁게시판"></a>
+                </li>
+                
+                <li class="nav-item">
+                  <a class="nav-link" href="http://localhost:9093/scontents/rank?cate_no=4" th:text="랭킹게시판"></a>
+                </li>
+                
+                <li class="nav-item">
+                  <a class="nav-link" href="http://localhost:9093/admin/tip?cate_no=5" th:text="마이페이지"></a>
+                </li> 
+                 
+                
+            </ul>
           <!-- 메뉴 종료 -->
             
       </div>

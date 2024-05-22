@@ -14,6 +14,7 @@
   <div class='menu_line'></div>
   
   <form name='frm' method='post' th:object="${scontentsVO}" action='./create' enctype="multipart/form-data">
+  <input type="hidden" name="cate_no" th:value="${categoryVO.cate_no}"> <!-- cate_no 데이터 값 가져옴 -->
   
     <div>
       <tr th:each="hashtag, status:${list}">      
@@ -57,7 +58,7 @@
     </div>   -->
         <div>
        <label>url1</label>
-       <input type='url' name='url_link'  required
+       <input type='url' name='url_link'  
                  autofocus="autofocus" class="form-control" style='width: 100%;'/>
        <label>url2</label>
        <input type='url'  name='url_link'  value=" "
@@ -75,7 +76,7 @@
       
     <div class="content_body_bottom">
       <button type="submit" class="btn btn-secondary btn-sm">등록</button>
-      <button type="button" th:attr="onclick=|location.href='./list_by_search'|" class="btn btn-secondary btn-sm">목록</button>
+      <button type="button" th:attr="onclick=|location.href='./list_by_search?cate_no=${cate_no}'|" class="btn btn-secondary btn-sm">목록</button>
     </div>
   
   </form>

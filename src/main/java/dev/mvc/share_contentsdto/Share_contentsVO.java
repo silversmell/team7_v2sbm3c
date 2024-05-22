@@ -4,10 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 
+@Getter @Setter
 public class Share_contentsVO {
 	private int scon_no;
 	
-	private int catno;
+	private int cate_no;
 	
 	private int acc_no;
 	
@@ -45,14 +46,6 @@ public class Share_contentsVO {
 
 	public void setScon_no(int scon_no) {
 		this.scon_no = scon_no;
-	}
-
-	public int getCatno() {
-		return catno;
-	}
-
-	public void setCatno(int catno) {
-		this.catno = catno;
 	}
 
 	public int getacc_no() {
