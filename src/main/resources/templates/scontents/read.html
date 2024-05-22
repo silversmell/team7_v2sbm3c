@@ -107,13 +107,13 @@
   </div>
   
   <aside class="aside_right" >
-    <a href="./create">등록</a>
+    <a href="./create?cate_no=1">등록</a>
     <span class='menu_divide' >│</span>
     <a th:href="@{|./update_text?scon_no=${scontentsVO.scon_no}&cate_no=1|}">글 수정</a>
     <span class='menu_divide' >│</span>
     <a th:href="@{|./update_file?scon_no=${scontentsVO.scon_no}&cate_no=1|}">파일 수정</a>  
     <span class='menu_divide' >│</span>
-    <a th:href="@{|./delete?scon_no=${scontentsVO.scon_no}|}">삭제</a>  
+    <a th:href="@{|./delete?scon_no=${scontentsVO.scon_no}&cate_no=1|}">삭제</a>  
     <span class='menu_divide' >│</span>
 
     <a href="javascript:location.reload();">새로고침</a>
@@ -157,12 +157,12 @@
 					</span> 
 					<span style="font-size: 1.5em; font-weight: bold;" th:text="${scontentsVO.scon_title}"></span>
           <span style="font-size: 1em;" th:text="${scontentsVO.scon_date}"></span><br><br>
-          <span style="font-size: 1em;" th:text="|조회수: ${scon_views}|"></span><br><br>
+          <span style="font-size: 1em;" th:text="|조회수: ${scontentsVO.scon_views}|"></span><br><br>
           <span style="font-size: 1em;" th:text="|댓글수: ${cnt}|"></span><br><br>
           <div style="white-space: pre-wrap;"><span th:text="${scontentsVO.scon_contents}"></span></div>
-          	<span th:if="${scontentsVO.mark =='N'}"> <a th:href="@{|./up_priority/${scontentsVO.scon_no}|}">
+          	<span th:if="${scontentsVO.mark =='N'}"> <a th:href="@{|./up_priority/${scontentsVO.scon_no}?cate_no=1|}">
 						<img 	src="/css/images/bookmark_off.png" class="icon"></a>	</span>
-					<span th:unless="${scontentsVO.mark =='N'}"> <a	 th:href="@{|./down_priority/${scontentsVO.scon_no}|}"><img
+					<span th:unless="${scontentsVO.mark =='N'}"> <a	 th:href="@{|./down_priority/${scontentsVO.scon_no}?cate_no=1|}"><img
 							src="/css/images/bookmark_on.png" class="icon"></a> </span>
         </div>
       </li>

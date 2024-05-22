@@ -64,9 +64,7 @@ public class Share_contentsCont {
     model.addAttribute("categoryVO", categoryVO);
     
     int cnt = this.sconProc.update_view(scon_no); //조회수 업데이트
-    
-    model.addAttribute("scon_views", cnt); 
-
+  
     Share_contentsVO scontentsVO = this.sconProc.read(scon_no);
     model.addAttribute("scontentsVO", scontentsVO);
 
@@ -89,6 +87,10 @@ public class Share_contentsCont {
     ArrayList<Contents_urlVO> url_list = this.sconProc.only_url(scon_no);
 
     for (int i = 0; i < url_list.size(); i++) {
+    	System.out.println("url_link[i]: " +url_list.get(i).getUrl_link());
+    	if(url_list.get(i).getUrl_link().equals(" ")) {
+    		url_list.get(i).setUrl_link("1");
+    	}
       model.addAttribute("url_list" + i, url_list.get(i).getUrl_link());
     }
     ArrayList<Share_imageVO> share_imageVO = this.sconProc.read_image(scon_no);
@@ -99,7 +101,7 @@ public class Share_contentsCont {
   }
   
   @GetMapping("/up_priority/{scon_no}")
-  public String up_priority(@PathVariable("scon_no") Integer scon_no) {
+  public String up_priority(@PathVariable("scon_no") Integer scon_no,int cate_no,RedirectAttributes ra) {
     
     this.sconProc.up_priority(scon_no);
     int cnt = this.sconProc.y_mark(scon_no);
@@ -116,11 +118,12 @@ public class Share_contentsCont {
 //    }
     
     //System.out.println("up_priority created");
+    ra.addAttribute("cate_no", cate_no);
     return "redirect:/scontents/read?scon_no=" +scon_no;
   }
   
   @GetMapping("/down_priority/{scon_no}")
-  public String down_priority(@PathVariable("scon_no") Integer scon_no) {
+  public String down_priority(@PathVariable("scon_no") Integer scon_no,int cate_no,RedirectAttributes ra) {
     int cnt = this.sconProc.down_priority(scon_no);
     int mark_down = this.sconProc.n_mark(scon_no);
 //    if(mark_down=='N') {
@@ -134,6 +137,7 @@ public class Share_contentsCont {
 //      System.out.println("scon_priority down 성공");
 //    }
     System.out.println("down_priority created");
+    ra.addAttribute("cate_no", cate_no);
     return "redirect:/scontents/read?scon_no=" +scon_no;
   }
   
@@ -193,31 +197,37 @@ public class Share_contentsCont {
   public String update_text(Model model, Share_contentsVO scontentsVO, RedirectAttributes ra, int scon_no,int cate_no,
       String url_link, List<MultipartFile> fnamesMF) {
     int cnt = this.sconProc.update_text(scontentsVO);
-    System.out.println("url_link -> " + url_link);
 
     HashMap<String, Object> map = new HashMap<>();
     
     System.out.println("현재 url_link->" + url_link);
     ArrayList<Contents_urlVO> arr = this.sconProc.url_read(scon_no);
 
-    
     String[] list = url_link.split(",");
-    System.out.println("list 사이즈:" + list.length);
-    
-    for(int i = 0;i<list.length;i++) { //list 가 있을 경우
+
+    System.out.println("-> list의 사이즈:" + list.length);
+
+    for(int i = 0;i<list.length;i++) { //만약 순서대로 삭제 하지 않았을 경우 1을 넣음
+    	if(list[i].equals("")) {
+    		list[i]="1";
+    	}
+    }
+    for(int i = 0;i<list.length;i++) { //list가 5개 다 있을 경우 하나를 삭제했을 때 
     	map.put("url_link", list[i].trim());
     	map.put("scon_no", scon_no);
     	map.put("url_no", arr.get(i).getUrl_no());
     	this.sconProc.update_url(map);
-    	System.out.println("url 수정 완");
     }
-    for (int i =arr.size()-list.length-1;i>=list.length;i--) { //list 가 없는 경우
-    	map.put("url_link", 1);
+    
+    if(list.length!=5) {
+    for (int i =arr.size()-list.length-1;i>=list.length;i--) { //url_link가 가 없는 경우
+    	map.put("url_link", "1");
     	map.put("scon_no",scon_no);
     	map.put("url_no", arr.get(i).getUrl_no());
     	this.sconProc.update_url(map);
     	System.out.println("1로 변환");
     }
+  }
     
 //    for(String list1:list) {
 //    if(!list1.trim().isEmpty()) { //url_link 가 있을경우
@@ -439,7 +449,11 @@ public class Share_contentsCont {
   }
 
   @GetMapping("/delete")
-  public String delete(int scon_no, Model model) {
+  public String delete(int scon_no, Model model,int cate_no) {
+	  
+	    CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
+	    model.addAttribute("categoryVO", categoryVO);
+	    
     Share_contentsVO scontentsVO = this.sconProc.read(scon_no);
     model.addAttribute("scontentsVO", scontentsVO);
     
@@ -448,7 +462,7 @@ public class Share_contentsCont {
   }
 
   @PostMapping("/delete")
-  public String delete(int scon_no, RedirectAttributes ra) {
+  public String delete(int scon_no, RedirectAttributes ra,int cate_no) {
     
     Share_contentsVO share_contentsVO = this.sconProc.read(scon_no); // scon_no 가져오기
     
@@ -472,8 +486,9 @@ public class Share_contentsCont {
     int cnt = this.sconProc.delete(scon_no);
     
     this.categoryProc.cnt_minus(share_contentsVO.getCate_no()); // 관련 글 수 감소
-    
     System.out.println(" -> 삭제 한 scon_no:" + scon_no);
+    
+    ra.addAttribute("cate_no", cate_no);
     return "redirect:/scontents/list_by_search";
   }
 

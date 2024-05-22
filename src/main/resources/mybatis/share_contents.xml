@@ -162,7 +162,7 @@
 		SELECT url_no,scon_no,url_link
 		FROM contents_url
 		where
-		scon_no=#{scon_no}
+		scon_no=#{scon_no} 
 	</select>
 	<select id="only_url"
 		resultType="dev.mvc.share_contentsdto.Contents_urlVO"
