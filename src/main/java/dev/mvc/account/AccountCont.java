@@ -202,6 +202,19 @@ public class AccountCont {
 
 		AccountVO accountVO = this.accountProc.read(acc_no);
 		model.addAttribute("accountVO", accountVO);
+		
+		/* 해시태그 폼 */
+		List<HashtagVO> hashtag_list = this.accountProc.hashtagList(); // 해시태그 목록 조회
+		model.addAttribute("hashtag_list", hashtag_list); // 모델에 해시태그 목록 추가
+
+		String[] tagCodeList = this.accountProc.tagCodeList().split(",");
+		List<String> tag_codes = Arrays.asList(tagCodeList);
+		model.addAttribute("tag_codes", tag_codes);
+		
+		/* 회원가입 시 선택한 해시태그들 */
+		String[] selectedTags = this.accountProc.selectedTags(acc_no).split(",");
+		List<String> selected_tags = Arrays.asList(selectedTags);
+		model.addAttribute("selected_tags", selected_tags);
 
 		return "account/read";
 	}
@@ -214,15 +227,26 @@ public class AccountCont {
 	 * @return
 	 */
 	@PostMapping(value = "/update")
-	public String update_proc(Model model, AccountVO accountVO) {
+	public String update_proc(Model model, AccountVO accountVO, RecommendVO recommendVO,
+			@RequestParam(value = "selected_hashtags", required = false) List<Integer> selected_hashtags) {
 
 		int checkName_cnt = this.accountProc.checkName(accountVO.getAcc_name());
-		if (checkName_cnt == 0) {
+		if (checkName_cnt <= 1) {
 			int cnt = this.accountProc.update(accountVO);
 			if (cnt == 1) { // 수정 성공
 				model.addAttribute("acc_name", accountVO.getAcc_name());
 				model.addAttribute("acc_tel", accountVO.getAcc_tel());
 				model.addAttribute("acc_age", accountVO.getAcc_age());
+				
+	            // 기존의 추천 해시태그 삭제
+				this.accountProc.deleteRecommend(accountVO.getAcc_no());
+
+	            // 새로운 해시태그 추천 추가
+	            for (Integer tag_no : selected_hashtags) {
+					recommendVO.setAcc_no(accountVO.getAcc_no());
+					recommendVO.setTag_no(tag_no);
+					this.accountProc.insertRecommend(recommendVO);
+	            }
 
 				model.addAttribute("code", "update_success");
 				model.addAttribute("cnt", cnt);

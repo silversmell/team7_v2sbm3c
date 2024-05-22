@@ -51,7 +51,14 @@ VALUES(ACCOUNT_SEQ.nextval,'user2','1111','장영은',sysdate,1);
 INSERT INTO ACCOUNT(acc_no, acc_id, acc_pw, acc_name, acc_date, acc_grade)
 VALUES(ACCOUNT_SEQ.nextval,'user3','1111','김수진',sysdate,1);
 
+INSERT INTO ACCOUNT(acc_no, acc_id, acc_pw, acc_name, acc_date, acc_grade)
+VALUES(ACCOUNT_SEQ.nextval,'user4','1111','RECO',sysdate,1);
+INSERT INTO ACCOUNT(acc_no, acc_id, acc_pw, acc_name, acc_date, acc_grade)
+VALUES(ACCOUNT_SEQ.nextval,'user5','1111','RECO2',sysdate,1);
+INSERT INTO ACCOUNT(acc_no, acc_id, acc_pw, acc_name, acc_date, acc_grade)
+VALUES(ACCOUNT_SEQ.nextval,'user6','1111','RECO3',sysdate,1);
 
+commit;
 --------------------------------------------------------------------------------
 
 -- 전체 회원 조회
@@ -70,6 +77,8 @@ SELECT acc_no, acc_id, acc_pw, acc_name, acc_tel, acc_age, acc_date, acc_grade,
 FROM account
 WHERE acc_id = 'user2';
 
+--------------------------------------------------------------------------------
+
 
 -- 아이디 중복 검사
 SELECT COUNT(acc_id) AS cnt
@@ -81,7 +90,8 @@ FROM account
 WHERE acc_id='notExist';
 
 
-------------
+--------------------------------------------------------------------------------
+
 
 -- 회원 정보 수정
 UPDATE account 
@@ -89,7 +99,7 @@ SET acc_name='수정됨', acc_tel='010-9999-1110', acc_age='20대'
 WHERE acc_no=4;
 
 
-------------
+--------------------------------------------------------------------------------
 
 -- 회원 전체 삭제 
 DELETE FROM account;
@@ -99,6 +109,11 @@ DELETE FROM account
 WHERE acc_no=4;
 
 -- 회원 탈퇴 (update문)
+
+
+
+
+--------------------------------------------------------------------------------
 
 SELECT * FROM account;
 

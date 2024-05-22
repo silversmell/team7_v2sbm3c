@@ -82,7 +82,30 @@
 				</select>
 			</div>
 
-
+			<hr>
+			
+			<!-- 해시태그 -->
+			<span style="font-size: 18px;">나의 취향</span>
+			<div class="form-group">
+			    <div class="hashtag-flex-container">
+			        <th:block th:each="tag_code : ${tag_codes}">
+			            <fieldset>
+			                <legend th:text="${tag_code}" style="color: lightgray;"></legend>
+			                <th:block th:each="hashtag : ${hashtag_list}">
+			                    <!-- tag_code가 현재 반복 중인 tag_code와 같은 경우에만 해당하는 해시태그를 출력 -->
+			                    <th:block th:if="${hashtag.tag_code == tag_code}">
+			                        <label class="hashtag-checkbox">
+			                            <!-- name 속성을 변경하여 선택된 체크박스들이 서버로 전송되도록 함 -->
+			                            <input type="checkbox" name="selected_hashtags" th:value="${hashtag.tag_no}"
+			                                   th:checked="${selected_tags.contains(hashtag.tag_name)}">
+			                            <span th:text="${hashtag.tag_name}"></span>
+			                        </label>
+			                    </th:block>
+			                </th:block>
+			            </fieldset>
+			        </th:block>
+			    </div>
+			</div>
 
 			<div class="content_body_bottom">
 				<button type="button" onclick="send();" class="btn btn-secondary btn-sm">저장</button>

@@ -27,14 +27,13 @@ function checkName() {
 		})
 			.then(response => response.json())
 			.then(rdata => {
-				if (rdata.cnt > 0) {	// 존재하는 이름
+				if (rdata.cnt > 1) {	// 존재하는 이름
 					acc_name_msg.innerHTML = "이미 사용 중인 이름 입니다.";
 					acc_name_msg.classList.add("span_warning");
 					acc_name.focus();
 				} else {	// 존재하지 않은 이름
 					acc_name_msg.innerHTML = "사용 가능한 이름 입니다.";
 					acc_name_msg.classList.add("span_info");
-					document.getElementById("acc_pw").focus();
 				}
 			})
 			.catch(error => {	// 서버 다운 등 통신 에러

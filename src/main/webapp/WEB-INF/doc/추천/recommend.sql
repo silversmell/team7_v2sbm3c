@@ -30,11 +30,47 @@ DROP SEQUENCE RECOMMEND_SEQ;
 
 --------------------------------------------------------------------------------
 
+
 -- 회원가입 시 선택한 해시태그 정보 저장 
 INSERT INTO RECOMMEND(recom_no, acc_no, tag_no)
 VALUES(RECOMMEND_SEQ.nextval, 2, 3);
 
 
+--------------------------------------------------------------------------------
 
-select * from recommend;
+
+-- 회원이 선택한 해시태그 조회(회원 정보 조회)
+SELECT LISTAGG(h.tag_name, ',') WITHIN GROUP (ORDER BY tag_code DESC) AS tag_name
+FROM recommend r
+INNER JOIN hashtag h ON h.tag_no = r.tag_no
+WHERE r.acc_no = 4;
+
+SELECT h.tag_name
+FROM recommend r
+INNER JOIN hashtag h ON h.tag_no = r.tag_no
+WHERE r.acc_no = 4;
+
+
+-- [참고] 3개 테이블 JOIN
+SELECT h.tag_name
+FROM recommend r
+INNER JOIN account a ON a.acc_no = r.acc_no
+INNER JOIN hashtag h ON h.tag_no = r.tag_no
+WHERE r.acc_no = 9;
+
+
+--------------------------------------------------------------------------------
+
+-- 추천 정보 삭제
+DELETE FROM recommend WHERE acc_no = 4;
+
+--------------------------------------------------------------------------------
+
+SELECT * FROM recommend;
+
+commit;
+
+
+
+
 

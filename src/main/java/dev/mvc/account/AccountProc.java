@@ -67,17 +67,29 @@ public class AccountProc implements AccountProcInter {
 	}
 
 	@Override
+	public String selectedTags(int acc_no) {
+		String tag_names  = this.accountDAO.selectedTags(acc_no);
+		return tag_names;
+	}
+
+	@Override
 	public int update(AccountVO accountVO) {
 		int cnt = this.accountDAO.update(accountVO);
 		return cnt;
 	}
 
 	@Override
+	public int deleteRecommend(int acc_no) {
+		int cnt = this.accountDAO.deleteRecommend(acc_no);
+		return cnt;
+	}
+	
+	@Override
 	public int delete(int acc_no) {
 		int cnt = this.accountDAO.delete(acc_no);
 		return cnt;
 	}
 
-	
+
 	
 }

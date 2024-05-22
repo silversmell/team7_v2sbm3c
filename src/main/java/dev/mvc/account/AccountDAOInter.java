@@ -69,11 +69,27 @@ public interface AccountDAOInter {
     public AccountVO read(int acc_no);
     
     /**
+     * 선택된 해시태그 조회(회원 정보 조회)
+     * 
+     * @param acc_no
+     * @return
+     */
+    public String selectedTags(int acc_no);
+    
+    /**
      * 회원 정보 수정(회원 목록, 마이페이지)
      * @param accountVO
      * @return
      */
     public int update(AccountVO accountVO);
+    
+    /**
+     * 기존 추천 데이터(해시태그) 삭제
+     * 
+     * @param acc_no
+     * @return
+     */
+    public int deleteRecommend(int acc_no);
     
     /** 
      * 회원 정보 삭제(관리자, 회원 목록)

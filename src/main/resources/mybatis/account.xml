@@ -38,49 +38,63 @@
 	<insert id="create" parameterType="dev.mvc.account.AccountVO">
 		<selectKey keyProperty="acc_no" resultType="int" order="AFTER">
 			SELECT ACCOUNT_SEQ.currval AS acc_no FROM dual
-		</selectKey>
-		INSERT INTO ACCOUNT(acc_no, acc_id, acc_pw, acc_name, acc_date, acc_grade)
-		VALUES(ACCOUNT_SEQ.nextval, #{acc_id}, #{acc_pw}, #{acc_name}, sysdate, 15)
-	</insert>
+		</selectKey> INSERT
+		INTO ACCOUNT(acc_no, acc_id, acc_pw, acc_name, acc_date, acc_grade)
+		VALUES(ACCOUNT_SEQ.nextval, #{acc_id}, #{acc_pw}, #{acc_name}, sysdate,
+		15) </insert>
 
 	<!-- 추천 데이터(해시태그) 저장 -->
 	<insert id="insertRecommend" parameterType="dev.mvc.recommend.RecommendVO">
 		INSERT INTO RECOMMEND(recom_no, acc_no, tag_no)
 		VALUES(RECOMMEND_SEQ.nextval, #{acc_no}, #{tag_no})
 	</insert>
-	
+
 	<!-- 회원 목록(관리자) -->
 	<select id="list" resultType="dev.mvc.account.AccountVO">
-		SELECT acc_no, acc_id, acc_pw, acc_name, acc_tel, acc_age, acc_date, acc_grade,
+		SELECT acc_no, acc_id, acc_pw, acc_name, acc_tel, acc_age, acc_date,
+		acc_grade,
 		acc_img, acc_saved_img, acc_thumb_img, acc_img_size
 		FROM account
 		ORDER BY acc_grade ASC, acc_id ASC
 	</select>
-	
+
 	<!-- 회원 정보 조회(회원 목록, 마이페이지) -->
 	<select id="read" resultType="dev.mvc.account.AccountVO" parameterType="int">
-		SELECT acc_no, acc_id, acc_pw, acc_name, acc_tel, acc_age, acc_date, acc_grade,
+		SELECT acc_no, acc_id, acc_pw, acc_name, acc_tel, acc_age, acc_date,
+		acc_grade,
 		acc_img, acc_saved_img, acc_thumb_img, acc_img_size
 		FROM account
 		WHERE acc_no = #{acc_no}
 	</select>
-	
+
+	<!-- 선택된 해시태그 조회(회원 정보 조회) -->
+	<select id="selectedTags" resultType="String" parameterType="int">
+		SELECT LISTAGG(h.tag_name, ',') WITHIN GROUP (ORDER BY tag_code DESC) AS
+		tag_name
+		FROM recommend r
+		INNER JOIN hashtag h ON h.tag_no = r.tag_no
+		WHERE r.acc_no = #{acc_no}
+	</select>
+
 	<!-- 회원 정보 수정(회원 목록, 마이페이지) -->
 	<update id="update" parameterType="dev.mvc.account.AccountVO">
 		UPDATE account
 		SET acc_name=#{acc_name}, acc_tel=#{acc_tel}, acc_age=#{acc_age}
 		WHERE acc_no=#{acc_no}
 	</update>
-	
+
+	<!-- 기존 추천 데이터(해시태그) 삭제 -->
+	<delete id="deleteRecommend" parameterType="int">
+		DELETE FROM recommend WHERE acc_no = #{acc_no}
+	</delete>
+
 	<!-- 회원 정보 삭제(관리자, 회원 목록) -->
 	<delete id="delete" parameterType="int">
 		DELETE FROM account
 		WHERE acc_no=#{acc_no}
 	</delete>
-	
+
 	<!-- 회원 탈퇴(사용자, 마이페이지) -->
-	
-	
-	
+
 
 </mapper>

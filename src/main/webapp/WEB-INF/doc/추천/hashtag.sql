@@ -28,7 +28,7 @@ DROP SEQUENCE HASHTAG_SEQ;
 
 --------------------------------------------------------------------------------
 
--- A: 색상 B: 분위기 C: 연령
+-- 데이터 생성
 
 INSERT INTO HASHTAG(tag_no, tag_code, tag_name)
 VALUES(HASHTAG_SEQ.nextval, '색상', '아이보리'); 
@@ -64,21 +64,11 @@ SELECT * FROM hashtag;
 SELECT DISTINCT tag_code
 FROM hashtag;
 
-SELECT tag_no, tag_code, tag_name
-FROM hashtag
-GROUP BY tag_code;
-
 SELECT LISTAGG(tag_code, ',') WITHIN GROUP (ORDER BY tag_code DESC) AS tag_codes
 FROM (
     SELECT DISTINCT tag_code
     FROM hashtag
 );
-
-
-SELECT LISTAGG(tag_code, ',') WITHIN GROUP (ORDER BY tag_no) AS tag_codes
-FROM hashtag;
-
 		
-
 commit;
 
