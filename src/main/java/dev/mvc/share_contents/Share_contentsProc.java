@@ -118,8 +118,8 @@ public class Share_contentsProc implements Share_contentsProcInter {
 	}
 
 	@Override
-	public String pagingBox(int now_page, String word, String list_file, int search_count, int record_per_page,int cate_no,
-			int page_per_block) {
+	public String pagingBox(int now_page, String word, String list_file, int search_count, int record_per_page,
+			int cate_no, int page_per_block) {
 		// 전체 페이지 수: (double)1/10 -> 0.1 -> 1 페이지, (double)12/10 -> 1.2 페이지 -> 2 페이지
 		int total_page = (int) (Math.ceil((double) search_count / record_per_page));
 		// 전체 그룹 수: (double)1/10 -> 0.1 -> 1 그룹, (double)12/10 -> 1.2 그룹-> 2 그룹
@@ -173,8 +173,8 @@ public class Share_contentsProc implements Share_contentsProcInter {
 		// 현재 3그룹일 경우: (3 - 1) * 10 = 2그룹의 마지막 페이지 20
 		int _now_page = (now_grp - 1) * page_per_block;
 		if (now_grp >= 2) { // 현재 그룹번호가 2이상이면 페이지수가 11페이지 이상임으로 이전 그룹으로 갈수 있는 링크 생성
-			str.append("<span class='span_box_1'><A href='" + list_file +"?cate_no="+cate_no+ "&word=" + word + "&now_page=" + _now_page
-					+ "'>이전</A></span>");
+			str.append("<span class='span_box_1'><A href='" + list_file + "?cate_no=" + cate_no + "&word=" + word
+					+ "&now_page=" + _now_page + "'>이전</A></span>");
 		}
 
 		// 중앙의 페이지 목록
@@ -187,8 +187,8 @@ public class Share_contentsProc implements Share_contentsProcInter {
 				str.append("<span class='span_box_2'>" + i + "</span>"); // 현재 페이지, 강조
 			} else {
 				// 현재 페이지가 아닌 페이지는 이동이 가능하도록 링크를 설정
-				str.append("<span class='span_box_1'><A href='" + list_file+"?cate_no="+cate_no + "&word=" + word + "&now_page=" + i + "'>"
-						+ i + "</A></span>");
+				str.append("<span class='span_box_1'><A href='" + list_file + "?cate_no=" + cate_no + "&word=" + word
+						+ "&now_page=" + i + "'>" + i + "</A></span>");
 			}
 		}
 
@@ -199,8 +199,8 @@ public class Share_contentsProc implements Share_contentsProcInter {
 		// 현재 페이지 25일경우 -> 현재 3그룹: (3 * 10) + 1 = 4그룹의 시작페이지 31
 		_now_page = (now_grp * page_per_block) + 1; // 최대 페이지수 + 1
 		if (now_grp < total_grp) {
-			str.append("<span class='span_box_1'><A href='" + list_file+"?cate_no="+cate_no + "&word=" + word + "&now_page=" + _now_page
-					+ "'>다음</A></span>");
+			str.append("<span class='span_box_1'><A href='" + list_file + "?cate_no=" + cate_no + "&word=" + word
+					+ "&now_page=" + _now_page + "'>다음</A></span>");
 		}
 		str.append("</DIV>");
 
@@ -273,123 +273,136 @@ public class Share_contentsProc implements Share_contentsProcInter {
 		return cnt;
 	}
 
-  @Override
-  public ArrayList select_hashtag() {
-    ArrayList<HashtagVO> list = this.scontentsDAO.select_hashtag();
-    return list;
-  }
+	@Override
+	public ArrayList select_hashtag() {
+		ArrayList<HashtagVO> list = this.scontentsDAO.select_hashtag();
+		return list;
+	}
 
-  @Override
-  public HashtagVO select_hashname(int tag_no) {
-    HashtagVO hashtagVO = this.scontentsDAO.select_hashname(tag_no);
-    return hashtagVO;
-  }
+	@Override
+	public HashtagVO select_hashname(int tag_no) {
+		HashtagVO hashtagVO = this.scontentsDAO.select_hashname(tag_no);
+		return hashtagVO;
+	}
 
-  @Override
-  public ArrayList select_sconno(int tag_no) {
-    ArrayList<Contents_tagVO> list = this.scontentsDAO.select_sconno(tag_no);
-    return list;
-  }
+	@Override
+	public ArrayList select_sconno(int tag_no) {
+		ArrayList<Contents_tagVO> list = this.scontentsDAO.select_sconno(tag_no);
+		return list;
+	}
 
-  @Override
-  public ArrayList list_by_sconno(int scon_no) {
-    ArrayList<Share_contentsVO> list = this.scontentsDAO.list_by_sconno(scon_no);
-    return list;
-  }
+	@Override
+	public ArrayList list_by_sconno(int scon_no) {
+		ArrayList<Share_contentsVO> list = this.scontentsDAO.list_by_sconno(scon_no);
+		return list;
+	}
 
-  @Override
-  public ArrayList list_image() {
-    ArrayList<Share_imageVO> list = this.scontentsDAO.list_image();
-    return list;
-  }
+	@Override
+	public ArrayList list_image() {
+		ArrayList<Share_imageVO> list = this.scontentsDAO.list_image();
+		return list;
+	}
 
-  @Override
-  public ArrayList read_image(int scon_no) {
-      ArrayList<Share_imageVO> share_imageVO = this.scontentsDAO.read_image(scon_no);
-    return share_imageVO;
-  }
+	@Override
+	public ArrayList read_image(int scon_no) {
+		ArrayList<Share_imageVO> share_imageVO = this.scontentsDAO.read_image(scon_no);
+		return share_imageVO;
+	}
 
-  @Override
-  public int delete_image(int scon_no) {
-    int cnt = this.scontentsDAO.delete_image(scon_no);
-    return cnt;
-  }
+	@Override
+	public int delete_image(int scon_no) {
+		int cnt = this.scontentsDAO.delete_image(scon_no);
+		return cnt;
+	}
 
-  @Override
-  public int update_file(Share_imageVO share_imageVO) {
-    int cnt = this.scontentsDAO.update_file(share_imageVO);
-    return cnt;
-  }
+	@Override
+	public int update_file(Share_imageVO share_imageVO) {
+		int cnt = this.scontentsDAO.update_file(share_imageVO);
+		return cnt;
+	}
 
-@Override
-public int count_image(int scon_no) {
-	int cnt = this.scontentsDAO.count_image(scon_no);
-	return cnt;
-}
+	@Override
+	public int count_image(int scon_no) {
+		int cnt = this.scontentsDAO.count_image(scon_no);
+		return cnt;
+	}
 
-@Override
-public int up_priority(int scon_no) {
-	int cnt = this.scontentsDAO.up_priority(scon_no);
-	return cnt;
-}
+	@Override
+	public int up_priority(int scon_no) {
+		int cnt = this.scontentsDAO.up_priority(scon_no);
+		return cnt;
+	}
 
-@Override
-public int down_priority(int scon_no) {
-	int cnt = this.scontentsDAO.down_priority(scon_no);
-	return cnt;
-}
+	@Override
+	public int down_priority(int scon_no) {
+		int cnt = this.scontentsDAO.down_priority(scon_no);
+		return cnt;
+	}
 
-@Override
-public int y_mark(int scon_no) {
-	int cnt = this.scontentsDAO.y_mark(scon_no);
-	return cnt;
-}
+	@Override
+	public int y_mark(int scon_no) {
+		int cnt = this.scontentsDAO.y_mark(scon_no);
+		return cnt;
+	}
 
-@Override
-public int n_mark(int scon_no) {
-	int cnt = this.scontentsDAO.n_mark(scon_no);
-	return cnt;
-}
+	@Override
+	public int n_mark(int scon_no) {
+		int cnt = this.scontentsDAO.n_mark(scon_no);
+		return cnt;
+	}
 
-@Override
-public int update_comment(HashMap<String, Object> map) {
-	int cnt = this.scontentsDAO.update_comment(map);
-	return cnt;
-}
+	@Override
+	public int update_comment(HashMap<String, Object> map) {
+		int cnt = this.scontentsDAO.update_comment(map);
+		return cnt;
+	}
 
-@Override
-public int read_scmtno(HashMap<String, Object> map) {
-	int cnt = this.scontentsDAO.read_scmtno(map);
-	return cnt;
-}
+	@Override
+	public int read_scmtno(HashMap<String, Object> map) {
+		int cnt = this.scontentsDAO.read_scmtno(map);
+		return cnt;
+	}
 
-@Override
-public int bookmarK_create(HashMap<String, Object> map) {
-	int cnt = this.scontentsDAO.bookmarK_create(map);
-	return cnt;
-}
+	@Override
+	public int bookmarK_create(HashMap<String, Object> map) {
+		int cnt = this.scontentsDAO.bookmarK_create(map);
+		return cnt;
+	}
 
-@Override
-public int bookmark_delete(int scon_no) {
-	int cnt = this.scontentsDAO.bookmark_delete(scon_no);
-	return cnt;
-}
+	@Override
+	public int bookmark_delete(int scon_no) {
+		int cnt = this.scontentsDAO.bookmark_delete(scon_no);
+		return cnt;
+	}
 
-@Override
-public ArrayList<Share_imageVO> distinct_sconno() {
-	ArrayList<Share_imageVO>list = this.scontentsDAO.distinct_sconno();
-	return list;
-}
+	@Override
+	public ArrayList<Share_imageVO> distinct_sconno() {
+		ArrayList<Share_imageVO> list = this.scontentsDAO.distinct_sconno();
+		return list;
+	}
 
-@Override
-public int delete_tag(int scon_no) {
-	int cnt = this.scontentsDAO.delete_tag(scon_no);
-	return cnt;
-}
+	@Override
+	public int delete_tag(int scon_no) {
+		int cnt = this.scontentsDAO.delete_tag(scon_no);
+		return cnt;
+	}
 
+	@Override
+	public int scon_comment(int scon_no) {
+		int scon = this.scontentsDAO.scon_comment(scon_no);
+		return scon;
+	}
 
+	@Override
+	public int delete_scmtno(int scmt_no) {
+		int cnt = this.scontentsDAO.delete_scmtno(scmt_no);
+		return cnt;
+	}
 
-
-
+	@Override
+	public int tag_count(int tag_no) {
+		int cnt = this.scontentsDAO.tag_count(tag_no);
+		return cnt;
+	}
 
 }

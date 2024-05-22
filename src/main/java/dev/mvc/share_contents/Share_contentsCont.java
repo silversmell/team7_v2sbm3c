@@ -70,24 +70,25 @@ public class Share_contentsCont {
 
     ArrayList<Contents_tagVO> list1 = this.sconProc.read_contents_tag(scon_no);  //scon_no에 맞는 컨텐츠 태그 가져오기
     ArrayList<String> list2 = new ArrayList<>();
+    
     for (int i = 0; i < list1.size(); i++) {
       HashtagVO list3 = this.sconProc.select_hashname(list1.get(i).getTag_no());
       list2.add(list3.getTag_name()); //태그 이름을 갖고오기
     }
+    
     model.addAttribute("list2", list2);
 
     int cnt1 = this.sconProc.comment_search(scon_no);
     model.addAttribute("cnt", cnt1);
 
     ArrayList<Share_commentsVO> list = this.sconProc.read_comment(scon_no); //댓글 등록가져옴
-
     model.addAttribute("list", list);
     model.addAttribute("acc_no", 1);
 
     ArrayList<Contents_urlVO> url_list = this.sconProc.only_url(scon_no);
 
     for (int i = 0; i < url_list.size(); i++) {
-    	System.out.println("url_link[i]: " +url_list.get(i).getUrl_link());
+
     	if(url_list.get(i).getUrl_link().equals(" ")) {
     		url_list.get(i).setUrl_link("1");
     	}
@@ -96,7 +97,7 @@ public class Share_contentsCont {
     ArrayList<Share_imageVO> share_imageVO = this.sconProc.read_image(scon_no);
 
     model.addAttribute("share_imageVO", share_imageVO);
-
+    
     return "scontents/read";
   }
   
@@ -140,37 +141,80 @@ public class Share_contentsCont {
     ra.addAttribute("cate_no", cate_no);
     return "redirect:/scontents/read?scon_no=" +scon_no;
   }
+
+	@PostMapping("/create_comment")
+	public String create_comment(String scmt_comment, int scon_no, int acc_no, RedirectAttributes ra, int cate_no) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("scmt_comment", scmt_comment);
+		map.put("scon_no", scon_no);
+		map.put("acc_no", acc_no);
+
+		int cnt = this.sconProc.create_comment(map);
+		ra.addAttribute("scon_no", scon_no);
+		ra.addAttribute("cate_no", cate_no);
+
+		return "redirect:/scontents/read";
+
+	}
   
 
-  @GetMapping("/create_comment")
-  @ResponseBody
-  public String create_comment_form(String scmt_comment, int scon_no, int acc_no) {
-    HashMap<String, Object> map = new HashMap<String, Object>();
-    map.put("scmt_comment", scmt_comment);
-    map.put("scon_no", scon_no);
-    map.put("acc_no", acc_no);
-
-    int cnt = this.sconProc.create_comment(map);
-
-    JSONObject obj = new JSONObject();
-    obj.put("cnt", cnt);
-
-    return obj.toString();
-  }
+//  @GetMapping("/create_comment")
+//  @ResponseBody
+//  public String create_comment_form(String scmt_comment, int scon_no, int acc_no) {
+//    HashMap<String, Object> map = new HashMap<String, Object>();
+//    map.put("scmt_comment", scmt_comment);
+//    map.put("scon_no", scon_no);
+//    map.put("acc_no", acc_no);
+//
+//    int cnt = this.sconProc.create_comment(map);
+//
+//    JSONObject obj = new JSONObject();
+//    obj.put("cnt", cnt);
+//
+//    return obj.toString();
+//  }
   
-  @GetMapping("/update_comment")
-  @ResponseBody
-  public String update_comment_form(String scmt_comment,int scon_no) {
-    HashMap<String, Object> map = new HashMap<String, Object>();
-    map.put("scmt_comment",scmt_comment);
-    map.put("scon_no", scon_no);
-    
-    int cnt = this.sconProc.read_scmtno(map);
-    JSONObject obj = new JSONObject();
-    obj.put("cnt", cnt);
-    
-    return obj.toString();
-  }
+	@GetMapping("/update_comment/{scmt_no}")
+	public String update_comment_form(Model model,@PathVariable("scmt_no") Integer scmt_no,int cate_no) {
+		
+	    CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
+	    model.addAttribute("categoryVO", categoryVO);
+		
+		model.addAttribute("scmt_no",scmt_no);
+		return "scontents/update_comment";
+	}
+	
+	@PostMapping("/update_comment")
+	public String update_comment_forn(@RequestParam("scmt_no") int scmt_no, @RequestParam("scmt_comment") String scmt_comment,RedirectAttributes ra,int cate_no) {
+		HashMap<String,Object> map = new HashMap<>();
+		map.put("scmt_no",scmt_no);
+		map.put("scmt_comment", scmt_comment);
+		
+		int cnt = this.sconProc.update_comment(map);
+		
+		
+		if(cnt==1) {
+			System.out.println("댓글 수정 성공");
+		}
+		int scon_no = this.sconProc.scon_comment(scmt_no);
+		System.out.println("-> scon_no:" + scon_no);
+		ra.addAttribute("scon_no", scon_no);
+		ra.addAttribute("cate_no", cate_no);
+		
+		return "redirect:/scontents/read";
+	}
+	
+	@PostMapping("/delete_comment")
+	public String delete_comment(int scmt_no,RedirectAttributes ra,int cate_no) {
+		int scon_no = this.sconProc.scon_comment(scmt_no);
+		int cnt = this.sconProc.delete_scmtno(scmt_no);
+		if(cnt==1) {
+			System.out.println("댓글 삭제 성공");
+		}
+		ra.addAttribute("cate_no", cate_no);
+		ra.addAttribute("scon_no", scon_no);
+		return "redirect:/scontents/read";
+	}
 
   @GetMapping("/update_text") //글 수정
   public String update_text_form(Model model, int scon_no,int cate_no) {
@@ -185,9 +229,11 @@ public class Share_contentsCont {
     for (int i = 0; i < url_list.size(); i++) {
       String url = url_list.get(i).getUrl_link();
       System.out.println("url[i]" +url_list.get(i).getUrl_link());
+      
       if (url.equals("1")) {
         url_list.get(i).setUrl_link(" ");
       }
+      
       model.addAttribute("url_list"+i, url_list.get(i).getUrl_link());
     }
     return "scontents/update_text";
@@ -207,7 +253,7 @@ public class Share_contentsCont {
    
     System.out.println("-> list의 사이즈:" + list.length);
     
-//
+
 //    for(int i = 0;i<list.length;i++) { //만약 순서대로 삭제 하지 않았을 경우 1을 넣음
 //    	 System.out.println("현재 url_link: " + list[i]);
 ////    	if(list[i].equals("")) {
@@ -235,7 +281,6 @@ public class Share_contentsCont {
     	
     	}
     }
-    
     
     ra.addAttribute("cate_no",cate_no);
     return "redirect:/scontents/list_by_search";
@@ -524,10 +569,7 @@ public class Share_contentsCont {
     model.addAttribute("word", word);
 
     ArrayList<Contents_tagVO> tag_sconno = this.sconProc.select_sconno(tag_no);
-    for(Contents_tagVO list2: tag_sconno) {
-    	System.out.println("tag_sconno 에 따른 sconno"+list2.getScon_no());
-    	System.out.println("tag_sconno 에 따른 sconno"+list2.getTag_no());
-    }
+
     System.out.println();
     ArrayList<Share_imageVO> list_image = new ArrayList<>();
     for (Contents_tagVO scon : tag_sconno) {
@@ -550,7 +592,6 @@ public class Share_contentsCont {
     model.addAttribute("no", no);
 
     return "scontents/list_by_search_paging";
-
   }
 
   @GetMapping("/list_by_search")
@@ -564,7 +605,7 @@ public class Share_contentsCont {
     CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
     model.addAttribute("categoryVO", categoryVO);
     
-    System.out.println("-> categoryVO.cate_no :" +categoryVO.getCate_no());
+    //System.out.println("-> categoryVO.cate_no :" +categoryVO.getCate_no());
     
     ArrayList<HashtagVO> list_hashtag = this.sconProc.select_hashtag();
     model.addAttribute("list_hashtag", list_hashtag);

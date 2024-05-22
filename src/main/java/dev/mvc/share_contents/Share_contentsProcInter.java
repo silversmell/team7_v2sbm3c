@@ -302,6 +302,28 @@ public interface Share_contentsProcInter {
 	  * @return int
 	  */
 	 public int delete_tag(int scon_no);
+	 
+	 /**
+	  * scmt_no 에 따른 scon_no
+	  * @param scon_no
+	  * @return
+	  */
+	 public int scon_comment(int scon_no);
+
+	 /**
+	  * sctm_no에 따른 댓글 삭제
+	  * @param scmt_no
+	  * @return
+	  */
+	 public int delete_scmtno(int scmt_no);
+	 
+	 /**
+	  * 해시태그에 따른 게시물 갯수
+	  * @param tag_no
+	  * @return
+	  */
+	 public int tag_count(int tag_no);
+	 
 
 
 	 
