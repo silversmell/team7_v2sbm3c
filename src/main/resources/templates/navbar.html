@@ -17,9 +17,7 @@
               <li class="nav-item dropdown" th:each="categoryVOMenu: ${menu}"  aria-labelledby="navbarDropdownMenuLink">
                     <a class="nav-link dropdown-toggle" th:href="@{|/scontents/list_by_search?cate_no=${categoryVO.cate_no}|}" role="button" th:text="${categoryVOMenu.cate_name}"></a>
               </li>
-
-                  
-
+              
                <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
                          role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="관리자">                                                            
@@ -35,6 +33,7 @@
                     </li>
                     </ul>
                 </li>
+                
                 
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
@@ -53,24 +52,34 @@
                       <li class="nav-item" th:if="${session.memberno!=null}"><a class="nav-link" href="#">로그인 내역</a></li>
                     </ul>
                 </li>
+                
+                 <li class="nav-item">
+                      <span th:if="${session.memberno == null}"><a class="nav-link" href="/member/login" th:text="@{|로그인|}"></a></span>
+                      <span th:if="${session.memberno != null}"><a class="nav-link" href="/member/logout" th:text="@{|${session.id} 로그아웃|}"></a></span>
+                 </li>  
 
-                <li class="nav-item">
-                    <span th:if="${session.memberno == null}"><a class="nav-link" href="/member/login" th:text="@{|로그인|}"></a></span>
-                    <span th:if="${session.memberno != null}"><a class="nav-link" href="/member/logout" th:text="@{|${session.id} 로그아웃|}"></a></span>
-                </li>
-                
                 
                 <li class="nav-item">
-                  <a class="nav-link" href="http://localhost:9093/scontents/list_by_search?cate_no=1" th:text="공유게시판1"></a>
+                  <a class="nav-link" href="http://localhost:9093/scontents/list_by_search?cate_no=1" th:text="공유게시판"></a>
                 </li>
                 
                 <li class="nav-item">
-                  <a class="nav-link" href="http://localhost:9093/qcontents/list_by_search?cate_no=2" th:text="질문게시판2"></a>
+                  <a class="nav-link" href="http://localhost:9093/qcontents/list_by_search?cate_no=2" th:text="질문게시판"></a>
                 </li>
                 
                 <li class="nav-item">
-                  <a class="nav-link" href="http://localhost:9093/admin/list_by_search?cate_no=3" th:text="팁게시판3"></a>
+                  <a class="nav-link" href="http://localhost:9093/admin/list_by_search?cate_no=3" th:text="팁게시판"></a>
                 </li>
+                
+                <li class="nav-item">
+                  <a class="nav-link" href="http://localhost:9093/scontents/rank?cate_no=4" th:text="랭킹게시판"></a>
+                </li>
+                
+                <li class="nav-item">
+                  <a class="nav-link" href="http://localhost:9093/admin/tip?cate_no=5" th:text="마이페이지"></a>
+                </li> 
+                 
+                
             </ul>
           <!-- 메뉴 종료 -->
             
