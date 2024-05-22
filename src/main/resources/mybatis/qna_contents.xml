@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
  
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="dev.mvc.share_contents.Share_contentsDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
+<mapper namespace="dev.mvc.qna_contents.Qna_contentsDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
 
   <!-- 전체 목록 -->
   <select id="qna_list_all" resultType="dev.mvc.qna_contents.Qna_contentsVO">
@@ -12,8 +12,13 @@
   
   <!-- 등록 -->
   <insert id="qna_create">
+    <!-- 등록후 Qna_contentsVO class의 qcon_no 컬럼에 PK return  -->
+    <selectKey keyProperty="qcon_no" resultType="int" order="BEFORE">
+      SELECT qna_contents_seq.nextval FROM dual
+    </selectKey>
+    
     INSERT INTO QNA_CONTENTS(qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_comment, qcon_date, word, qcon_passwd)
-    VALUES(qna_contents_seq.nextval, #{cate_no}, #{acc_no}, #{qcon_name}, #{qcon_contents}, #{qcon_views}, #{qcon_bookmark}, #{qcon_comment}, sysdate, #{word}, #{qcon_passwd})
+    VALUES(#{qcon_no}, #{cate_no}, 1, #{qcon_name}, #{qcon_contents}, #{qcon_views}, #{qcon_bookmark}, #{qcon_comment}, sysdate, #{word}, #{qcon_passwd})
   </insert>
   
   <!-- 댓글 등록 -->
@@ -113,7 +118,7 @@
   <!-- 카테고리별 검색 레코드 갯수 -->
   <select id="list_by_qna_search_count" resultType="int" parameterType="HashMap">
     SELECT COUNT(*) as cnt
-    FROM contents
+    FROM qna_contents
     <choose>
       <when test="word == null or word == ''"> <!-- 검색하지 않는 경우의 레코드 갯수 -->
         WHERE cate_no=#{cate_no}
@@ -133,7 +138,7 @@
               SELECT qcon_no, acc_no, cate_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_comment, qcon_date, rownum as r
               FROM (
                         SELECT qcon_no, acc_no, cate_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_comment, qcon_date
-                        FROM contents
+                        FROM qna_contents
                         <choose>
                           <when test="word == null or word == ''"> <!-- 검색하지 않는 경우 -->
                             WHERE cate_no=#{cate_no}
@@ -231,13 +236,4 @@
   
 
 </mapper>
-
-
-
-
-
-
-
-
-
 
