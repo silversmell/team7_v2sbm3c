@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import ch.qos.logback.core.recovery.ResilientSyslogOutputStream;
 import dev.mvc.category.CategoryProcInter;
 import dev.mvc.category.CategoryVO;
 import dev.mvc.recommend.HashtagVO;
@@ -167,7 +168,7 @@ public class Share_contentsCont {
     return obj.toString();
   }
 
-  @GetMapping("/update_text")
+  @GetMapping("/update_text") //글 수정
   public String update_text_form(Model model, int scon_no,int cate_no) {
 	  
     CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
@@ -179,37 +180,57 @@ public class Share_contentsCont {
     ArrayList<Contents_urlVO> url_list = this.sconProc.only_url(scon_no);
     for (int i = 0; i < url_list.size(); i++) {
       String url = url_list.get(i).getUrl_link();
+      System.out.println("url[i]" +url_list.get(i).getUrl_link());
       if (url.equals("1")) {
         url_list.get(i).setUrl_link(" ");
       }
-      model.addAttribute("url_list" + i, url_list.get(i).getUrl_link());
+      model.addAttribute("url_list"+i, url_list.get(i).getUrl_link());
     }
     return "scontents/update_text";
   }
-  @PostMapping("/update_text")
+  
+  @PostMapping("/update_text") //url 수정, 등록, 삭제
   public String update_text(Model model, Share_contentsVO scontentsVO, RedirectAttributes ra, int scon_no,int cate_no,
       String url_link, List<MultipartFile> fnamesMF) {
-	 
     int cnt = this.sconProc.update_text(scontentsVO);
-    // System.out.println("url_link -> " + url_link);
+    System.out.println("url_link -> " + url_link);
 
     HashMap<String, Object> map = new HashMap<>();
     
-    if(!url_link.trim().isEmpty()) { //url_link 가 있을경우
-    String[] list = url_link.split(",");
+    System.out.println("현재 url_link->" + url_link);
     ArrayList<Contents_urlVO> arr = this.sconProc.url_read(scon_no);
-    
-    for (int i = 0; i < list.length; i++) {
-      list[i] = list[i].trim();
-      map.put("url_link", list[i]);
-      map.put("scon_no", scon_no);
-      map.put("url_no", arr.get(i).getUrl_no());
-      this.sconProc.update_url(map);
-    }
-    System.out.println("url 수정 완");
-    }
-    ra.addAttribute("cate_no",cate_no);
 
+    
+    String[] list = url_link.split(",");
+    System.out.println("list 사이즈:" + list.length);
+    
+    for(int i = 0;i<list.length;i++) { //list 가 있을 경우
+    	map.put("url_link", list[i].trim());
+    	map.put("scon_no", scon_no);
+    	map.put("url_no", arr.get(i).getUrl_no());
+    	this.sconProc.update_url(map);
+    	System.out.println("url 수정 완");
+    }
+    for (int i =arr.size()-list.length-1;i>=list.length;i--) { //list 가 없는 경우
+    	map.put("url_link", 1);
+    	map.put("scon_no",scon_no);
+    	map.put("url_no", arr.get(i).getUrl_no());
+    	this.sconProc.update_url(map);
+    	System.out.println("1로 변환");
+    }
+    
+//    for(String list1:list) {
+//    if(!list1.trim().isEmpty()) { //url_link 가 있을경우
+//      map.put("url_link", list1.trim());
+//      map.put("scon_no", scon_no);
+//      map.put("url_no", arr.get(idx).getUrl_no());
+//      this.sconProc.update_url(map);
+//      System.out.println("url 수정 완");
+//      System.out.println("현재 idx:" +idx);
+//      ++idx;
+//    }
+//    }
+    ra.addAttribute("cate_no",cate_no);
     return "redirect:/scontents/list_by_search";
   }
 
@@ -217,6 +238,9 @@ public class Share_contentsCont {
   public String update_file_form(Model model, int scon_no,int cate_no) {
     Share_contentsVO scontentsVO = this.sconProc.read(scon_no);
     model.addAttribute("scontentsVO", scontentsVO);
+    
+    CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
+    model.addAttribute("categoryVO", categoryVO);
 
     ArrayList<Share_imageVO> simage = this.sconProc.read_image(scon_no);
     for (int i = 1; i < simage.size(); i++) {
@@ -233,9 +257,7 @@ public class Share_contentsCont {
   }
 
   @PostMapping("/update_file")
-  public String update_file(Model model, RedirectAttributes ra, int scon_no, List<MultipartFile> fnamesMF) {
-
-	  
+  public String update_file(Model model, RedirectAttributes ra, int scon_no, List<MultipartFile> fnamesMF,int cate_no) {
 
     ArrayList<Share_imageVO> image_list_old = this.sconProc.read_image(scon_no);
     for (Share_imageVO image : image_list_old) {
@@ -300,6 +322,7 @@ public class Share_contentsCont {
       }
 
     }
+    ra.addAttribute("cate_no", cate_no);
     return "redirect:/scontents/list_by_search";
   }
 
@@ -356,9 +379,8 @@ public class Share_contentsCont {
     }
   }
     else {
-  System.out.println("url 패스");
+    	System.out.println("url 패스");
     }
-
 
     String file_origin_name = "";
     String file_upload_name = "";
