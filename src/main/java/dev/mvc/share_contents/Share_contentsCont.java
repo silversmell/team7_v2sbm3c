@@ -30,7 +30,7 @@ import dev.mvc.share_contentsdto.Share_imageVO;
 import dev.mvc.tool.Tool;
 import dev.mvc.tool.Upload;
 
-@RequestMapping("/scontents")
+@RequestMapping("/scontents") //http://localhost:9093/scontents/list_by_search?cate_no=1
 @Controller
 public class Share_contentsCont {
   
@@ -59,30 +59,28 @@ public class Share_contentsCont {
   public String read(Model model, int scon_no, int cate_no) {
     
     // 카테고리 가져오기
-    CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
+    CategoryVO categoryVO = this.categoryProc.cate_read(cate_no); //카테고리 읽어옴
     model.addAttribute("categoryVO", categoryVO);
     
-    int cnt = this.sconProc.update_view(scon_no);
+    int cnt = this.sconProc.update_view(scon_no); //조회수 업데이트
     
-    model.addAttribute("scon_views", cnt);
+    model.addAttribute("scon_views", cnt); 
 
     Share_contentsVO scontentsVO = this.sconProc.read(scon_no);
     model.addAttribute("scontentsVO", scontentsVO);
-    System.out.println("-> mark: " +scontentsVO.getMark());
-    System.out.println("-> priority : "+scontentsVO.getScon_priority());
 
-    ArrayList<Contents_tagVO> list1 = this.sconProc.read_contents_tag(scon_no); // hashtag vo 들어오면 변경할 것
+    ArrayList<Contents_tagVO> list1 = this.sconProc.read_contents_tag(scon_no);  //scon_no에 맞는 컨텐츠 태그 가져오기
     ArrayList<String> list2 = new ArrayList<>();
     for (int i = 0; i < list1.size(); i++) {
       HashtagVO list3 = this.sconProc.select_hashname(list1.get(i).getTag_no());
-      list2.add(list3.getTag_name());
+      list2.add(list3.getTag_name()); //태그 이름을 갖고오기
     }
     model.addAttribute("list2", list2);
 
     int cnt1 = this.sconProc.comment_search(scon_no);
     model.addAttribute("cnt", cnt1);
 
-    ArrayList<Share_commentsVO> list = this.sconProc.read_comment(scon_no);
+    ArrayList<Share_commentsVO> list = this.sconProc.read_comment(scon_no); //댓글 등록가져옴
 
     model.addAttribute("list", list);
     model.addAttribute("acc_no", 1);
@@ -170,8 +168,11 @@ public class Share_contentsCont {
   }
 
   @GetMapping("/update_text")
-  public String update_text_form(Model model, int scon_no) {
-
+  public String update_text_form(Model model, int scon_no,int cate_no) {
+	  
+    CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
+    model.addAttribute("categoryVO", categoryVO);
+    
     Share_contentsVO scontentsVO = this.sconProc.read(scon_no);
     model.addAttribute("scontentsVO", scontentsVO);
 
@@ -185,9 +186,35 @@ public class Share_contentsCont {
     }
     return "scontents/update_text";
   }
+  @PostMapping("/update_text")
+  public String update_text(Model model, Share_contentsVO scontentsVO, RedirectAttributes ra, int scon_no,int cate_no,
+      String url_link, List<MultipartFile> fnamesMF) {
+	 
+    int cnt = this.sconProc.update_text(scontentsVO);
+    // System.out.println("url_link -> " + url_link);
+
+    HashMap<String, Object> map = new HashMap<>();
+    
+    if(!url_link.trim().isEmpty()) { //url_link 가 있을경우
+    String[] list = url_link.split(",");
+    ArrayList<Contents_urlVO> arr = this.sconProc.url_read(scon_no);
+    
+    for (int i = 0; i < list.length; i++) {
+      list[i] = list[i].trim();
+      map.put("url_link", list[i]);
+      map.put("scon_no", scon_no);
+      map.put("url_no", arr.get(i).getUrl_no());
+      this.sconProc.update_url(map);
+    }
+    System.out.println("url 수정 완");
+    }
+    ra.addAttribute("cate_no",cate_no);
+
+    return "redirect:/scontents/list_by_search";
+  }
 
   @GetMapping("/update_file") // 파일 수정
-  public String update_file_form(Model model, int scon_no) {
+  public String update_file_form(Model model, int scon_no,int cate_no) {
     Share_contentsVO scontentsVO = this.sconProc.read(scon_no);
     model.addAttribute("scontentsVO", scontentsVO);
 
@@ -206,7 +233,9 @@ public class Share_contentsCont {
   }
 
   @PostMapping("/update_file")
-  public String update_text(Model model, RedirectAttributes ra, int scon_no, List<MultipartFile> fnamesMF) {
+  public String update_file(Model model, RedirectAttributes ra, int scon_no, List<MultipartFile> fnamesMF) {
+
+	  
 
     ArrayList<Share_imageVO> image_list_old = this.sconProc.read_image(scon_no);
     for (Share_imageVO image : image_list_old) {
@@ -274,27 +303,7 @@ public class Share_contentsCont {
     return "redirect:/scontents/list_by_search";
   }
 
-  @PostMapping("/update_text")
-  public String update_text(Model model, Share_contentsVO scontentsVO, RedirectAttributes ra, int scon_no,
-      String url_link, List<MultipartFile> fnamesMF) {
-    int cnt = this.sconProc.update_text(scontentsVO);
-    // System.out.println("url_link -> " + url_link);
 
-    HashMap<String, Object> map = new HashMap<>();
-
-    String[] list = url_link.split(",");
-    ArrayList<Contents_urlVO> arr = this.sconProc.url_read(scon_no);
-
-    for (int i = 0; i < list.length; i++) {
-      list[i] = list[i].trim();
-      map.put("url_link", list[i]);
-      map.put("scon_no", scon_no);
-      map.put("url_no", arr.get(i).getUrl_no());
-      this.sconProc.update_url(map);
-    }
-
-    return "redirect:/scontents/list_by_search";
-  }
 
   @GetMapping("/create")
   public String create_form(Model model, Share_contentsVO scontentsVO, int cate_no) {
@@ -319,24 +328,37 @@ public class Share_contentsCont {
     String[] url_sub_link = { "1", "1", "1", "1", "1" };
     
     int cnt = this.sconProc.create(scontentsVO);
-
-    if (cnt == 1) {
-      System.out.println("등록 성공");
-      System.out.println("-> cate_no: " + scontentsVO.getCate_no());
-      this.categoryProc.cnt_plus(scontentsVO.getCate_no()); // 관련 글 수 증가
-    }
     ArrayList<Share_contentsVO> list1 = this.sconProc.list_all();
-    for (Share_contentsVO list : list1) {
-      System.out.println("->scon_no: " + list.getScon_no());
-
-    }
     System.out.println(" -> list1.size : " + list1.size());
 
     Share_contentsVO scontentsVO1 = list1.get(list1.size() - 1); // 직전 등록한 Share_contentsVO 가져오기 ->scon_no를 사용하기 위해
-
+    
     System.out.println("-> create 한 후 scon_no : " + scontentsVO1.getScon_no());
     int scon_no = scontentsVO1.getScon_no();
-    System.out.println(" -> scon_no" + scon_no);
+    
+    if(!url_link.trim().isEmpty()) { //url이 있는 경우에 url 을 등록 할 것
+    HashMap<String, Object> map = new HashMap<>();
+    String[] list = url_link.split(",");
+    System.out.println("url link에 들어옴");
+    for (int i = 0; i < list.length; i++) {
+      list[i] = list[i].trim();
+      map.put("url_link", list[i]);
+      map.put("scon_no", scon_no);
+      this.sconProc.create_url(map);
+    }
+    
+    if (list.length < url_sub_link.length) {
+      for (int i = list.length; i < url_sub_link.length; i++) {
+        map.put("url_link", url_sub_link[i]);
+        map.put("scon_no", scon_no);
+        this.sconProc.create_url(map);
+      }
+    }
+  }
+    else {
+  System.out.println("url 패스");
+    }
+
 
     String file_origin_name = "";
     String file_upload_name = "";
@@ -380,24 +402,14 @@ public class Share_contentsCont {
       map1.put("scon_no", scon_no);
       int cnt1 = this.sconProc.insert_tag(map1);
     }
-
-    HashMap<String, Object> map = new HashMap<>();
-    String[] list = url_link.split(",");
-
-    for (int i = 0; i < list.length; i++) {
-      list[i] = list[i].trim();
-      map.put("url_link", list[i]);
-      map.put("scon_no", scon_no);
-      this.sconProc.create_url(map);
-    }
-    if (list.length < url_sub_link.length) {
-      for (int i = list.length; i < url_sub_link.length; i++) {
-        map.put("url_link", url_sub_link[i]);
-        map.put("scon_no", scon_no);
-        this.sconProc.create_url(map);
-      }
-    }
     
+
+    if (cnt == 1) {
+      System.out.println("등록 성공");
+      System.out.println("-> cate_no: " + scontentsVO.getCate_no());
+      this.categoryProc.cnt_plus(scontentsVO.getCate_no()); // 관련 글 수 증가
+    }
+
     // redirect로 넘겨주는 cate_no
     ra.addAttribute("cate_no", scontentsVO.getCate_no());
     
@@ -478,7 +490,11 @@ public class Share_contentsCont {
     model.addAttribute("word", word);
 
     ArrayList<Contents_tagVO> tag_sconno = this.sconProc.select_sconno(tag_no);
-    
+    for(Contents_tagVO list2: tag_sconno) {
+    	System.out.println("tag_sconno 에 따른 sconno"+list2.getScon_no());
+    	System.out.println("tag_sconno 에 따른 sconno"+list2.getTag_no());
+    }
+    System.out.println();
     ArrayList<Share_imageVO> list_image = new ArrayList<>();
     for (Contents_tagVO scon : tag_sconno) {
       ArrayList<Share_imageVO> distinct_image = this.sconProc.read_image(scon.getScon_no());

@@ -17,6 +17,7 @@
   
   <form name='frm' method='post' th:object="${scontentsVO}" action='./update_text' enctype="multipart/form-data">
     <input type="hidden" name="scon_no" th:value="${scontentsVO.scon_no }">
+    <input type="hidden" name="cate_no" th:value="${categoryVO.cate_no}"> <!-- cate_no 데이터 값 가져옴 -->
     <!--<input type="hidden" name="now_page" th:value="${now_page}"> -->
     <!-- <input type="hidden" name="search_word" th:value="${word}"> -->
     
@@ -32,7 +33,7 @@
     </div>
 
        <label th:if="${url_list0!= null}"label>url1</label>
-       <input type='url' name='url_link' th:if="${url_list0 != null}" th:value="${url_list0}" required
+       <input type='url' name='url_link' th:if="${url_list0 != null}" th:value="${url_list0}" 
                  autofocus="autofocus" class="form-control" style='width: 100%;'/>
        <label th:if="${url_list1 != null}">url2</label>
        <input type='url' name='url_link'  th:if="${url_list1 != null}"  th:value="${url_list1}" 
