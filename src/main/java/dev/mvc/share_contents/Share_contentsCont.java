@@ -196,50 +196,47 @@ public class Share_contentsCont {
   @PostMapping("/update_text") //url 수정, 등록, 삭제
   public String update_text(Model model, Share_contentsVO scontentsVO, RedirectAttributes ra, int scon_no,int cate_no,
       String url_link, List<MultipartFile> fnamesMF) {
+
     int cnt = this.sconProc.update_text(scontentsVO);
 
     HashMap<String, Object> map = new HashMap<>();
     
-    System.out.println("현재 url_link->" + url_link);
     ArrayList<Contents_urlVO> arr = this.sconProc.url_read(scon_no);
-
+    
     String[] list = url_link.split(",");
-
+   
     System.out.println("-> list의 사이즈:" + list.length);
-
-    for(int i = 0;i<list.length;i++) { //만약 순서대로 삭제 하지 않았을 경우 1을 넣음
+    
+//
+//    for(int i = 0;i<list.length;i++) { //만약 순서대로 삭제 하지 않았을 경우 1을 넣음
+//    	 System.out.println("현재 url_link: " + list[i]);
+////    	if(list[i].equals("")) {
+////    		list[i]="1";
+////    	}
+//    }
+    
+    for(int i = 0;i<list.length;i++) { //list가 5개 다 있을 경우 하나를 삭제했을 때 
     	if(list[i].equals("")) {
     		list[i]="1";
     	}
-    }
-    for(int i = 0;i<list.length;i++) { //list가 5개 다 있을 경우 하나를 삭제했을 때 
     	map.put("url_link", list[i].trim());
     	map.put("scon_no", scon_no);
     	map.put("url_no", arr.get(i).getUrl_no());
     	this.sconProc.update_url(map);
     }
     
-    if(list.length!=5) {
-    for (int i =arr.size()-list.length-1;i>=list.length;i--) { //url_link가 가 없는 경우
+    if(list.length!=arr.size()) { //list.length와 arr.size 가 다를 경우
+    for (int i =arr.size()-1;i>=list.length;i--) { //url_link가 가 없는 경우
     	map.put("url_link", "1");
     	map.put("scon_no",scon_no);
     	map.put("url_no", arr.get(i).getUrl_no());
     	this.sconProc.update_url(map);
     	System.out.println("1로 변환");
+    	
+    	}
     }
-  }
     
-//    for(String list1:list) {
-//    if(!list1.trim().isEmpty()) { //url_link 가 있을경우
-//      map.put("url_link", list1.trim());
-//      map.put("scon_no", scon_no);
-//      map.put("url_no", arr.get(idx).getUrl_no());
-//      this.sconProc.update_url(map);
-//      System.out.println("url 수정 완");
-//      System.out.println("현재 idx:" +idx);
-//      ++idx;
-//    }
-//    }
+    
     ra.addAttribute("cate_no",cate_no);
     return "redirect:/scontents/list_by_search";
   }
