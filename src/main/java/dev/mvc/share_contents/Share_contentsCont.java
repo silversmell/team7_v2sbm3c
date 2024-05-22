@@ -580,7 +580,6 @@ public class Share_contentsCont {
 			list_image.add(distinct_image.get(0)); // 첫번째 것
 		}
 		model.addAttribute("list_image", list_image);
-
 		int search_count = this.sconProc.list_by_cateno_search_count(map);
 		String paging = this.sconProc.pagingBox(now_page, word, "/scontents/list_by_search", search_count,
 				Contents.RECORD_PER_PAGE, cate_no, Contents.PAGE_PER_BLOCK);
