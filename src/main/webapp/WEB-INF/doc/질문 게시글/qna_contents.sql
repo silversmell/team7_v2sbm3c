@@ -44,16 +44,18 @@ CREATE SEQUENCE QNA_CONTENTS_SEQ
   
 commit;
 SELECT * FROM qna_contents;
+
 -- Create, 등록: 1건 이상
 INSERT INTO QNA_CONTENTS(qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_comment, qcon_date, word, qcon_passwd)
 VALUES(qna_contents_seq.nextval, 2, 1, '찾아주세요!', '사진 속 물건과 비슷한게 있을까요?', 1, 1, 1, sysdate, '질문', '1234');
 
-INSERT INTO QNA_CONTENTS(qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_comment, qcon_date, word)
-VALUES(qna_contents_seq.nextval, 2, 2, '가성비', '화이트 데스크테리어에 어울릴만한 가성비 아이템 추천해주세요.', 0, 0, 0, sysdate, '화이트');
+INSERT INTO QNA_CONTENTS(qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_comment, qcon_date, word, qcon_passwd)
+VALUES(qna_contents_seq.nextval, 2, 2, '가성비', '화이트 데스크테리어에 어울릴만한 가성비 아이템 추천해주세요.', 0, 0, 0, sysdate, '화이트', '1234');
 
-INSERT INTO QNA_CONTENTS(qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_comment, qcon_date, word)
-VALUES(qna_contents_seq.nextval, 2, 3, '대신 골라주삼', '내 책상과 어울릴만한 아이템 하나 골라주라', 0, 0, 0, sysdate, '추천');
+INSERT INTO QNA_CONTENTS(qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_comment, qcon_date, word, qcon_passwd)
+VALUES(qna_contents_seq.nextval, 2, 3, '대신 골라주삼', '내 책상과 어울릴만한 아이템 하나 골라주라', 0, 0, 0, sysdate, '추천', '1234');
 
+commit;
 
 -- 전체 목록
 SELECT qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_comment, qcon_date

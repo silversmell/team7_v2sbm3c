@@ -37,7 +37,7 @@ commit;
 SELECT * FROM qna_image;
 
 -- 이미지 삽입
-INSERT INTO QNA_IMAGE_SEQ(file_no, qcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date)
+    INSERT INTO QNA_IMAGE_SEQ(file_no, qcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date)
 VALUES(qna_image_seq.nextval, 1, 'qna1.jpg', 'desk.jpg', 'desk.jpg_t', 100, sysdate);
 
 INSERT INTO QNA_IMAGE_SEQ(file_no, qcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date)

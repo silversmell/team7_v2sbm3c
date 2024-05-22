@@ -108,6 +108,7 @@ WHERE cate_no=1;
 UPDATE category
 SET cate_visible='N'
 WHERE cate_no=1;
+
 /**
 -- 카테고리 관련 자료수 갯수
 SELECT 

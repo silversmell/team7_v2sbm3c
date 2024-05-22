@@ -1,5 +1,10 @@
 package dev.mvc.qna_contents;
 
+import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
+
+import groovy.transform.ToString;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
@@ -22,17 +27,17 @@ import lombok.Setter;
 //  FOREIGN KEY (ACC_NO) REFERENCES ACCOUNT (ACC_NO)
 //);
 
-@Getter @Setter
+@Getter @Setter @ToString
 public class Qna_contentsVO {
 
   /** 질문 게시글 번호 */
-  private Integer qcon_no;
+  private int qcon_no;
   
   /** 카테고리 번호 */
-  private Integer cate_no;
+  private int cate_no;
   
   /** 회원 번호 */
-  private Integer acc_no;
+  private int acc_no;
   
   /** 질문 게시글 제목 */
   @NotEmpty(message="질문게시글 제목은 필수입력 항목입니다.")
@@ -63,4 +68,18 @@ public class Qna_contentsVO {
   
   /** 질문게시글 검색어 */
   private String word="";
+  
+  /** 비밀번호 */
+  private String qcon_passwd="";
+  
+  
+  /** Form의 파일을 MultipartFile로 변환하여 List에 저장  */
+  private List<MultipartFile> fnamesMF;
+  
+  // private MultipartFile fnamesMF;  // 하나의 파일 처리
+  /** 파일 단위 출력 */
+  private String flabel;
+  
+  private MultipartFile file1MF = null;
+
 }

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+
+  <div class='title_line'>
+    <span th:text="${categoryVO.cate_name}" class="title_line_text"></span > 
+    <span th:if="${word != ''}" th:text="|> ${word} (${search_count} 건)|" class="title_line_text"></span>
+  </div>
+  
+  <aside class='aside_left'>
+    <a href='#'>모든 이미지 파일</a>
+  </aside>
+  
+  <aside class="aside_right">
+    
+    <a th:href="@{|./qna_create?cate_no=${categoryVO.cate_no}|}">등록</a>
+    <span class="menu_devide">│</span>
+    <!-- 로그인 기능 미완성
+    <span th:if="${session.grade == 'admin'}">
+      <a th:href="@{|qcontents/qna_create?cate_no=${categoryVO.cate_no}|}">등록</a>
+      <span class="menu_devide">│</span>
+    </span>
+    -->
+    
+    <a th:href="@{|./list_by_qna_search?cate_no=${categoryVO.cate_no}|}">목록</a>
+    <span class='menu_divide' >│</span>
+   
+    <a href="javascript:location.reload();">새로고침</a>
+  </aside> 
+
+  <!-- /qcontents/list_search_component.html 파일의 list_search_fragment import -->
+  <div th:replace="~{qcontents/list_search_component::list_search_fragment}"></div>
+     
+  <div class='menu_line'></div>
+       
+  <div style='width: 100%;'> <!-- 목록 Layout  시작 -->
+    <form name='frm' method='POST' action='/qcontents/qna_create' enctype="multipart/form-data" class="form-horizontal">
+        <!-- FK 지정 -->
+        <input type='hidden' name='cate_no' th:value="${categoryVO.cate_no}">
+        <!-- <input type='hidden' name='qcon_no' th:value="${qna_contentsVO.qcon_no}"> -->
+        
+        <table class="table table-striped" style='width: 100%;'>
+          <colgroup>
+            <col style="width: 10%;">
+            <col style="width: 15%;">
+            <col style="width: 15%;">
+            <col style="width: 15%;">
+            <col style="width: 15%;">        
+            <col style="width: 15%;">
+            <col style="width: 15%;">        
+          </colgroup>
+          <thead>
+            <tr>
+              <th style='text-align: center;'>NO</th>
+              <th style='text-align: center;'>파일</th>
+              <th style='text-align: center;'>원본<br>파일명</th>
+              <th style='text-align: center;'>저장<br>파일명</th>
+              <th style='text-align: center;'>Preview<br>파일명</th>
+              <th style='text-align: center;'>등록일</th>
+              <th style='text-align: center;'>기타</th>
+            </tr>
+          </thead>
+          
+          <tbody>
+            <forEach var="qna_contentsVO" items="${list}">
+              <set var="qcon_no" value="${qna_contentsVO.qcon_no }" />
+              <set var="file_origin_name" value="${qna_contentsVO.file_origin_name.toLowerCase() }" />
+              
+              <tr> 
+                <td style='vertical-align: middle; text-align: center;'>${qna_contentsVO.file_no}</td>
+                <td style='vertical-align: middle; text-align: center;'>
+                  <choose>
+                    <when test="${file_origin_name.endsWith('jpg') || file_origin_name.endsWith('png') || file_origin_name.endsWith('gif')}">
+                      <IMG src="./storage/${file_origin_name.file_thumb_name}"> 
+                    </when>
+                    <otherwise> <!-- 이미지가 아닌 일반 파일 -->
+                      ${qna_contentsVO.file_origin_name}
+                    </otherwise>
+                  </choose>
+                </td> 
+                <td style='text-align: center; vertical-align: middle;'>${qna_contentsVO.file_origin_name}</td>
+                <td style='text-align: center; vertical-align: middle;'>${qna_contentsVO.file_upload_name}</td>
+                <td style='text-align: center; vertical-align: middle;'>${qna_contentsVO.file_thumb_name}</td>
+                <td style='text-align: center; vertical-align: middle;'>${qna_contentsVO.file_date.substring(0, 10)}</td>
+                <td style='text-align: center; vertical-align: middle;'>
+                  <a href="./qna_delete_image?file_no=${qna_contentsVO.file_no}"><img src="./images/delete.png" title="삭제"  border='0' /></a>
+                </td>
+              </tr>
+            </forEach>
+            
+          </tbody>
+        </table>
+    </form>
+  </div>  <!-- 목록 Layout  종료 -->
+   
+  <!-- 페이지 버튼 목록 출력 시작 -->
+  <div class="bottom_menu" th:utext="${paging}"></div>
+  <!-- 페이지 버튼 목록 출력 종료 --> 
+
+</div>
+</html>
+
+
+
+
+
