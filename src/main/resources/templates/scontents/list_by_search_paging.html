@@ -22,7 +22,7 @@
 	<div class='menu_line'></div>
 	
 <div style="display: flex;">
-    <div th:each="hashtag, status:${list_hashtag}" th:attr="onclick=|location.href='/scontents/read_hashtag?tag_no=${hashtag.tag_no}'|" style="cursor: pointer; margin-right: 10px;">
+    <div th:each="hashtag, status:${list_hashtag}" th:attr="onclick=|location.href='/scontents/read_hashtag?cate_no=1&tag_no=${hashtag.tag_no}'|" style="cursor: pointer; margin-right: 10px;">
         <span style="font-weight: bold;" th:text="${hashtag.tag_name}"></span>
     </div>
 </div>
@@ -57,7 +57,7 @@
         </div>
     </td>
     <td>
-        <div class='td_basic' th:each="scontentsVO, status:${list}" th:attr="onclick=|location.href='/scontents/read?scon_no=${scontentsVO.scon_no}'|" style="cursor: pointer; margin-left: 30px;">
+        <div class='td_basic' th:each="scontentsVO, status:${list}" th:attr="onclick=|location.href='/scontents/read?cate_no=1&scon_no=${scontentsVO.scon_no}'|" style="cursor: pointer; margin-left: 30px;">
             <span style="font-size: 1em;" th:text="${scontentsVO.scon_views}"></span><br>
             <br>
             <span th:text="${scontentsVO.scon_title}" style="font-weight: bold;"></span><br>

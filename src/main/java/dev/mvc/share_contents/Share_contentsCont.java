@@ -444,8 +444,12 @@ public class Share_contentsCont {
   }
 
   @GetMapping("/read_hashtag")
-  public String read_hashtag(int tag_no, Model model, @RequestParam(name = "word", defaultValue = "") String word,
+  public String read_hashtag(int tag_no, Model model, @RequestParam(name = "word", defaultValue = "") String word,int cate_no,
       @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
+	  
+	    CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
+	    model.addAttribute("categoryVO", categoryVO);
+	    
     ArrayList<Contents_tagVO> sconno_list = this.sconProc.select_sconno(tag_no); // tag_no에 따른 scon_no
     int[] sconno = new int[sconno_list.size()];
 
@@ -453,6 +457,7 @@ public class Share_contentsCont {
       sconno[i] = sconno_list.get(i).getScon_no();
       // System.out.println("->read_hashtag: " + sconno[i]);
     }
+    
     ArrayList<Share_contentsVO> list = new ArrayList<>(); // scon_no에 따른 Share_contentsVO
     for (int i = 0; i < sconno_list.size(); i++) {
       list.addAll(this.sconProc.list_by_sconno(sconno[i])); //
@@ -483,7 +488,7 @@ public class Share_contentsCont {
 
     int search_count = this.sconProc.list_by_cateno_search_count(map);
     String paging = this.sconProc.pagingBox(now_page, word, "/scontents/list_by_search", search_count,
-        Contents.RECORD_PER_PAGE, Contents.PAGE_PER_BLOCK);
+        Contents.RECORD_PER_PAGE,cate_no, Contents.PAGE_PER_BLOCK);
 
     model.addAttribute("paging", paging);
     model.addAttribute("now_page", now_page);
@@ -509,6 +514,8 @@ public class Share_contentsCont {
     CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
     model.addAttribute("categoryVO", categoryVO);
     
+    System.out.println("-> categoryVO.cate_no :" +categoryVO.getCate_no());
+    
     ArrayList<HashtagVO> list_hashtag = this.sconProc.select_hashtag();
     model.addAttribute("list_hashtag", list_hashtag);
 
@@ -532,7 +539,7 @@ public class Share_contentsCont {
     
     int search_count = this.sconProc.list_by_cateno_search_count(map);
     String paging = this.sconProc.pagingBox(now_page, word, "/scontents/list_by_search", search_count,
-        Contents.RECORD_PER_PAGE, Contents.PAGE_PER_BLOCK);
+        Contents.RECORD_PER_PAGE,cate_no, Contents.PAGE_PER_BLOCK);
 
     model.addAttribute("paging", paging);
     model.addAttribute("now_page", now_page);
