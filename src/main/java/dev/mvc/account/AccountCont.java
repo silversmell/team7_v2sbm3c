@@ -199,7 +199,7 @@ public class AccountCont {
 	 */
 	@GetMapping(value = "/read")
 	public String read(Model model, int acc_no) { // 아직 세션 구현 X, HttpSession session
-
+		
 		AccountVO accountVO = this.accountProc.read(acc_no);
 		model.addAttribute("accountVO", accountVO);
 		
@@ -212,10 +212,17 @@ public class AccountCont {
 		model.addAttribute("tag_codes", tag_codes);
 		
 		/* 회원가입 시 선택한 해시태그들 */
-		String[] selectedTags = this.accountProc.selectedTags(acc_no).split(",");
-		List<String> selected_tags = Arrays.asList(selectedTags);
-		model.addAttribute("selected_tags", selected_tags);
-
+		String selectedTagsStr = this.accountProc.selectedTags(acc_no);
+		List<String> selected_tags;
+		
+		if(selectedTagsStr != null) {
+			String[] selectedTags = selectedTagsStr.split(",");
+			selected_tags = Arrays.asList(selectedTags);
+		} else {
+			selected_tags = new ArrayList<>();	// 선택한 해시태그가 없을 경우 빈 리스트로 초기화
+		}
+	    model.addAttribute("selected_tags", selected_tags);
+	    
 		return "account/read";
 	}
 

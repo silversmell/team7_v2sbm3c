@@ -45,6 +45,20 @@ function checkName() {
 
 }
 
+/* 해시태그 체크 여부 확인 */
+function checkTag() {
+	let selected_hashtags = document.querySelectorAll('input[name="selected_hashtags"]:checked');
+	let hashtag_msg = document.getElementById("hashtag_msg");
+
+	if (selected_hashtags.length === 0) { // 선택된 해시태그가 없는 경우
+		hashtag_msg.innerHTML = "해시태그를 하나 이상 선택해 주세요.";
+		hashtag_msg.classList.add("span_warning");
+		return false; // 회원가입 진행 중지
+	}
+	hashtag_msg.classList.remove("span_warning");
+	return true; // 선택된 해시태그가 있는 경우 회원가입 진행
+}
+
 
 /* 회원 정보 수정 */
 function send() {
@@ -58,6 +72,11 @@ function send() {
 		acc_name.focus();
 
 		return false;
+	}
+	
+	// 해시태그 체크 여부 확인
+	if (!checkTag()) {	// 선택된 해시태그 없음
+		return false; // 회원가입 진행 중지
 	}
 
 	document.getElementById('update_frm').submit(); // required="required" 작동 안 됨
