@@ -106,10 +106,10 @@ public interface Qna_contentsDAOInter {
   
   /**
    * 질문글 이미지 조회
-   * @param qcon_no
+   * @param file_no
    * @return
    */
-  public ArrayList<Qna_imageVO> qna_read_image(int qcon_no);
+  public ArrayList<Qna_imageVO> qna_read_image(int file_no);
   
   /**
    * 질문글 이미지 수정

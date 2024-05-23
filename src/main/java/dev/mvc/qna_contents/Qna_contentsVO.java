@@ -12,32 +12,17 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
-//CREATE TABLE QNA_CONTENTS(
-//    QCON_NO NUMBER(10) NOT NULL PRIMARY KEY,
-//    CATE_NO NUMBER(10),     -- FK
-//    ACC_NO NUMBER(10),      -- FK
-//    QCON_NAME VARCHAR2(100) NOT NULL,
-//    QCON_CONTENTS VARCHAR2(3000),
-//    QCON_VIEWS NUMBER(7) DEFAULT 0 NOT NULL,
-//    QCON_BOOKMARK NUMBER(7) DEFAULT 0 NOT NULL,
-//    QCON_COMMENT NUMBER(7) DEFAULT 0 NOT NULL,
-//    QCON_DATE DATE NOT NULL,
-//        WORD VARCHAR2(30)             NULL,
-//  FOREIGN KEY (CATE_NO) REFERENCES CATEGORY (CATE_NO),
-//  FOREIGN KEY (ACC_NO) REFERENCES ACCOUNT (ACC_NO)
-//);
-
 @Getter @Setter @ToString
 public class Qna_contentsVO {
 
   /** 질문 게시글 번호 */
-  private int qcon_no;
+  private Integer qcon_no;
   
   /** 카테고리 번호 */
-  private int cate_no;
+  private Integer cate_no;
   
   /** 회원 번호 */
-  private int acc_no;
+  private Integer acc_no;
   
   /** 질문 게시글 제목 */
   @NotEmpty(message="질문게시글 제목은 필수입력 항목입니다.")
@@ -72,14 +57,11 @@ public class Qna_contentsVO {
   /** 비밀번호 */
   private String qcon_passwd="";
   
-  
-  /** Form의 파일을 MultipartFile로 변환하여 List에 저장  */
+  /** Form의 파일을 MultipartFile로 변환하여 List에 저장 */
   private List<MultipartFile> fnamesMF;
-  
-  // private MultipartFile fnamesMF;  // 하나의 파일 처리
+
   /** 파일 단위 출력 */
   private String flabel;
   
   private MultipartFile file1MF = null;
-
 }

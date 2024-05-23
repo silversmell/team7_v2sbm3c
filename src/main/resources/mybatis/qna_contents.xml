@@ -21,6 +21,17 @@
     VALUES(#{qcon_no}, #{cate_no}, 1, #{qcon_name}, #{qcon_contents}, #{qcon_views}, #{qcon_bookmark}, #{qcon_comment}, sysdate, #{word}, #{qcon_passwd})
   </insert>
   
+  <!-- 첨부 파일 등록 -->
+  <insert id="qna_attach_create" parameterType="dev.mvc.qna_contents.Qna_imageVO">
+    <selectKey keyProperty="file_no" resultType="int" order="BEFORE">
+      SELECT qna_image_seq.nextval FROM dual
+    </selectKey>
+    
+    INSERT INTO QNA_IMAGE(file_no, qcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date)
+    VALUES(#{file_no}, #{qcon_no}, #{file_origin_name}, #{file_upload_name}, #{file_thumb_name}, #{file_size}, sysdate)
+  </insert>
+  
+  
   <!-- 댓글 등록 -->
   <insert id="qna_create_comment" parameterType="HashMap">
     INSERT INTO QNA_COMMENT(qcmt_no, acc_no, qcon_no, qcmt_contents, qcmt_date)
@@ -76,7 +87,7 @@
     ORDER BY qcon_no DESC, file_no ASC
   </select>
   
-  <!-- 이미지 수 -->
+  <!-- 이미지 수정 -->
   <select id="qna_search_count_image" resultType="int" parameterType="int">
     SELECT file_no, qcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date
     FROM qna_image
@@ -95,7 +106,7 @@
   <select id="qna_read_image">
     SELECT file_no, qcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date
     FROM qna_image
-    WHERE qcon_no=#{qcon_no}
+    WHERE file_no=#{file_no}
   </select>
 
   <!-- 카테고리별 검색 목록 -->
@@ -199,12 +210,6 @@
     DELETE FROM qna_contents
     WHERE qcon_no=#{qcon_no}
   </delete>
-  
-  <!-- 첨부 파일 등록 -->
-  <insert id="qna_attach_create" parameterType="dev.mvc.qna_contents.Qna_imageVO">
-    INSERT INTO QNA_IMAGE_SEQ(file_no, qcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date)
-    VALUES(qna_image_seq.nextval, #{qcon_no}, #{file_origin_name}, #{file_upload_name}, #{file_thumb_name}, #{file_size}, sysdate)
-  </insert>
   
   <!-- FK cate_no 컬럼에 대응하는 필수 SQL -->
   <!-- 특정 카테고리에 속한 레코드 갯수를 리턴 -->
