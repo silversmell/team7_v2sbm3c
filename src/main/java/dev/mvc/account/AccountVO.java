@@ -45,6 +45,8 @@ public class AccountVO {
 	
 	/** 업로드 이미지 파일 */
 	private MultipartFile acc_img_mf = null;
+	/** 메인 이미지 크기 단위, 파일 크기 */
+	private String img_size_label = "";
 	/** 프로필 사진 */
 	private String acc_img = "";
 	/** 저장된 프로필 사진 */

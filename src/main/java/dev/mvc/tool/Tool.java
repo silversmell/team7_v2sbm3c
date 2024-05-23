@@ -154,7 +154,7 @@ public class Tool {
         } else if (height == RATIO) {
           double ratio = ((double) destWidth) / ((double) srcWidth);
           destHeight = (int) ((double) srcHeight * ratio);
-        }
+        } 
  
         // 메모리에 대상 이미지 생성
         Image imgTarget = srcImg.getScaledInstance(destWidth, destHeight,
