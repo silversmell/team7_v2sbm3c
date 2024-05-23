@@ -77,6 +77,12 @@ public class AccountProc implements AccountProcInter {
 		int cnt = this.accountDAO.update(accountVO);
 		return cnt;
 	}
+	
+	@Override
+	public int updatePic(AccountVO accountVO) {
+		int cnt = this.accountDAO.updatePic(accountVO);
+		return cnt;
+	}
 
 	@Override
 	public int deleteRecommend(int acc_no) {
@@ -89,6 +95,7 @@ public class AccountProc implements AccountProcInter {
 		int cnt = this.accountDAO.delete(acc_no);
 		return cnt;
 	}
+
 
 
 	

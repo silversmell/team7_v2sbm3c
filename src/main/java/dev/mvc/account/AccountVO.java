@@ -1,5 +1,7 @@
 package dev.mvc.account;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -40,6 +42,9 @@ public class AccountVO {
 	private String acc_date = "";
 	/** 회원 등급 */
 	private int acc_grade = 0;
+	
+	/** 업로드 이미지 파일 */
+	private MultipartFile acc_img_mf = null;
 	/** 프로필 사진 */
 	private String acc_img = "";
 	/** 저장된 프로필 사진 */
@@ -47,6 +52,6 @@ public class AccountVO {
 	/** 프로필 사진 THUMB */
 	private String acc_thumb_img = "";
 	/** 프로필 사진 크기 */
-	private int acc_img_size = 0;
+	private long acc_img_size = 0;
 	
 }

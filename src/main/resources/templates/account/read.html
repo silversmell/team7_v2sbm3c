@@ -19,6 +19,22 @@
 
 
 	<div style="width: 60%; margin: 0px auto ">
+
+		<form name="pic_update_frm" id="pic_update_frm" th:object="${accountVO}" method="post" 
+			action="/account/updatePic" onsubmit="return checkImg()" enctype="multipart/form-data">
+			<input type="hidden" name="acc_no" th:value="${accountVO.acc_no}">
+			<div>
+				<span style="font-size: 18px;">프로필 사진</span> <!-- 업로드 방식으로 변경 예정 -->
+				<div style="width: 100%;">
+					<img src='/account/images/고먐미.jpeg' style="width: 20%;">
+				</div>
+				<input type="file" class="form-control" name="acc_img_mf" id="acc_img_mf" value="" placeholder="파일 선택">
+				<span id='acc_img_msg'></span>
+				<button type="submit" class="btn btn-secondary btn-sm">저장</button>
+			</div>
+		</form>
+
+
 		<form name="update_frm" id="update_frm" th:object="${accountVO}" method="post" action="/account/update">
 			<input type="hidden" name="acc_no" th:value="${accountVO.acc_no}">
 
@@ -28,10 +44,6 @@
 					acc_img, acc_saved_img, acc_thumb_img, acc_img_size
 					-->
 
-			<span style="font-size: 18px;">프로필 사진</span> <!-- 업로드 방식으로 변경 예정 -->
-			<div style="width: 100%;">
-				<img src='/account/images/고먐미.jpeg' style="width: 20%;">
-			</div>
 
 			<hr>
 
@@ -83,29 +95,29 @@
 			</div>
 
 			<hr>
-			
+
 			<!-- 해시태그 -->
 			<span style="font-size: 18px;">나의 취향</span>
 			<div class="form-group">
-			    <div class="hashtag-flex-container">
-			        <th:block th:each="tag_code : ${tag_codes}">
-			            <fieldset>
-			                <legend th:text="${tag_code}" style="color: lightgray;"></legend>
-			                <th:block th:each="hashtag : ${hashtag_list}">
-			                    <!-- tag_code가 현재 반복 중인 tag_code와 같은 경우에만 해당하는 해시태그를 출력 -->
-			                    <th:block th:if="${hashtag.tag_code == tag_code}">
-			                        <label class="hashtag-checkbox">
-			                            <!-- name 속성을 변경하여 선택된 체크박스들이 서버로 전송되도록 함 -->
-			                            <input type="checkbox" name="selected_hashtags" th:value="${hashtag.tag_no}"
-			                                   th:checked="${selected_tags.contains(hashtag.tag_name)}">
-			                            <span th:text="${hashtag.tag_name}"></span>
-			                        </label>
-			                    </th:block>
-			                </th:block>
-			            </fieldset>
-			        </th:block>
-			    </div>
-			</div>			
+				<div class="hashtag-flex-container">
+					<th:block th:each="tag_code : ${tag_codes}">
+						<fieldset>
+							<legend th:text="${tag_code}" style="color: lightgray;"></legend>
+							<th:block th:each="hashtag : ${hashtag_list}">
+								<!-- tag_code가 현재 반복 중인 tag_code와 같은 경우에만 해당하는 해시태그를 출력 -->
+								<th:block th:if="${hashtag.tag_code == tag_code}">
+									<label class="hashtag-checkbox">
+										<!-- name 속성을 변경하여 선택된 체크박스들이 서버로 전송되도록 함 -->
+										<input type="checkbox" name="selected_hashtags" th:value="${hashtag.tag_no}"
+											th:checked="${selected_tags.contains(hashtag.tag_name)}">
+										<span th:text="${hashtag.tag_name}"></span>
+									</label>
+								</th:block>
+							</th:block>
+						</fieldset>
+					</th:block>
+				</div>
+			</div>
 			<span id="hashtag_msg"></span>
 
 
