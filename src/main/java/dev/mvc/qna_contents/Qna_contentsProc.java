@@ -101,7 +101,7 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
   }
 
   @Override
-  public String pagingBox(int cateno, int now_page, String word, String list_file, int search_count, int record_per_page, int page_per_block) {
+  public String pagingBox(int cate_no, int now_page, String word, String list_file, int search_count, int record_per_page, int page_per_block) {
  // 전체 페이지 수: (double)1/10 -> 0.1 -> 1 페이지, (double)12/10 -> 1.2 페이지 -> 2 페이지
     int total_page = (int) (Math.ceil((double) search_count / record_per_page));
     // 전체 그룹 수: (double)1/10 -> 0.1 -> 1 그룹, (double)12/10 -> 1.2 그룹-> 2 그룹
@@ -155,7 +155,7 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
     // 현재 3그룹일 경우: (3 - 1) * 10 = 2그룹의 마지막 페이지 20
     int _now_page = (now_grp - 1) * Contents.PAGE_PER_BLOCK;
     if (now_grp >= 2) { // 현재 그룹번호가 2이상이면 페이지수가 11페이지 이상임으로 이전 그룹으로 갈수 있는 링크 생성
-      str.append("<span class='span_box_1'><A href='" + list_file + "?cateno=" + cateno + "&word=" + word + "&now_page=" + _now_page
+      str.append("<span class='span_box_1'><A href='" + list_file + "?cate_no=" + cate_no + "&word=" + word + "&now_page=" + _now_page
           + "'>이전</A></span>");
     }
 
@@ -169,7 +169,7 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
         str.append("<span class='span_box_2'>" + i + "</span>"); // 현재 페이지, 강조
       } else {
         // 현재 페이지가 아닌 페이지는 이동이 가능하도록 링크를 설정
-        str.append("<span class='span_box_1'><A href='" + list_file + "?cateno=" + cateno + "&word=" + word + "&now_page=" + i + "'>" + i
+        str.append("<span class='span_box_1'><A href='" + list_file + "?cate_no=" + cate_no + "&word=" + word + "&now_page=" + i + "'>" + i
             + "</A></span>");
       }
     }
@@ -228,8 +228,8 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
   }
 
   @Override
-  public ArrayList<Qna_imageVO> qna_read_image(int qcon_no) {
-    ArrayList<Qna_imageVO> list = this.qna_read_image(qcon_no);
+  public ArrayList<Qna_imageVO> qna_read_image(int file_no) {
+    ArrayList<Qna_imageVO> list = this.qna_read_image(file_no);
     
     return list;
   }
