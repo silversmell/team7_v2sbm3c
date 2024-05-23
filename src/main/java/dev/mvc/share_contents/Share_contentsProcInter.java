@@ -324,6 +324,13 @@ public interface Share_contentsProcInter {
 	  */
 	 public int tag_count(int tag_no);
 	 
+   /**
+    * 게시글 해시태그에 따른 목록 페이징
+    * @param map
+    * @return
+    */
+   public ArrayList contents_tag_search_paging(HashMap<String,Object> map);
+	 
 
 
 	 

@@ -99,6 +99,7 @@ public interface Share_contentsDAOInter {
     */
 	 public int list_by_cateno_search_count(HashMap<String,Object> map);
 	 
+
 	 /**
 	  * 각 게시글의 댓글 개수
 	  * @param scon_no
@@ -304,6 +305,13 @@ public interface Share_contentsDAOInter {
 	  * @return
 	  */
 	 public int tag_count(int tag_no);
+	 
+   /**
+    * 게시글 해시태그에 따른 목록 페이징
+    * @param map
+    * @return
+    */
+   public ArrayList contents_tag_search_paging(HashMap<String,Object> map);
 
 //	 /**
 //	  * 우선순위 올림

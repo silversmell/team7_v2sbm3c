@@ -347,6 +347,26 @@
 		from contents_tag
 		where tag_no=#{tag_no}
 	</select>
+	
+	 <!-- 카테고리별 검색 + 페이징 목록 -->
+  <select id="contents_tag_search_paging"
+    resultType="dev.mvc.share_contentsdto.Contents_tagVO"
+    parameterType="HashMap">
+      select scon_no,tag_no,contents_tag_no,r
+      FROM(
+      select scon_no,tag_no,contents_tag_no,rownum as r
+      from (
+      select scon_no,tag_no,contents_tag_no
+      from contents_tag
+      where tag_no=#{tag_no}
+      ORDER BY scon_no DESC
+      )
+      )
+      WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>
+
+    <!-- 1 page: WHERE r >= 1 AND r <= 10; 2 page: WHERE r >= 11 AND r <= 20; 
+      3 page: WHERE r >= 21 AND r <= 30; -->
+  </select>
 </mapper>
 
 

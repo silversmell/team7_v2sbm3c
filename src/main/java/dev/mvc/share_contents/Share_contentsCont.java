@@ -537,8 +537,28 @@ public class Share_contentsCont {
 		model.addAttribute("categoryVO", categoryVO);
 
 		model.addAttribute("tag_no", tag_no);
+		
+		HashMap<String,Object> map1 = new HashMap<String,Object>();
+		map1.put("now_page",now_page);
+		//System.out.println("now_page 성공");
+    int begin_of_page = ((int) map1.get("now_page") - 1) * Contents.RECORD_PER_PAGE;
+    //System.out.println("begin_of_pate->" +begin_of_page);
 
-		ArrayList<Contents_tagVO> sconno_list = this.sconProc.select_sconno(tag_no); // tag_no에 따른 scon_no
+    int start_num = begin_of_page + 1;
+
+
+    int end_num = begin_of_page + Contents.RECORD_PER_PAGE;
+
+
+     System.out.println("begin_of_page: " + begin_of_page);
+     System.out.println("WHERE r >= "+start_num+" AND r <= " + end_num);
+
+    map1.put("start_num", start_num);
+    map1.put("end_num", end_num);
+		
+		map1.put("tag_no", tag_no);
+		ArrayList<Contents_tagVO> sconno_list = this.sconProc.contents_tag_search_paging(map1); // tag_no에 따른 scon_no
+		
 		int[] sconno = new int[sconno_list.size()];
 
 		for (int i = 0; i < sconno.length; i++) {
@@ -571,14 +591,15 @@ public class Share_contentsCont {
 		int count = this.sconProc.tag_count(tag_no);
 		model.addAttribute("count", count);
 
-		ArrayList<Contents_tagVO> tag_sconno = this.sconProc.select_sconno(tag_no);
+		//ArrayList<Contents_tagVO> tag_sconno = this.sconProc.select_sconno(tag_no);
 
 		System.out.println();
 		ArrayList<Share_imageVO> list_image = new ArrayList<>();
-		for (Contents_tagVO scon : tag_sconno) { //조회시 대표사진 하나만 나오게
+		for (Contents_tagVO scon : sconno_list) { //조회시 대표사진 하나만 나오게
 			ArrayList<Share_imageVO> distinct_image = this.sconProc.read_image(scon.getScon_no());
 			list_image.add(distinct_image.get(0)); // 첫번째 것
 		}
+		
 		model.addAttribute("list_image", list_image);
 		//int search_count = this.sconProc.list_by_cateno_search_count(map);
 		String url ="/scontents/read_hashtag/"+tag_no; 

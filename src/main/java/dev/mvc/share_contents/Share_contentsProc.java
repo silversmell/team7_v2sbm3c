@@ -107,15 +107,24 @@ public class Share_contentsProc implements Share_contentsProcInter {
 		 * r >= 21 AND r <= 30
 		 */
 
-		// System.out.println("begin_of_page: " + begin_of_page);
-		// System.out.println("WHERE r >= "+start_num+" AND r <= " + end_num);
+		 System.out.println("begin_of_page: " + begin_of_page);
+		 System.out.println("WHERE r >= "+start_num+" AND r <= " + end_num);
 
 		map.put("start_num", start_num);
 		map.put("end_num", end_num);
 
 		ArrayList<Share_contentsVO> list = this.scontentsDAO.list_by_contents_search_paging(map);
+		
 		return list;
 	}
+	
+  @Override
+  public ArrayList contents_tag_search_paging(HashMap<String, Object> map) {
+
+    ArrayList<Contents_tagVO> list = this.scontentsDAO.contents_tag_search_paging(map);
+    return list;
+    
+  }
 
 	@Override
 	public String pagingBox(int now_page, String word, String list_file, int search_count, int record_per_page,
@@ -404,5 +413,7 @@ public class Share_contentsProc implements Share_contentsProcInter {
 		int cnt = this.scontentsDAO.tag_count(tag_no);
 		return cnt;
 	}
+
+
 
 }
