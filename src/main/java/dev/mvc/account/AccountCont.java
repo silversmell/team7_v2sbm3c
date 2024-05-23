@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,11 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import dev.mvc.recommend.HashtagVO;
 import dev.mvc.recommend.RecommendVO;
-import dev.mvc.account.PicUpload;
 import dev.mvc.tool.Tool;
 import dev.mvc.tool.Upload;
 
@@ -202,6 +199,12 @@ public class AccountCont {
 	public String read(Model model, int acc_no) { // 아직 세션 구현 X, HttpSession session
 		
 		AccountVO accountVO = this.accountProc.read(acc_no);
+		
+		/* 프로필 사진 불러오기 */
+		long acc_img_size = accountVO.getAcc_img_size();
+		String img_size_label = Tool.unit(acc_img_size);
+		accountVO.setImg_size_label(img_size_label);
+		
 		model.addAttribute("accountVO", accountVO);
 		
 		/* 해시태그 폼 */
@@ -273,7 +276,9 @@ public class AccountCont {
 	@PostMapping(value="/updatePic")
 	public String updatePic(Model model, AccountVO accountVO, int acc_no) {
 		System.out.println("---> RequestParam acc_no: " + acc_no);
-		// <input type="file" class="form-control" name="acc_img_mf" id="acc_img_mf" value="" placeholder="파일 선택">
+		
+		/* <form name="pic_update_frm" id="pic_update_frm" th:object="${accountVO}" method="post" 
+				action="/account/updatePic" onsubmit="return checkImg()" enctype="multipart/form-data">*/
 
 		String acc_img = "";	// 원본 파일명
 		String acc_saved_img = "";	// 저장된 파일명
@@ -293,7 +298,7 @@ public class AccountCont {
 			if(Tool.isImage(acc_img) == true) {	// 업로드 가능한 이미지 파일인지 검사
 				/* 파일 저장 후 업로드된 파일명 리턴 */
 				acc_saved_img = Upload.saveFileSpring(mf, upDir);
-				acc_thumb_img = Tool.preview(upDir, acc_saved_img, 100, 100);
+				acc_thumb_img = Tool.preview(upDir, acc_saved_img, 500, 500);
 				
 				accountVO.setAcc_no(accountVO.getAcc_no());
 				System.out.println("---> accountVO.getAcc_no(): " + accountVO.getAcc_no());
@@ -301,19 +306,21 @@ public class AccountCont {
 				accountVO.setAcc_saved_img(acc_saved_img);	// 저장된 파일명(중복 파일명 처리)
 				accountVO.setAcc_thumb_img(acc_thumb_img);	// 미리보기 파일명
 				accountVO.setAcc_img_size(acc_img_size);	// 파일 크기
+				
+				// 저장된 파일 경로 로그 출력
+	            String fullSavedPath = upDir + acc_saved_img;
+	            System.out.println("---> Full saved img path: " + fullSavedPath);
 			} else {	// 이미지 파일 외 형식
 				model.addAttribute("code", "check_upload_file_fail");
 				model.addAttribute("cnt", 0);
 				return "/account/msg";
 			}
-		} else {	// 파일이 선택되지 않음
-			
 		}
 		
 		int cnt = this.accountProc.updatePic(accountVO);
 		System.out.println("---> updatePic cnt: " + cnt);
 		model.addAttribute("code", "file_upload_success");
-		model.addAttribute("cnt", cnt);
+		model.addAttribute("cnt", 2);
 		return "/account/msg";
 	}
 	
