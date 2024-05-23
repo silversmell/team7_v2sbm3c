@@ -529,8 +529,8 @@ public class Share_contentsCont {
 		return "redirect:/scontents/list_by_search";
 	}
 
-	@GetMapping("/read_hashtag")
-	public String read_hashtag(int tag_no, Model model, @RequestParam(name = "word", defaultValue = "") String word,
+	@GetMapping("/read_hashtag/{tag_no}")
+	public String read_hashtag(@PathVariable("tag_no") Integer tag_no, Model model, @RequestParam(name = "word", defaultValue = "") String word,
 			int cate_no, @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
 
 		CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
@@ -575,22 +575,24 @@ public class Share_contentsCont {
 
 		System.out.println();
 		ArrayList<Share_imageVO> list_image = new ArrayList<>();
-		for (Contents_tagVO scon : tag_sconno) {
+		for (Contents_tagVO scon : tag_sconno) { //조회시 대표사진 하나만 나오게
 			ArrayList<Share_imageVO> distinct_image = this.sconProc.read_image(scon.getScon_no());
 			list_image.add(distinct_image.get(0)); // 첫번째 것
 		}
 		model.addAttribute("list_image", list_image);
-		int search_count = this.sconProc.list_by_cateno_search_count(map);
-		String paging = this.sconProc.pagingBox(now_page, word, "/scontents/list_by_search", search_count,
+		//int search_count = this.sconProc.list_by_cateno_search_count(map);
+		String url ="/scontents/read_hashtag/"+tag_no; 
+		int tag_count = this.sconProc.tag_count(tag_no);
+		String paging = this.sconProc.pagingBox(now_page, word, url, tag_count,
 				Contents.RECORD_PER_PAGE, cate_no, Contents.PAGE_PER_BLOCK);
 
 		model.addAttribute("paging", paging);
 		model.addAttribute("now_page", now_page);
 
-		model.addAttribute("search_count", search_count);
+		model.addAttribute("search_count", tag_count);
 
 		// 일련 변호 생성: 레코드 갯수 - ((현재 페이지수 -1) * 페이지당 레코드 수)
-		int no = search_count - ((now_page - 1) * Contents.RECORD_PER_PAGE);
+		int no = tag_count - ((now_page - 1) * Contents.RECORD_PER_PAGE);
 		model.addAttribute("no", no);
 
 		return "scontents/list_by_search_paging";

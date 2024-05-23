@@ -23,7 +23,7 @@
 	<div class='menu_line'></div>
 	
 <div style="display: flex;">
-    <div th:each="hashtag, status:${list_hashtag}" th:attr="onclick=|location.href='/scontents/read_hashtag?cate_no=1&tag_no=${hashtag.tag_no}'|" style="cursor: pointer; margin-right: 10px;">
+    <div th:each="hashtag, status:${list_hashtag}" th:attr="onclick=|location.href='/scontents/read_hashtag/${hashtag.tag_no}?cate_no=1'|" style="cursor: pointer; margin-right: 10px;">
         <span style="font-weight: bold;" th:text="${hashtag.tag_name}"></span>
     </div>
 </div>
