@@ -84,6 +84,14 @@ public interface AccountDAOInter {
     public int update(AccountVO accountVO);
     
     /**
+     * 프로필 사진 업데이트
+     * 
+     * @param accountVO
+     * @return
+     */
+    public int updatePic(AccountVO accountVO);
+    
+    /**
      * 기존 추천 데이터(해시태그) 삭제
      * 
      * @param acc_no

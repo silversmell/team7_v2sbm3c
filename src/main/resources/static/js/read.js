@@ -1,5 +1,16 @@
 /* read.html 참조 */
 
+/* 이미지 선택 여부 확인 */
+function checkImg() {
+	let acc_img_mf = document.getElementById("acc_img_mf");
+	let acc_img_msg = document.getElementById("acc_img_msg");
+	if(acc_img_mf.files.length === 0) {
+		acc_img_msg.innerHTML = "사진을 선택해주세요.";
+		acc_img_msg.classList.add("span_warning");
+		
+		return false;
+	}
+}
 
 /* 이름(닉네임) 중복 확인 */
 function checkName() {
@@ -80,4 +91,25 @@ function send() {
 	}
 
 	document.getElementById('update_frm').submit(); // required="required" 작동 안 됨
-}    
+} 
+
+
+function send_pic() {
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   

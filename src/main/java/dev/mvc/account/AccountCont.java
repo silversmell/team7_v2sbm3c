@@ -23,6 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import dev.mvc.recommend.HashtagVO;
 import dev.mvc.recommend.RecommendVO;
+import dev.mvc.account.PicUpload;
 import dev.mvc.tool.Tool;
 import dev.mvc.tool.Upload;
 
@@ -156,7 +157,7 @@ public class AccountCont {
 	}
 
 	/**
-	 * 회원가입 메시지
+	 * 회원 가입 메시지
 	 * 
 	 * @param model
 	 * @param accountVO
@@ -267,6 +268,53 @@ public class AccountCont {
 		}
 
 		return "account/msg";
+	}
+	
+	@PostMapping(value="/updatePic")
+	public String updatePic(Model model, AccountVO accountVO, int acc_no) {
+		System.out.println("---> RequestParam acc_no: " + acc_no);
+		// <input type="file" class="form-control" name="acc_img_mf" id="acc_img_mf" value="" placeholder="파일 선택">
+
+		String acc_img = "";	// 원본 파일명
+		String acc_saved_img = "";	// 저장된 파일명
+		String acc_thumb_img = "";	// 미리보기 파일명
+		
+		String upDir = PicUpload.getUploadDir();
+		System.out.println("---> upDir: " + upDir);
+		
+		// 전송 파일이 없어도 MF 객체 생성
+		MultipartFile mf = accountVO.getAcc_img_mf();
+		
+		acc_img = mf.getOriginalFilename();	// 원본 파일명
+		System.out.println("---> acc_img(원본파일): " + acc_img);
+		
+		long acc_img_size = mf.getSize();	// 파일 크기
+		if(acc_img_size > 0) {	// 파일 크기 체크
+			if(Tool.isImage(acc_img) == true) {	// 업로드 가능한 이미지 파일인지 검사
+				/* 파일 저장 후 업로드된 파일명 리턴 */
+				acc_saved_img = Upload.saveFileSpring(mf, upDir);
+				acc_thumb_img = Tool.preview(upDir, acc_saved_img, 100, 100);
+				
+				accountVO.setAcc_no(accountVO.getAcc_no());
+				System.out.println("---> accountVO.getAcc_no(): " + accountVO.getAcc_no());
+				accountVO.setAcc_img(acc_img);	// 순수 원본 파일명
+				accountVO.setAcc_saved_img(acc_saved_img);	// 저장된 파일명(중복 파일명 처리)
+				accountVO.setAcc_thumb_img(acc_thumb_img);	// 미리보기 파일명
+				accountVO.setAcc_img_size(acc_img_size);	// 파일 크기
+			} else {	// 이미지 파일 외 형식
+				model.addAttribute("code", "check_upload_file_fail");
+				model.addAttribute("cnt", 0);
+				return "/account/msg";
+			}
+		} else {	// 파일이 선택되지 않음
+			
+		}
+		
+		int cnt = this.accountProc.updatePic(accountVO);
+		System.out.println("---> updatePic cnt: " + cnt);
+		model.addAttribute("code", "file_upload_success");
+		model.addAttribute("cnt", cnt);
+		return "/account/msg";
 	}
 	
 	/**
