@@ -56,7 +56,7 @@ public class Share_contentsCont {
 		return "scontents/list_all";
 	}
 
-	@GetMapping("/read")
+	@GetMapping("/read") //글 조회
 	public String read(Model model, int scon_no, int cate_no) {
 
 		// 카테고리 가져오기
@@ -141,37 +141,46 @@ public class Share_contentsCont {
 		ra.addAttribute("cate_no", cate_no);
 		return "redirect:/scontents/read?scon_no=" + scon_no;
 	}
-
-	@PostMapping("/create_comment")
-	public String create_comment(String scmt_comment, int scon_no, int acc_no, RedirectAttributes ra, int cate_no) {
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("scmt_comment", scmt_comment);
-		map.put("scon_no", scon_no);
-		map.put("acc_no", acc_no);
-
-		int cnt = this.sconProc.create_comment(map);
-		ra.addAttribute("scon_no", scon_no);
-		ra.addAttribute("cate_no", cate_no);
-
-		return "redirect:/scontents/read";
-
-	}
-
-//  @GetMapping("/create_comment")
-//  @ResponseBody
-//  public String create_comment_form(String scmt_comment, int scon_no, int acc_no) {
-//    HashMap<String, Object> map = new HashMap<String, Object>();
-//    map.put("scmt_comment", scmt_comment);
-//    map.put("scon_no", scon_no);
-//    map.put("acc_no", acc_no);
+	
+	
+//	@PostMapping("/create_comment")
+//	@ResponseBody
+//	public String create_comment(String scmt_comment, int scon_no, int acc_no, RedirectAttributes ra, int cate_no) {
+//		HashMap<String, Object> map = new HashMap<String, Object>();
+//		map.put("scmt_comment", scmt_comment);
+//		map.put("scon_no", scon_no);
+//		map.put("acc_no", acc_no);
 //
-//    int cnt = this.sconProc.create_comment(map);
+//		int cnt = this.sconProc.create_comment(map);
+//		ra.addAttribute("scon_no", scon_no);
+//		ra.addAttribute("cate_no", cate_no);
 //
-//    JSONObject obj = new JSONObject();
-//    obj.put("cnt", cnt);
+//		return "redirect:/scontents/read";
 //
-//    return obj.toString();
-//  }
+//	}
+
+  @GetMapping("/create_comment")
+  @ResponseBody
+  public String create_comment_form(String scmt_comment, int scon_no, int acc_no,int cate_no) {
+    HashMap<String, Object> map = new HashMap<String, Object>();
+    map.put("scmt_comment", scmt_comment);
+    map.put("scon_no", scon_no);
+    map.put("acc_no", acc_no);
+    
+    
+    int cnt = this.sconProc.create_comment(map);
+    ArrayList<Share_commentsVO> list = this.sconProc.read_comment(scon_no);
+    Share_commentsVO comment = list.get(list.size()-1);
+    JSONObject obj = new JSONObject();
+    obj.put("cnt", cnt);
+    obj.put("scmt_comment", scmt_comment);
+    obj.put("scmt_date", comment.getScmt_date());
+    obj.put("scmt_no", comment.getScmt_no());
+    obj.put("acc_no", comment.getacc_no());
+    obj.put("cate_no", cate_no);
+
+    return obj.toString();
+  }
 
 	@GetMapping("/update_comment/{scmt_no}")
 	public String update_comment_form(Model model, @PathVariable("scmt_no") Integer scmt_no, int cate_no) {
@@ -205,6 +214,8 @@ public class Share_contentsCont {
 
 	@PostMapping("/delete_comment")
 	public String delete_comment(int scmt_no, RedirectAttributes ra, int cate_no) {
+	  System.out.println("-> scmt_no :" + scmt_no);
+	  System.out.println("->cate_no:" +cate_no);
 		int scon_no = this.sconProc.scon_comment(scmt_no);
 		int cnt = this.sconProc.delete_scmtno(scmt_no);
 		if (cnt == 1) {
