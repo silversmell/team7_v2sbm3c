@@ -368,6 +368,14 @@
     <!-- 1 page: WHERE r >= 1 AND r <= 10; 2 page: WHERE r >= 11 AND r <= 20; 
       3 page: WHERE r >= 21 AND r <= 30; -->
   </select>
+  <!-- scon_no에 따른 선택삭제 -->
+<delete id="delete_sconno" parameterType="list">
+    DELETE FROM share_contents
+    WHERE scon_no IN 
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+        #{item}
+    </foreach>
+</delete>
 </mapper>
 
 

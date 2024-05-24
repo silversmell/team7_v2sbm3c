@@ -2,6 +2,7 @@ package dev.mvc.share_contents;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -414,6 +415,9 @@ public class Share_contentsProc implements Share_contentsProcInter {
 		return cnt;
 	}
 
-
-
+  @Override
+  public int delete_sconno(List<Integer> scon_no) {
+    int cnt = this.scontentsDAO.delete_sconno(scon_no);
+    return cnt;
+  }
 }

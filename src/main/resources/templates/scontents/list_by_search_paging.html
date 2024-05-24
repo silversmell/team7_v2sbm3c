@@ -2,7 +2,36 @@
 <html layout:decorate="~{layout}">
 <!-- layout.html 상속-->
 <div layout:fragment="content">
-
+  <script>
+    function select_delete(){
+     let checkboxes = document.querySelectorAll('input[name="scon_no"]:checked');
+     let sconnos=[];
+     checkboxes.forEach((checkboxes) =>{
+       sconnos.push(checkboxes.value);
+     });
+     let querystring = sconnos.map(sconno=>`scon_no=${sconno}`).join('&');
+     let url = `./select_delete?${querystring}`;
+     console.log(url);
+     
+     fetch(url,{
+       method:'GET',
+     })
+     .then(response => response.json())
+     .then(rdata =>{
+       if(rdata.cnt>0){
+         console.log('삭제성공');
+         window.location.reload();
+     }
+       else { 
+       console.log('삭제 실패');
+       }
+    })
+     .catch(error => {
+       console.error('Error.' ,error);
+     })
+   }
+    
+  </script>
 	<div class='title_line'>
 		<span th:if="${word != ''}" th:text="|> ${word} (${search_count} 건)|"
 			class="title_line_text"></span>
@@ -36,6 +65,7 @@
 		
 
     <thead>
+      <button type="button" onclick="select_delete()" class="btn btn-secondary btn-sm">선택삭제</button>
         <tr>
             <th class="th_bs">파일</th>
             <th class="th_bs">제목</th>
@@ -58,16 +88,19 @@
         </div>
     </td>
     <td>
-        <div class='td_basic' th:each="scontentsVO, status:${list}" th:attr="onclick=|location.href='/scontents/read?cate_no=1&scon_no=${scontentsVO.scon_no}'|" style="cursor: pointer; margin-left: 30px;">
-            <span style="font-size: 1em;" th:text="${scontentsVO.scon_views}"></span><br>
-            <br>
-            <span th:text="${scontentsVO.scon_title}" style="font-weight: bold;"></span><br>
-            <span th:if="${scontentsVO.scon_contents.length() > 160 }" th:text="|${scontentsVO.scon_contents.substring(0, 160)}...|"></span>
-            <span th:if="${scontentsVO.scon_contents.length() <= 160 }" th:text="|${scontentsVO.scon_contents}|"></span>
-        </div>
+<div th:each="scontentsVO, status:${list}" style="cursor: pointer; margin-left: 30px;">
+    <div class='td_basic' th:attr="onclick=|location.href='/scontents/read?cate_no=1&scon_no=${scontentsVO.scon_no}'|" style="cursor: pointer;">
+        <span style="font-size: 1em;" th:text="${scontentsVO.scon_views}"></span><br>
+        <br>
+        <span th:text="${scontentsVO.scon_title}" style="font-weight: bold;"></span><br>
+        <span th:if="${scontentsVO.scon_contents.length() > 160 }" th:text="|${scontentsVO.scon_contents.substring(0, 160)}...|"></span>
+        <span th:if="${scontentsVO.scon_contents.length() <= 160 }" th:text="|${scontentsVO.scon_contents}|"></span>
+    </div>
+    <input type="checkbox" th:id="'scon_no_' + ${scontentsVO.scon_no}" name="scon_no" th:value="${scontentsVO.scon_no}">
+</div>
+
     </td>
 </tr>
-
 
         <!-- 리스트가 비어있을 때 -->
         <tr th:if="${list_image.size() == 0}">

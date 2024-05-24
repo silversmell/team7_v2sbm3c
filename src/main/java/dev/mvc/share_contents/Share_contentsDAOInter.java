@@ -2,6 +2,7 @@ package dev.mvc.share_contents;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import dev.mvc.recommend.HashtagVO;
 import dev.mvc.share_contentsdto.Contents_tagVO;
@@ -312,6 +313,13 @@ public interface Share_contentsDAOInter {
     * @return
     */
    public ArrayList contents_tag_search_paging(HashMap<String,Object> map);
+   
+   /**
+    * scon_no에 따른 선택 삭제
+    * @param scon_no
+    * @return int
+    */
+   public int delete_sconno(List<Integer> scon_no);
 
 //	 /**
 //	  * 우선순위 올림

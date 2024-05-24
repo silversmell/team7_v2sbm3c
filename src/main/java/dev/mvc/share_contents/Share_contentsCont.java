@@ -224,6 +224,20 @@ public class Share_contentsCont {
 		ra.addAttribute("scon_no", scon_no);
 		return "redirect:/scontents/read";
 	}
+	
+	@GetMapping("/select_delete")
+	@ResponseBody
+	public String select_delete(@RequestParam(value = "scon_no") List<Integer> scon_no) {
+	  System.out.println("-> select_delete scon_no:" +scon_no);
+	  int cnt = this.sconProc.delete_sconno(scon_no);
+	  if(cnt>0) {
+	    System.out.println("삭제 성공");
+	  }
+    JSONObject obj = new JSONObject();
+    obj.put("cnt", cnt);
+    
+    return obj.toString();
+	}
 
 	@GetMapping("/update_text") // 글 수정
 	public String update_text_form(Model model, int scon_no, int cate_no) {
