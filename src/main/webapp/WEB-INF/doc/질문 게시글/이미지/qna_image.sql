@@ -49,7 +49,7 @@ VALUES(qna_image_seq.nextval, 1, 'qna3.jpg', 'monitor.jpg', 'monitor.jpg_t', 100
 -- 특정 이미지 조회
 SELECT file_no, qcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date
 FROM qna_image
-WHERE file_no=1;
+WHERE qcon_no=1;
 
 -- 특정 이미지 변경
 UPDATE qna_image

@@ -228,8 +228,8 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
   }
 
   @Override
-  public ArrayList<Qna_imageVO> qna_read_image(int file_no) {
-    ArrayList<Qna_imageVO> list = this.qna_read_image(file_no);
+  public ArrayList<Qna_imageVO> qna_read_image(int qcon_no) {
+    ArrayList<Qna_imageVO> list = this. qna_contentsDAO.qna_read_image(qcon_no);
     
     return list;
   }

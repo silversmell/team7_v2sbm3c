@@ -106,10 +106,10 @@ public interface Qna_contentsProcInter {
   
   /**
    * qcon_no에 따른 질문글 이미지 조회
-   * @param file_no
+   * @param qcon_no
    * @return
    */
-  public ArrayList<Qna_imageVO> qna_read_image(int file_no);
+  public ArrayList<Qna_imageVO> qna_read_image(int qcon_no);
   
   /**
    * 질문글 이미지 수정

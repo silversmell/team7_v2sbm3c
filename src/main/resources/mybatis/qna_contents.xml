@@ -23,12 +23,8 @@
   
   <!-- 첨부 파일 등록 -->
   <insert id="qna_attach_create" parameterType="dev.mvc.qna_contents.Qna_imageVO">
-    <selectKey keyProperty="file_no" resultType="int" order="BEFORE">
-      SELECT qna_image_seq.nextval FROM dual
-    </selectKey>
-    
     INSERT INTO QNA_IMAGE(file_no, qcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date)
-    VALUES(#{file_no}, #{qcon_no}, #{file_origin_name}, #{file_upload_name}, #{file_thumb_name}, #{file_size}, sysdate)
+    VALUES(qna_image_seq.nextval, #{qcon_no}, #{file_origin_name}, #{file_upload_name}, #{file_thumb_name}, #{file_size}, sysdate)
   </insert>
   
   
@@ -106,7 +102,7 @@
   <select id="qna_read_image">
     SELECT file_no, qcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date
     FROM qna_image
-    WHERE file_no=#{file_no}
+    WHERE qcon_no=#{qcon_no}
   </select>
 
   <!-- 카테고리별 검색 목록 -->
