@@ -198,6 +198,13 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
     int cnt = this.qna_contentsDAO.qna_password_check(hashMap);
     return cnt;
   }
+  
+  @Override
+  public int update_qna_view(int qcon_no) {
+    int cnt = this.qna_contentsDAO.update_qna_view(qcon_no);
+    
+    return cnt;
+  }
 
   @Override
   public int qna_update_text(Qna_contentsVO qna_contentsVO) {

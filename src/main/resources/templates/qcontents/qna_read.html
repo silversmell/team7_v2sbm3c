@@ -3,7 +3,7 @@
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
 <div layout:fragment="content">
   <div class='title_line'>
-    <span th:text="${qna_contentsVO.qcon_.name }" class="title_line_text"></span > 
+    <span th:text="${qna_contentsVO.qcon_name }" class="title_line_text"></span > 
     > 글 조회
   </div>
   
@@ -16,10 +16,10 @@
     <span class='menu_divide' >│</span>
     <a th:href="@{|./qna_delete?qcon_no=${qna_contentsVO.qcon_no}&word=${word}&now_page=${now_page}&cate_no=${qna_contentsVO.cate_no}|}">삭제</a>  
     <span class='menu_divide' >│</span>
-
+    <a th:href="@{|./qna_list_all?cate_no=${categoryVO.cate_no}&word=${word}&now_page=${now_page}|}">목록</a>   
+    <span class='menu_divide' >│</span>
     <a href="javascript:location.reload();">새로고침</a>
-    <span class='menu_divide' >│</span>    
-    <a th:href="@{|./list_by_qna_search?cate_no=${categoryVO.cate_no }&word=${word}&now_page=${now_page}|}">목록</a>    
+ 
   </aside> <!-- 네비게이션 바 종료 -->
  
   <div class='menu_line'></div>
@@ -35,6 +35,10 @@
 
           <span style="font-size: 1.5em; font-weight: bold;" th:text="${qna_contentsVO.qcon_name}"></span>
           <span style="font-size: 1em;" th:text="${qna_contentsVO.qcon_date}"></span><br><br>
+          <span style="font-size: 1em;" th:text="|조회수: ${qna_contentsVO.qcon_views}|"></span><br><br>
+          
+          <input type="hidden" name="cate_no" th:value="${categoryVO.cate_no}"> <!-- cate_no 데이터 값 가져옴 -->
+          <input type="hidden"name="qcon_no" th:value="${qna_contentsVO.qcon_no}"> <!-- qcon_no 데이터 값 가져옴 -->
           <div style="white-space: pre-wrap;"><span th:text="${qna_contentsVO.qcon_contents}"></span></div>
         </div>
       </li>

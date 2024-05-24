@@ -108,6 +108,9 @@ public class Qna_contentsCont {
     
     // 질문글 등록 성공 여부 확인
     if (cnt == 1) { // 질문글 등록 성공
+      System.out.println("등록 성공");
+      System.out.println("-> cate_no: " + qna_contentsVO.getCate_no());
+      this.categoryProc.cnt_plus(qna_contentsVO.getCate_no()); // 관련 글 수 증가
       
       // 새로 등록된 질문글 번호 가져오기
       int qcon_no = qna_contentsVO.getQcon_no();
@@ -230,6 +233,34 @@ public class Qna_contentsCont {
     model.addAttribute("no", no);
     
     return "qcontents/list_by_qna_search_paging"; // /templates/qcontents/list_by_qna_search_paging.html
+  }
+  
+  /**
+   * 질문글 조회
+   * http://localhost:9093/qcontents/qna_read?cate_no=2
+   * @param model
+   * @param cate_no
+   * @param qcon_no
+   * @return
+   */
+  @GetMapping(value="qna_read")
+  public String qna_read(Model model, int cate_no, int qcon_no) {
+   
+    // 카테고리 가져오기
+    CategoryVO categoryVO = this.categoryProc.cate_read(cate_no); // 카테고리 읽어옴
+    model.addAttribute("categoryVO", categoryVO);
+    
+    int view = this.qna_contentsProc.update_qna_view(qcon_no); // 조회수 증가
+    
+    // 질문글 가져오기
+    Qna_contentsVO qna_contentsVO = this.qna_contentsProc.qna_read(qcon_no);
+    model.addAttribute("qna_contentsVO", qna_contentsVO);
+    
+    // 질문글 이미지 가져오기
+    ArrayList<Qna_imageVO> qna_imageVO = this.qna_contentsProc.qna_read_image(qcon_no);
+    model.addAttribute("qna_imageVO", qna_imageVO);
+    
+    return "qcontents/qna_read"; // /templates/qcontents/qna_read;
   }
 
 }
