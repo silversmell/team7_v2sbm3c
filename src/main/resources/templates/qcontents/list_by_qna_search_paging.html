@@ -36,18 +36,11 @@
            th:attr="onclick=|location.href='/qcontents/qna_read?qcon_no=${qna_contentsVO.qcon_no}&word=${word}&now_page=${now_page}'|"
            style="cursor: pointer; height: 90px;">
         <td class='td_basic' style="vertical-align: middle; text-align: center;">
-          <div th:each="file : ${qna_imageVO}">
-            <div th:if="${file != null}">
-              <div th:if="${file.file_origin_name != null and (file.file_origin_name.endsWith('jpg') or file.file_origin_name.endsWith('png') or file.file_origin_name.endsWith('gif'))}">
-                <img th:src="@{|/contents/storage/${file.file_thumb_name}|}" style="width: 120px; height: 90px;">
-              </div>
-              <div th:if="${file.file_origin_name != null and !file.file_origin_name.endsWith('jpg') and !file.file_origin_name.endsWith('png') and !file.file_origin_name.endsWith('gif') and file.file_size > 0}">
-                <span th:text="${file.file_origin_name}"></span>
-              </div>
-              <div th:if="${file.file_size == 0}">
-                <img src="/contents/images/none1.png" style="width: 120px; height: 90px;">
-              </div>
-            </div>
+          <div th:if="${#lists.size(qna_imageVO) > status.index and qna_imageVO[status.index] != null}">
+            <img th:src="@{|/contents/storage/${qna_imageVO[status.index].file_thumb_name}|}" style="width: 120px; height: 90px;">
+          </div>
+          <div th:unless="${#lists.size(qna_imageVO) > status.index and qna_imageVO[status.index] != null}">
+            <img src="/contents/images/none1.png" style="width: 120px; height: 90px;">
           </div>
         </td>
         <td class='td_left'>

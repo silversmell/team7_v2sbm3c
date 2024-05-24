@@ -185,7 +185,6 @@ public class Qna_contentsCont {
   @GetMapping(value="/qna_list_all")
   public String list_by_qna_search_paging(Model model, HttpSession session, int cate_no,
                                                     @RequestParam(name="word", defaultValue = "") String word,
-                                                    @RequestParam(name="file_no", defaultValue = "1") int file_no,
                                                     @RequestParam(name="now_page", defaultValue = "1") int now_page) {
     
     // 카테고리 가져오기
@@ -203,8 +202,18 @@ public class Qna_contentsCont {
     model.addAttribute("list", list);
     
     ArrayList<Qna_imageVO> qna_imageVO = this.qna_contentsProc.qna_list_all_image();
-    System.out.println("-> list_all_image: " + qna_imageVO);
-    model.addAttribute("qna_imageVO", qna_imageVO);
+    // 각 질문글에 대한 이미지 중 첫 번째 이미지만 선택
+    ArrayList<Qna_imageVO> filterImage = new ArrayList<>();
+    for (Qna_contentsVO qnaContents : list) {
+        int qconNo = qnaContents.getQcon_no();
+        for (Qna_imageVO image : qna_imageVO) {
+            if (image.getQcon_no() == qconNo) {
+                filterImage.add(image);
+                break; // 하나의 이미지만 추가하기 위해 반복문 탈출
+            }
+        }
+    }   
+    model.addAttribute("qna_imageVO", filterImage);
     
     model.addAttribute("word", word);
     
