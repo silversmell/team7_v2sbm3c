@@ -48,7 +48,7 @@ public class Share_contentsCont {
 	}
 
 	@GetMapping("/list_all")
-	public String list_all(Model model) {
+	public String list_all(Model model) { 
 		// System.out.println("list_all 생성");
 		ArrayList<Share_contentsVO> list = this.sconProc.list_all();
 		model.addAttribute("list", list);
@@ -57,7 +57,7 @@ public class Share_contentsCont {
 	}
 
 	@GetMapping("/read") //글 조회
-	public String read(Model model, int scon_no, int cate_no) {
+	public String read(Model model, int scon_no, int cate_no) { // acc_no 필요(session)
 
 		// 카테고리 가져오기
 		CategoryVO categoryVO = this.categoryProc.cate_read(cate_no); // 카테고리 읽어옴
@@ -143,44 +143,43 @@ public class Share_contentsCont {
 	}
 	
 	
-//	@PostMapping("/create_comment")
-//	@ResponseBody
-//	public String create_comment(String scmt_comment, int scon_no, int acc_no, RedirectAttributes ra, int cate_no) {
-//		HashMap<String, Object> map = new HashMap<String, Object>();
-//		map.put("scmt_comment", scmt_comment);
-//		map.put("scon_no", scon_no);
-//		map.put("acc_no", acc_no);
-//
-//		int cnt = this.sconProc.create_comment(map);
-//		ra.addAttribute("scon_no", scon_no);
-//		ra.addAttribute("cate_no", cate_no);
-//
-//		return "redirect:/scontents/read";
-//
-//	}
-
-  @GetMapping("/create_comment")
-  @ResponseBody
-  public String create_comment_form(String scmt_comment, int scon_no, int acc_no,int cate_no) {
+  @PostMapping("/create_comment")
+  public String create_comment(String scmt_comment, int scon_no, int acc_no, RedirectAttributes ra, int cate_no) {
     HashMap<String, Object> map = new HashMap<String, Object>();
     map.put("scmt_comment", scmt_comment);
     map.put("scon_no", scon_no);
     map.put("acc_no", acc_no);
-    
-    
-    int cnt = this.sconProc.create_comment(map);
-    ArrayList<Share_commentsVO> list = this.sconProc.read_comment(scon_no);
-    Share_commentsVO comment = list.get(list.size()-1);
-    JSONObject obj = new JSONObject();
-    obj.put("cnt", cnt);
-    obj.put("scmt_comment", scmt_comment);
-    obj.put("scmt_date", comment.getScmt_date());
-    obj.put("scmt_no", comment.getScmt_no());
-    obj.put("acc_no", comment.getacc_no());
-    obj.put("cate_no", cate_no);
 
-    return obj.toString();
+    int cnt = this.sconProc.create_comment(map);
+    ra.addAttribute("scon_no", scon_no);
+    ra.addAttribute("cate_no", cate_no);
+
+    return "redirect:/scontents/read";
+
   }
+
+//  @GetMapping("/create_comment")
+//  @ResponseBody
+//  public String create_comment_form(String scmt_comment, int scon_no, int acc_no,int cate_no) {
+//    HashMap<String, Object> map = new HashMap<String, Object>();
+//    map.put("scmt_comment", scmt_comment);
+//    map.put("scon_no", scon_no);
+//    map.put("acc_no", acc_no);
+//    
+//    
+//    int cnt = this.sconProc.create_comment(map);
+//    ArrayList<Share_commentsVO> list = this.sconProc.read_comment(scon_no);
+//    Share_commentsVO comment = list.get(list.size()-1);
+//    JSONObject obj = new JSONObject();
+//    obj.put("cnt", cnt);
+//    obj.put("scmt_comment", scmt_comment);
+//    obj.put("scmt_date", comment.getScmt_date());
+//    obj.put("scmt_no", comment.getScmt_no());
+//    obj.put("acc_no", comment.getacc_no());
+//    obj.put("cate_no", cate_no);
+//
+//    return obj.toString();
+//  }
 
 	@GetMapping("/update_comment/{scmt_no}")
 	public String update_comment_form(Model model, @PathVariable("scmt_no") Integer scmt_no, int cate_no) {
@@ -395,7 +394,7 @@ public class Share_contentsCont {
 		// 카테고리 가져오기
 		CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
 		model.addAttribute("categoryVO", categoryVO);
-
+		model.addAttribute("acc_no",1); //로그인 시에 session 들어올 것
 		ArrayList<HashtagVO> list = this.sconProc.select_hashtag();
 		System.out.println("-> tag_no :" + list.get(0).getTag_no());
 		model.addAttribute("list", list);
@@ -406,7 +405,7 @@ public class Share_contentsCont {
 	@PostMapping("/create")
 	public String create(Model model, Share_contentsVO scontentsVO, String url_link, RedirectAttributes ra,
 			List<MultipartFile> fnamesMF, @RequestParam("tag_no") int[] tag_no) {
-
+	  //System.out.println(" -> create acc_no :" +scontentsVO.getacc_no()); //로그인 시에 session 들어올 것
 		System.out.println("-> fnamesMF :" + fnamesMF);
 		String[] url_sub_link = { "1", "1", "1", "1", "1" };
 
@@ -679,5 +678,4 @@ public class Share_contentsCont {
 		return "scontents/list_by_search_paging";
 
 	}
-
 }

@@ -5,15 +5,6 @@
   
     <script>
     function comment_create() {
-      let today = new Date();
-      let year = today.getFullYear(); 
-      let month = today.getMonth() + 1; 
-      let date = today.getDate(); 
-      let hours = today.getHours(); 
-      let minutes = today.getMinutes(); 
-      let seconds = today.getSeconds(); 
-      
-      let formattedDate = year + '-' + month + '-' + date + ' ' + hours + ':' + minutes + ':' + seconds;
       let accno = document.getElementById("acc_no")
       let comment = document.getElementById("comment")
       let scon_no = document.getElementById("scon_no")
@@ -33,10 +24,10 @@
           let comments = '<div id="commentSection">';
           comments += '<td class="td_left">';
           comments += '<br><span id="scmt_date" style="font-size: 1em;">'+ rdata.scmt_date +'</span><br>';
-          comments  += '<input type="hidden" name="scmt_no" value=" ' +rdata.scmt_no +' "></span>';
-          comments +=  '<input type="hidden" style="font-size: 1em;" value=" ' +rdata.acc_no +' " ></span>';
-          comments += '<br><span id="scmt_comment" style="font-weight: bold;">' + rdata.scmt_comment + '</span><br>';
-          comments += '<div name="update_co" style="cursor: pointer;" onclick="location.href=\'./update_comment/' + rdata.scmt_no + '?cate_no=1\'">수정</div>';
+          comments  += '<input type="hidden" id ="scmt_no" name="scmt_no" value=" ' +rdata.scmt_no +' "></span>';
+          comments +=  '<input type="hidden" id="acc_no" style="font-size: 1em;" value=" ' +rdata.acc_no +' " ></span>';
+          comments += '<span id="scmt_comment" style="font-weight: bold;">' + rdata.scmt_comment + '</span><br>';
+          comments += ' <button type="button" onclick="update_comment(event)" class="btn btn-primary btn-sm"  style="cursor: pointer;">수정</button>';
           comments += '<form name="frm" method="post" action="/scontents/delete_comment">';
           comments += '<input type="hidden" name="scmt_no" value=" ' +rdata.scmt_no+ ' ">';
           comments += '<input type="hidden" name="cate_no" value=" ' +rdata.cate_no +' ">';
@@ -58,11 +49,13 @@
       
     }
     
-    function update_comment_form(){
-    	var text_areaform = document.getElementById("hidden_form");
-    	text_areaform.style.display = 'block';   
-    	let scmt_no = document.getElementById("scmt_no");
-    	console.log(scmt_no);
+    function update_comment(event){
+      console.log(event.target);
+      console.log($(event.target).closest('#commentSection'));
+      let scmt_comment=$(event.target).closest('#commentSection').find('#scmt_comment').text();
+      console.log(scmt_comment);
+      
+      
     }
     
     function cancel_update(){
@@ -70,18 +63,7 @@
     	text_areaform.style.display='none';
     }
     
-    function update_comment_submit(){
 
-    	let scon_no = document.getElementById("scon_no")
-    	console.log(scon_no.value);
-    	
-      let update_comment =document.getElementById("update_comment");
-      console.log(update_comment.value);
-      
-      let url = './create_comment?scmt_comment='+update_comment.value+'&scon_no='+scon_no.value;
-      
- 
-    }
   </script>
 
   <div class='title_line'>
@@ -182,41 +164,39 @@
     <div id="commentSection">
       <tr th:each="scommentVO, status:${list}">      
       <td class='td_left'>
-      	<span id="scmt_date" style="font-size: 1em;" th:text="${scommentVO.scmt_date}"></span><br>
-      	<input type="hidden"  name="scmt_no" th:value="${scommentVO.scmt_no}" ></span>
-     		<input type="hidden" style="font-size: 1em;" th:value="${acc_no}"></span>
+        <span id="scmt_date" style="font-size: 1em;" th:text="${scommentVO.scmt_date}"></span><br>
+        <input type="hidden"  name="scmt_no" th:value="${scommentVO.scmt_no}" ></span>
+        <input type="hidden" style="font-size: 1em;" th:value="${acc_no}"></span>
         <span id="scmt_comment" th:text="${scommentVO.scmt_comment}" style="font-weight: bold;"></span><br>
-        	<div name="update_co" style="cursor: pointer;" th:onclick="|location.href='./update_comment/${scommentVO.scmt_no}?cate_no=1'|">수정</div>
-        	
+          <div name="update_co" style="cursor: pointer;" th:onclick="|location.href='./update_comment/${scommentVO.scmt_no}?cate_no=1'|">수정</div>
+          
          <form name='frm' method='post'  th:action="@{|/scontents/delete_comment|}">
           <input type="hidden" name="scmt_no" th:value="${scommentVO.scmt_no}">
           <input type="hidden" name="cate_no" th:value="${categoryVO.cate_no}"> <!-- cate_no 데이터 값 가져옴 -->
           
          <button type="submit" name="delete_co" >삭제</button>
-     			</form>
+          </form>
       </td>
     </tr>
     </div>
     
   </fieldset>
   
-    <div id="commentsContainer"></div>
       <div>
-      <!--<form name='frm' method='post'  th:action="@{|/scontents/create_comment|}"> -->
+      <form name='frm' method='post'  th:action="@{|/scontents/create_comment|}">
        <label for="comment">댓글</label>
        <input type="text" id="acc_no" name="acc_no" th:value="${acc_no}">
-       <input type="hidden" id="cate_no" name="cate_no" th:value="${categoryVO.cate_no}"> <!-- cate_no 데이터 값 가져옴 -->
+       <input type="hidden" name="cate_no" th:value="${categoryVO.cate_no}"> <!-- cate_no 데이터 값 가져옴 -->
        <input type="hidden" id="scon_no" name="scon_no" th:value="${scontentsVO.scon_no}">
        <textarea name='scmt_comment' id="comment" required="required" value="" class="form-control" rows="5" style='width: 100%;'></textarea>
-             <button type='button' id="comment()" onclick="comment_create()" style="margin-top: 4px;">등록</button>
-       <!-- </form> -->
+             <button type='submit' style="margin-top: 4px;">등록</button>
+       </form>
        <!-- 
       <button type='button' onclick="submit_comment();" 
              class="btn btn-primary btn-sm" style="margin-top: 4px;">등록</button> -->
     </div>
 
 
-    	
     	<div id="hidden_form"  style="display:none;">
        <input type="hidden" id="scon_no" name="scon_no" th:value="${scontentsVO.scon_no}">
 			<textarea name='update_comment' id="update_comment" required="required" value="" class="form-control" rows="5" style='width: 100%;'></textarea>

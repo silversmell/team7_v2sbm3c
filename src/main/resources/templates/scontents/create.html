@@ -15,7 +15,6 @@
   
   <form name='frm' method='post' th:object="${scontentsVO}" action='./create' enctype="multipart/form-data">
   <input type="hidden" name="cate_no" th:value="${categoryVO.cate_no}"> <!-- cate_no 데이터 값 가져옴 -->
-  
     <div>
       <tr th:each="hashtag, status:${list}">      
       <td class='td_left'>
@@ -25,12 +24,13 @@
       </td>
     </tr>
     </div>
-
     <div>
        <label>제목</label>
        <input type='text' name='scon_title' value=' ' required="required" 
                  autofocus="autofocus" class="form-control" style='width: 100%;'>
     </div>
+           <input type='hidden' name='acc_no' th:value="${acc_no}" required="required" 
+                 autofocus="autofocus" class="form-control" style='width: 100%;'>
     <div>
        <label>내용</label>
        <textarea name='scon_contents' required="required" class="form-control" rows="12" style='width: 100%;'></textarea>
