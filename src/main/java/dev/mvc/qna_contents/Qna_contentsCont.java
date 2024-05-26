@@ -265,7 +265,35 @@ public class Qna_contentsCont {
     
     return "qcontents/qna_read"; // /templates/qcontents/qna_read;
   }
+  
+  @GetMapping(value="qna_update_text")
+  public String upqna_update_text(Model model, int cate_no, int qcon_no) {
+    
+    // 카테고리 가져오기
+    CategoryVO categoryVO = this.categoryProc.cate_read(cate_no); // 카테고리 읽어옴
+    model.addAttribute("categoryVO", categoryVO);
+    
+    // 질문글 가져오기
+    Qna_contentsVO qna_contentsVO = this.qna_contentsProc.qna_read(qcon_no);
+    model.addAttribute("qna_contentsVO", qna_contentsVO);
+    
+    return "qcontents/qna_update_text";
+  }
+  
+  @PostMapping(value="qna_update_text")
+  public String qna_update_text(Model model, RedirectAttributes ra, 
+                                        Qna_contentsVO qna_contentsVO,
+                                        int cate_no, int qcon_no) {
+    
+    int cnt = this.qna_contentsProc.qna_update_text(qna_contentsVO);
+    
+    HashMap<String, Object> map = new HashMap<>();
 
+    ra.addAttribute("cate_no", cate_no);
+    ra.addAttribute("qcon_no", qcon_no);
+    
+    return "redirect:/scontents/list_by_qna_search_paging";
+    }
 }
 
 
