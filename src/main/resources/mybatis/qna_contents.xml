@@ -91,11 +91,10 @@
   </select>
   
   <!-- 일반적인 조회 -->
-  <select id="qna_read" resultType="dev.mvc.qna_contents.Qna_contentsVO" parameterType="Integer">
+  <select id="qna_read" resultType="dev.mvc.qna_contents.Qna_contentsVO" parameterType="int">
     SELECT qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_comment, qcon_date, word, qcon_passwd
     FROM qna_contents
     WHERE qcon_no= #{qcon_no}
-    ORDER BY sysdate desc
   </select> 
   
   <!-- 이미지 조회 -->
@@ -177,7 +176,7 @@
   <!-- 조회수 증가 -->
   <select id="update_qna_view" parameterType="dev.mvc.qna_contents.Qna_contentsVO">
     UPDATE qna_contents
-    SET qna_views = qna_views+1
+    SET qcon_views = qcon_views+1
     WHERE qcon_no=#{qcon_no}
   </select>
   

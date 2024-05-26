@@ -1,61 +1,52 @@
-<!DOCTYPE html> 
-
-<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<!DOCTYPE html>
+<html layout:decorate="~{layout}">
 <div layout:fragment="content">
   <div class='title_line'>
-    <span th:text="${qna_contentsVO.qcon_name }" class="title_line_text"></span > 
-    > 글 조회
+    <span th:text="${qna_contentsVO.qcon_name}" class="title_line_text"></span> > 글 조회
   </div>
   
-  <aside class="aside_right"> <!-- 네비게이션 바 시작 -->
-    <a href="./qna_create?cate_no=${categoryVO.cate_no }">등록</a>
-    <span class='menu_divide' >│</span>
+  <aside class="aside_right">
+    <a th:href="@{|/qcontents/qna_create?cate_no=2|}">등록</a>
+    <span class='menu_divide'>│</span>
     <a th:href="@{|/qcontents/qna_update_text?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}&word=${word}|}">글 수정</a>
-    <span class='menu_divide' >│</span>
-    <a th:href="@{|./qna_update_file?qcon_no=${qna_contentsVO.qcon_no}&word=${word}&now_page=${now_page}|}">파일 수정</a>  
-    <span class='menu_divide' >│</span>
-    <a th:href="@{|./qna_delete?qcon_no=${qna_contentsVO.qcon_no}&word=${word}&now_page=${now_page}&cate_no=${qna_contentsVO.cate_no}|}">삭제</a>  
-    <span class='menu_divide' >│</span>
-    <a th:href="@{|./qna_list_all?cate_no=${categoryVO.cate_no}&word=${word}&now_page=${now_page}|}">목록</a>   
-    <span class='menu_divide' >│</span>
+    <span class='menu_divide'>│</span>
+    <a th:href="@{|/qcontents/qna_update_file?qcon_no=${qna_contentsVO.qcon_no}&word=${word}&now_page=${now_page}|}">파일 수정</a>  
+    <span class='menu_divide'>│</span>
+    <a th:href="@{|/qcontents/qna_delete?qcon_no=${qna_contentsVO.qcon_no}&word=${word}&now_page=${now_page}&cate_no=2|}">삭제</a>  
+    <span class='menu_divide'>│</span>
+    <a th:href="@{|/qcontents/qna_list_all?cate_no=2&word=${word}&now_page=${now_page}|}">목록</a>   
+    <span class='menu_divide'>│</span>
     <a href="javascript:location.reload();">새로고침</a>
- 
-  </aside> <!-- 네비게이션 바 종료 -->
+  </aside>
  
   <div class='menu_line'></div>
+  
+  <form action="/qcontents/qna_read" method="get">
+    <input type="hidden" name="cate_no" th:value="${categoryVO.cate_no}">
+    <input type="hidden" name="qcon_no" th:value="${qna_contentsVO.qcon_no}">
 
-  <fieldset class="fieldset_basic">
-    <ul>
-      <li class="li_none" th:text="|검색어(키워드): ${qna_contentsVO.word}|">
-        <div style="width: 100%; word-break: break-all;">
-        
-          <div th:if="${qna_imageVO.file_origin_name.endsWith('jpg') or qna_imageVO.file_origin_name.endsWith('png') or qna_imageVO.file_origin_name.endsWith('gif')}">
-            <img th:src="@{|/contents/storage/${qna_imageVO.file1saved}|}" style='width: 50%; float: left; margin-top: 0.5%; margin-right: 1%;'>
+    <fieldset class="fieldset_basic">
+      <ul>
+        <li class="li_none" th:text="|검색어(키워드): ${qna_contentsVO.word}|">
+          <div style="width: 100%; word-break: break-all;">
+            <div th:each="image : ${qna_imageVO}">
+              <div th:if="${image.file_origin_name.endsWith('jpg') or image.file_origin_name.endsWith('png') or image.file_origin_name.endsWith('gif')}">
+                <img th:src="@{|/contents/storage/${image.file_upload_name}|}" style='width: 50%; float: left; margin-top: 0.5%; margin-right: 1%;'>
+              </div>
+            </div>
+            <span style="font-size: 1.5em; font-weight: bold;" th:text="${qna_contentsVO.qcon_name}"></span>
+            <span style="font-size: 1em;" th:text="${qna_contentsVO.qcon_date}"></span><br><br>
+            <span style="font-size: 1em;" th:text="|조회수: ${qna_contentsVO.qcon_views}|"></span><br><br>
+            <div style="white-space: pre-wrap;"><span th:text="${qna_contentsVO.qcon_contents}"></span></div>
           </div>
-
-          <span style="font-size: 1.5em; font-weight: bold;" th:text="${qna_contentsVO.qcon_name}"></span>
-          <span style="font-size: 1em;" th:text="${qna_contentsVO.qcon_date}"></span><br><br>
-          <span style="font-size: 1em;" th:text="|조회수: ${qna_contentsVO.qcon_views}|"></span><br><br>
-          
-          <input type="hidden" name="cate_no" th:value="${categoryVO.cate_no}"> <!-- cate_no 데이터 값 가져옴 -->
-          <input type="hidden"name="qcon_no" th:value="${qna_contentsVO.qcon_no}"> <!-- qcon_no 데이터 값 가져옴 -->
-          <div style="white-space: pre-wrap;"><span th:text="${qna_contentsVO.qcon_contents}"></span></div>
-        </div>
-      </li>
-
-      <li class="li_none" th:text="|검색어(키워드): ${qna_contentsVO.word}|">
-      </li>
-      
-      <li class="li_none" th:if="${qna_imageVO.file_size > 0}">
-        <div >
-          첨부 파일: <a th:href='@{|/download?dir=/contents/storage&filename=${qna_imageVO.file1saved}&downname=${qna_imageVO.file_origin_name}|}'
-                             th:text='|${qna_imageVO.file_origin_name}|'></a>
-        </div>
-      </li>   
-    </ul>
-  </fieldset>
-
+        </li>
+        <li class="li_none" th:each="image : ${qna_imageVO}" th:if="${image.file_size > 0}">
+          <div>
+            첨부 파일: <a th:href="@{|/download?dir=/contents/storage&filename=${image.file_upload_name}&downname=${image.file_origin_name}|}" th:text="|${image.file_origin_name}|"></a>
+          </div>
+        </li>   
+      </ul>
+    </fieldset>
+  </form>
 </div>
-
 </html>
-

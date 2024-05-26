@@ -65,7 +65,7 @@ ORDER BY qcon_no asc;
 -- 해당 컨텐츠 조회
 SELECT qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_comment, qcon_date
 FROM qna_contents
-WHERE qcon_no=1;
+WHERE qcon_no=2;
 
 -- 해당 컨텐츠 삭제
 DELETE FROM qna_contents
@@ -90,7 +90,7 @@ ORDER BY sysdate asc;
 
 -- 조회수 올리기
 UPDATE qna_contents
-SET qna_views = qna_views+1
+SET qcon_views = qcon_views+1
 WHERE qcon_no=1;
 
 rollback;

@@ -244,13 +244,13 @@ public class Qna_contentsCont {
    * @return
    */
   @GetMapping(value="qna_read")
-  public String qna_read(Model model, int cate_no, int qcon_no) {
+  public String qna_read(Model model, @RequestParam(defaultValue = "2") int cate_no, int qcon_no) {
    
     // 카테고리 가져오기
     CategoryVO categoryVO = this.categoryProc.cate_read(cate_no); // 카테고리 읽어옴
     model.addAttribute("categoryVO", categoryVO);
     
-    int view = this.qna_contentsProc.update_qna_view(qcon_no); // 조회수 증가
+//    this.qna_contentsProc.update_qna_view(qcon_no); // 조회수 증가
     
     // 질문글 가져오기
     Qna_contentsVO qna_contentsVO = this.qna_contentsProc.qna_read(qcon_no);
@@ -259,6 +259,9 @@ public class Qna_contentsCont {
     // 질문글 이미지 가져오기
     ArrayList<Qna_imageVO> qna_imageVO = this.qna_contentsProc.qna_read_image(qcon_no);
     model.addAttribute("qna_imageVO", qna_imageVO);
+    
+    model.addAttribute("cate_no", cate_no);
+    model.addAttribute("qcon_no", qcon_no);
     
     return "qcontents/qna_read"; // /templates/qcontents/qna_read;
   }

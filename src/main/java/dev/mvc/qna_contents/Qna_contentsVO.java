@@ -12,6 +12,22 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+//CREATE TABLE QNA_CONTENTS(
+//    QCON_NO NUMBER(10) NOT NULL PRIMARY KEY,
+//    CATE_NO NUMBER(10),     -- FK
+//    ACC_NO NUMBER(10),      -- FK
+//    QCON_NAME VARCHAR2(100) NOT NULL,
+//    QCON_CONTENTS VARCHAR2(3000),
+//    QCON_VIEWS NUMBER(7) DEFAULT 0 NOT NULL,
+//    QCON_BOOKMARK NUMBER(7) DEFAULT 0 NOT NULL,
+//    QCON_COMMENT NUMBER(7) DEFAULT 0 NOT NULL,
+//    QCON_DATE DATE NOT NULL,
+//        WORD VARCHAR2(30)             NULL,
+//        QCON_PASSWD  VARCHAR2(100)          NOT NULL,
+//  FOREIGN KEY (CATE_NO) REFERENCES CATEGORY (CATE_NO),
+//  FOREIGN KEY (ACC_NO) REFERENCES ACCOUNT (ACC_NO)
+//);
+
 @Getter @Setter @ToString
 public class Qna_contentsVO {
 
@@ -34,13 +50,9 @@ public class Qna_contentsVO {
   private String qcon_contents="";
   
   /** 질문 게시글 조회수 */
-  @Min(value=0)
-  @Max(value=1000000)
-  private Integer qcon_views=0;
+  private Integer qcon_views;
   
   /** 질문 게시글 북마크 수 */
-  @Min(value=0)
-  @Max(value=1000000)
   private Integer qcon_bookmark=0;
   
   /** 질문 게시글 댓글 수 */
