@@ -15,8 +15,8 @@
 		SELECT LISTAGG(tag_code, ',') WITHIN GROUP (ORDER BY tag_code DESC) AS
 		tag_codes
 		FROM (
-			SELECT DISTINCT tag_code
-			FROM hashtag
+		SELECT DISTINCT tag_code
+		FROM hashtag
 		)
 	</select>
 
@@ -38,10 +38,10 @@
 	<insert id="create" parameterType="dev.mvc.account.AccountVO">
 		<selectKey keyProperty="acc_no" resultType="int" order="AFTER">
 			SELECT ACCOUNT_SEQ.currval AS acc_no FROM dual
-		</selectKey> 
-		INSERT INTO ACCOUNT(acc_no, acc_id, acc_pw, acc_name, acc_date, acc_grade)
-		VALUES(ACCOUNT_SEQ.nextval, #{acc_id}, #{acc_pw}, #{acc_name}, sysdate, 15)
-	</insert>
+		</selectKey> INSERT
+		INTO ACCOUNT(acc_no, acc_id, acc_pw, acc_name, acc_date, acc_grade)
+		VALUES(ACCOUNT_SEQ.nextval, #{acc_id}, #{acc_pw}, #{acc_name}, sysdate,
+		15) </insert>
 
 	<!-- 추천 데이터(해시태그) 저장 -->
 	<insert id="insertRecommend" parameterType="dev.mvc.recommend.RecommendVO">
@@ -82,19 +82,34 @@
 		SET acc_name=#{acc_name}, acc_tel=#{acc_tel}, acc_age=#{acc_age}
 		WHERE acc_no=#{acc_no}
 	</update>
-	
+
 	<!-- 프로필 사진 업데이트 -->
 	<update id="updatePic" parameterType="dev.mvc.account.AccountVO">
 		UPDATE account
-		SET acc_img=#{acc_img}, acc_saved_img=#{acc_saved_img}, acc_thumb_img=#{acc_thumb_img}, acc_img_size=#{acc_img_size}
+		SET acc_img=#{acc_img}, acc_saved_img=#{acc_saved_img},
+		acc_thumb_img=#{acc_thumb_img}, acc_img_size=#{acc_img_size}
 		WHERE acc_no=#{acc_no}
 	</update>
-	
+
 	<!-- 기존 추천 데이터(해시태그) 삭제 -->
 	<delete id="deleteRecommend" parameterType="int">
 		DELETE FROM recommend WHERE acc_no = #{acc_no}
 	</delete>
+	
+	<!-- 현재 비밀번호 확인 -->
+	<select id="checkPasswd" parameterType="HashMap" resultType="int">
+		SELECT COUNT(acc_no) as cnt
+		FROM account
+		WHERE acc_no=#{acc_no} AND acc_pw=#{acc_pw}
+	</select>
 
+	<!-- 비밀번호 변경 -->
+	<update id="updatePasswd" parameterType="HashMap">
+		UPDATE account
+		SET acc_pw=#{acc_pw}
+		WHERE acc_no=#{acc_no}
+	</update>
+	
 	<!-- 회원 정보 삭제(관리자, 회원 목록) -->
 	<delete id="delete" parameterType="int">
 		DELETE FROM account
@@ -102,6 +117,23 @@
 	</delete>
 
 	<!-- 회원 탈퇴(사용자, 마이페이지) -->
+	
+	
 
 
 </mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

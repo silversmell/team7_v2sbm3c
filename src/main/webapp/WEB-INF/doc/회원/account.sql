@@ -113,12 +113,32 @@ WHERE acc_no=4;
 
 --------------------------------------------------------------------------------
 
-
 -- 프로필 사진 업데이트
 
-		UPDATE account
-		SET acc_name=#{acc_name}, acc_tel=#{acc_tel}, acc_age=#{acc_age}
-		WHERE acc_no=#{acc_no}
+UPDATE account
+SET acc_img = 'test', acc_saved_img = 'test', acc_thumb_img = 'test', acc_img_size = 100
+WHERE acc_no=4;
+
+--------------------------------------------------------------------------------
+
+-- 현재 비밀번호 확인
+SELECT COUNT(acc_no) as cnt
+FROM account
+WHERE acc_no=1 AND acc_pw='1111';
+
+SELECT COUNT(acc_no) as cnt
+FROM account
+WHERE acc_no=1 AND acc_pw='1234';
+
+-- 비밀번호 변경
+
+
+
+
+
+
+
+
 
 --------------------------------------------------------------------------------
 

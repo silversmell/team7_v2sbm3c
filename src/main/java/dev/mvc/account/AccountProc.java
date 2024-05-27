@@ -1,6 +1,7 @@
 package dev.mvc.account;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,10 +92,24 @@ public class AccountProc implements AccountProcInter {
 	}
 	
 	@Override
+	public int checkPasswd(HashMap<String, Object> map) {
+		int cnt = this.accountDAO.checkPasswd(map);
+		return cnt;
+	}
+
+	@Override
+	public int updatePasswd(HashMap<String, Object> map) {
+		int cnt = this.accountDAO.updatePasswd(map);
+		return cnt;
+	}
+	
+	@Override
 	public int delete(int acc_no) {
 		int cnt = this.accountDAO.delete(acc_no);
 		return cnt;
 	}
+
+
 
 
 

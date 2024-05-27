@@ -21,19 +21,20 @@
 	<div style="width: 60%; margin: 0px auto">
 		<!-- 회원가입 폼 -->
 		<form name="create_frm" id="create_frm" th:object="${accountVO}" method="post" action="/account/create">
-
+			
 			<!-- 아이디(이메일) -->
-			<div style="display: flex; align-items: center;">
+			<div id="acc_id_div" style="display: flex; align-items: center;">
 			    <label for="acc_id" style="margin-right: 10px;">아이디(이메일)</label>
 			    <input type="text" name="acc_id" id="acc_id" value="" autofocus="autofocus"
 			        class="form-control fom-control-sm" style="width: 50%;" th:field="*{acc_id}">
 			    <button type="button" id="btn_checkID" onclick="checkID()" class="btn btn-primary btn-sm"
 			        style="margin-top: 4px; margin-left: 10px;">중복확인</button>
+			    <button type="button" id="btn_sendMail" onclick="send_mail();" class="btn btn-primary btn-sm"
+			        style="margin-top: 4px; margin-left: 10px;" disabled>메일 인증</button>
 			</div>
 			<span id="acc_id_msg"></span>
-
-
-
+			
+			
 			<!-- 패스워드 -->
 			<div class="form-group" style="display: flex; align-items: center;">
 				<label for="acc_pw" style="margin-right: 10px;">패스워드</label>

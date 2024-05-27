@@ -1,6 +1,7 @@
 package dev.mvc.account;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import dev.mvc.recommend.HashtagVO;
@@ -98,6 +99,21 @@ public interface AccountDAOInter {
      * @return
      */
     public int deleteRecommend(int acc_no);
+    
+    /**
+     * 현재 비밀번호 확인
+     * 
+     * @param map
+     * @return 0(다름) or 1(일치)
+     */
+    public int checkPasswd(HashMap<String, Object> map);
+    
+    /**
+     * 비밀번호 변경
+     * @param map
+     * @return 변경된 비밀번호 갯수
+     */
+    public int updatePasswd(HashMap<String, Object> map);
     
     /** 
      * 회원 정보 삭제(관리자, 회원 목록)

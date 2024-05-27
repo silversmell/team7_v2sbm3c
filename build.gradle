@@ -44,7 +44,14 @@ dependencies {
   implementation 'commons-fileupload:commons-fileupload:1.5'
   implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
   // https://mvnrepository.com/artifact/javax.mail/javax.mail-api 
-  implementation 'javax.mail:javax.mail-api:1.6.2'
+  // implementation 'javax.mail:javax.mail-api:1.6.2'
+  // https://mvnrepository.com/artifact/com.sun.mail/javax.mail
+  implementation 'com.sun.mail:javax.mail:1.6.2'
+  // https://mvnrepository.com/artifact/javax.activation/activation
+  implementation 'javax.activation:activation:1.1.1'  
+  // https://mvnrepository.com/artifact/javax.mail/mail
+  implementation 'javax.mail:mail:1.4.7'
+  
   
   
   // JUnit 테스트 시 java.lang.NoSuchMethodError: 'java.util.Set org.junit.platform.engine.TestDescriptor.getAncestors()' 해결
