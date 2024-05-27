@@ -200,8 +200,8 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
   }
   
   @Override
-  public int update_qna_view(int qcon_no) {
-    int cnt = this.qna_contentsDAO.update_qna_view(qcon_no);
+  public int qna_update_view(int qcon_no) {
+    int cnt = this.qna_contentsDAO.qna_update_view(qcon_no);
     
     return cnt;
   }

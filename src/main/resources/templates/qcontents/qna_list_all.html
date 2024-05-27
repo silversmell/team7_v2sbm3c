@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+
+  <div class='title_line'>전체 글 목록</div>
+
+  <aside class="aside_right">
+    <a th:href="@{|/qcontents/qna_create?cate_no=2|}">등록</a>
+    <span class='menu_divide'>│</span>
+    <a href="javascript:location.reload();">새로고침</a>
+  </aside> 
+   
+  <div class='menu_line'></div>
+       
+  <table class="table table-striped" style='width: 100%;'>
+    <colgroup>
+      <col style='width: 10%;'/>
+      <col style='width: 90%;'/>
+    </colgroup>
+    <tr>
+      <th class='th_bs'>파일</TH>
+      <th class='th_bs'>제목</th>
+    </tr>
+  </table>
+   
+    <tr th:each="qna_contentsVO, status : ${list}"
+         th:attr="onclick=|location.href='/qcontents/qna_read?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}'|"
+         style="cursor: pointer;">
+      <td class='td_left'>
+          <span th:text="${qna_contentsVO.qcon_name}" style="font-weight: bold;"></span>
+          <span th:text="|&nbsp;${qna_contentsVO.qcon_date.substring(0, 10)}|"></span><br>
+          <span th:if="${qna_contentsVO.qcon_contents.length() > 160}" 
+                th:text="|${qna_contentsVO.qcon_contents.substring(0, 160)}...|"></span>
+          <span th:if="${qna_contentsVO.qcon_contents.length() <= 160}" 
+                th:text="|${qna_contentsVO.qcon_contents}|"></span>
+        </td>
+    </tr>
+  </table>
+   
+  <div class='bottom_menu'>
+    <button type='button' onclick="location.reload();" class="btn btn-primary btn-sm">새로 고침</button>
+  </div>
+
+</div>
+</html>
+

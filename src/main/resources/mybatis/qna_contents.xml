@@ -17,8 +17,8 @@
       SELECT qna_contents_seq.nextval FROM dual
     </selectKey>
     
-    INSERT INTO QNA_CONTENTS(qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_comment, qcon_date, word, qcon_passwd)
-    VALUES(#{qcon_no}, #{cate_no}, 1, #{qcon_name}, #{qcon_contents}, #{qcon_views}, #{qcon_bookmark}, #{qcon_comment}, sysdate, #{word}, #{qcon_passwd})
+    INSERT INTO QNA_CONTENTS(qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_comment, qcon_date, qcon_passwd)
+    VALUES(#{qcon_no}, #{cate_no}, 1, #{qcon_name}, #{qcon_contents}, 0, 0, 0, sysdate, #{qcon_passwd})
   </insert>
   
   <!-- 첨부 파일 등록 -->
@@ -92,7 +92,7 @@
   
   <!-- 일반적인 조회 -->
   <select id="qna_read" resultType="dev.mvc.qna_contents.Qna_contentsVO" parameterType="int">
-    SELECT qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_comment, qcon_date, word, qcon_passwd
+    SELECT qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_comment, qcon_date, qcon_passwd
     FROM qna_contents
     WHERE qcon_no= #{qcon_no}
   </select> 
@@ -174,16 +174,16 @@
   </select>
   
   <!-- 조회수 증가 -->
-  <select id="update_qna_view" parameterType="dev.mvc.qna_contents.Qna_contentsVO">
+  <update id="qna_update_view" parameterType="dev.mvc.qna_contents.Qna_contentsVO">
     UPDATE qna_contents
     SET qcon_views = qcon_views+1
     WHERE qcon_no=#{qcon_no}
-  </select>
+  </update>
   
   <!-- 글 수정 -->
-  <update id="qna_update_text" parameterType="dev.mvc.qna_contents.Qna_contentsVO">
+  <update id="qna_update_text" parameterType="int">
     UPDATE qna_contents
-    SET qcon_name=#{qcon_name}, qcon_contents=#{qcon_contents},  word=#{word}
+    SET qcon_name=#{qcon_name}, qcon_contents=#{qcon_contents}
     WHERE qcon_no = #{qcon_no}
   </update>
   
