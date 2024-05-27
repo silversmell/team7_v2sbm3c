@@ -83,13 +83,6 @@
     ORDER BY qcon_no DESC, file_no ASC
   </select>
   
-  <!-- 이미지 수정 -->
-  <select id="qna_search_count_image" resultType="int" parameterType="int">
-    SELECT file_no, qcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date
-    FROM qna_image
-    WHERE qcon_no=#{qcon_no}
-  </select>
-  
   <!-- 일반적인 조회 -->
   <select id="qna_read" resultType="dev.mvc.qna_contents.Qna_contentsVO" parameterType="int">
     SELECT qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_comment, qcon_date, qcon_passwd
@@ -98,7 +91,7 @@
   </select> 
   
   <!-- 이미지 조회 -->
-  <select id="qna_read_image">
+  <select id="qna_read_image" resultType="dev.mvc.qna_contents.Qna_imageVO" parameterType="Integer">
     SELECT file_no, qcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date
     FROM qna_image
     WHERE qcon_no=#{qcon_no}
@@ -181,7 +174,7 @@
   </update>
   
   <!-- 글 수정 -->
-  <update id="qna_update_text" parameterType="int">
+  <update id="qna_update_text" parameterType="dev.mvc.qna_contents.Qna_imageVO">
     UPDATE qna_contents
     SET qcon_name=#{qcon_name}, qcon_contents=#{qcon_contents}
     WHERE qcon_no = #{qcon_no}
@@ -193,6 +186,13 @@
     SET file_origin_name=#{file_origin_name}, file_upload_name=#{file_upload_name}, file_thumb_name=#{file_thumb_name},file_size=#{file_size}
     WHERE file_no=#{file_no} 
   </update>
+  
+  <!-- 이미지 수 -->
+  <select id="qna_search_count_image" resultType="int" parameterType="int">
+    SELECT file_no, qcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date
+    FROM qna_image
+    WHERE qcon_no=#{qcon_no}
+  </select>
   
   <!-- 파일 삭제 -->
   <delete id="qna_delete_image" parameterType="int">
