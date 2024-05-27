@@ -10,11 +10,11 @@
   <aside class="aside_right">
     <a th:href="@{|/qcontents/qna_create?cate_no=2|}">등록</a>
     <span class='menu_divide'>│</span>
-    <a th:href="@{|/qcontents/qna_update_file?qcon_no=${qna_contentsVO.qcon_no}&word=${word}&now_page=${now_page}|}">파일 수정</a>  
+    <a th:href="@{|/qcontents/qna_update_file?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}|}">파일 수정</a>  
     <span class='menu_divide'>│</span>
-    <a th:href="@{|/qcontents/qna_delete?qcon_no=${qna_contentsVO.qcon_no}&word=${word}&now_page=${now_page}&cate_no=2|}">삭제</a>  
+    <a th:href="@{|/qcontents/qna_delete?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}&cate_no=2|}">삭제</a>  
     <span class='menu_divide'>│</span>
-    <a th:href="@{|/qcontents/qna_list_all?cate_no=2&word=${word}&now_page=${now_page}|}">목록</a>   
+    <a th:href="@{|/qcontents/qna_list_all?cate_no=2&now_page=${now_page}|}">목록</a>   
     <span class='menu_divide'>│</span>
     <a href="javascript:location.reload();">새로고침</a>
   </aside>
@@ -38,7 +38,6 @@
                       th:text='${qna_contentsVO.qcon_contents}'></textarea>
     </div>
 
-
     <div>
        <label>패스워드</label>
        <input type='password' name='qcon_passwd' th:value='1234' required="required" 
@@ -47,7 +46,7 @@
 
     <div class="content_body_bottom">
       <button type="submit" class="btn btn-secondary btn-sm">저장</button>
-      <button type="button" th:attr="onclick=|location.href='./ist_all?scon_no=${scon_no}'|" class="btn btn-secondary btn-sm">목록</button>
+      <button type="button" th:attr="onclick=|location.href='./qna_list_all?cate_no=2'|" class="btn btn-secondary btn-sm">목록</button>
     </div>
  
   </form>

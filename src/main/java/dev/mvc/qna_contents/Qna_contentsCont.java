@@ -20,6 +20,7 @@ import dev.mvc.category.CategoryProcInter;
 import dev.mvc.category.CategoryVO;
 import dev.mvc.category.CategoryVOMenu;
 import dev.mvc.share_contents.Contents;
+import dev.mvc.share_contentsdto.Share_contentsVO;
 import dev.mvc.tool.Tool;
 import dev.mvc.tool.Upload;
 import jakarta.servlet.http.HttpServletRequest;
@@ -62,6 +63,14 @@ public class Qna_contentsCont {
     return url; // /forward, /templates/...
   }
   
+  @GetMapping("/list_all")
+  public String list_all(Model model) { 
+    // System.out.println("list_all 생성");
+    ArrayList<Qna_contentsVO> list = this.qna_contentsProc.qna_list_all();
+    model.addAttribute("list", list);
+
+    return "qcontents/qna_list_all";
+  }
   
   /**
    * 질문글 등록 폼
@@ -227,6 +236,8 @@ public class Qna_contentsCont {
     model.addAttribute("paging", paging);
     model.addAttribute("now_page", now_page);
     model.addAttribute("search_count", search_count);
+    model.addAttribute("cate_no", cate_no);
+    model.addAttribute("qna_imageVO", qna_imageVO);
     
     // 일련 변호 생성: 레코드 갯수 - ((현재 페이지수 -1) * 페이지당 레코드 수)
     int no = search_count - ((now_page - 1) * Contents.RECORD_PER_PAGE);
@@ -243,31 +254,49 @@ public class Qna_contentsCont {
    * @param qcon_no
    * @return
    */
-  @GetMapping(value="qna_read")
-  public String qna_read(Model model, @RequestParam(defaultValue = "2") int cate_no, int qcon_no) {
-   
-    // 카테고리 가져오기
-    CategoryVO categoryVO = this.categoryProc.cate_read(cate_no); // 카테고리 읽어옴
-    model.addAttribute("categoryVO", categoryVO);
+  @GetMapping(value="/qna_read")
+  public String qna_read(Model model, 
+                               @RequestParam(name="cate_no", defaultValue = "2") int cate_no, 
+                               int qcon_no, int now_page) {
     
-//    this.qna_contentsProc.update_qna_view(qcon_no); // 조회수 증가
-    
-    // 질문글 가져오기
-    Qna_contentsVO qna_contentsVO = this.qna_contentsProc.qna_read(qcon_no);
-    model.addAttribute("qna_contentsVO", qna_contentsVO);
-    
-    // 질문글 이미지 가져오기
-    ArrayList<Qna_imageVO> qna_imageVO = this.qna_contentsProc.qna_read_image(qcon_no);
-    model.addAttribute("qna_imageVO", qna_imageVO);
-    
-    model.addAttribute("cate_no", cate_no);
-    model.addAttribute("qcon_no", qcon_no);
-    
-    return "qcontents/qna_read"; // /templates/qcontents/qna_read;
+      model.addAttribute("cate_no", cate_no);
+      model.addAttribute("qcon_no", qcon_no);
+      
+      // 카테고리 가져오기
+      CategoryVO categoryVO = this.categoryProc.cate_read(cate_no); // 카테고리 읽어옴
+      model.addAttribute("categoryVO", categoryVO);
+      
+      System.out.println("qcon_no: " + qcon_no);
+      // 조회수 증가
+      this.qna_contentsProc.qna_update_view(qcon_no); 
+      
+      // 질문글 가져오기
+      Qna_contentsVO qna_contentsVO = this.qna_contentsProc.qna_read(qcon_no);
+      model.addAttribute("qna_contentsVO", qna_contentsVO);
+      
+      // 질문글 이미지 가져오기
+      ArrayList<Qna_imageVO> qna_imageVO = this.qna_contentsProc.qna_read_image(qcon_no);
+      model.addAttribute("qna_imageVO", qna_imageVO);
+      model.addAttribute("now_page", now_page);
+      
+      return "qcontents/qna_read"; // /templates/qcontents/qna_read;
   }
-  
-  @GetMapping(value="qna_update_text")
-  public String upqna_update_text(Model model, int cate_no, int qcon_no) {
+
+  /**
+   * 글 수정 폼
+   * @param model
+   * @param cate_no
+   * @param qcon_no
+   * @return
+   */
+  @GetMapping(value="/qna_update_text")
+  public String upqna_update_text(HttpSession session, Model model, 
+                                            RedirectAttributes ra,
+                                            String word, int now_page,
+                                            @RequestParam(name="cate_no", defaultValue = "2") int cate_no, int qcon_no) {
+    
+    model.addAttribute("word", word);
+    model.addAttribute("now_page", now_page);
     
     // 카테고리 가져오기
     CategoryVO categoryVO = this.categoryProc.cate_read(cate_no); // 카테고리 읽어옴
@@ -280,20 +309,39 @@ public class Qna_contentsCont {
     return "qcontents/qna_update_text";
   }
   
-  @PostMapping(value="qna_update_text")
-  public String qna_update_text(Model model, RedirectAttributes ra, 
+  /**
+   * 글 수정 처리
+   * @param model
+   * @param ra
+   * @param qna_contentsVO
+   * @param cate_no
+   * @param qcon_no
+   * @return
+   */
+  @PostMapping(value="/qna_update_text")
+  public String qna_update_text(HttpSession session, Model model, 
+                                        RedirectAttributes ra, 
                                         Qna_contentsVO qna_contentsVO,
+                                        String search_word, int now_page,
                                         int cate_no, int qcon_no) {
     
     int cnt = this.qna_contentsProc.qna_update_text(qna_contentsVO);
     
-    HashMap<String, Object> map = new HashMap<>();
+    HashMap<String, Object> map = new HashMap<String, Object>();
+    map.put("qcon_no", qna_contentsVO.getQcon_no());
+    map.put("qcon_passwd", qna_contentsVO.getQcon_passwd());
 
+    this.qna_contentsProc.qna_update_text(qna_contentsVO);
+    
     ra.addAttribute("cate_no", cate_no);
     ra.addAttribute("qcon_no", qcon_no);
+    ra.addAttribute("now_page", now_page);
+    ra.addAttribute("word", search_word);
     
-    return "redirect:/scontents/list_by_qna_search_paging";
+    return "redirect:/scontents/qna_read";
     }
+
+
 }
 
 

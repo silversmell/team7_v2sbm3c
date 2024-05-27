@@ -50,15 +50,13 @@ public class Qna_contentsVO {
   private String qcon_contents="";
   
   /** 질문 게시글 조회수 */
-  private Integer qcon_views;
+  private Integer qcon_views=0;
   
   /** 질문 게시글 북마크 수 */
-  private Integer qcon_bookmark=0;
+  private Integer qcon_bookmark;
   
   /** 질문 게시글 댓글 수 */
-  @Min(value=0)
-  @Max(value=1000000)
-  private Integer qcon_comment=0;
+  private Integer qcon_comment;
   
   /** 질문 게시글 등록일 */
   private String qcon_date = "";
@@ -69,11 +67,4 @@ public class Qna_contentsVO {
   /** 비밀번호 */
   private String qcon_passwd="";
   
-  /** Form의 파일을 MultipartFile로 변환하여 List에 저장 */
-  private List<MultipartFile> fnamesMF;
-
-  /** 파일 단위 출력 */
-  private String flabel;
-  
-  private MultipartFile file1MF = null;
 }

@@ -8,13 +8,13 @@
   <aside class="aside_right">
     <a th:href="@{|/qcontents/qna_create?cate_no=2|}">등록</a>
     <span class='menu_divide'>│</span>
-    <a th:href="@{|/qcontents/qna_update_text?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}&word=${word}|}">글 수정</a>
+    <a th:href="@{|/qcontents/qna_update_text?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}|}">글 수정</a>
     <span class='menu_divide'>│</span>
-    <a th:href="@{|/qcontents/qna_update_file?qcon_no=${qna_contentsVO.qcon_no}&word=${word}&now_page=${now_page}|}">파일 수정</a>  
+    <a th:href="@{|/qcontents/qna_update_file?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}|}">파일 수정</a>  
     <span class='menu_divide'>│</span>
-    <a th:href="@{|/qcontents/qna_delete?qcon_no=${qna_contentsVO.qcon_no}&word=${word}&now_page=${now_page}&cate_no=2|}">삭제</a>  
+    <a th:href="@{|/qcontents/qna_delete?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}&cate_no=2|}">삭제</a>  
     <span class='menu_divide'>│</span>
-    <a th:href="@{|/qcontents/qna_list_all?cate_no=2&word=${word}&now_page=${now_page}|}">목록</a>   
+    <a th:href="@{|/qcontents/qna_list_all?cate_no=2&now_page=${now_page}|}">목록</a>   
     <span class='menu_divide'>│</span>
     <a href="javascript:location.reload();">새로고침</a>
   </aside>
@@ -24,10 +24,11 @@
   <form action="/qcontents/qna_read" method="get">
     <input type="hidden" name="cate_no" th:value="${categoryVO.cate_no}">
     <input type="hidden" name="qcon_no" th:value="${qna_contentsVO.qcon_no}">
+    <input type="hidden" name="now_page" th:value="${now_page}">
 
     <fieldset class="fieldset_basic">
       <ul>
-        <li class="li_none" th:text="|검색어(키워드): ${qna_contentsVO.word}|">
+        <li class="li_none">
           <div style="width: 100%; word-break: break-all;">
             <div th:each="image : ${qna_imageVO}">
               <div th:if="${image.file_origin_name.endsWith('jpg') or image.file_origin_name.endsWith('png') or image.file_origin_name.endsWith('gif')}">

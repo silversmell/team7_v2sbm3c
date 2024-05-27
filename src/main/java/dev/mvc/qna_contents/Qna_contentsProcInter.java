@@ -82,7 +82,7 @@ public interface Qna_contentsProcInter {
    * @param qcon_no
    * @return
    */
-  public int update_qna_view(int qcon_no);
+  public int qna_update_view(int qcon_no);
   
   /**
    * 질문글 텍스트 수정
