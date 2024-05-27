@@ -668,7 +668,6 @@ public class Share_contentsCont {
 
 		ArrayList<Share_contentsVO> list = this.sconProc.list_by_contents_search_paging(map);
 		model.addAttribute("list", list);
-
 		model.addAttribute("word", word);
 		// 사진 하나만 나오게 하기
 		ArrayList<Share_imageVO> list_image = new ArrayList<>();

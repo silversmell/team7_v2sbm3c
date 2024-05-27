@@ -59,12 +59,18 @@
 
 	<div class='menu_line'></div>
 	
+<div style="display: flex; justify-content: space-between; ">
 <div style="display: flex;">
-    <div th:each="hashtag, status:${list_hashtag}" th:attr="onclick=|location.href='/scontents/read_hashtag/${hashtag.tag_no}?cate_no=1'|" style="cursor: pointer; margin-right: 10px;">
-    <div class="hashtag" >
+    <div th:each="hashtag, status:${list_hashtag}" th:attr="onclick=|location.href='/scontents/read_hashtag/${hashtag.tag_no}?cate_no=1'|" style="cursor: pointer; ">
+    <div class="hashtag">
         <span style="font-weight: bold;" th:text="${hashtag.tag_name}"></span>
         </div>
     </div>
+    </div>
+        <div>
+      <button type="button" onclick="select_delete()" class="button_2"  style="margin-right:3px;">선택삭제</button>
+      <button type="button" onclick="whole_delete()" class="button_2">전체선택</button>
+      </div>
 </div>
     
 	<table class="table table-striped" style='width: 100%;'>
@@ -75,10 +81,6 @@
 		
 
     <thead>
-    <div class="button-container">
-      <button type="button" onclick="select_delete()" class="button_2"  style="margin-right:3px;">선택삭제</button>
-      <button type="button" onclick="whole_delete()" class="button_2">전체선택</button>
-      </div>
         <tr>
             <th class="th_bs">파일</th>
             <th class="th_bs">제목</th>
