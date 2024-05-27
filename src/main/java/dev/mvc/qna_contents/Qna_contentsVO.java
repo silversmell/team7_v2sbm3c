@@ -23,6 +23,7 @@ import lombok.Setter;
 //    QCON_COMMENT NUMBER(7) DEFAULT 0 NOT NULL,
 //    QCON_DATE DATE NOT NULL,
 //        WORD VARCHAR2(30)             NULL,
+//        QCON_PASSWD  VARCHAR2(100)          NOT NULL,
 //  FOREIGN KEY (CATE_NO) REFERENCES CATEGORY (CATE_NO),
 //  FOREIGN KEY (ACC_NO) REFERENCES ACCOUNT (ACC_NO)
 //);
@@ -31,13 +32,13 @@ import lombok.Setter;
 public class Qna_contentsVO {
 
   /** 질문 게시글 번호 */
-  private int qcon_no;
+  private Integer qcon_no;
   
   /** 카테고리 번호 */
-  private int cate_no;
+  private Integer cate_no;
   
   /** 회원 번호 */
-  private int acc_no;
+  private Integer acc_no;
   
   /** 질문 게시글 제목 */
   @NotEmpty(message="질문게시글 제목은 필수입력 항목입니다.")
@@ -49,19 +50,13 @@ public class Qna_contentsVO {
   private String qcon_contents="";
   
   /** 질문 게시글 조회수 */
-  @Min(value=0)
-  @Max(value=1000000)
   private Integer qcon_views=0;
   
   /** 질문 게시글 북마크 수 */
-  @Min(value=0)
-  @Max(value=1000000)
-  private Integer qcon_bookmark=0;
+  private Integer qcon_bookmark;
   
   /** 질문 게시글 댓글 수 */
-  @Min(value=0)
-  @Max(value=1000000)
-  private Integer qcon_comment=0;
+  private Integer qcon_comment;
   
   /** 질문 게시글 등록일 */
   private String qcon_date = "";
@@ -72,14 +67,4 @@ public class Qna_contentsVO {
   /** 비밀번호 */
   private String qcon_passwd="";
   
-  
-  /** Form의 파일을 MultipartFile로 변환하여 List에 저장  */
-  private List<MultipartFile> fnamesMF;
-  
-  // private MultipartFile fnamesMF;  // 하나의 파일 처리
-  /** 파일 단위 출력 */
-  private String flabel;
-  
-  private MultipartFile file1MF = null;
-
 }

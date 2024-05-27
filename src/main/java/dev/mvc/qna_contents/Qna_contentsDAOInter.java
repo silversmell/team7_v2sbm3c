@@ -62,6 +62,13 @@ public interface Qna_contentsDAOInter {
   public int qna_password_check(HashMap<String, Object> hashMap);
   
   /**
+   * 조회수 증가
+   * @param qcon_no
+   * @return
+   */
+  public int qna_update_view(int qcon_no);
+  
+  /**
    * 질문글 텍스트 수정
    * @param qna_contentsVO
    * @return
@@ -166,7 +173,7 @@ public interface Qna_contentsDAOInter {
    * @param acc_no
    * @return
    */
-  public int qna_delete_comment(int qcon_no, int acc_no);
+  public int qna_delete_comment(HashMap<String, Object> hashMap);
   
   /**
    * 질문글 댓글 수

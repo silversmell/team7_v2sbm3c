@@ -19,6 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import ch.qos.logback.core.recovery.ResilientSyslogOutputStream;
+import dev.mvc.account.AccountProcInter;
+import dev.mvc.account.AccountVO;
 import dev.mvc.category.CategoryProcInter;
 import dev.mvc.category.CategoryVO;
 import dev.mvc.recommend.HashtagVO;
@@ -34,10 +36,15 @@ import dev.mvc.tool.Upload;
 @RequestMapping("/scontents") // http://localhost:9093/scontents/list_by_search?cate_no=1
 @Controller
 public class Share_contentsCont {
+	
+	@Autowired
+	@Qualifier("dev.mvc.account.AccountProc")
+	private AccountProcInter accountProc;
 
 	@Autowired
 	@Qualifier("dev.mvc.category.CategoryProc")
 	private CategoryProcInter categoryProc;
+	
 
 	@Autowired
 	@Qualifier("dev.mvc.share_contents.Share_contentsProc")
@@ -48,7 +55,7 @@ public class Share_contentsCont {
 	}
 
 	@GetMapping("/list_all")
-	public String list_all(Model model) {
+	public String list_all(Model model) { 
 		// System.out.println("list_all 생성");
 		ArrayList<Share_contentsVO> list = this.sconProc.list_all();
 		model.addAttribute("list", list);
@@ -56,9 +63,12 @@ public class Share_contentsCont {
 		return "scontents/list_all";
 	}
 
-	@GetMapping("/read")
-	public String read(Model model, int scon_no, int cate_no) {
-
+	@GetMapping("/read") //글 조회
+	public String read(Model model, int scon_no, int cate_no, @RequestParam(name = "acc_id", defaultValue = "0") String acc_id,
+			@RequestParam(name = "acc_no", defaultValue = "0") int acc_no) { // acc_no 필요(session)
+		System.out.println("read시 acc_id->" +acc_id);
+		model.addAttribute("acc_id",acc_id);
+		model.addAttribute("acc_no",acc_no);
 		// 카테고리 가져오기
 		CategoryVO categoryVO = this.categoryProc.cate_read(cate_no); // 카테고리 읽어옴
 		model.addAttribute("categoryVO", categoryVO);
@@ -141,34 +151,47 @@ public class Share_contentsCont {
 		ra.addAttribute("cate_no", cate_no);
 		return "redirect:/scontents/read?scon_no=" + scon_no;
 	}
+	
+	
+  @PostMapping("/create_comment")
+  public String create_comment(String scmt_comment, int scon_no, int acc_no, RedirectAttributes ra, int cate_no) {
+    HashMap<String, Object> map = new HashMap<String, Object>();
+    map.put("scmt_comment", scmt_comment);
+    map.put("scon_no", scon_no);
+    map.put("acc_no", acc_no);
+    int cnt = this.sconProc.create_comment(map);
+    
+    AccountVO accountVO = this.accountProc.read(acc_no);
+    
+    String acc_id= accountVO.getAcc_id();
+    ra.addAttribute("scon_no", scon_no);
+    ra.addAttribute("cate_no", cate_no);
+    ra.addAttribute("acc_no", acc_no);
+    ra.addAttribute("acc_id",acc_id);
+    
+    return "redirect:/scontents/read";
 
-	@PostMapping("/create_comment")
-	public String create_comment(String scmt_comment, int scon_no, int acc_no, RedirectAttributes ra, int cate_no) {
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("scmt_comment", scmt_comment);
-		map.put("scon_no", scon_no);
-		map.put("acc_no", acc_no);
-
-		int cnt = this.sconProc.create_comment(map);
-		ra.addAttribute("scon_no", scon_no);
-		ra.addAttribute("cate_no", cate_no);
-
-		return "redirect:/scontents/read";
-
-	}
+  }
 
 //  @GetMapping("/create_comment")
 //  @ResponseBody
-//  public String create_comment_form(String scmt_comment, int scon_no, int acc_no) {
+//  public String create_comment_form(String scmt_comment, int scon_no, int acc_no,int cate_no) {
 //    HashMap<String, Object> map = new HashMap<String, Object>();
 //    map.put("scmt_comment", scmt_comment);
 //    map.put("scon_no", scon_no);
 //    map.put("acc_no", acc_no);
-//
+//    
+//    
 //    int cnt = this.sconProc.create_comment(map);
-//
+//    ArrayList<Share_commentsVO> list = this.sconProc.read_comment(scon_no);
+//    Share_commentsVO comment = list.get(list.size()-1);
 //    JSONObject obj = new JSONObject();
 //    obj.put("cnt", cnt);
+//    obj.put("scmt_comment", scmt_comment);
+//    obj.put("scmt_date", comment.getScmt_date());
+//    obj.put("scmt_no", comment.getScmt_no());
+//    obj.put("acc_no", comment.getacc_no());
+//    obj.put("cate_no", cate_no);
 //
 //    return obj.toString();
 //  }
@@ -205,6 +228,8 @@ public class Share_contentsCont {
 
 	@PostMapping("/delete_comment")
 	public String delete_comment(int scmt_no, RedirectAttributes ra, int cate_no) {
+	  System.out.println("-> scmt_no :" + scmt_no);
+	  System.out.println("->cate_no:" +cate_no);
 		int scon_no = this.sconProc.scon_comment(scmt_no);
 		int cnt = this.sconProc.delete_scmtno(scmt_no);
 		if (cnt == 1) {
@@ -213,6 +238,24 @@ public class Share_contentsCont {
 		ra.addAttribute("cate_no", cate_no);
 		ra.addAttribute("scon_no", scon_no);
 		return "redirect:/scontents/read";
+	}
+	
+	@GetMapping("/select_delete")
+	@ResponseBody
+	public String select_delete(@RequestParam(value = "scon_no") List<Integer> scon_no) {
+	  System.out.println("-> select_delete scon_no:" +scon_no);
+	  this.sconProc.sdelete_image(scon_no);
+	  this.sconProc.sdelete_tag(scon_no);
+	  this.sconProc.sdelete_comment(scon_no);
+	  this.sconProc.sdelete_url(scon_no);
+	  int cnt = this.sconProc.delete_sconno(scon_no);
+	  if(cnt>0) {
+	    System.out.println("삭제 성공");
+	  }
+    JSONObject obj = new JSONObject();
+    obj.put("cnt", cnt);
+    
+    return obj.toString();
 	}
 
 	@GetMapping("/update_text") // 글 수정
@@ -384,7 +427,7 @@ public class Share_contentsCont {
 		// 카테고리 가져오기
 		CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
 		model.addAttribute("categoryVO", categoryVO);
-
+		model.addAttribute("acc_no",1); //로그인 시에 session 들어올 것
 		ArrayList<HashtagVO> list = this.sconProc.select_hashtag();
 		System.out.println("-> tag_no :" + list.get(0).getTag_no());
 		model.addAttribute("list", list);
@@ -395,7 +438,7 @@ public class Share_contentsCont {
 	@PostMapping("/create")
 	public String create(Model model, Share_contentsVO scontentsVO, String url_link, RedirectAttributes ra,
 			List<MultipartFile> fnamesMF, @RequestParam("tag_no") int[] tag_no) {
-
+	  //System.out.println(" -> create acc_no :" +scontentsVO.getacc_no()); //로그인 시에 session 들어올 것
 		System.out.println("-> fnamesMF :" + fnamesMF);
 		String[] url_sub_link = { "1", "1", "1", "1", "1" };
 
@@ -622,9 +665,9 @@ public class Share_contentsCont {
 	@GetMapping("/list_by_search")
 	public String list_by_search(Model model, int cate_no, @RequestParam(name = "word", defaultValue = "") String word,
 			@RequestParam(name = "now_page", defaultValue = "1") int now_page) {
-
+		
 		word = Tool.checkNull(word).trim();
-
+		
 		// cate_no를 가져오기 위한 카테고리 가져오기
 		CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
 		model.addAttribute("categoryVO", categoryVO);
@@ -640,7 +683,6 @@ public class Share_contentsCont {
 
 		ArrayList<Share_contentsVO> list = this.sconProc.list_by_contents_search_paging(map);
 		model.addAttribute("list", list);
-
 		model.addAttribute("word", word);
 		// 사진 하나만 나오게 하기
 		ArrayList<Share_imageVO> list_image = new ArrayList<>();
@@ -668,5 +710,4 @@ public class Share_contentsCont {
 		return "scontents/list_by_search_paging";
 
 	}
-
 }

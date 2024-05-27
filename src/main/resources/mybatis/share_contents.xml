@@ -66,7 +66,7 @@
 		INSERT INTO share_contents(scon_no, scon_title,
 		scon_contents,scon_bookmark,
 		scon_views,scon_date, acc_no,cate_no)
-		VALUES(share_contents_SEQ.nextval,#{scon_title},#{scon_contents},1,0,sysdate,1,1)
+		VALUES(share_contents_SEQ.nextval,#{scon_title},#{scon_contents},1,0,sysdate,#{acc_no},1)
 	</insert>
 
 	<delete id="delete" parameterType="int">
@@ -231,6 +231,7 @@
 		where tag_no=#{tag_no}
 	</select>
 
+ <!--  전체 이미지 조회 -->
 	<select id="list_image"
 		resultType="dev.mvc.share_contentsdto.Share_imageVO">
 		SELECT
@@ -367,6 +368,50 @@
     <!-- 1 page: WHERE r >= 1 AND r <= 10; 2 page: WHERE r >= 11 AND r <= 20; 
       3 page: WHERE r >= 21 AND r <= 30; -->
   </select>
+  <!-- scon_no에 따른 선택삭제 -->
+<delete id="delete_sconno" parameterType="list">
+    DELETE FROM share_contents
+    WHERE scon_no IN 
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+        #{item}
+    </foreach>
+</delete>
+
+<!--  scon_no에 따른 이미지 삭제 -->
+<delete id="sdelete_image" parameterType="list">
+    DELETE FROM share_image
+    WHERE scon_no IN 
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+        #{item}
+    </foreach>
+</delete>
+
+<!--  scon_no에 따른 url삭제 -->
+<delete id="sdelete_url" parameterType="list">
+    DELETE FROM contents_url
+    WHERE scon_no IN 
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+        #{item}
+    </foreach>
+</delete>
+<!--  scon_no에 따른 comment삭제 -->
+<delete id="sdelete_comment" parameterType="list">
+		DELETE FROM share_comment
+		WHERE scon_no IN
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+        #{item}
+    </foreach>
+</delete>
+
+<!--  scon_no에 따른 태그 삭제 -->
+<delete id="sdelete_tag" parameterType="list">
+		DELETE FROM contents_tag
+		WHERE scon_no IN
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+        #{item}
+    </foreach>
+</delete>
+
 </mapper>
 
 

@@ -49,4 +49,6 @@ public class Qna_imageVO {
   // private MultipartFile fnamesMF;  // 하나의 파일 처리
   /** 파일 단위 출력 */
   private String flabel;   
+  
+  private MultipartFile file1MF = null;
 }

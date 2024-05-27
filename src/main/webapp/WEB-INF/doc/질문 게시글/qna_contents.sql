@@ -47,7 +47,7 @@ SELECT * FROM qna_contents;
 
 -- Create, 등록: 1건 이상
 INSERT INTO QNA_CONTENTS(qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_comment, qcon_date, word, qcon_passwd)
-VALUES(qna_contents_seq.nextval, 2, 1, '찾아주세요!', '사진 속 물건과 비슷한게 있을까요?', 1, 1, 1, sysdate, '질문', '1234');
+VALUES(qna_contents_seq.nextval, 2, 1, '찾아주세요!', '사진 속 물건과 비슷한게 있을까요?', 0, 0, 0, sysdate, '질문', '1234');
 
 INSERT INTO QNA_CONTENTS(qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_comment, qcon_date, word, qcon_passwd)
 VALUES(qna_contents_seq.nextval, 2, 2, '가성비', '화이트 데스크테리어에 어울릴만한 가성비 아이템 추천해주세요.', 0, 0, 0, sysdate, '화이트', '1234');
@@ -65,7 +65,7 @@ ORDER BY qcon_no asc;
 -- 해당 컨텐츠 조회
 SELECT qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_comment, qcon_date
 FROM qna_contents
-WHERE qcon_no=1;
+WHERE qcon_no=2;
 
 -- 해당 컨텐츠 삭제
 DELETE FROM qna_contents
@@ -90,7 +90,7 @@ ORDER BY sysdate asc;
 
 -- 조회수 올리기
 UPDATE qna_contents
-SET qna_views = qna_views+1
+SET qcon_views = qcon_views+1
 WHERE qcon_no=1;
 
 rollback;

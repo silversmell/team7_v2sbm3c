@@ -57,7 +57,7 @@ public interface Qna_contentsProcInter {
   /** 
    * SPAN태그를 이용한 박스 모델의 지원, 1 페이지부터 시작 
    * 현재 페이지: 11 / 22   [이전] 11 12 13 14 15 16 17 18 19 20 [다음] 
-   * @param cateno  카테고리 번호
+   * @param cate_no  카테고리 번호
    * @param now_page  현재 페이지
    * @param now_page 
    * @param word 검색어
@@ -67,7 +67,7 @@ public interface Qna_contentsProcInter {
    * @param page_per_block 블럭당 페이지 수
    * @return 페이징 생성 문자열
    */ 
-  public String pagingBox(int cateno, int now_page, String word, String list_file, int search_count, 
+  public String pagingBox(int cate_no, int now_page, String word, String list_file, int search_count, 
                                       int record_per_page, int page_per_block);   
   
   /**
@@ -76,6 +76,13 @@ public interface Qna_contentsProcInter {
    * @return
    */
   public int qna_password_check(HashMap<String, Object> hashMap);
+  
+  /**
+   * 조회수 증가
+   * @param qcon_no
+   * @return
+   */
+  public int qna_update_view(int qcon_no);
   
   /**
    * 질문글 텍스트 수정
@@ -159,7 +166,7 @@ public interface Qna_contentsProcInter {
    * @param acc_no
    * @return
    */
-  public int qna_delete_comment(int qcon_no, int acc_no);
+  public int qna_delete_comment(HashMap<String, Object> hashMap);
   
   /**
    * 질문글 당 댓글 수

@@ -2,6 +2,7 @@ package dev.mvc.share_contents;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import dev.mvc.recommend.HashtagVO;
 import dev.mvc.share_contentsdto.Contents_tagVO;
@@ -330,6 +331,39 @@ public interface Share_contentsProcInter {
     * @return
     */
    public ArrayList contents_tag_search_paging(HashMap<String,Object> map);
+   
+   /**
+    * scon_no에 따른 선택 삭제
+    * @param scon_no
+    * @return int
+    */
+   public int delete_sconno(List<Integer> scon_no);
+   /** 
+    * scon_no에 따른 이미지 여러장 삭제
+    * @param scon_no
+    * @return int
+    */
+   public int sdelete_image(List<Integer> scon_no);
+   
+   /** 
+    * scon_no에 따른 url 삭제
+    * @param scon_no
+    * @return int
+    */
+   public int sdelete_url(List<Integer> scon_no);
+   /** 
+    * scon_no에 따른 comment 삭제
+    * @param scon_no
+    * @return int
+    */
+   public int sdelete_comment(List<Integer> scon_no);
+   /** 
+    * scon_no에 따른 tag 삭제
+    * @param scon_no
+    * @return int
+    */
+   public int sdelete_tag (List<Integer> scon_no);
+
 	 
 
 
