@@ -105,8 +105,6 @@ WHERE qcon_no = 1;
 DELETE FROM qna_contents
 WHERE cate_no=2 AND qcon_no <= 99;
 
--- 질문 이미지 전체 조회
-SELECT 
 
 -- 검색
 -- word 컬럼의 존재 이유: 검색 정확도를 높이기 위하여 중요 단어를 명시

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -463,7 +464,6 @@ public class Qna_contentsCont {
         cnt1++;
       }
   
-  
     }
     
     ra.addAttribute("cate_no", cate_no);
@@ -473,20 +473,49 @@ public class Qna_contentsCont {
     return "redirect:/qcontents/qna_read";
   }
   
+  /**
+   * 질문글 삭제
+   * @param model
+   * @param qcon_no
+   * @return
+   */
   @GetMapping("/qna_delete")
-  public String qua_delete_form(Model model,int qcon_no) {
-	  ArrayList<Qna_contentsVO> qna_contentsVO = this.qna_contentsProc.list_by_qcon_no(qcon_no);
-	  model.addAttribute("qna_contentsVO",qna_contentsVO);
-	  return "qcontents/delete";
+  public String qna_delete(HttpSession session, 
+                                  Model model, 
+                                  @RequestParam(name="cate_no", defaultValue = "2") int cate_no, 
+                                  int qcon_no, int now_page) {
+    
+    model.addAttribute("cate_no", cate_no);
+    model.addAttribute("now_page", now_page);
+    
+    // 카테고리 가져오기
+    CategoryVO categoryVO = this.categoryProc.cate_read(cate_no); // 카테고리 읽어옴
+    model.addAttribute("categoryVO", categoryVO);
+    
+    // 질문글 가져오기
+    Qna_contentsVO qna_contentsVO = this.qna_contentsProc.qna_read(qcon_no);
+    model.addAttribute("qna_contentsVO", qna_contentsVO);
+	  
+	  return "qcontents/qna_delete";
   }
-  @PostMapping("/delete")
-  public String qna_delete(int qcon_no, int cate_no,RedirectAttributes ra) {
-	  System.out.println("-> qcon_no:" + qcon_no);
+  
+  /**
+   * 질문글 삭제 처리
+   * @param qcon_no
+   * @param cate_no
+   * @param ra
+   * @return
+   */
+  @PostMapping("/qna_delete")
+  public String qna_delete(RedirectAttributes ra, 
+                                  int qcon_no, int cate_no, int now_page) {
+    
+//	  System.out.println("-> qcon_no:" + qcon_no);
 	  ArrayList<Qna_contentsVO> qna_contentsVO = this.qna_contentsProc.list_by_qcon_no(qcon_no); //회원정보 불러오기 위함.
 	  
 	  int acc_no = qna_contentsVO.get(0).getAcc_no(); //댓글 삭제 parameter 값에 넣을 회원번호
 	  
-	  HashMap<String,Object> map = new HashMap<>();
+	  HashMap<String,Object> map = new HashMap<String,Object>();
 	  map.put("qcon_no", qcon_no);
 	  map.put("acc_no", acc_no);
 	  
@@ -506,7 +535,72 @@ public class Qna_contentsCont {
 	  }
 	  
 	  ra.addAttribute("cate_no",cate_no);
-	  return "redirect:/qcontents/list_all";
+	  ra.addAttribute("now_page", now_page);
+	  
+	  return "redirect:/qcontents/qna_list_all";
+  }
+  
+  /**
+   * 댓글 등록 처리
+   * @param ra
+   * @param request
+   * @param model
+   * @param qna_contentsVO
+   * @param qna_commentVO
+   * @param cate_no
+   * @param qcon_no
+   * @param acc_no
+   * @param now_page
+   * @return
+   */
+  @ResponseBody
+  @PostMapping(value="/qna_create_comment")
+  public String qna_create_comment(RedirectAttributes ra,
+                                              HttpServletRequest request,
+                                              Model model,
+                                              Qna_contentsVO qna_contentsVO,
+                                              Qna_commentVO qna_commentVO,
+                                              int cate_no, int qcon_no, int acc_no, int now_page) {
+    
+    // 카테고리 가져오기
+    CategoryVO categoryVO = this.categoryProc.cate_read(cate_no); // 카테고리 읽어옴
+    model.addAttribute("categoryVO", categoryVO);
+    
+    // 질문글 가져오기
+    this.qna_contentsProc.qna_read(qcon_no);
+    model.addAttribute("qna_contentsVO", qna_contentsVO);
+    
+    HashMap<String, Object> hashMap = new HashMap<String, Object>();
+    hashMap.put("qcon_no", qcon_no);
+    hashMap.put("acc_no", acc_no);
+    hashMap.put("cate_no", cate_no);
+    hashMap.put("now_page", now_page);
+    
+    // 댓글 등록
+    int cnt = this.qna_contentsProc.qna_create_comment(hashMap);
+    
+    if (cnt == 1) {
+      System.out.println("등록 성공");
+      int qcmt_no = qna_commentVO.getQcmt_no();
+      System.out.println("-> qcmt_no: " + qcmt_no);
+      
+      ra.addAttribute("qcmt_no", qcmt_no);
+      
+      return "redirect:/qcontents/qna_read";
+    } else {
+      System.out.println("질문글 댓글 등록 실패");
+      
+      ra.addFlashAttribute("code", "qna_create_fail"); // 등록 실패
+      ra.addFlashAttribute("cnt", 0); // cnt: 0, 질문글 등록 실패
+      ra.addFlashAttribute("url", "/qcontents/msg"); // /templates/qcontents/msg.html
+    }
+    
+    ra.addAttribute("cate_no", cate_no);
+    ra.addAttribute("qcon_no", qcon_no);
+    ra.addAttribute("now_page", now_page);
+    ra.addAttribute("acc_no", acc_no);
+    
+    return "redirect:/qcontents/qna_read";
   }
 
 }
