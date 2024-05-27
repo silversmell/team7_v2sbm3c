@@ -277,6 +277,10 @@ public class Qna_contentsCont {
       model.addAttribute("qna_imageVO", qna_imageVO);
       model.addAttribute("now_page", now_page);
       
+      // 댓글 목록 가져오기
+      ArrayList<Qna_commentVO> qna_comment = this.qna_contentsProc.list_by_qcmt_no_join(qcon_no);
+      model.addAttribute("qna_comment", qna_comment);
+      
       return "qcontents/qna_read"; // /templates/qcontents/qna_read;
   }
 
@@ -560,6 +564,7 @@ public class Qna_contentsCont {
                                               Model model,
                                               Qna_contentsVO qna_contentsVO,
                                               Qna_commentVO qna_commentVO,
+                                              String qna_comment,
                                               int cate_no, int qcon_no, int acc_no, int now_page) {
     
     // 카테고리 가져오기
@@ -571,6 +576,7 @@ public class Qna_contentsCont {
     model.addAttribute("qna_contentsVO", qna_contentsVO);
     
     HashMap<String, Object> hashMap = new HashMap<String, Object>();
+    hashMap.put("qna_comment", qna_comment);
     hashMap.put("qcon_no", qcon_no);
     hashMap.put("acc_no", acc_no);
     hashMap.put("cate_no", cate_no);

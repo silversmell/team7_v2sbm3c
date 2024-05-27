@@ -1,5 +1,63 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout}">
+<script>
+$(function(){
+   $('#btn_recom').on("click", function() { 
+        var qcon_no = $('#qcon_no').val(); // qcon_no 값을 읽어옴
+        update_recom_ajax(qcon_no); 
+    });
+
+    // 댓글 목록 초기 로딩
+    loadComments();
+
+    // 더보기 버튼 클릭 이벤트
+    $('#btn_add').on('click', function() {
+        var replyPage = $('#reply_list').data('now_page');
+        loadComments(replyPage + 1);
+    });
+});
+
+// 댓글 등록 함수
+function reply_create() {
+    var formData = $('#frm_reply').serialize(); // 폼 데이터 직렬화
+
+    $.ajax({
+        url: "/qcontents/qna_create_comment", // 댓글 등록을 처리하는 컨트롤러 URL
+        type: "POST", // HTTP 요청 방법
+        data: formData, // FormData 객체를 전송
+        success: function(response) {
+            // 댓글 등록 성공 시 댓글 목록 다시 불러오기
+            loadComments();
+        },
+        error: function(xhr, status, error) {
+            console.error(error); // 에러 메시지 출력
+        }
+    });
+}
+
+// 댓글 목록을 불러오는 함수
+function loadComments(page) {
+    // 페이지가 지정되지 않으면 기본값으로 1을 사용
+    page = page || 1;
+
+    $.ajax({
+        url: "/qcontents/qna_read_comment", // 댓글 목록을 불러오는 컨트롤러 URL
+        type: "GET", // HTTP 요청 방법
+        data: {
+            qcon_no: "${qna_contentsVO.qcon_no}",
+            page: page
+        },
+        success: function(response) {
+            $('#reply_list').html(response); // 댓글 목록 업데이트
+            $('#reply_list').data('replyPage', page); // 현재 페이지 업데이트
+        },
+        error: function(xhr, status, error) {
+            console.error(error); // 에러 메시지 출력
+        }
+    });
+}
+</script>
+
 <div layout:fragment="content">
   <div class='title_line'>
     <span th:text="${qna_contentsVO.qcon_name}" class="title_line_text"></span> > 글 조회
@@ -21,33 +79,24 @@
  
   <div class='menu_line'></div>
   
-  <form action="/qcontents/qna_read" method="get">
-    <input type="hidden" name="cate_no" th:value="${categoryVO.cate_no}">
-    <input type="hidden" name="qcon_no" th:value="${qna_contentsVO.qcon_no}">
-    <input type="hidden" name="now_page" th:value="${now_page}">
+  <form id="frm_reply" action="/qcontents/qna_create_comment" method="post">
+    <input type="hidden" name="cate_no" value="${categoryVO.cate_no}">
+    <input type="hidden" name="qcon_no" value="${qna_contentsVO.qcon_no}">
+    <input type="hidden" name="acc_no" value="${qna_contentsVO.acc_no}">
+    <input type="hidden" name="now_page" value="${now_page}">
 
     <fieldset class="fieldset_basic">
-      <ul>
-        <li class="li_none">
-          <div style="width: 100%; word-break: break-all;">
-            <div th:each="image : ${qna_imageVO}">
-              <div th:if="${image.file_origin_name.endsWith('jpg') or image.file_origin_name.endsWith('png') or image.file_origin_name.endsWith('gif')}">
-                <img th:src="@{|/contents/storage/${image.file_upload_name}|}" style='width: 50%; float: left; margin-top: 0.5%; margin-right: 1%;'>
-              </div>
-            </div>
-            <span style="font-size: 1.5em; font-weight: bold;" th:text="${qna_contentsVO.qcon_name}"></span>
-            <span style="font-size: 1em;" th:text="${qna_contentsVO.qcon_date}"></span><br><br>
-            <span style="font-size: 1em;" th:text="|조회수: ${qna_contentsVO.qcon_views}|"></span><br><br>
-            <div style="white-space: pre-wrap;"><span th:text="${qna_contentsVO.qcon_contents}"></span></div>
-          </div>
-        </li>
-        <li class="li_none" th:each="image : ${qna_imageVO}" th:if="${image.file_size > 0}">
-          <div>
-            첨부 파일: <a th:href="@{|/download?dir=/contents/storage&filename=${image.file_upload_name}&downname=${image.file_origin_name}|}" th:text="|${image.file_origin_name}|"></a>
-          </div>
-        </li>   
-      </ul>
+        <legend>댓글 등록</legend>
+        <textarea name="qna_comment" id="qna_comment" rows="4" cols="50" placeholder="댓글을 입력하세요"></textarea><br>            
+        <button type="button" onclick="reply_create()">댓글 등록</button>
     </fieldset>
   </form>
+
+  <div id="reply_list" data-replyPage='1'>
+
+  </div>
+  <div id='reply_list_btn' style='border: solid 1px #EEEEEE; margin: 0px auto; width: 100%; background-color: #EEFFFF;'>
+      <button id='btn_add' style='width: 100%;'>더보기 ▽</button>
+  </div>  
 </div>
 </html>
