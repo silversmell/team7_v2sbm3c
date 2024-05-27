@@ -320,6 +320,32 @@ public interface Share_contentsDAOInter {
     * @return int
     */
    public int delete_sconno(List<Integer> scon_no);
+   
+   /** 
+    * scon_no에 따른 이미지 여러장 삭제
+    * @param scon_no
+    * @return int
+    */
+   public int sdelete_image(List<Integer> scon_no);
+   
+   /** 
+    * scon_no에 따른 url 삭제
+    * @param scon_no
+    * @return int
+    */
+   public int sdelete_url(List<Integer> scon_no);
+   /** 
+    * scon_no에 따른 comment 삭제
+    * @param scon_no
+    * @return int
+    */
+   public int sdelete_comment(List<Integer> scon_no);
+   /** 
+    * scon_no에 따른 tag 삭제
+    * @param scon_no
+    * @return int
+    */
+   public int sdelete_tag (List<Integer> scon_no);
 
 //	 /**
 //	  * 우선순위 올림
