@@ -290,12 +290,13 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
     return cnt;
   }
 
-  @Override
-  public int qna_delete_comment(int qcon_no, int acc_no) {
-    int cnt = this.qna_contentsDAO.qna_delete_comment(qcon_no, acc_no);
-    
-    return cnt;
-  }
+@Override
+public int qna_delete_comment(HashMap<String, Object> hashMap) {
+	int cnt = this.qna_contentsDAO.qna_delete_comment(hashMap);
+	return cnt;
+}
+
+
   
   
   

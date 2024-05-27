@@ -166,7 +166,7 @@ public interface Qna_contentsProcInter {
    * @param acc_no
    * @return
    */
-  public int qna_delete_comment(int qcon_no, int acc_no);
+  public int qna_delete_comment(HashMap<String, Object> hashMap);
   
   /**
    * 질문글 당 댓글 수

@@ -473,6 +473,41 @@ public class Qna_contentsCont {
     return "redirect:/qcontents/qna_read";
   }
   
+  @GetMapping("/qna_delete")
+  public String qua_delete_form(Model model,int qcon_no) {
+	  ArrayList<Qna_contentsVO> qna_contentsVO = this.qna_contentsProc.list_by_qcon_no(qcon_no);
+	  model.addAttribute("qna_contentsVO",qna_contentsVO);
+	  return "qcontents/delete";
+  }
+  @PostMapping("/delete")
+  public String qna_delete(int qcon_no, int cate_no,RedirectAttributes ra) {
+	  System.out.println("-> qcon_no:" + qcon_no);
+	  ArrayList<Qna_contentsVO> qna_contentsVO = this.qna_contentsProc.list_by_qcon_no(qcon_no); //회원정보 불러오기 위함.
+	  
+	  int acc_no = qna_contentsVO.get(0).getAcc_no(); //댓글 삭제 parameter 값에 넣을 회원번호
+	  
+	  HashMap<String,Object> map = new HashMap<>();
+	  map.put("qcon_no", qcon_no);
+	  map.put("acc_no", acc_no);
+	  
+	  int cnt_comment = this.qna_contentsProc.qna_delete_comment(map); // 댓글 삭제
+	  if(cnt_comment>0) {
+		  System.out.println("댓글 삭제 성공");
+	  }
+	  
+	  int cnt_image = this.qna_contentsProc.qna_delete_image(qcon_no); //이미지 삭제
+	  if(cnt_image>0) {
+		  System.out.println("이미지 삭제 성공");
+	  }
+
+	  int cnt_contents = this.qna_contentsProc.qna_delete(qcon_no); //글삭제
+	  if(cnt_contents>0) {
+		  System.out.println("글 삭제 성공");
+	  }
+	  
+	  ra.addAttribute("cate_no",cate_no);
+	  return "redirect:/qcontents/list_all";
+  }
 
 }
 
