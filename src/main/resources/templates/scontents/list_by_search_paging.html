@@ -3,6 +3,16 @@
 <!-- layout.html 상속-->
 <div layout:fragment="content">
   <script>
+  function whole_delete(){
+	  if(confirm(" 전체 삭제하시겠습니까?")){
+	  let checkboxes = document.querySelectorAll('Input[name="scon_no"]');
+	  checkboxes.forEach(checkbox =>{
+		  checkbox.checked=true;
+	  });
+	  select_delete();
+  }
+ }
+  
     function select_delete(){
      let checkboxes = document.querySelectorAll('input[name="scon_no"]:checked');
      let sconnos=[];
@@ -65,7 +75,8 @@
 		
 
     <thead>
-      <button type="button" onclick="select_delete()" class="btn btn-secondary btn-sm">선택삭제</button>
+      <button type="button" onclick="select_delete()" class="btn btn-secondary btn-sm"  style="margin-right:10px;">선택삭제</button>
+      <button type="button" onclick="whole_delete()" class="btn btn-secondary btn-sm">전체삭제</button>
         <tr>
             <th class="th_bs">파일</th>
             <th class="th_bs">제목</th>
