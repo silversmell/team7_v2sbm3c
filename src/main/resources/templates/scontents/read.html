@@ -84,28 +84,14 @@
     <a href="javascript:location.reload();">새로고침</a>
 
   </aside> 
-<!--  
-  <aside class="aside_right" th:if="${session.grade != 'admin'}">
-     <a href="javascript:location.reload();">새로고침</a>
-    <span class='menu_divide' >│</span>    
-    <a th:href="@{|./list_by_cateno?cateno=${cateVO.cateno }&word=${word }&now_page=${now_page}|}">목록형</a>    
-    <span class='menu_divide' >│</span>
-    <a th:href="@{|./list_by_cateno_grid?cateno=${cateno }&word=${word }&now_page=${now_page}|}">갤러리형</a>
-  </aside> 
- -->
+
   <div class='menu_line'></div>
 
   <fieldset class="fieldset_basic">
     <ul>
+    <div >
       <li class="li_none">
         <div style="width: 100%; word-break: break-all;">
-          
-
-        <!--  
-          <div th:if="${scontentsVO.file1.endsWith('jpg') or scontentsVO.file1.endsWith('png')  or scontentsVO.file1.endsWith('gif')}">
-            <img th:src="@{|/scontents/storage/${scontentsVO.file1saved}|}" style='width: 50%; float: left; margin-top: 0.5%; margin-right: 1%;'>
-          </div>
-					-->
 					<div class ="horizontal-container">
 					해시태그:
    		<tr th:each="item, status : ${list2}">
@@ -114,15 +100,16 @@
         </td>
     </tr>
     </div>
-    
     <tr th:each="share_imageVO, status:${share_imageVO}">  
+    <div style="display:flex; align-items:center;">
       <div th:if="${share_imageVO.file_origin_name.endsWith('jpg') or share_imageVO.file_origin_name.endsWith('png')  or share_imageVO.file_origin_name.endsWith('gif')}">
-            <img th:src="@{|/contents/storage/${share_imageVO.file_upload_name}|}" style='width: 50%; float: left; margin-top: 0.5%; margin-right: 1%;'>
+            <img th:src="@{|/contents/storage/${share_imageVO.file_upload_name}|}" style='width: 40%; float: left; margin-top: 0.5%; margin-right: 1%;'>
+          </div>
           </div>
     </tr>
 					<br> 
 					</span> 
-					<span style="font-size: 1.5em; font-weight: bold;" th:text="${scontentsVO.scon_title}"></span>
+					<span style="font-size: 1.5em; font-weight: bold;" th:text="${scontentsVO.scon_title}"></span><br>
 					<span style="font-size: 1.5em; font-weight: bold;" th:text="${scontentsVO.scon_contents}"></span>
           <span style="font-size: 1em;" th:text="${scontentsVO.scon_date}"></span><br><br>
           <span style="font-size: 1em;" th:text="|조회수: ${scontentsVO.scon_views}|"></span><br><br>
@@ -136,7 +123,6 @@
         </div>
       </li>
 
-
       <div>
 <div>
 	<a style="font-size: 1em;" th:href="${url_list0}" th:text="${url_list0}" th:if="${url_list0 != '1'}">Link1</a><br><br>
@@ -144,49 +130,41 @@
 	<a style="font-size: 1em;" th:href="${url_list2}" th:text="${url_list2}"  th:if="${url_list2 != '1'}">Link3</a><br><br>
 	<a style="font-size: 1em;" th:href="${url_list3}" th:text="${url_list3}"   th:if="${url_list3 != '1'}">Link4</a><br><br>
 	<a style="font-size: 1em;" th:href="${url_list4}" th:text="${url_list4}"  th:if="${url_list4 != '1'}">Link5</a><br><br>
-
 </div>
 
       </div>
-       <!--  
-      <li class="li_none" th:text="|검색어(키워드): ${scontentsVO.word }|">
-      </li>-->
-      <!-- 
-      <li class="li_none" th:if="${scontentsVO.size1 > 0}">
-        <div >
-          <! ServletRegister.java: registrationBean.addUrlMappings("/download"); --> 
-         <!--  
-          첨부 파일: <a th:href='@{|/download?dir=/scontents/storage&filename=${scontentsVO.file1saved}&downname=${scontentsVO.file1}|}'
-                             th:text='|${scontentsVO.file1}|'></a> <span th:text="|(${scontentsVO.size1_label})|"></span>  
-        </div>
-       
-      </li>  
-       -->
+      </div>
     </ul>
-    
-    <div id="commentSection">
-      <tr th:each="scommentVO, status:${list}">      
+    <br>
+
+  </fieldset>
+        <tr th:each="scommentVO, status:${list}">
+      <div id="commentSection" style="margin-left:60px;" >
+      <div style="display:flex;">
       <td class='td_left'>
-      
-      	
-        <span id="scmt_date" style="font-size: 1em;" th:text="${scommentVO.scmt_date}"></span><br>
+          <div>
+          <span id="scmt_date" style="font-size: 1em;" th:text="${scommentVO.scmt_date}"></span><br><br>
         <span name="acc_id"  th:value = "${acc_id}"  th:text="${acc_id}"></span><br>
         <input type="hidden"  name="scmt_no" th:value="${scommentVO.scmt_no}" ></span>
         <input type="hidden" style="font-size: 1em;" th:value="${acc_no}"></span>
         <span id="scmt_comment" th:text="${scommentVO.scmt_comment}" style="font-weight: bold;"></span><br>
-          <div name="update_co" style="cursor: pointer;" th:onclick="|location.href='./update_comment/${scommentVO.scmt_no}?cate_no=1'|">수정</div>
-          
-         <form name='frm' method='post'  th:action="@{|/scontents/delete_comment|}">
-          <input type="hidden" name="scmt_no" th:value="${scommentVO.scmt_no}">
-          <input type="hidden" name="cate_no" th:value="${categoryVO.cate_no}"> <!-- cate_no 데이터 값 가져옴 -->
-          
-         <button type="submit" name="delete_co" >삭제</button>
-          </form>
+        </div>
       </td>
+        <div style="margin-left: auto;">
+          <div style="display:flex;gap:10px;">
+       <div name="update_co" style="cursor: pointer;" th:onclick="|location.href='./update_comment/${scommentVO.scmt_no}?cate_no=1'|">수정</div>
+      <form name='frm' method='post'  th:action="@{|/scontents/delete_comment|}">
+       <input type="hidden" name="scmt_no" th:value="${scommentVO.scmt_no}">
+       <input type="hidden" name="cate_no" th:value="${categoryVO.cate_no}"> <!-- cate_no 데이터 값 가져옴 -->
+       <span class='menu_divide' >│</span>
+      	<button type="submit" name="delete_co" style="border: none; background-color: white;">삭제</button>
+       </form>
+       </div>
+      </div>     
+      </div>
+      <hr style="width: 100%;">
+      </div>
     </tr>
-    </div>
-    
-  </fieldset>
   
       <div>
       <form name='frm' method='post'  th:action="@{|/scontents/create_comment|}">
@@ -197,21 +175,8 @@
        <textarea name='scmt_comment' id="comment" required="required" value="" class="form-control" rows="5" style='width: 100%;'></textarea>
              <button type='submit' style="margin-top: 4px;">등록</button>
        </form>
-       <!-- 
-      <button type='button' onclick="submit_comment();" 
-             class="btn btn-primary btn-sm" style="margin-top: 4px;">등록</button> -->
     </div>
 
-
-    	<div id="hidden_form"  style="display:none;">
-       <input type="hidden" id="scon_no" name="scon_no" th:value="${scontentsVO.scon_no}">
-			<textarea name='update_comment' id="update_comment" required="required" value="" class="form-control" rows="5" style='width: 100%;'></textarea>
-			<button type='button' onclick="update_comment_submit();" 
-			       class="btn btn-primary btn-sm" style="margin-top: 4px;">수정</button>
-			<button type='button' onclick="cancel_update();" 
-			       class="btn btn-primary btn-sm" style="margin-top: 4px;">취소</button>
-    </div>
-    
     <span id='id_msg'></span>  
 
 </div>

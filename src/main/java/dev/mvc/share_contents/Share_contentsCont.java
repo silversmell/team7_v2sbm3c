@@ -66,7 +66,6 @@ public class Share_contentsCont {
 	@GetMapping("/read") //글 조회
 	public String read(Model model, int scon_no, int cate_no, @RequestParam(name = "acc_id", defaultValue = "0") String acc_id,
 			@RequestParam(name = "acc_no", defaultValue = "0") int acc_no) { // acc_no 필요(session)
-		System.out.println("read시 acc_id->" +acc_id);
 		model.addAttribute("acc_id",acc_id);
 		model.addAttribute("acc_no",acc_no);
 		// 카테고리 가져오기
