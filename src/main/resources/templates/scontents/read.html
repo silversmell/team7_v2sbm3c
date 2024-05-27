@@ -164,12 +164,10 @@
        -->
     </ul>
     <br>
-    <div id="commentSection" style="margin-left:60px;" >
       <tr th:each="scommentVO, status:${list}">
+      <div id="commentSection" style="margin-left:60px;" >
       <div style="display:flex;">
-
       <td class='td_left'>
-          
           <div>
         <span name="acc_id"  th:value = "${acc_id}"  th:text="${acc_id}"></span><br>
         <input type="hidden"  name="scmt_no" th:value="${scommentVO.scmt_no}" ></span>
@@ -177,19 +175,22 @@
         <span id="scmt_comment" th:text="${scommentVO.scmt_comment}" style="font-weight: bold;"></span><br>
         <span id="scmt_date" style="font-size: 1em;" th:text="${scommentVO.scmt_date}"></span><br>
         </div>
-           <div class="button-container" style="display:flex; gap:10px;">
-          <div name="update_co" style="cursor: pointer;" th:onclick="|location.href='./update_comment/${scommentVO.scmt_no}?cate_no=1'|">수정</div>
-         <form name='frm' method='post'  th:action="@{|/scontents/delete_comment|}">
-          <input type="hidden" name="scmt_no" th:value="${scommentVO.scmt_no}">
-          <input type="hidden" name="cate_no" th:value="${categoryVO.cate_no}"> <!-- cate_no 데이터 값 가져옴 -->
-         <button type="submit" name="delete_co" >삭제</button>
-          </form>
-          </div>
       </td>
+        <div style="margin-left: auto;">
+          <div style="display:flex;gap:10px;">
+       <div name="update_co" style="cursor: pointer;" th:onclick="|location.href='./update_comment/${scommentVO.scmt_no}?cate_no=1'|">수정</div>
+      <form name='frm' method='post'  th:action="@{|/scontents/delete_comment|}">
+       <input type="hidden" name="scmt_no" th:value="${scommentVO.scmt_no}">
+       <input type="hidden" name="cate_no" th:value="${categoryVO.cate_no}"> <!-- cate_no 데이터 값 가져옴 -->
+      	<button type="submit" name="delete_co" >삭제</button>
+       </form>
+       </div>
       </div>     
+      </div>
       <hr style="width: 100%;">
+      </div>
     </tr>
-    </div>
+    
   </fieldset>
   
       <div>
