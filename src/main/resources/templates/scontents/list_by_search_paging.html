@@ -3,13 +3,12 @@
 <div layout:fragment="content">
   <script>
   function whole_delete(){
-	  if(confirm(" 전체 삭제하시겠습니까?")){
 	  let checkboxes = document.querySelectorAll('Input[name="scon_no"]');
 	  checkboxes.forEach(checkbox =>{
 		  checkbox.checked=true;
 	  });
   }
- }
+ 
   
     function select_delete(){
      let checkboxes = document.querySelectorAll('input[name="scon_no"]:checked');
@@ -21,6 +20,8 @@
      let url = `./select_delete?${querystring}`;
      console.log(url);
      
+     let confirmation = confirm("삭제하시면 복구할 수 없습니다. 정말 삭제하시겠습니까?");
+     if(confirmation){
      fetch(url,{
        method:'GET',
      })
@@ -38,6 +39,7 @@
        console.error('Error.' ,error);
      })
    }
+  }
     
   </script>
 	<div class='title_line'>
@@ -88,12 +90,11 @@
     </thead>
 
     <tbody>
-        <!-- 해시태그 -->
+
 
 <tr th:if="${list_image.size() > 0}">
     <td class='td_basic' style="vertical-align: middle; text-align: center;">
-        <div th:each="share_imageVO, status:${list_image}">
-        <div class="horizontal-container" style="margin-bottom:5px">
+        <div th:each="share_imageVO, status:${list_image}"><div class="horizontal-container" style="margin-bottom:5px">
         	<input type="checkbox" th:id="'scon_no_' + ${share_imageVO.scon_no}" name="scon_no" th:value="${share_imageVO.scon_no}">
             <div th:if="${share_imageVO.file_origin_name.endsWith('jpg') or share_imageVO.file_origin_name.endsWith('png') or share_imageVO.file_origin_name.endsWith('gif')}">
                 <img th:src="@{|/contents/storage/${share_imageVO.file_thumb_name}|}" style="width: 120px; height: 90px;">
@@ -104,15 +105,15 @@
             </div>
         </div>
     </td>
-    <td>
     
-<div th:each="scontentsVO, status:${list}" style="cursor: pointer; margin-left: 30px; margin-bottom:15px">
+    <td>
+<div th:each="scontentsVO, status:${list}" style="cursor: pointer; margin-left: 30px; margin-bottom:20px; margin-top:10px;">
 			    <div class='td_basic' th:attr="onclick=|location.href='/scontents/read?cate_no=1&scon_no=${scontentsVO.scon_no}'|" style="cursor: pointer;">
-			        <span style="font-size: 1em;" th:text="${scontentsVO.scon_views}"></span><br>
-			        <br>
-			        <span th:text="${scontentsVO.scon_title}" style="font-weight: bold;"></span><br>
+			        조회수: <span style="font-size: 1em;" th:text="${scontentsVO.scon_views}"></span><br>
+			        제목:<span th:text="${scontentsVO.scon_title}" style="font-weight: bold;"></span><br>
 			        <span th:if="${scontentsVO.scon_contents.length() > 160 }" th:text="|${scontentsVO.scon_contents.substring(0, 160)}...|"></span>
 			        <span th:if="${scontentsVO.scon_contents.length() <= 160 }" th:text="|${scontentsVO.scon_contents}|"></span>
+			        <br><br>
 			    </div>
 			</div>
     </td>
