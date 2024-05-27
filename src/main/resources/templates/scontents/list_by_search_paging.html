@@ -3,13 +3,12 @@
 <div layout:fragment="content">
   <script>
   function whole_delete(){
-	  if(confirm(" 전체 삭제하시겠습니까?")){
 	  let checkboxes = document.querySelectorAll('Input[name="scon_no"]');
 	  checkboxes.forEach(checkbox =>{
 		  checkbox.checked=true;
 	  });
   }
- }
+ 
   
     function select_delete(){
      let checkboxes = document.querySelectorAll('input[name="scon_no"]:checked');
@@ -21,6 +20,8 @@
      let url = `./select_delete?${querystring}`;
      console.log(url);
      
+     let confirmation = confirm("삭제하시면 복구할 수 없습니다. 정말 삭제하시겠습니까?");
+     if(confirmation){
      fetch(url,{
        method:'GET',
      })
@@ -38,6 +39,7 @@
        console.error('Error.' ,error);
      })
    }
+  }
     
   </script>
 	<div class='title_line'>
