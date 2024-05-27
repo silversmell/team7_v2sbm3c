@@ -584,3 +584,28 @@
   	margin: 7px;
   }
   
+  .button-container{
+  	text-align: right;
+  }
+  .button-container_left{
+  	text-align: left;
+  }
+  
+  button.button_2 {
+  border: 2px solid #cccccc;
+  outline: none;
+  font-size: 15px;
+  margin: 3px;
+  background: white;
+  color: black;
+  padding: 2px;
+  cursor: pointer;
+  border-radius: 10px;
+}
+	.horizontal-container{
+		display: flex;
+		flex-direction: row; /* 수평 방향으로 요소 배치 */
+		align-items:center;
+		gap: 10px;
+	}
+  

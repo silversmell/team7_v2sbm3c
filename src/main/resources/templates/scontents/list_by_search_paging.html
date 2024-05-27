@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout}">
-<!-- layout.html 상속-->
 <div layout:fragment="content">
   <script>
   function whole_delete(){
@@ -9,7 +8,6 @@
 	  checkboxes.forEach(checkbox =>{
 		  checkbox.checked=true;
 	  });
-	  select_delete();
   }
  }
   
@@ -75,8 +73,10 @@
 		
 
     <thead>
-      <button type="button" onclick="select_delete()" class="btn btn-secondary btn-sm"  style="margin-right:10px;">선택삭제</button>
-      <button type="button" onclick="whole_delete()" class="btn btn-secondary btn-sm">전체삭제</button>
+    <div class="button-container">
+      <button type="button" onclick="select_delete()" class="button_2"  style="margin-right:10px;">선택삭제</button>
+      <button type="button" onclick="whole_delete()" class="button_2">전체선택</button>
+      </div>
         <tr>
             <th class="th_bs">파일</th>
             <th class="th_bs">제목</th>
@@ -90,11 +90,14 @@
 <tr th:if="${list_image.size() > 0}">
     <td class='td_basic' style="vertical-align: middle; text-align: center;">
         <div th:each="share_imageVO, status:${list_image}">
+        <div class="horizontal-container">
+        	<input type="checkbox" th:id="'scon_no_' + ${share_imageVO.scon_no}" name="scon_no" th:value="${share_imageVO.scon_no}">
             <div th:if="${share_imageVO.file_origin_name.endsWith('jpg') or share_imageVO.file_origin_name.endsWith('png') or share_imageVO.file_origin_name.endsWith('gif')}">
                 <img th:src="@{|/contents/storage/${share_imageVO.file_thumb_name}|}" style="width: 120px; height: 90px;">
             </div>
             <div th:if="${((share_imageVO.file_origin_name.endsWith('jpg') or share_imageVO.file_origin_name.endsWith('png') or share_imageVO.file_origin_name.endsWith('gif')) == false) and (share_imageVO.file_size > 0)}">
                 <span th:text="${share_imageVO.file_origin_name}"></span>
+            </div>
             </div>
         </div>
     </td>
@@ -107,7 +110,11 @@
         <span th:if="${scontentsVO.scon_contents.length() > 160 }" th:text="|${scontentsVO.scon_contents.substring(0, 160)}...|"></span>
         <span th:if="${scontentsVO.scon_contents.length() <= 160 }" th:text="|${scontentsVO.scon_contents}|"></span>
     </div>
+    <!--  
+    <div class="button-container_left">
     <input type="checkbox" th:id="'scon_no_' + ${scontentsVO.scon_no}" name="scon_no" th:value="${scontentsVO.scon_no}">
+    </div>
+    -->
 </div>
 
     </td>
