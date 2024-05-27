@@ -420,4 +420,28 @@ public class Share_contentsProc implements Share_contentsProcInter {
     int cnt = this.scontentsDAO.delete_sconno(scon_no);
     return cnt;
   }
+
+@Override
+public int sdelete_image(List<Integer> scon_no) {
+	int cnt = this.scontentsDAO.sdelete_image(scon_no);
+	return cnt;
+}
+
+@Override
+public int sdelete_url(List<Integer> scon_no) {
+	int cnt = this.scontentsDAO.sdelete_url(scon_no);
+	return cnt;
+}
+
+@Override
+public int sdelete_comment(List<Integer> scon_no) {
+	int cnt = this.scontentsDAO.sdelete_comment(scon_no);
+	return cnt;
+}
+
+@Override
+public int sdelete_tag(List<Integer> scon_no) {
+	int cnt = this.scontentsDAO.sdelete_tag(scon_no);
+	return cnt;
+}
 }

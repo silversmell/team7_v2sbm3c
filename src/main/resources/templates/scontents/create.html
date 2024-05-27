@@ -2,6 +2,28 @@
 
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
 <div layout:fragment="content">
+
+<script>
+function send(){
+	  var checkboxes = document.querySelectorAll('input[type="checkbox"][name="tag_no"]');
+	  var fileInput = document.querySelector('input[type="file"]');
+	  var isChecked = false;
+	  checkboxes.forEach(function(checkbox){
+	    if(checkbox.checked){
+	      isChecked = true;
+	    }
+	  });
+	  if(!isChecked) {
+	    alert("하나 이상의 해시태그를 선택하세요.");
+	    return false;
+	  }
+	  if(!fileInput.files || fileInput.files.length===0){
+		  alert("이미지를 선택하세요.");
+		  return false;
+	  }
+	  document.getElementById('frm').submit(); 
+	}
+	</script>
   <div class='title_line'>
 
    글 등록
@@ -13,7 +35,7 @@
   
   <div class='menu_line'></div>
   
-  <form name='frm' method='post' th:object="${scontentsVO}" action='./create' enctype="multipart/form-data">
+  <form name='frm'  id="frm" method='post' th:object="${scontentsVO}" action='./create' enctype="multipart/form-data">
   <input type="hidden" name="cate_no" th:value="${categoryVO.cate_no}"> <!-- cate_no 데이터 값 가져옴 -->
     <div>
       <tr th:each="hashtag, status:${list}">      
@@ -75,7 +97,7 @@
       </div>
       
     <div class="content_body_bottom">
-      <button type="submit" class="btn btn-secondary btn-sm">등록</button>
+      <button type="button" onclick ="send();" class="btn btn-secondary btn-sm">등록</button>
       <button type="button" th:attr="onclick=|location.href='./list_by_search?cate_no=${cate_no}'|" class="btn btn-secondary btn-sm">목록</button>
     </div>
   

@@ -376,6 +376,42 @@
         #{item}
     </foreach>
 </delete>
+
+<!--  scon_no에 따른 이미지 삭제 -->
+<delete id="sdelete_image" parameterType="list">
+    DELETE FROM share_image
+    WHERE scon_no IN 
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+        #{item}
+    </foreach>
+</delete>
+
+<!--  scon_no에 따른 url삭제 -->
+<delete id="sdelete_url" parameterType="list">
+    DELETE FROM contents_url
+    WHERE scon_no IN 
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+        #{item}
+    </foreach>
+</delete>
+<!--  scon_no에 따른 comment삭제 -->
+<delete id="sdelete_comment" parameterType="list">
+		DELETE FROM share_comment
+		WHERE scon_no IN
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+        #{item}
+    </foreach>
+</delete>
+
+<!--  scon_no에 따른 태그 삭제 -->
+<delete id="sdelete_tag" parameterType="list">
+		DELETE FROM contents_tag
+		WHERE scon_no IN
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+        #{item}
+    </foreach>
+</delete>
+
 </mapper>
 
 

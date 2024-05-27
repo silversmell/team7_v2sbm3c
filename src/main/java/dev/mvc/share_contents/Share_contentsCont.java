@@ -229,6 +229,10 @@ public class Share_contentsCont {
 	@ResponseBody
 	public String select_delete(@RequestParam(value = "scon_no") List<Integer> scon_no) {
 	  System.out.println("-> select_delete scon_no:" +scon_no);
+	  this.sconProc.sdelete_image(scon_no);
+	  this.sconProc.sdelete_tag(scon_no);
+	  this.sconProc.sdelete_comment(scon_no);
+	  this.sconProc.sdelete_url(scon_no);
 	  int cnt = this.sconProc.delete_sconno(scon_no);
 	  if(cnt>0) {
 	    System.out.println("삭제 성공");
@@ -664,7 +668,6 @@ public class Share_contentsCont {
 
 		ArrayList<Share_contentsVO> list = this.sconProc.list_by_contents_search_paging(map);
 		model.addAttribute("list", list);
-
 		model.addAttribute("word", word);
 		// 사진 하나만 나오게 하기
 		ArrayList<Share_imageVO> list_image = new ArrayList<>();
