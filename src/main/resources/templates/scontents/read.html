@@ -167,7 +167,10 @@
     <div id="commentSection">
       <tr th:each="scommentVO, status:${list}">      
       <td class='td_left'>
+      
+      	
         <span id="scmt_date" style="font-size: 1em;" th:text="${scommentVO.scmt_date}"></span><br>
+        <span name="acc_id"  th:value = "${acc_id}"  th:text="${acc_id}"></span><br>
         <input type="hidden"  name="scmt_no" th:value="${scommentVO.scmt_no}" ></span>
         <input type="hidden" style="font-size: 1em;" th:value="${acc_no}"></span>
         <span id="scmt_comment" th:text="${scommentVO.scmt_comment}" style="font-weight: bold;"></span><br>

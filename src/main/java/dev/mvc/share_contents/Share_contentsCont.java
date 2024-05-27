@@ -19,6 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import ch.qos.logback.core.recovery.ResilientSyslogOutputStream;
+import dev.mvc.account.AccountProcInter;
+import dev.mvc.account.AccountVO;
 import dev.mvc.category.CategoryProcInter;
 import dev.mvc.category.CategoryVO;
 import dev.mvc.recommend.HashtagVO;
@@ -34,10 +36,15 @@ import dev.mvc.tool.Upload;
 @RequestMapping("/scontents") // http://localhost:9093/scontents/list_by_search?cate_no=1
 @Controller
 public class Share_contentsCont {
+	
+	@Autowired
+	@Qualifier("dev.mvc.account.AccountProc")
+	private AccountProcInter accountProc;
 
 	@Autowired
 	@Qualifier("dev.mvc.category.CategoryProc")
 	private CategoryProcInter categoryProc;
+	
 
 	@Autowired
 	@Qualifier("dev.mvc.share_contents.Share_contentsProc")
@@ -57,8 +64,11 @@ public class Share_contentsCont {
 	}
 
 	@GetMapping("/read") //글 조회
-	public String read(Model model, int scon_no, int cate_no) { // acc_no 필요(session)
-
+	public String read(Model model, int scon_no, int cate_no, @RequestParam(name = "acc_id", defaultValue = "0") String acc_id,
+			@RequestParam(name = "acc_no", defaultValue = "0") int acc_no) { // acc_no 필요(session)
+		System.out.println("read시 acc_id->" +acc_id);
+		model.addAttribute("acc_id",acc_id);
+		model.addAttribute("acc_no",acc_no);
 		// 카테고리 가져오기
 		CategoryVO categoryVO = this.categoryProc.cate_read(cate_no); // 카테고리 읽어옴
 		model.addAttribute("categoryVO", categoryVO);
@@ -149,11 +159,16 @@ public class Share_contentsCont {
     map.put("scmt_comment", scmt_comment);
     map.put("scon_no", scon_no);
     map.put("acc_no", acc_no);
-
     int cnt = this.sconProc.create_comment(map);
+    
+    AccountVO accountVO = this.accountProc.read(acc_no);
+    
+    String acc_id= accountVO.getAcc_id();
     ra.addAttribute("scon_no", scon_no);
     ra.addAttribute("cate_no", cate_no);
-
+    ra.addAttribute("acc_no", acc_no);
+    ra.addAttribute("acc_id",acc_id);
+    
     return "redirect:/scontents/read";
 
   }
@@ -650,9 +665,9 @@ public class Share_contentsCont {
 	@GetMapping("/list_by_search")
 	public String list_by_search(Model model, int cate_no, @RequestParam(name = "word", defaultValue = "") String word,
 			@RequestParam(name = "now_page", defaultValue = "1") int now_page) {
-
+		
 		word = Tool.checkNull(word).trim();
-
+		
 		// cate_no를 가져오기 위한 카테고리 가져오기
 		CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
 		model.addAttribute("categoryVO", categoryVO);
