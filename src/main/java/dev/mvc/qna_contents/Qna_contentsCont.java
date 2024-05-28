@@ -20,6 +20,7 @@ import dev.mvc.account.AccountProc;
 import dev.mvc.category.CategoryProcInter;
 import dev.mvc.category.CategoryVO;
 import dev.mvc.category.CategoryVOMenu;
+import dev.mvc.share_contentsdto.Share_contentsVO;
 import dev.mvc.tool.Tool;
 import dev.mvc.tool.Upload;
 import jakarta.servlet.http.HttpServletRequest;
@@ -277,10 +278,6 @@ public class Qna_contentsCont {
       model.addAttribute("qna_imageVO", qna_imageVO);
       model.addAttribute("now_page", now_page);
       
-      // 댓글 목록 가져오기
-      ArrayList<Qna_commentVO> qna_comment = this.qna_contentsProc.list_by_qcmt_no_join(qcon_no);
-      model.addAttribute("qna_comment", qna_comment);
-      
       return "qcontents/qna_read"; // /templates/qcontents/qna_read;
   }
 
@@ -515,9 +512,11 @@ public class Qna_contentsCont {
                                   int qcon_no, int cate_no, int now_page) {
     
 //	  System.out.println("-> qcon_no:" + qcon_no);
-	  ArrayList<Qna_contentsVO> qna_contentsVO = this.qna_contentsProc.list_by_qcon_no(qcon_no); //회원정보 불러오기 위함.
+	  ArrayList<Qna_contentsVO> list = this.qna_contentsProc.list_by_qcon_no(qcon_no); //회원정보 불러오기 위함.
 	  
-	  int acc_no = qna_contentsVO.get(0).getAcc_no(); //댓글 삭제 parameter 값에 넣을 회원번호
+	  Qna_contentsVO qna_contentsVO = this.qna_contentsProc.qna_read(qcon_no); // scon_no 가져오기
+	  
+	  int acc_no = list.get(0).getAcc_no(); //댓글 삭제 parameter 값에 넣을 회원번호
 	  
 	  HashMap<String,Object> map = new HashMap<String,Object>();
 	  map.put("qcon_no", qcon_no);
@@ -536,6 +535,7 @@ public class Qna_contentsCont {
 	  int cnt_contents = this.qna_contentsProc.qna_delete(qcon_no); //글삭제
 	  if(cnt_contents>0) {
 		  System.out.println("글 삭제 성공");
+		  this.categoryProc.cnt_minus(qna_contentsVO.getCate_no()); // 관련 글 수 감소
 	  }
 	  
 	  ra.addAttribute("cate_no",cate_no);
@@ -544,70 +544,6 @@ public class Qna_contentsCont {
 	  return "redirect:/qcontents/qna_list_all";
   }
   
-  /**
-   * 댓글 등록 처리
-   * @param ra
-   * @param request
-   * @param model
-   * @param qna_contentsVO
-   * @param qna_commentVO
-   * @param cate_no
-   * @param qcon_no
-   * @param acc_no
-   * @param now_page
-   * @return
-   */
-  @ResponseBody
-  @PostMapping(value="/qna_create_comment")
-  public String qna_create_comment(RedirectAttributes ra,
-                                              HttpServletRequest request,
-                                              Model model,
-                                              Qna_contentsVO qna_contentsVO,
-                                              Qna_commentVO qna_commentVO,
-                                              String qna_comment,
-                                              int cate_no, int qcon_no, int acc_no, int now_page) {
-    
-    // 카테고리 가져오기
-    CategoryVO categoryVO = this.categoryProc.cate_read(cate_no); // 카테고리 읽어옴
-    model.addAttribute("categoryVO", categoryVO);
-    
-    // 질문글 가져오기
-    this.qna_contentsProc.qna_read(qcon_no);
-    model.addAttribute("qna_contentsVO", qna_contentsVO);
-    
-    HashMap<String, Object> hashMap = new HashMap<String, Object>();
-    hashMap.put("qna_comment", qna_comment);
-    hashMap.put("qcon_no", qcon_no);
-    hashMap.put("acc_no", acc_no);
-    hashMap.put("cate_no", cate_no);
-    hashMap.put("now_page", now_page);
-    
-    // 댓글 등록
-    int cnt = this.qna_contentsProc.qna_create_comment(hashMap);
-    
-    if (cnt == 1) {
-      System.out.println("등록 성공");
-      int qcmt_no = qna_commentVO.getQcmt_no();
-      System.out.println("-> qcmt_no: " + qcmt_no);
-      
-      ra.addAttribute("qcmt_no", qcmt_no);
-      
-      return "redirect:/qcontents/qna_read";
-    } else {
-      System.out.println("질문글 댓글 등록 실패");
-      
-      ra.addFlashAttribute("code", "qna_create_fail"); // 등록 실패
-      ra.addFlashAttribute("cnt", 0); // cnt: 0, 질문글 등록 실패
-      ra.addFlashAttribute("url", "/qcontents/msg"); // /templates/qcontents/msg.html
-    }
-    
-    ra.addAttribute("cate_no", cate_no);
-    ra.addAttribute("qcon_no", qcon_no);
-    ra.addAttribute("now_page", now_page);
-    ra.addAttribute("acc_no", acc_no);
-    
-    return "redirect:/qcontents/qna_read";
-  }
 
 }
 
