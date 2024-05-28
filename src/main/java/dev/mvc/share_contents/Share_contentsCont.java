@@ -56,14 +56,14 @@ public class Share_contentsCont {
 		System.out.println(" ->Share_contentsCont created");
 	}
 
-	@GetMapping("/list_all")
-	public String list_all(Model model) { 
-		// System.out.println("list_all 생성");
-		ArrayList<Share_contentsVO> list = this.sconProc.list_all();
-		model.addAttribute("list", list);
-
-		return "scontents/list_all";
-	}
+//	@GetMapping("/list_all")
+//	public String list_all(Model model) { 
+//		// System.out.println("list_all 생성");
+//		ArrayList<Share_contentsVO> list = this.sconProc.list_all();
+//		model.addAttribute("list", list);
+//
+//		return "scontents/list_all";
+//	}
 
 	@GetMapping("/read") //글 조회
 	public String read(Model model, int scon_no, int cate_no, @RequestParam(name = "acc_id", defaultValue = "0") String acc_id,
@@ -112,9 +112,30 @@ public class Share_contentsCont {
 		return "scontents/read";
 	}
 
+//	@GetMapping("/up_priority/{scon_no}")
+//	
+//	public String up_priority(@PathVariable("scon_no") Integer scon_no, int cate_no, RedirectAttributes ra,HttpSession session) {
+//
+//		this.sconProc.up_priority(scon_no);
+//		int cnt = this.sconProc.y_mark(scon_no);
+//		HashMap<String, Object> map = new HashMap<>();
+//		map.put("scon_no", scon_no);
+//		map.put("acc_no", 1); // acc_no 들어오면 바꿔야 할 것!
+//		int cnt1 = this.sconProc.bookmarK_create(map);
+//
+//		if (cnt1 == 1) {
+//			System.out.println("북마크에 등록 성공");
+//		}
+//
+//		// System.out.println("up_priority created");
+//		ra.addAttribute("cate_no", cate_no);
+//		return "redirect:/scontents/read?scon_no=" + scon_no;
+//	}
+	
 	@GetMapping("/up_priority/{scon_no}")
+	@ResponseBody
 	public String up_priority(@PathVariable("scon_no") Integer scon_no, int cate_no, RedirectAttributes ra,HttpSession session) {
-
+		JSONObject obj = new JSONObject();
 		this.sconProc.up_priority(scon_no);
 		int cnt = this.sconProc.y_mark(scon_no);
 		HashMap<String, Object> map = new HashMap<>();
@@ -125,14 +146,11 @@ public class Share_contentsCont {
 		if (cnt1 == 1) {
 			System.out.println("북마크에 등록 성공");
 		}
-//    if(cnt==1) {
-//      System.out.println("y_mark 성공");
-//    }
+		obj.put("cnt", cnt);
+		return obj.toString();
 
-		// System.out.println("up_priority created");
-		ra.addAttribute("cate_no", cate_no);
-		return "redirect:/scontents/read?scon_no=" + scon_no;
 	}
+	
 
 	@GetMapping("/down_priority/{scon_no}")
 	public String down_priority(@PathVariable("scon_no") Integer scon_no, int cate_no, RedirectAttributes ra,HttpSession session) {
@@ -280,7 +298,7 @@ public class Share_contentsCont {
 
 	@PostMapping("/update_text") // url 수정, 등록, 삭제
 	public String update_text(Model model, Share_contentsVO scontentsVO, RedirectAttributes ra, int scon_no,
-			int cate_no, String url_link, List<MultipartFile> fnamesMF) {
+			int cate_no, String url_link) {
 
 		int cnt = this.sconProc.update_text(scontentsVO);
 
@@ -319,7 +337,6 @@ public class Share_contentsCont {
 
 			}
 		}
-
 		ra.addAttribute("cate_no", cate_no);
 		return "redirect:/scontents/list_by_search";
 	}
@@ -599,20 +616,20 @@ public class Share_contentsCont {
 			Tool.deleteFile(uploadDir, thumb);
 		}
 		int cnt_image = this.sconProc.delete_image(scon_no);
-		if (cnt_image > 0) {
-			System.out.println("이미지 삭제 성공");
-		}
+//		if (cnt_image > 0) {
+//			System.out.println("이미지 삭제 성공");
+//		}
 		
 		int cnt = this.sconProc.delete(scon_no);
 		
-		System.out.println("게시글 삭제 성공");
+		//System.out.println("게시글 삭제 성공");
 
 		this.categoryProc.cnt_minus(share_contentsVO.getCate_no()); // 관련 글 수 감소
-		System.out.println(" -> 삭제 한 scon_no:" + scon_no);
+		//System.out.println(" -> 삭제 한 scon_no:" + scon_no);
 
 		JSONObject obj = new JSONObject();
 		obj.put("cnt", cnt);
-		System.out.println(obj.get("cnt"));
+		//System.out.println(obj.get("cnt"));
 		return obj.toString();
 	}
 
@@ -633,7 +650,6 @@ public class Share_contentsCont {
 
 //	     System.out.println("begin_of_page: " + begin_of_page);
 //	     System.out.println("WHERE r >= "+start_num+" AND r <= " + end_num);
-//	
 	    map1.put("start_num", start_num);
 	    map1.put("end_num", end_num);
 			

@@ -4,44 +4,31 @@
 <div layout:fragment="content">
   
     <script>
-    function comment_create() {
-      let accno = document.getElementById("acc_no")
-      let comment = document.getElementById("comment")
-      let scon_no = document.getElementById("scon_no")
-      let cate_no = document.getElementById("cate_no")
-      let acc_id = document.getElementById("acc_id")
-
-      let url = './create_comment?scmt_comment='+comment.value+'&scon_no='+scon_no.value+'&acc_no='+accno.value +'&cate_no=' +cate_no.value ;
-      
-      fetch(url,{
-        method: 'GET'
-      })
-      .then(response => response.json())
-      .then(rdata=>{
-          if(rdata.cnt>0){
-        	  
-        	  	sessionStorage.setItem('acc_id', rdata.acc_id);
-        	  		
-              console.log('댓글 등록성공');
-             // document.getElementById("acc_id").innerText = acc_id;
-              //window.location.reload();
-          }
-          else{
-           id_msg.innerHTML= '댓글 등록이 안됩니다.';
-        }
-          document.getElementById("comment").value="";
-
-      })
-      .catch(error =>{
-        console.error("Error")
-      });
-      
-    }
-    document.addEventListener('DOMContentLoaded', (event) => {
-    	  // sessionStorage에서 acc_id 값을 가져와서 설정
-    	  let accId = sessionStorage.getItem('acc_id');
-    	  document.getElementById("acc_id").innerText = accId;
+    function mark(){
+    	console.log("mark  클릭");
+    	let scon_no = document.getElementById("scon_no").value;
+    	let cate_no = document.getElementById("cate_no").value;
+    	
+    	console.log(scon_no);
+    	console.log(cate_no);
+    	
+    	let url = './up_priority/'+scon_no+'?cate_no=' +cate_no;
+    	fetch(url,{
+    		method:'GET',
+    	})
+    	.then(response =>response.json())
+    	.then(rdata=>{
+    		if(rdata.cnt>0){
+    			document.getElementById("book_markoff").src = "/css/images/bookmark_on.png";
+    			console.log("우선순위 올리기 성공")
+    		}
+    	})
+    	.catch(error =>{
+    		console.log('Error:',error);
     	});
+    }
+    
+
 
   </script>
 
@@ -89,16 +76,15 @@
     </tr>
 					<br> 
 					</span> 
-					<span style="font-size: 1.5em; font-weight: bold;" th:text="${scontentsVO.scon_title}"></span><br>
 					<span style="font-size: 1.5em; font-weight: bold;" th:text="${scontentsVO.scon_contents}"></span>
           <span style="font-size: 1em;" th:text="${scontentsVO.scon_date}"></span><br><br>
           <span style="font-size: 1em;" th:text="|조회수: ${scontentsVO.scon_views}|"></span><br><br>
           <span style="font-size: 1em;" th:text="|댓글수: ${cnt}|"></span><br><br>
           <input type="hidden" id="scon_no" name="scon_no" th:value="${scontentsVO.scon_no}">
           <div style="white-space: pre-wrap;"></div>
-          	<span th:if="${scontentsVO.mark =='N'}"> <a th:href="@{|./up_priority/${scontentsVO.scon_no}?cate_no=1|}">
-						<img 	src="/css/images/bookmark_off.png" class="icon"></a>	</span>
-					<span th:unless="${scontentsVO.mark =='N'}"> <a	 th:href="@{|./down_priority/${scontentsVO.scon_no}?cate_no=1|}"><img
+          	<span th:if="${scontentsVO.mark =='N'}">
+						<img 	src="/css/images/bookmark_off.png" id="book_markoff" class="icon" onclick="mark()">	</span>
+					<span th:unless="${scontentsVO.mark =='N'}"> <a	th:href="@{|./down_priority/${scontentsVO.scon_no}?cate_no=1|}"><img
 							src="/css/images/bookmark_on.png" class="icon"></a> </span>
         </div>
       </li>
