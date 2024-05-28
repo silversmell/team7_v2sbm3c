@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -536,10 +537,52 @@ public class Share_contentsCont {
 		return "scontents/delete";
 
 	}
-
+//	
+//	@PostMapping("/delete")
+//	public String delete(int scon_no, RedirectAttributes ra, int cate_no) {
+//
+//		Share_contentsVO share_contentsVO = this.sconProc.read(scon_no); // scon_no 가져오기
+//
+//		this.sconProc.delete_comments(scon_no);
+//		this.sconProc.delete_url(scon_no);
+//		this.sconProc.delete_tag(scon_no);
+//		this.sconProc.bookmark_delete(scon_no);
+//		ArrayList<Share_imageVO> list = this.sconProc.read_image(scon_no);
+//		for (Share_imageVO image : list) {
+//			String file_saved = image.getFile_upload_name();
+//			String thumb = image.getFile_thumb_name();
+//
+//			String uploadDir = Contents.getUploadDir();
+//			Tool.deleteFile(uploadDir, file_saved);
+//			Tool.deleteFile(uploadDir, thumb);
+//		}
+//		int cnt_image = this.sconProc.delete_image(scon_no);
+//		if (cnt_image > 0) {
+//			System.out.println("이미지 삭제 성공");
+//		}
+//		int cnt = this.sconProc.delete(scon_no);
+//
+//		this.categoryProc.cnt_minus(share_contentsVO.getCate_no()); // 관련 글 수 감소
+//		System.out.println(" -> 삭제 한 scon_no:" + scon_no);
+//
+//		ra.addAttribute("cate_no", cate_no);
+//		return "redirect:/scontents/list_by_search";
+//	}
+	
 	@PostMapping("/delete")
-	public String delete(int scon_no, RedirectAttributes ra, int cate_no) {
+	@ResponseBody
+	public String delete(@RequestBody String json_src) {
+		System.out.println("-> json_src:" +json_src);
+		String cleanedJsonSrc = json_src.replace(";", "");
+		 JSONObject src = new JSONObject(cleanedJsonSrc);
+		 System.out.println(src);
+		System.out.println("ok");
 
+		
+		int cate_no = src.getInt("cate_no");
+		int scon_no = (int) src.getInt("scon_no");
+		System.out.println("-> cate_no:" +cate_no);
+		System.out.println("-> scon_no:" +scon_no);
 		Share_contentsVO share_contentsVO = this.sconProc.read(scon_no); // scon_no 가져오기
 
 		this.sconProc.delete_comments(scon_no);
@@ -559,13 +602,18 @@ public class Share_contentsCont {
 		if (cnt_image > 0) {
 			System.out.println("이미지 삭제 성공");
 		}
+		
 		int cnt = this.sconProc.delete(scon_no);
+		
+		System.out.println("게시글 삭제 성공");
 
 		this.categoryProc.cnt_minus(share_contentsVO.getCate_no()); // 관련 글 수 감소
 		System.out.println(" -> 삭제 한 scon_no:" + scon_no);
 
-		ra.addAttribute("cate_no", cate_no);
-		return "redirect:/scontents/list_by_search";
+		JSONObject obj = new JSONObject();
+		obj.put("cnt", cnt);
+		System.out.println(obj.get("cnt"));
+		return obj.toString();
 	}
 
 	@GetMapping("/read_hashtag/{tag_no}")
