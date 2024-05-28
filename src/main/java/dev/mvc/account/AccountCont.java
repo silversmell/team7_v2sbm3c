@@ -401,6 +401,19 @@ public class AccountCont {
 		}
 
 	}
+	
+	/**
+	 * 로그아웃
+	 * 
+	 * @param session
+	 * @param model
+	 * @return
+	 */
+	@GetMapping(value="/logout")
+	public String logout(HttpSession session, Model model) {
+		session.invalidate(); // 모든 세션 변수 삭제
+		return "redirect:/";
+	}
 
 	/**
 	 * 회원 정보 수정(회원 목록, 마이페이지)

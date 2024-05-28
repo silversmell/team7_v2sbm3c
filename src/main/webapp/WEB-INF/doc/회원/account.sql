@@ -150,8 +150,7 @@ SELECT COUNT(acc_no) as cnt
 FROM account
 WHERE acc_id='user2' AND acc_pw='1234';
 
-
-
+--------------------------------------------------------------------------------
 
 
 
