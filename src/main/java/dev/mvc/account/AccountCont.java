@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,8 +26,13 @@ import org.springframework.web.servlet.ModelAndView;
 import dev.mvc.recommend.HashtagVO;
 import dev.mvc.recommend.RecommendVO;
 import dev.mvc.tool.MailTool;
+import dev.mvc.tool.Security;
 import dev.mvc.tool.Tool;
 import dev.mvc.tool.Upload;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @RequestMapping("/account")
 @Controller
@@ -34,6 +40,9 @@ public class AccountCont {
 	@Autowired
 	@Qualifier("dev.mvc.account.AccountProc") // @Service("dev.mvc.account.AccountProc")
 	private AccountProcInter accountProc;
+
+	@Autowired
+	Security security;
 
 	public AccountCont() {
 		System.out.println("-> AccountCont created.");
@@ -79,7 +88,7 @@ public class AccountCont {
 
 	/** 인증 번호 저장 변수 */
 	private String verify_code;
-	
+
 	/**
 	 * 인증 메일 전송
 	 * 
@@ -89,16 +98,16 @@ public class AccountCont {
 	@ResponseBody
 	public Map<String, Object> mail(String receiver) {
 		System.out.println("Cont RECEIVER ---> : " + receiver);
-		
+
 		Map<String, Object> response = new HashMap<>();
-		
+
 		try {
 			/* 인증 번호 생성 */
 			Random random = new Random();
 			int code = random.nextInt(999999);
 			verify_code = String.format("%06d", code);
 			System.out.println("---> verify code : " + code);
-			
+
 			MailTool mailTool = new MailTool();
 			mailTool.send(receiver, "-", "[DESK TOUR] 이메일 인증입니다.", "Verify Code : " + code); // 메일 전송
 			response.put("status", "success");
@@ -106,28 +115,28 @@ public class AccountCont {
 			response.put("status", "error");
 			response.put("msg", e.getMessage());
 		}
-		
+
 		return response;
 	}
-	
+
 	/**
 	 * 인증 번호 확인
 	 * 
 	 * @param code
 	 * @return
 	 */
-	@PostMapping(value="/verifyCode")
+	@PostMapping(value = "/verifyCode")
 	@ResponseBody
 	public Map<String, Object> verifyCode(@RequestParam String code) {
 		Map<String, Object> response = new HashMap<>();
-		
-		if(verify_code != null && verify_code.equals(code)) {
+
+		if (verify_code != null && verify_code.equals(code)) {
 			response.put("status", "success");
 		} else {
 			response.put("status", "error");
 			response.put("msg", "인증번호가 일치하지 않습니다.");
 		}
-		
+
 		return response;
 	}
 
@@ -182,8 +191,6 @@ public class AccountCont {
 				response.put("code", "create_success");
 				response.put("acc_id", accountVO.getAcc_id());
 				response.put("acc_name", accountVO.getAcc_name());
-				// 암호화 미완
-				response.put("acc_pw", accountVO.getAcc_pw());
 
 				// 선택된 해시태그 저장
 				System.out.println("====> selected_hashtags: " + selected_hashtags);
@@ -238,8 +245,7 @@ public class AccountCont {
 	 * @return
 	 */
 	@GetMapping(value = "/list")
-	public String list(Model model) { // 아직 로그인 세션 구현 X, HttpSession session
-
+	public String list(HttpSession session, Model model) {
 		ArrayList<AccountVO> list = this.accountProc.list();
 		model.addAttribute("list", list);
 
@@ -254,7 +260,7 @@ public class AccountCont {
 	 * @return
 	 */
 	@GetMapping(value = "/read")
-	public String read(Model model, int acc_no) { // 아직 세션 구현 X, HttpSession session
+	public String read(HttpSession session, Model model, int acc_no) {
 
 		AccountVO accountVO = this.accountProc.read(acc_no);
 
@@ -286,6 +292,114 @@ public class AccountCont {
 		model.addAttribute("selected_tags", selected_tags);
 
 		return "account/read";
+	}
+
+	/**
+	 * 로그인 폼 (쿠키 기반)
+	 * 
+	 * @param request
+	 * @param model
+	 * @return
+	 */
+	@GetMapping(value = "/login")
+	public String login_form(Model model, HttpServletRequest request) {
+
+		/* Cookie */
+		Cookie[] cookies = request.getCookies();
+		Cookie cookie = null;
+
+		String ck_id = ""; // acc_id 저장
+		String ck_id_save = ""; // acc_id 저장 여부 확인
+
+		if (cookie != null) { // 쿠키 존재
+			for (int i = 0; i < cookies.length; i++) {
+				System.out.println("--> cookies[" + i + "]" + cookies[i]);
+				cookie = cookies[i]; // 쿠키 객체 추출
+
+				if (cookie.getName().equals("ck_id")) {
+					ck_id = cookie.getValue(); // id(email)
+				} else if (cookie.getName().equals("ck_id_save")) {
+					ck_id_save = cookie.getValue(); // Y, N
+				}
+			}
+		}
+
+		model.addAttribute("ck_id", ck_id);
+		model.addAttribute("ck_id_save", ck_id_save);
+
+		return "account/login";
+	}
+
+	/**
+	 * 로그인 처리 (쿠키 기반)
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@PostMapping(value = "/login")
+	public String login_proc(HttpSession session, HttpServletRequest request, HttpServletResponse response, Model model,
+			String acc_id, String acc_pw, @RequestParam(value = "id_save", defaultValue = "") String id_save) {
+
+		String ip = request.getRemoteAddr(); // IP
+		System.out.println("---> 접속한 IP: " + ip);
+
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("acc_id", acc_id);
+		map.put("acc_pw", this.security.aesEncode(acc_pw));
+
+		int cnt = this.accountProc.login(map);
+		System.out.println("---> login_proc cnt: " + cnt);
+
+		model.addAttribute("cnt", cnt);
+
+		if (cnt == 1) {
+			// id를 이용한 회원 정보 조회
+			AccountVO accountVO = this.accountProc.readById(acc_id);
+			session.setAttribute("acc_no", accountVO.getAcc_no());
+			// int acc_no = (int)session.getAttribute("acc_no"); // Session에서 가져오기
+
+			session.setAttribute("acc_id", accountVO.getAcc_id());
+			session.setAttribute("acc_name", accountVO.getAcc_name());
+
+			if (accountVO.getAcc_grade() >= 1 && accountVO.getAcc_grade() <= 10) {
+				session.setAttribute("acc_grade", "admin"); // 관리자
+			} else if (accountVO.getAcc_grade() >= 11 && accountVO.getAcc_grade() <= 20) {
+				session.setAttribute("acc_grade", "member"); // 일반 회원
+			} else if (accountVO.getAcc_grade() >= 30 && accountVO.getAcc_grade() <= 39) {
+				session.setAttribute("acc_grade", "suspended"); // 정지 회원
+			} else if (accountVO.getAcc_grade() == 99) {
+				session.setAttribute("acc_grade", "withdrawn"); // 탈퇴 회원
+			} else {
+				session.setAttribute("acc_grade", "guest");
+			}
+
+			/* Cookie */
+			/* acc_id 관련 쿠키 저장 */
+			if (id_save.equals("Y")) { // Checkbox 체크, acc_id 저장
+				Cookie ck_id = new Cookie("ck_id", acc_id);
+				ck_id.setPath("/"); // root 폴더에 쿠키를 기록 -> 모든 경로에서 쿠키 접근 가능
+				ck_id.setMaxAge(60 * 60 * 24 * 30); // 30 days, 초단위
+				response.addCookie(ck_id); // acc_id 저장
+			} else { // N, Checkbox 해제, acc_id 미저장
+				Cookie ck_id = new Cookie("ck_id", "");
+				ck_id.setPath("/");
+				ck_id.setMaxAge(0);
+				response.addCookie(ck_id);
+			}
+
+			/* Checkbox 체크 확인(acc_id 저장 여부) */
+			Cookie ck_id_save = new Cookie("ck_id_save", id_save);
+			ck_id_save.setPath("/");
+			ck_id_save.setMaxAge(60 * 60 * 24 * 30); // 30 days
+			response.addCookie(ck_id_save);
+
+			return "redirect:/";
+		} else {
+			model.addAttribute("code", "login_fail");
+			model.addAttribute("cnt", 0);
+			return "account/msg";
+		}
+
 	}
 
 	/**
@@ -331,6 +445,14 @@ public class AccountCont {
 		return "account/msg";
 	}
 
+	/**
+	 * 프로필 사진 업데이트
+	 * 
+	 * @param model
+	 * @param accountVO
+	 * @param acc_no
+	 * @return
+	 */
 	@PostMapping(value = "/updatePic")
 	public String updatePic(Model model, AccountVO accountVO, int acc_no) {
 		System.out.println("---> RequestParam acc_no: " + acc_no);
@@ -385,9 +507,99 @@ public class AccountCont {
 		return "/account/msg";
 	}
 
-	/** 비밀번호 확인 */
+	/**
+	 * 비밀번호 변경 폼
+	 * 
+	 * @param session
+	 * @param model
+	 * @return
+	 */
+	@GetMapping(value = "/update_passwd")
+	public String update_passwd_form(HttpSession session, Model model) {
+		int acc_no = (int) session.getAttribute("acc_no"); // session
 
-	/** 비밀번호 변경 */
+		AccountVO accountVO = this.accountProc.read(acc_no);
+		model.addAttribute("accountVO", accountVO);
+
+		return "account/update_passwd";
+	}
+
+	/**
+	 * 현재 비밀번호 확인
+	 * 
+	 * @param session
+	 * @param json_src
+	 * @return
+	 */
+	@PostMapping(value = "/check_passwd")
+	@ResponseBody
+	public String checkPasswd(HttpSession session, @RequestBody String json_src) {
+		System.out.println("---> json_src: " + json_src); // json_src: {"current_passwd":"1234"}
+		JSONObject src = new JSONObject(json_src); // String -> JSON
+		String current_passwd = (String) src.get("current_passwd"); // 값 가져오기
+		System.out.println("---> current_passwd:  " + current_passwd);
+
+		int acc_no = (int) session.getAttribute("acc_no"); // session에서 가져오기
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("acc_no", acc_no);
+		map.put("acc_pw", this.security.aesEncode(current_passwd));
+
+		int cnt = this.accountProc.checkPasswd(map);
+		System.out.println("---> check_passwd cnt: " + cnt);
+
+		JSONObject json = new JSONObject();
+		json.put("cnt", cnt);
+		System.out.println("---> json.toString() cnt: " + json.toString());
+
+		return json.toString();
+	}
+
+	/**
+	 * 비밀번호 변경
+	 * 
+	 * @param session
+	 * @param model
+	 * @param current_passwd
+	 * @param new_passwd
+	 * @return
+	 */
+	@PostMapping(value = "/update_passwd")
+	public String updatePasswd(HttpSession session, Model model, String current_passwd, String new_passwd) {
+
+		if (this.accountProc.isMember(session)) {
+			int acc_no = (int) session.getAttribute("acc_no"); // session
+
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put("acc_no", acc_no);
+			map.put("acc_pw", this.security.aesEncode(current_passwd));
+			System.out.println("--> updatePasswd current_passwd: " + current_passwd);
+
+			/* Form 없이 해커가 해킹했을 경우 대비 패스워드 재검사 */
+			int cnt = this.accountProc.checkPasswd(map);
+
+			if (cnt == 0) { // 현재 패스워드 불일치
+				
+			} else { // 현재 패스워드 일치
+				HashMap<String, Object> map_new_passwd = new HashMap<String, Object>();
+				map_new_passwd.put("acc_no", acc_no);
+				map_new_passwd.put("acc_pw", this.security.aesEncode(new_passwd));
+				System.out.println("--> updatePasswd new_passwd: " + new_passwd);
+
+				int update_cnt = this.accountProc.updatePasswd(map_new_passwd);
+				if (update_cnt == 1) {
+					model.addAttribute("code", "passwd_update_success");
+					model.addAttribute("cnt", update_cnt);
+				} else {
+					model.addAttribute("code", "passwd_update_fail");
+					model.addAttribute("cnt", update_cnt);
+				}
+			}
+			return "account/msg";
+		} else {
+			return "redirect:/account/login";
+		}
+
+	}
 
 	/**
 	 * 회원 정보 삭제 페이지

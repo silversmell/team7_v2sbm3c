@@ -6,6 +6,7 @@ import java.util.List;
 
 import dev.mvc.recommend.HashtagVO;
 import dev.mvc.recommend.RecommendVO;
+import jakarta.servlet.http.HttpSession;
 
 public interface AccountProcInter {
 
@@ -68,6 +69,39 @@ public interface AccountProcInter {
      * @return
      */
     public AccountVO read(int acc_no);
+    
+    /**
+     * 아이디로 회원 정보 조회(로그인)
+     * 
+     * @param acc_id
+     * @return
+     */
+    public AccountVO readById(String acc_id);
+    
+    /**
+     * 로그인
+     * 
+     * @param map
+     * @return
+     */
+    public int login(HashMap<String, Object> map);
+    
+    /**
+     * 로그인된 회원 계정인지 검사
+     * 
+     * @param session
+     * @return
+     */
+    public boolean isMember(HttpSession session);
+    
+    /**
+     * 로그인된 회원이 관리자 계정인지 검사
+     * 
+     * @param session
+     * @return
+     */
+    public boolean isMemberAdmin(HttpSession session);
+    
     
     /**
      * 선택된 해시태그 조회(회원 정보 조회)

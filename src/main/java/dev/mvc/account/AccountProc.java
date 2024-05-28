@@ -9,11 +9,16 @@ import org.springframework.stereotype.Component;
 
 import dev.mvc.recommend.HashtagVO;
 import dev.mvc.recommend.RecommendVO;
+import dev.mvc.tool.Security;
+import jakarta.servlet.http.HttpSession;
 
 @Component("dev.mvc.account.AccountProc")
 public class AccountProc implements AccountProcInter {
 	@Autowired
 	private AccountDAOInter accountDAO;
+	
+	@Autowired
+	Security security;
 
 	public AccountProc() {
 		System.out.println("-> AccountProc created.");
@@ -45,6 +50,11 @@ public class AccountProc implements AccountProcInter {
 
 	@Override
 	public int create(AccountVO accountVO) {
+		// accountVO.setAcc_pw(new Security().aesEncode(accountVO.getAcc_pw())); // 단축형
+		String acc_pw = accountVO.getAcc_pw();
+		String pw_encoded = this.security.aesEncode(acc_pw);
+		accountVO.setAcc_pw(pw_encoded);
+		
 		int cnt = this.accountDAO.create(accountVO);
 		return cnt;
 	}
@@ -65,6 +75,44 @@ public class AccountProc implements AccountProcInter {
 	public AccountVO read(int acc_no) {
 		AccountVO accountVO = this.accountDAO.read(acc_no);
 		return accountVO;
+	}
+	
+	@Override
+	public AccountVO readById(String acc_id) {
+		AccountVO accountVO = this.accountDAO.readById(acc_id);
+		return accountVO;
+	}
+
+	@Override
+	public int login(HashMap<String, Object> map) {
+		int cnt = this.accountDAO.login(map);
+		return cnt;
+	}
+	
+	@Override
+	public boolean isMember(HttpSession session) {
+		boolean sw = false;	// 로그아웃 상태로 초기화
+		String acc_grade = (String)session.getAttribute("acc_grade");
+		
+		if(acc_grade != null) {
+			if(acc_grade.equals("admin") || acc_grade.equals("member")) {
+				sw = true;	// 로그인 상태로 전환
+			}
+		}
+		return sw;
+	}
+
+	@Override
+	public boolean isMemberAdmin(HttpSession session) {
+		boolean sw = false;	// 로그아웃 상태로 초기화
+		String acc_grade = (String)session.getAttribute("acc_grade");
+		
+		if(acc_grade != null) {
+			if(acc_grade.equals("admin")) {
+				sw = true;	// 로그인 상태로 전환
+			}
+		}
+		return sw;
 	}
 
 	@Override

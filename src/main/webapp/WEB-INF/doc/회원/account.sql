@@ -71,11 +71,11 @@ ORDER BY acc_grade ASC, acc_id ASC;
 SELECT ACCOUNT_SEQ.currval AS acc_no FROM dual;
 
 -- 특정 회원 조회
-
 SELECT acc_no, acc_id, acc_pw, acc_name, acc_tel, acc_age, acc_date, acc_grade, 
        acc_img, acc_saved_img, acc_thumb_img, acc_img_size
 FROM account
 WHERE acc_id = 'user2';
+
 
 --------------------------------------------------------------------------------
 
@@ -131,9 +131,24 @@ FROM account
 WHERE acc_no=1 AND acc_pw='1234';
 
 -- 비밀번호 변경
+SELECT * FROM account;
+
+UPDATE account
+SET acc_pw='3333'
+WHERE acc_no=2;
 
 
 
+--------------------------------------------------------------------------------
+
+-- 로그인
+SELECT COUNT(acc_no) as cnt
+FROM account
+WHERE acc_id='user2' AND acc_pw='1111';
+
+SELECT COUNT(acc_no) as cnt
+FROM account
+WHERE acc_id='user2' AND acc_pw='1234';
 
 
 

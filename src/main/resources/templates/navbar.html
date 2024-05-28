@@ -44,18 +44,18 @@
                       <li class="nav-item" th:if="${session.acc_no != null}">
                           <a class="nav-link" th:href="@{|/account/read?acc_no=${session.acc_no}|}">회원 정보 조회</a>
                       </li>
-                      <li class="nav-item" th:if="${session.memberno != null}">
-                          <a class="nav-link" href="/member/passwd_update_form">비밀 번호 변경</a>
+                      <li class="nav-item" th:if="${session.acc_no != null}">
+                          <a class="nav-link" href="/account/update_passwd">비밀 번호 변경</a>
                       </li>
                       <li class="nav-item"><a class="nav-link" href="#">아이디 찾기</a></li>         
                       <li class="nav-item"><a class="nav-link" href="#">비밀번호 찾기</a></li>
-                      <li class="nav-item" th:if="${session.memberno!=null}"><a class="nav-link" href="#">로그인 내역</a></li>
+                      <li class="nav-item" th:if="${session.acc_no != null}"><a class="nav-link" href="#">로그인 내역</a></li>
                     </ul>
                 </li>
                 
                  <li class="nav-item">
-                      <span th:if="${session.memberno == null}"><a class="nav-link" href="/member/login" th:text="@{|로그인|}"></a></span>
-                      <span th:if="${session.memberno != null}"><a class="nav-link" href="/member/logout" th:text="@{|${session.id} 로그아웃|}"></a></span>
+                      <span th:if="${session.acc_no == null}"><a class="nav-link" href="/account/login" th:text="@{|로그인|}"></a></span>
+                      <span th:if="${session.acc_no != null}"><a class="nav-link" href="/account/logout" th:text="@{|${session.acc_id} 로그아웃|}"></a></span>
                  </li>  
 
                 

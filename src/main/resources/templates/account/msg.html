@@ -37,9 +37,26 @@
 					<div th:case="file_upload_success">
 						<span class="span_success">프로필 사진이 변경되었습니다.</span>
 					</div>
-					
+
 					<div th:case="check_upload_file_fail">
 						<span class="span_fail">이미지 파일이 아닙니다.</span>
+					</div>
+
+					<div th:case="login_fail">
+						<span class="span_fail">로그인에 실패했습니다.</span><br>
+						<span class="span_fail">로그인 정보가 존재하지 않습니다.</span><br>
+					</div>
+
+					<div th:case="passwd_not_equal">
+						<span class="span_fail">비밀번호가 일치하지 않습니다.</span><br>
+					</div>
+
+					<div th:case="passwd_update_success">
+						<span class="span_success">비밀번호가 변경되었습니다.</span><br>
+					</div>
+
+					<div th:case="passwd_update_fail">
+						<span class="span_fail">비밀번호 변경에 실패하였습니다.</span><br>
 					</div>
 
 
@@ -53,22 +70,9 @@
             삭제 실패된 회원 정보: <span th:text="${mname}"></span>
           </div>
 
-          <div th:case="login_fail">
-            <span class="span_fail">로그인에 실패했습니다.</span><br>
-            <span class="span_fail">로그인 정보가 존재하지 않습니다.</span><br>
-          </div>
 
-          <div th:case="passwd_not_equal">
-            <span class="span_fail">패스워드가 일치하지 않습니다.</span><br>
-          </div>
 
-          <div th:case="passwd_change_success">
-            <span class="span_success">패스워드 변경을 실행했습니다.</span><br>
-          </div>
 
-          <div th:case="passwd_change_fail">
-            <span class="span_fail">패스워드 변경을 실패했습니다.</span><br>
-          </div>
 
           <div th:case="grade_change_success">
             <span class="span_success">등급을 변경하였습니다.</span><br>
@@ -89,7 +93,8 @@
 						<button type="button" onclick="location.href='/'" class="btn btn-secondary btn-sm">닫기</button>
 					</div>
 					<div th:if="${cnt == 2}">
-						<button type="button" th:attr="onclick=|location.href='./read?acc_no=${accountVO.acc_no}'|" class="btn btn-secondary btn-sm">확인</button>
+						<button type="button" th:attr="onclick=|location.href='./read?acc_no=${accountVO.acc_no}'|"
+							class="btn btn-secondary btn-sm">확인</button>
 					</div>
 				</li>
 			</ul>

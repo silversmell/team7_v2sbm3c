@@ -67,6 +67,23 @@
 		WHERE acc_no = #{acc_no}
 	</select>
 
+	<!-- id로 회원 정보 조회(로그인) -->
+	<select id="readById" resultType="dev.mvc.account.AccountVO"
+		parameterType="String">
+		SELECT acc_no, acc_id, acc_pw, acc_name, acc_tel, acc_age, acc_date,
+		acc_grade,
+		acc_img, acc_saved_img, acc_thumb_img, acc_img_size
+		FROM account
+		WHERE acc_id = #{acc_id}
+	</select>
+
+	<!-- 로그인 -->
+	<select id="login" resultType="int" parameterType="HashMap">
+		SELECT COUNT(acc_no) as cnt
+		FROM account
+		WHERE acc_id=#{acc_id} AND acc_pw=#{acc_pw}
+	</select>
+
 	<!-- 선택된 해시태그 조회(회원 정보 조회) -->
 	<select id="selectedTags" resultType="String" parameterType="int">
 		SELECT LISTAGG(h.tag_name, ',') WITHIN GROUP (ORDER BY tag_code DESC) AS
@@ -95,7 +112,7 @@
 	<delete id="deleteRecommend" parameterType="int">
 		DELETE FROM recommend WHERE acc_no = #{acc_no}
 	</delete>
-	
+
 	<!-- 현재 비밀번호 확인 -->
 	<select id="checkPasswd" parameterType="HashMap" resultType="int">
 		SELECT COUNT(acc_no) as cnt
@@ -109,7 +126,7 @@
 		SET acc_pw=#{acc_pw}
 		WHERE acc_no=#{acc_no}
 	</update>
-	
+
 	<!-- 회원 정보 삭제(관리자, 회원 목록) -->
 	<delete id="delete" parameterType="int">
 		DELETE FROM account
@@ -117,8 +134,6 @@
 	</delete>
 
 	<!-- 회원 탈퇴(사용자, 마이페이지) -->
-	
-	
 
 
 </mapper>

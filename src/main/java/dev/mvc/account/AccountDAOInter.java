@@ -70,6 +70,22 @@ public interface AccountDAOInter {
     public AccountVO read(int acc_no);
     
     /**
+     * 아이디로 회원 정보 조회(로그인)
+     * 
+     * @param acc_id
+     * @return
+     */
+    public AccountVO readById(String acc_id);
+    
+    /**
+     * 로그인
+     * 
+     * @param map
+     * @return
+     */
+    public int login(HashMap<String, Object> map);
+    
+    /**
      * 선택된 해시태그 조회(회원 정보 조회)
      * 
      * @param acc_no
