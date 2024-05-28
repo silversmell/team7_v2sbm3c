@@ -28,7 +28,7 @@
   </insert>
   
   <!-- 댓글 등록 -->
-  <insert id="qna_create_comment" parameterType="HashMap">
+  <insert id="qna_create_comment" parameterType="dev.mvc.qna_contents.Qna_commentVO">
     INSERT INTO QNA_COMMENT(qcmt_no, acc_no, qcon_no, qcmt_contents, qcmt_date)
     VALUES(qna_comment_seq.nextval, #{acc_no}, #{qcon_no}, #{qcmt_contents}, sysdate); 
   </insert>

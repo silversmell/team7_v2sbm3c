@@ -263,8 +263,8 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
   }
 
   @Override
-  public int qna_create_comment(HashMap<String, Object> hashMap) {
-    int cnt = this.qna_contentsDAO.qna_create_comment(hashMap);
+  public int qna_create_comment(Qna_commentVO qna_commentVO) {
+    int cnt = this.qna_contentsDAO.qna_create_comment(qna_commentVO);
     
     return cnt;
   }
