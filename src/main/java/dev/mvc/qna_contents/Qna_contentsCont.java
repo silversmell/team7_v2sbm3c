@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -19,6 +20,7 @@ import dev.mvc.account.AccountProc;
 import dev.mvc.category.CategoryProcInter;
 import dev.mvc.category.CategoryVO;
 import dev.mvc.category.CategoryVOMenu;
+import dev.mvc.share_contentsdto.Share_contentsVO;
 import dev.mvc.tool.Tool;
 import dev.mvc.tool.Upload;
 import jakarta.servlet.http.HttpServletRequest;
@@ -463,7 +465,6 @@ public class Qna_contentsCont {
         cnt1++;
       }
   
-  
     }
     
     ra.addAttribute("cate_no", cate_no);
@@ -473,20 +474,51 @@ public class Qna_contentsCont {
     return "redirect:/qcontents/qna_read";
   }
   
+  /**
+   * 질문글 삭제
+   * @param model
+   * @param qcon_no
+   * @return
+   */
   @GetMapping("/qna_delete")
-  public String qua_delete_form(Model model,int qcon_no) {
-	  ArrayList<Qna_contentsVO> qna_contentsVO = this.qna_contentsProc.list_by_qcon_no(qcon_no);
-	  model.addAttribute("qna_contentsVO",qna_contentsVO);
-	  return "qcontents/delete";
+  public String qna_delete(HttpSession session, 
+                                  Model model, 
+                                  @RequestParam(name="cate_no", defaultValue = "2") int cate_no, 
+                                  int qcon_no, int now_page) {
+    
+    model.addAttribute("cate_no", cate_no);
+    model.addAttribute("now_page", now_page);
+    
+    // 카테고리 가져오기
+    CategoryVO categoryVO = this.categoryProc.cate_read(cate_no); // 카테고리 읽어옴
+    model.addAttribute("categoryVO", categoryVO);
+    
+    // 질문글 가져오기
+    Qna_contentsVO qna_contentsVO = this.qna_contentsProc.qna_read(qcon_no);
+    model.addAttribute("qna_contentsVO", qna_contentsVO);
+	  
+	  return "qcontents/qna_delete";
   }
-  @PostMapping("/delete")
-  public String qna_delete(int qcon_no, int cate_no,RedirectAttributes ra) {
-	  System.out.println("-> qcon_no:" + qcon_no);
-	  ArrayList<Qna_contentsVO> qna_contentsVO = this.qna_contentsProc.list_by_qcon_no(qcon_no); //회원정보 불러오기 위함.
+  
+  /**
+   * 질문글 삭제 처리
+   * @param qcon_no
+   * @param cate_no
+   * @param ra
+   * @return
+   */
+  @PostMapping("/qna_delete")
+  public String qna_delete(RedirectAttributes ra, 
+                                  int qcon_no, int cate_no, int now_page) {
+    
+//	  System.out.println("-> qcon_no:" + qcon_no);
+	  ArrayList<Qna_contentsVO> list = this.qna_contentsProc.list_by_qcon_no(qcon_no); //회원정보 불러오기 위함.
 	  
-	  int acc_no = qna_contentsVO.get(0).getAcc_no(); //댓글 삭제 parameter 값에 넣을 회원번호
+	  Qna_contentsVO qna_contentsVO = this.qna_contentsProc.qna_read(qcon_no); // scon_no 가져오기
 	  
-	  HashMap<String,Object> map = new HashMap<>();
+	  int acc_no = list.get(0).getAcc_no(); //댓글 삭제 parameter 값에 넣을 회원번호
+	  
+	  HashMap<String,Object> map = new HashMap<String,Object>();
 	  map.put("qcon_no", qcon_no);
 	  map.put("acc_no", acc_no);
 	  
@@ -503,11 +535,15 @@ public class Qna_contentsCont {
 	  int cnt_contents = this.qna_contentsProc.qna_delete(qcon_no); //글삭제
 	  if(cnt_contents>0) {
 		  System.out.println("글 삭제 성공");
+		  this.categoryProc.cnt_minus(qna_contentsVO.getCate_no()); // 관련 글 수 감소
 	  }
 	  
 	  ra.addAttribute("cate_no",cate_no);
-	  return "redirect:/qcontents/list_all";
+	  ra.addAttribute("now_page", now_page);
+	  
+	  return "redirect:/qcontents/qna_list_all";
   }
+  
 
 }
 

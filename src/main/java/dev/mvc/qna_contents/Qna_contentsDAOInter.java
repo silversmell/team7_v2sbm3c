@@ -145,7 +145,7 @@ public interface Qna_contentsDAOInter {
    * @param qna_commentVO
    * @return
    */
-  public int qna_create_comment(HashMap<String, Object> hashMap);
+  public int qna_create_comment(Qna_commentVO qna_commentVO);
   
   /**
    * 질문글 댓글 전체 목록

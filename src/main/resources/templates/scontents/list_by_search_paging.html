@@ -4,8 +4,17 @@
   <script>
   function whole_delete(){
 	  let checkboxes = document.querySelectorAll('Input[name="scon_no"]');
+	  let allchecked = true;
+	  
 	  checkboxes.forEach(checkbox =>{
-		  checkbox.checked=true;
+		  if(!checkbox.checked){
+			  allchecked = false;
+			  return;
+		  }
+	  });
+	  
+	  checkboxes.forEach(checkbox =>{
+		  checkbox.checked = !allchecked;
 	  });
   }
  
@@ -62,23 +71,23 @@
 	<div class='menu_line'></div>
 	
 <div style="display: flex; justify-content: space-between; ">
-<div style="display: flex;">
+<div style="display: flex; margin-left:78px;">
     <div th:each="hashtag, status:${list_hashtag}" th:attr="onclick=|location.href='/scontents/read_hashtag/${hashtag.tag_no}?cate_no=1'|" style="cursor: pointer; ">
     <div class="hashtag">
         <span style="font-weight: bold;" th:text="${hashtag.tag_name}"></span>
         </div>
     </div>
     </div>
-        <div>
-      <button type="button" onclick="select_delete()" class="button_2"  style="margin-right:3px;">선택삭제</button>
+        <div style="margin-right:88px;">
+      <button type="button" onclick="select_delete()" class="button_2"  style="margin-right:3px;">삭제</button>
       <button type="button" onclick="whole_delete()" class="button_2">전체선택</button>
       </div>
 </div>
-    
-	<table class="table table-striped" style='width: 100%;'>
+    <div style="display:flex; justify-content: center;">
+	<table class="table table-striped" style='width: 90%;  justify-content:center;' >
 		<colgroup>
-			<col style='width: 10%;' />
-			<col style='width: 90%;' />
+			<col style='width: 20%;' />
+			<col style='width: 80%;' />
 		</colgroup>
 		
 
@@ -94,10 +103,10 @@
 
 <tr th:if="${list_image.size() > 0}">
     <td class='td_basic' style="vertical-align: middle; text-align: center;">
-        <div th:each="share_imageVO, status:${list_image}"><div class="horizontal-container" style="margin-bottom:5px">
+        <div th:each="share_imageVO, status:${list_image}"><div class="horizontal-container" style="margin-bottom:10px">
         	<input type="checkbox" th:id="'scon_no_' + ${share_imageVO.scon_no}" name="scon_no" th:value="${share_imageVO.scon_no}">
             <div th:if="${share_imageVO.file_origin_name.endsWith('jpg') or share_imageVO.file_origin_name.endsWith('png') or share_imageVO.file_origin_name.endsWith('gif')}">
-                <img th:src="@{|/contents/storage/${share_imageVO.file_thumb_name}|}" style="width: 120px; height: 90px;">
+                <img th:src="@{|/contents/storage/${share_imageVO.file_thumb_name}|}" style="width: 180px; height: 100px;">
             </div>
             <div th:if="${((share_imageVO.file_origin_name.endsWith('jpg') or share_imageVO.file_origin_name.endsWith('png') or share_imageVO.file_origin_name.endsWith('gif')) == false) and (share_imageVO.file_size > 0)}">
                 <span th:text="${share_imageVO.file_origin_name}"></span>
@@ -105,19 +114,19 @@
             </div>
         </div>
     </td>
-    
     <td>
 <div th:each="scontentsVO, status:${list}" style="cursor: pointer; margin-left: 30px; margin-bottom:20px; margin-top:10px;">
 			    <div class='td_basic' th:attr="onclick=|location.href='/scontents/read?cate_no=1&scon_no=${scontentsVO.scon_no}'|" style="cursor: pointer;">
-			        조회수: <span style="font-size: 1em;" th:text="${scontentsVO.scon_views}"></span><br>
+			    조회수: <span style="font-size: 1em;" th:text="${scontentsVO.scon_views}"></span><br>
 			        제목:<span th:text="${scontentsVO.scon_title}" style="font-weight: bold;"></span><br>
 			        <span th:if="${scontentsVO.scon_contents.length() > 160 }" th:text="|${scontentsVO.scon_contents.substring(0, 160)}...|"></span>
 			        <span th:if="${scontentsVO.scon_contents.length() <= 160 }" th:text="|${scontentsVO.scon_contents}|"></span>
 			        <br><br>
 			    </div>
 			</div>
-    </td>
+			</td>
 </tr>
+
 
         <!-- 리스트가 비어있을 때 -->
         <tr th:if="${list_image.size() == 0}">
@@ -125,6 +134,7 @@
         </tr>
     </tbody>
 </table>
+</div>
 
 	<!-- 페이지 버튼 목록 출력 시작 -->
 	<div class="bottom_menu" th:utext="${paging}"></div>

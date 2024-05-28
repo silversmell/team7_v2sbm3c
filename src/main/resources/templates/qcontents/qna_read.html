@@ -1,5 +1,11 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout}">
+<head>
+<script>
+
+</script>
+</head>
+
 <div layout:fragment="content">
   <div class='title_line'>
     <span th:text="${qna_contentsVO.qcon_name}" class="title_line_text"></span> > 글 조회
@@ -21,7 +27,7 @@
  
   <div class='menu_line'></div>
   
-  <form action="/qcontents/qna_read" method="get">
+    <form action="/qcontents/qna_read" method="get">
     <input type="hidden" name="cate_no" th:value="${categoryVO.cate_no}">
     <input type="hidden" name="qcon_no" th:value="${qna_contentsVO.qcon_no}">
     <input type="hidden" name="now_page" th:value="${now_page}">
@@ -49,5 +55,7 @@
       </ul>
     </fieldset>
   </form>
+  
+
 </div>
 </html>

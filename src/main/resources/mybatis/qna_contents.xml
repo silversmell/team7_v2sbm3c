@@ -28,7 +28,7 @@
   </insert>
   
   <!-- 댓글 등록 -->
-  <insert id="qna_create_comment" parameterType="HashMap">
+  <insert id="qna_create_comment" parameterType="dev.mvc.qna_contents.Qna_commentVO">
     INSERT INTO QNA_COMMENT(qcmt_no, acc_no, qcon_no, qcmt_contents, qcmt_date)
     VALUES(qna_comment_seq.nextval, #{acc_no}, #{qcon_no}, #{qcmt_contents}, sysdate); 
   </insert>
@@ -49,10 +49,10 @@
   
   <!-- 특정 글에 따른 댓글 목록 -->
   <select id="list_by_qcmt_no_join" resultType="dev.mvc.qna_contents.Qna_commentVO" parameterType="int">
-    SELECT qcmt_no, acc_no, qcon_no, qcmt_contents, qcmt_date
-    FROM qna_comment
-    WHERE qcon_no=#{qcon_no}
-    ORDER BY qcmt_no DESC
+     SELECT a.acc_id, qc.qcmt_no, qc.acc_no, qc.qcon_no, qc.qcmt_contents, qc.qcmt_date 
+     FROM account a, qna_comment qc 
+     WHERE (a.acc_no = qc.acc_no) AND qc.qcon_no=#{qc.qcon_no} 
+     ORDER BY qc.qcmt_no DESC
   </select>
   
   <!-- 특정 글에 따른 댓글 -->
@@ -71,8 +71,8 @@
   
   <!-- 댓글 삭제 -->
   <delete id="qna_delete_comment" parameterType="HashMap">
-    DELETE FROM qna_comment
-    WHERE qcon_no=#{qcon_no} AND acc_no=#{acc_no}
+    DELETE FROM qna_comment 
+    WHERE qcon_no = #{qcon_no} AND acc_no IN ( SELECT a.acc_no FROM account a )
   </delete>
   
   <!-- 전체 파일 목록 -->

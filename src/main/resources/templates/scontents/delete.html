@@ -2,6 +2,34 @@
 
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
 <div layout:fragment="content">
+
+<script>
+		function delete_button(){
+		    let scon_no = document.getElementById("scon_no").value;
+		    let cate_no = document.getElementById("cate_no").value;
+					
+			let url = './delete';
+			fetch(url,{
+				method:'POST',
+				headers: {
+					 'Content-Type': 'application/json' // JSON 형식으로 데이터 전송을 알림
+				},
+				body: JSON.stringify({scon_no: scon_no,cate_no: cate_no})
+			})
+			.then(response =>response.json())
+			.then(rdata =>{
+				if(rdata.cnt>0){
+					console.log("삭제 성공");
+					location.href='/scontents/list_by_search?cate_no=1'
+						alert("삭제되었습니다.");
+				}
+			})
+      .catch(error => { // 서버 다운등 통신 에러
+          console.error('Error:', error);
+     });      
+					
+		}
+</script>
   <div class='title_line'>
    <span th:text="${scontentsVO.scon_title}" class="title_line_text"></span > 
     > 삭제
@@ -39,20 +67,19 @@
         <div style='text-align: left; width: 47%; float: left;'>
           <span style='font-size: 1.5em;' th:text="${scontentsVO.scon_title}"></span>
           <br>
-          <form name='frm' method='POST' action='./delete'>
-            <input type="hidden" name="scon_no" th:value="${scontentsVO.scon_no }">
-            <input type="hidden" name="cate_no" th:value="${categoryVO.cate_no}"> <!-- cate_no 데이터 값 가져옴 -->
+          <!--   <form name='frm' method='POST' action='./delete'> -->
+            <input type="hidden" id="scon_no" name="scon_no" th:value="${scontentsVO.scon_no }">
+            <input type="hidden" id="cate_no" name="cate_no" th:value="${categoryVO.cate_no}"> <!-- cate_no 데이터 값 가져옴 -->
             <!-- <input type="hidden" name="now_page" th:value="${now_page}"> -->
-            <!-- <input type="hidden" name="search_word" th:value="${word}"> -->
-                
+            <!-- <input type="hidden" name="search_word" th:value="${word}"> -->            
             <br> 
             <div style='margin-top: 20px; clear: both;'>
               <span style="color: #FF0000; font-weight: bold;">삭제를 진행 하시겠습니까? 삭제하시면 복구 할 수 없습니다.</span>
               <br><br><br>  
-              <button type="submit" class="btn btn-secondary btn-sm">삭제</button>
-              <button type="button" onclick="history.back();" class="btn btn-secondary btn-sm">취소</button>
+              <button type="button" onclick="delete_button();" class="btn btn-secondary btn-sm">삭제</button>
+               <button type="button" onclick="history.back();" class="btn btn-secondary btn-sm">취소</button>
             </div>  
-          </form>
+          <!--  </form>  -->
         </div>
       </li>
     </ul>
