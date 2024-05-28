@@ -66,8 +66,9 @@ public class Share_contentsCont {
 //	}
 
 	@GetMapping("/read") //글 조회
-	public String read(Model model, int scon_no, int cate_no, @RequestParam(name = "acc_id", defaultValue = "0") String acc_id,
+	public String read(Model model, int scon_no, int cate_no, @RequestParam(name = "acc_id", defaultValue = "0") String acc_id,HttpSession session,
 			@RequestParam(name = "acc_no", defaultValue = "0") int acc_no) { // acc_no 필요(session)
+
 		model.addAttribute("acc_id",acc_id);
 		model.addAttribute("acc_no",acc_no);
 		// 카테고리 가져오기
@@ -108,9 +109,10 @@ public class Share_contentsCont {
 		ArrayList<Share_imageVO> share_imageVO = this.sconProc.read_image(scon_no);
 
 		model.addAttribute("share_imageVO", share_imageVO);
+		
 
 		return "scontents/read";
-	}
+	  }
 
 //	@GetMapping("/up_priority/{scon_no}")
 //	
@@ -347,6 +349,7 @@ public class Share_contentsCont {
 
 	@GetMapping("/update_file") // 파일 수정
 	public String update_file_form(Model model, int scon_no, int cate_no,HttpSession session) {
+	  if(this.accountProc.isMember(session)) {
 		Share_contentsVO scontentsVO = this.sconProc.read(scon_no);
 		model.addAttribute("scontentsVO", scontentsVO);
 
@@ -364,7 +367,10 @@ public class Share_contentsCont {
 		model.addAttribute("share_imageVO", simage);
 
 		return "scontents/update_file";
+	  }else {
+	    return "account/login";
 
+	}
 	}
 
 	@PostMapping("/update_file")
@@ -440,17 +446,23 @@ public class Share_contentsCont {
 
 	@GetMapping("/create")
 	public String create_form(Model model, Share_contentsVO scontentsVO, int cate_no,HttpSession session) {
+	  System.out.println("->session.getno:" + session.getAttribute("acc_no"));
+	  if(this.accountProc.isMember(session)) {
+	    System.out.println("->session.getno:" + session.getAttribute("acc_no"));
 		model.addAttribute("scontentsVO", scontentsVO);
 
 		// 카테고리 가져오기
 		CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
 		model.addAttribute("categoryVO", categoryVO);
-		model.addAttribute("acc_no",1); //로그인 시에 session 들어올 것
+		model.addAttribute("acc_no",session.getAttribute("acc_no")); //로그인 시에 session 들어올 것
 		ArrayList<HashtagVO> list = this.sconProc.select_hashtag();
 		System.out.println("-> tag_no :" + list.get(0).getTag_no());
 		model.addAttribute("list", list);
 
 		return "scontents/create";
+	  }else {
+	    return "account/login";
+	}
 	}
 
 	@PostMapping("/create")
