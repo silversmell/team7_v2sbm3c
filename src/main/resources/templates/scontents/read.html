@@ -152,7 +152,7 @@
       </td>
         <div style="margin-left: auto;">
           <div style="display:flex;gap:10px;">
-       <div name="update_co" style="cursor: pointer;" th:onclick="|location.href='./update_comment/${scommentVO.scmt_no}?cate_no=1'|">수정</div>
+       <div name="update_co" style="cursor: pointer;" th:onclick="|location.href='./update_comment/${acc_no}/${scommentVO.scmt_no}?cate_no=1'|">수정</div>
       <form name='frm' method='post'  th:action="@{|/scontents/delete_comment|}">
        <input type="hidden" name="scmt_no" th:value="${scommentVO.scmt_no}">
        <input type="hidden" name="cate_no" th:value="${categoryVO.cate_no}"> <!-- cate_no 데이터 값 가져옴 -->

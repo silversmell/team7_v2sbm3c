@@ -16,9 +16,6 @@ public class Share_commentsVO {
 	private String scmt_date;
 	
 
-	
-
-
 	public int getScmt_no() {
 		return scmt_no;
 	}
