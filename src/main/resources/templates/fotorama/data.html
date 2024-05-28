@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="user-scalable=yes, initial-scale=1.0, maximum-scale=3.0, width=device-width" /> 
+<title>http://localhost:9091/jquery/fotorama/data.html</title>
+ 
+<script type="text/JavaScript" src="http://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+  // html이 로딩되고나서 자동 실행되는 함수
+  // window.onload = function() { 
+
+  // };
+
+  // window.onload = () => {
+
+  // }
+
+  // $(자동 실행되는 함수 선언);
+
+  $(function() {   // 자동 실행
+    let img='';    // 이미지 태그 할당
+    let width=0;   // image width
+    let title='';  // image title
+    
+    let div1 = $('#div1'); // id가 div1인 태그 검색
+    // console.log('data-width: ' + div1.attr('data-width'));  // 개발자가 추가로 선언한 속성 읽기
+    // console.log('data-title: ' + div1.attr('data-title'));
+    
+    img = $('#div1 img'); // id가 div1인 태그안의 이미지 태그 검색
+
+    width = div1.attr('data-width'); // data-width 속성 읽기 
+    title = div1.attr('data-title'); // data-title 속성 읽기 
+    
+    img.attr('width', width);        // img 태그의 width 속성에 값 적용
+    img.attr('title', title);        // img 태그의 title 속성에 값 적용
+    
+    // --------------------------------------------------------------------------------------------------------
+
+    var div2 = $('#div2');  // id가 div2인 태그 검색
+    img = $('#div2 img');   // id가 div2인 태그안의 이미지 태그 검색
+    
+    width = div2.attr('data-width'); // data-width 속성 읽기 
+    title = div2.attr('data-title'); // data-title 속성 읽기 
+    
+    img.attr('width', width);  // img 태그의 width 속성에 값 적용
+    img.attr('title', title);  // img 태그의 title 속성에 값 적용
+    
+    // --------------------------------------------------------------------------------------------------------
+ 
+    var div3 = $('#div3');
+    div3.append('<br>'); // 자식 태그 추가
+    div3.append('<span>여행지: ' + div3.attr('data-where') + ' 날짜: ' + div3.attr('data-travel-date')+'</span>');
+  });
+</script> 
+ 
+</head>
+<body>
+  <!-- 개발자가 태그의 속성을 필요한 만큼 추가가능, 형식: 접두사 'data-'로 시작해야함. -->
+  <div id='div1' data-width='100' data-title='45세에 시골에 만들 나의 시골집'> 
+    <img src='/jquery/images/spring01.jpg'> <!-- static 폴더 기준 -->
+  </div>
+  <div id='div2' data-width='200' data-title='스위스 풍경 2'>
+    <img src='/jquery/images/spring02.jpg'>
+  </div>
+  <div id='div3' data-where = '스위스' data-travel-date='2021-04-05'>
+    <img src='/jquery/images/spring03.jpg' style='width: 300px;' title="나의 여행 사진">
+  </div>
+  
+</body>
+</html>
+
+

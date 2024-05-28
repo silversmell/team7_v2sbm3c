@@ -71,23 +71,23 @@
 	<div class='menu_line'></div>
 	
 <div style="display: flex; justify-content: space-between; ">
-<div style="display: flex;">
+<div style="display: flex; margin-left:78px;">
     <div th:each="hashtag, status:${list_hashtag}" th:attr="onclick=|location.href='/scontents/read_hashtag/${hashtag.tag_no}?cate_no=1'|" style="cursor: pointer; ">
     <div class="hashtag">
         <span style="font-weight: bold;" th:text="${hashtag.tag_name}"></span>
         </div>
     </div>
     </div>
-        <div>
+        <div style="margin-right:88px;">
       <button type="button" onclick="select_delete()" class="button_2"  style="margin-right:3px;">삭제</button>
       <button type="button" onclick="whole_delete()" class="button_2">전체선택</button>
       </div>
 </div>
     <div style="display:flex; justify-content: center;">
-	<table class="table table-striped" style='width: 60%;  justify-content:center;' >
+	<table class="table table-striped" style='width: 90%;  justify-content:center;' >
 		<colgroup>
-			<col style='width: 30%;' />
-			<col style='width: 70%;' />
+			<col style='width: 20%;' />
+			<col style='width: 80%;' />
 		</colgroup>
 		
 
