@@ -179,19 +179,13 @@ public class Share_contentsCont {
 //    map.put("scmt_comment", scmt_comment);
 //    map.put("scon_no", scon_no);
 //    map.put("acc_no", acc_no);
-//    
-//    
 //    int cnt = this.sconProc.create_comment(map);
-//    ArrayList<Share_commentsVO> list = this.sconProc.read_comment(scon_no);
-//    Share_commentsVO comment = list.get(list.size()-1);
+//    
+//    AccountVO accountVO = this.accountProc.read(acc_no);
 //    JSONObject obj = new JSONObject();
+//    obj.put("acc_id", accountVO.getAcc_id());
 //    obj.put("cnt", cnt);
-//    obj.put("scmt_comment", scmt_comment);
-//    obj.put("scmt_date", comment.getScmt_date());
-//    obj.put("scmt_no", comment.getScmt_no());
-//    obj.put("acc_no", comment.getacc_no());
-//    obj.put("cate_no", cate_no);
-//
+//    
 //    return obj.toString();
 //  }
 

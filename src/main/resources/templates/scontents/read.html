@@ -8,6 +8,8 @@
       let accno = document.getElementById("acc_no")
       let comment = document.getElementById("comment")
       let scon_no = document.getElementById("scon_no")
+      let cate_no = document.getElementById("cate_no")
+      let acc_id = document.getElementById("acc_id")
 
       let url = './create_comment?scmt_comment='+comment.value+'&scon_no='+scon_no.value+'&acc_no='+accno.value +'&cate_no=' +cate_no.value ;
       
@@ -17,25 +19,12 @@
       .then(response => response.json())
       .then(rdata=>{
           if(rdata.cnt>0){
-            console.log(rdata.scmt_comment);
-            console.log(rdata.scmt_date);
-            console.log(rdata.scmt_no);
-            console.log(rdata.acc_no);
-          let comments = '<div id="commentSection">';
-          comments += '<td class="td_left">';
-          comments += '<br><span id="scmt_date" style="font-size: 1em;">'+ rdata.scmt_date +'</span><br>';
-          comments  += '<input type="hidden" id ="scmt_no" name="scmt_no" value=" ' +rdata.scmt_no +' "></span>';
-          comments +=  '<input type="hidden" id="acc_no" style="font-size: 1em;" value=" ' +rdata.acc_no +' " ></span>';
-          comments += '<span id="scmt_comment" style="font-weight: bold;">' + rdata.scmt_comment + '</span><br>';
-          comments += ' <button type="button" onclick="update_comment(event)" class="btn btn-primary btn-sm"  style="cursor: pointer;">수정</button>';
-          comments += '<form name="frm" method="post" action="/scontents/delete_comment">';
-          comments += '<input type="hidden" name="scmt_no" value=" ' +rdata.scmt_no+ ' ">';
-          comments += '<input type="hidden" name="cate_no" value=" ' +rdata.cate_no +' ">';
-          comments += '<button type="submit" name="delete_co">삭제</button>';
-          comments +='</form>';
-          comments += '</td>';
-          comments += '</div>';
-          document.getElementById('commentsContainer').innerHTML = comments;
+        	  
+        	  	sessionStorage.setItem('acc_id', rdata.acc_id);
+        	  		
+              console.log('댓글 등록성공');
+             // document.getElementById("acc_id").innerText = acc_id;
+              //window.location.reload();
           }
           else{
            id_msg.innerHTML= '댓글 등록이 안됩니다.';
@@ -48,21 +37,11 @@
       });
       
     }
-    
-    function update_comment(event){
-      console.log(event.target);
-      console.log($(event.target).closest('#commentSection'));
-      let scmt_comment=$(event.target).closest('#commentSection').find('#scmt_comment').text();
-      console.log(scmt_comment);
-      
-      
-    }
-    
-    function cancel_update(){
-    	var text_areaform = document.getElementById("hidden_form");
-    	text_areaform.style.display='none';
-    }
-    
+    document.addEventListener('DOMContentLoaded', (event) => {
+    	  // sessionStorage에서 acc_id 값을 가져와서 설정
+    	  let accId = sessionStorage.getItem('acc_id');
+    	  document.getElementById("acc_id").innerText = accId;
+    	});
 
   </script>
 
@@ -93,11 +72,12 @@
       <li class="li_none">
         <div style="width: 100%; word-break: break-all;">
 					<div class ="horizontal-container">
-					해시태그:
    		<tr th:each="item, status : ${list2}">
-        <td class='td_left'>
-            <span th:text="${item}" class="bold;"></span>
+   		<div class='hashtag' style = "padding:5px">
+        <td >
+            #<span th:text="${item}" class="bold;"></span>
         </td>
+        </div>
     </tr>
     </div>
     <tr th:each="share_imageVO, status:${share_imageVO}">  
@@ -144,7 +124,7 @@
       <td class='td_left'>
           <div>
           <span id="scmt_date" style="font-size: 1em;" th:text="${scommentVO.scmt_date}"></span><br><br>
-        <span name="acc_id"  th:value = "${acc_id}"  th:text="${acc_id}"></span><br>
+        <span name="acc_id" id="acc_id"  th:value = "${acc_id}"  th:text="${acc_id}"></span><br>
         <input type="hidden"  name="scmt_no" th:value="${scommentVO.scmt_no}" ></span>
         <input type="hidden" style="font-size: 1em;" th:value="${acc_no}"></span>
         <span id="scmt_comment" th:text="${scommentVO.scmt_comment}" style="font-weight: bold;"></span><br>
@@ -167,14 +147,14 @@
     </tr>
   
       <div>
-      <form name='frm' method='post'  th:action="@{|/scontents/create_comment|}">
+     <form name='frm' method='post'  th:action="@{|/scontents/create_comment|}">
        <label for="comment">댓글</label>
        <input type="text" id="acc_no" name="acc_no" th:value="${acc_no}">
-       <input type="hidden" name="cate_no" th:value="${categoryVO.cate_no}"> <!-- cate_no 데이터 값 가져옴 -->
+       <input type="hidden" id="cate_no" name="cate_no" th:value="${categoryVO.cate_no}"> <!-- cate_no 데이터 값 가져옴 -->
        <input type="hidden" id="scon_no" name="scon_no" th:value="${scontentsVO.scon_no}">
        <textarea name='scmt_comment' id="comment" required="required" value="" class="form-control" rows="5" style='width: 100%;'></textarea>
-             <button type='submit' style="margin-top: 4px;">등록</button>
-       </form>
+             <button type='submit'  style="margin-top: 4px;">등록</button>
+         </form> 
     </div>
 
     <span id='id_msg'></span>  
