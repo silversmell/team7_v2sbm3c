@@ -153,7 +153,9 @@ public class Share_contentsCont {
 	
 
 	@GetMapping("/down_priority/{scon_no}")
+	@ResponseBody
 	public String down_priority(@PathVariable("scon_no") Integer scon_no, int cate_no, RedirectAttributes ra,HttpSession session) {
+		JSONObject obj = new JSONObject();
 		int cnt = this.sconProc.down_priority(scon_no);
 		int mark_down = this.sconProc.n_mark(scon_no);
 //    if(mark_down=='N') {
@@ -167,8 +169,10 @@ public class Share_contentsCont {
 //      System.out.println("scon_priority down 성공");
 //    }
 		System.out.println("down_priority created");
-		ra.addAttribute("cate_no", cate_no);
-		return "redirect:/scontents/read?scon_no=" + scon_no;
+		obj.put("cnt", cnt);
+		return obj.toString();
+//		ra.addAttribute("cate_no", cate_no);
+//		return "redirect:/scontents/read?scon_no=" + scon_no;
 	}
 	
   @PostMapping("/create_comment") 

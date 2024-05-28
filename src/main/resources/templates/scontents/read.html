@@ -12,21 +12,34 @@
     	console.log(scon_no);
     	console.log(cate_no);
     	
-    	let url = './up_priority/'+scon_no+'?cate_no=' +cate_no;
+    	let url;
+    	let currentImg = document.getElementById("bookmarkImage").src;
+    	
+    	if(currentImg.endsWith("bookmark_off.png")){
+    		url = './up_priority/'+scon_no+'?cate_no=' +cate_no;
+    	}else{
+    		url='./down_priority/'+scon_no+'?cate_no=' +cate_no;
+    	}
+  
     	fetch(url,{
     		method:'GET',
     	})
     	.then(response =>response.json())
     	.then(rdata=>{
     		if(rdata.cnt>0){
-    			document.getElementById("book_markoff").src = "/css/images/bookmark_on.png";
-    			console.log("우선순위 올리기 성공")
+    			console.log("우선순위 변경 선공");
+    			if(currentImg.endsWith("bookmark_off.png")){
+    				document.getElementById("bookmarkImage").src = "/css/images/bookmark_on.png";
+    			}else{
+    				document.getElementById("bookmarkImage").src = "/css/images/bookmark_off.png";
+    			}
     		}
     	})
     	.catch(error =>{
     		console.log('Error:',error);
     	});
     }
+    
     
 
 
@@ -83,9 +96,9 @@
           <input type="hidden" id="scon_no" name="scon_no" th:value="${scontentsVO.scon_no}">
           <div style="white-space: pre-wrap;"></div>
           	<span th:if="${scontentsVO.mark =='N'}">
-						<img 	src="/css/images/bookmark_off.png" id="book_markoff" class="icon" onclick="mark()">	</span>
-					<span th:unless="${scontentsVO.mark =='N'}"> <a	th:href="@{|./down_priority/${scontentsVO.scon_no}?cate_no=1|}"><img
-							src="/css/images/bookmark_on.png" class="icon"></a> </span>
+						<img 	src="/css/images/bookmark_off.png" id="bookmarkImage" class="icon" onclick="mark()">	</span>
+					<span th:unless="${scontentsVO.mark =='N'}"> <img
+							src="/css/images/bookmark_on.png" id="bookmarkImage" class="icon" onclick="mark()"> </span>
         </div>
       </li>
 
