@@ -77,17 +77,20 @@
         </div>
     </tr>
     </div>
-    <div style='margin: 0px auto; width: 800px; '>
-<div class="fotorama" data-width="5000" data-ratio="800/520" data-max-width="100%"
-       style='margin: 0px auto; width: 90%;'>
-    <tr th:each="share_imageVO, status:${share_imageVO}">  
-    <div style="display:flex; align-items:center;">
-      <div th:if="${share_imageVO.file_origin_name.endsWith('jpg') or share_imageVO.file_origin_name.endsWith('png')  or share_imageVO.file_origin_name.endsWith('gif')}">
-            <img th:src="@{|/contents/storage/${share_imageVO.file_upload_name}|}" style='width: 100%; float: left; margin-top: 0.5%; margin-right: 1%;'>
-          </div>
-          </div>
-          </div>
-          </div>
+<div style='margin: 0px auto; width: 900px;'>
+    <div class="fotorama" data-width="80%" data-ratio="800/520" data-max-width="100%" style='margin: 0px auto;'>
+        <div th:each="share_imageVO, status: ${share_imageVO}">
+            <div style="display: flex; align-items: center;">
+                <div th:if="${share_imageVO.file_origin_name.endsWith('jpg') or share_imageVO.file_origin_name.endsWith('png') or share_imageVO.file_origin_name.endsWith('gif')}">
+                    <img th:src="@{|/contents/storage/${share_imageVO.file_upload_name}|}" style="width: 100%; height: auto; max-height: 520px; object-fit: contain; margin-top: 0.5%; margin-left: 20%;">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
     </tr>
 					<br> 
 					</span> 
