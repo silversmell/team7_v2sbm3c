@@ -138,7 +138,6 @@
 					<span style="font-size: 1.5em; font-weight: normal;" th:text="${scontentsVO.scon_contents}"></span><br>
 					          <div style="white-space: pre-wrap;"></div>
 
-          <span style="font-size: 1em;" th:text="|댓글수: ${cnt}|"></span>
           </div>
           <input type="hidden" id="scon_no" name="scon_no" th:value="${scontentsVO.scon_no}">
           <input type="hidden" id="member_no" name="member_no" th:value="${member_no}">
@@ -201,6 +200,7 @@
 	<div>
      <form name='frm' method='post'  th:action="@{|/scontents/create_comment|}">
        <label for="comment">댓글</label>
+       (<span style="font-size: 1em;" th:text="|${cnt}|"></span>)
        <input type="hidden" id="acc_no" name="acc_no" th:value="${acc_no}">
        <input type="hidden" id="cate_no" name="cate_no" th:value="${categoryVO.cate_no}"> <!-- cate_no 데이터 값 가져옴 -->
        <input type="hidden" id="scon_no" name="scon_no" th:value="${scontentsVO.scon_no}">
