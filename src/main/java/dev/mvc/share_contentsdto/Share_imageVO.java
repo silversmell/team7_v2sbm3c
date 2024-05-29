@@ -97,6 +97,16 @@ public class Share_imageVO {
 	
 	private String file_thumb_name;
 	
+	private String file_big_name;
+	
+	public String getFile_big_name() {
+		return file_big_name;
+	}
+
+	public void setFile_big_name(String file_big_name) {
+		this.file_big_name = file_big_name;
+	}
+
 	private int file_size;
 	
 	private String file_date;

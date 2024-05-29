@@ -191,7 +191,7 @@ public class Share_contentsCont {
 	}
 	
   @PostMapping("/create_comment") 
-  public String create_comment(String scmt_comment, int scon_no, int acc_no, RedirectAttributes ra, int cate_no,HttpSession session) {
+  public String create_comment(String scmt_comment, int scon_no, @RequestParam(name = "acc_no", defaultValue = "0") int acc_no, RedirectAttributes ra, int cate_no,HttpSession session) {
 	 if(this.accountProc.isMember(session)) {
     HashMap<String, Object> map = new HashMap<String, Object>();
     map.put("scmt_comment", scmt_comment);
@@ -450,7 +450,7 @@ public class Share_contentsCont {
 					file_upload_name = Upload.saveFileSpring(multipartFile, upDir);
 
 					if (Tool.isImage(file_origin_name)) {
-						file_thumb_name = Tool.preview(upDir, file_upload_name, 200, 150);
+						file_thumb_name = Tool.preview(upDir, file_upload_name, 800, 450);
 					}
 				}
 
@@ -564,7 +564,7 @@ public class Share_contentsCont {
 					file_upload_name = Upload.saveFileSpring(multipartFile, upDir);
 
 					if (Tool.isImage(file_origin_name)) {
-						file_thumb_name = Tool.preview(upDir, file_upload_name, 200, 150);
+						file_thumb_name = Tool.preview(upDir, file_upload_name, 800, 450);
 					}
 				}
 				share_imageVO.setScon_no(scon_no);
@@ -654,13 +654,13 @@ public class Share_contentsCont {
 		 System.out.println(src);
 		System.out.println("ok");
 
-		
 		int cate_no = src.getInt("cate_no");
 		int scon_no = (int) src.getInt("scon_no");
 		System.out.println("-> cate_no:" +cate_no);
 		System.out.println("-> scon_no:" +scon_no);
 		Share_contentsVO share_contentsVO = this.sconProc.read(scon_no); // scon_no 가져오기
-
+		
+		this.sconProc.bookmarall_delete(scon_no);
 		this.sconProc.delete_comments(scon_no);
 		this.sconProc.delete_url(scon_no);
 		this.sconProc.delete_tag(scon_no);

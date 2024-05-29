@@ -4,6 +4,10 @@
 <div layout:fragment="content">
   
     <script>
+    
+    function delete_comment(){
+    	
+    }
     function mark(){
     	console.log("mark  클릭");
     	let scon_no = document.getElementById("scon_no").value;
@@ -100,51 +104,66 @@
     <div>
       <li class="li_none">
         <div style="width: 100%; word-break: break-all;">
+
+<div style='margin: 0px auto; width: 900px;'>
 					<div class ="horizontal-container">
    		<tr th:each="item, status : ${list2}">
-   		<div class='hashtag' style = "padding:5px">
+   		<div class='read_hashtag' style = "padding:5px">
         <td >
             #<span th:text="${item}" class="bold;"></span>
         </td>
         </div>
-    </tr>
+    </tr><br>
+    	<br>
+    
     </div>
-<div style='margin: 0px auto; width: 900px;'>
-    <div class="fotorama" data-width="80%" data-ratio="800/520" data-max-width="100%" style='margin: 0px auto;'>
+    <br>
+    <div style="display:flex; align-items: center; margin-left:90px; flex-direction:row; justify-content: space-between;" > 
+    <span th:text="${scontentsVO.scon_title}" style="font-size:2em;font-weight: bold;"></span>
+    <span style="font-size: 1em; margin-left:10px;" th:text="|조회수: ${scontentsVO.scon_views}|"></span>
+    <div style="margin-left: auto; margin-right:90px;">
+    <span style="font-size: 1em; margin-left:10px;" th:text="${scontentsVO.scon_date}"></span>
+    </div>
+    </div>
+    <div class="fotorama" data-width="80%" data-ratio="800/520" data-max-width="100%" style='margin: 0px auto; display: flex; justify-content: center; align-items: center;'>
         <div th:each="share_imageVO, status: ${share_imageVO}">
-            <div style="display: flex; align-items: center;">
+            <div style="display: flex; justify-content: center; align-items: center;">
                 <div th:if="${share_imageVO.file_origin_name.endsWith('jpg') or share_imageVO.file_origin_name.endsWith('png') or share_imageVO.file_origin_name.endsWith('gif')}">
-                    <img th:src="@{|/contents/storage/${share_imageVO.file_upload_name}|}" style="width: 100%; height: auto; max-height: 520px; object-fit: contain; margin-top: 0.5%; margin-left: 20%;">
+                    <img th:src="@{|/contents/storage/${share_imageVO.file_thumb_name}|}" style="height: auto; max-height: 520px; object-fit: contain; margin-top: 0.5%;">
                 </div>
             </div>
         </div>
     </div>
-</div>
-
-
-
-    </tr>
 					<br> 
-					</span> 
-					<span style="font-size: 1.5em; font-weight: bold;" th:text="${scontentsVO.scon_contents}"></span>
-          <span style="font-size: 1em;" th:text="${scontentsVO.scon_date}"></span><br><br>
-          <span style="font-size: 1em;" th:text="|조회수: ${scontentsVO.scon_views}|"></span>
-          <span style="font-size: 1em;" th:text="|댓글수: ${cnt}|"></span>
+					<div style="text-align:left;">
+					<span style="font-size: 1.5em; font-weight: normal;" th:text="${scontentsVO.scon_contents}"></span><br>
+					          <div style="white-space: pre-wrap;"></div>
+          </div>
           <input type="hidden" id="scon_no" name="scon_no" th:value="${scontentsVO.scon_no}">
           <input type="hidden" id="member_no" name="member_no" th:value="${member_no}">
-          <div style="white-space: pre-wrap;"></div>
-          	<span th:if="${scontentsVO.mark =='N'}">
-						<img 	src="/css/images/bookmark_off.png" id="bookmarkImage" class="icon" onclick="mark()">	</span>
-					<span th:unless="${scontentsVO.mark =='N'}"> <img
-							src="/css/images/bookmark_on.png" id="bookmarkImage" class="icon" onclick="mark()"> </span>
-        </div>
-        <div>
-				<a style="font-size: 1em;" th:href="${url_list0}" th:text="${url_list0}" th:if="${url_list0 != '1'}">Link1</a><br>
-				<a style="font-size: 1em;" th:href="${url_list1}" th:text="${url_list1}" th:if="${url_list1 != '1'}">Link2</a><br>
-				<a style="font-size: 1em;" th:href="${url_list2}" th:text="${url_list2}"  th:if="${url_list2 != '1'}">Link3</a><br>
-				<a style="font-size: 1em;" th:href="${url_list3}" th:text="${url_list3}"   th:if="${url_list3 != '1'}">Link4</a><br>
-				<a style="font-size: 1em;" th:href="${url_list4}" th:text="${url_list4}"  th:if="${url_list4 != '1'}">Link5</a><br>
-			</div><br><br>
+				<br>
+<div style="display:flex; flex-direction:row; justify-content: space-between;">
+    <div>
+        <span style="font-size:1.5em">데스크 제품 목록</span>
+        
+        <br>
+        <a style="font-size: 1em;" th:href="${url_list0}" th:text="${url_list0}" th:if="${url_list0 != '1'}">Link1</a><br>
+        <a style="font-size: 1em;" th:href="${url_list1}" th:text="${url_list1}" th:if="${url_list1 != '1'}">Link2</a><br>
+        <a style="font-size: 1em;" th:href="${url_list2}" th:text="${url_list2}"  th:if="${url_list2 != '1'}">Link3</a><br>
+        <a style="font-size: 1em;" th:href="${url_list3}" th:text="${url_list3}"   th:if="${url_list3 != '1'}">Link4</a><br>
+        <a style="font-size: 1em;" th:href="${url_list4}" th:text="${url_list4}"  th:if="${url_list4 != '1'}">Link5</a>
+    </div>
+    <div style="margin-left: auto;">
+        <span th:if="${scontentsVO.mark =='N'}">
+            <img src="/css/images/bookmark_off.png" id="bookmarkImage" class="icon" onclick="mark()" style="width:24px; height: 24px;">
+        </span>
+        <span th:unless="${scontentsVO.mark =='N'}">
+            <img src="/css/images/bookmark_on.png" id="bookmarkImage" class="icon" onclick="mark()" style="width:24px; height: 24px;">
+        </span>
+    </div>
+</div>
+			<br><br>
+			
 			        <tr th:each="scommentVO, status:${list}">
       <div id="commentSection">
       <div style="display:flex;">
@@ -160,35 +179,40 @@
         <div style="margin-left: auto;">
           <div style="display:flex;gap:10px;">
        <div name="update_co" style="cursor: pointer;" th:onclick="|location.href='./update_comment/${acc_no}/${scommentVO.scmt_no}?cate_no=1'|">수정</div>
+       
       <form name='frm' method='post'  th:action="@{|/scontents/delete_comment|}">
        <input type="hidden" name="scmt_no" th:value="${scommentVO.scmt_no}">
        <input type="hidden" name="cate_no" th:value="${categoryVO.cate_no}"> <!-- cate_no 데이터 값 가져옴 -->
        <span class='menu_divide' >│</span>
-      	<button type="submit" name="delete_co" style="border: none; background-color: white;">삭제</button>
+      	<button type="submit" name="delete_co" style="border: none; background-color: white;" >삭제</button>
        </form>
        </div>
       </div>     
       </div>
-      <hr style="width: 100%;">
       </div>
+      <hr style="width: 100%;">
+      
     </tr>
-  
-      <div>
+    
+	<div>
      <form name='frm' method='post'  th:action="@{|/scontents/create_comment|}">
        <label for="comment">댓글</label>
-       <input type="text" id="acc_no" name="acc_no" th:value="${acc_no}">
+       (<span style="font-size: 1em;" th:text="|${cnt}|"></span>)
+       <input type="hidden" id="acc_no" name="acc_no" th:value="${acc_no}">
        <input type="hidden" id="cate_no" name="cate_no" th:value="${categoryVO.cate_no}"> <!-- cate_no 데이터 값 가져옴 -->
        <input type="hidden" id="scon_no" name="scon_no" th:value="${scontentsVO.scon_no}">
-       <textarea name='scmt_comment' id="comment" required="required" value="" class="form-control" rows="5" style='width: 100%;'></textarea>
-             <button type='submit'  style="margin-top: 4px;">등록</button>
+       <textarea name='scmt_comment' id="comment" required="required" class="form-control" rows="5" style='width: 100%;'></textarea>
+             <button type='submit'  style="margin-top: 8px; border: 1px solid black;">등록</button>
          </form> 
+	</div>
+    </div>
+    </div>
     </div>
       </li>
 
       </div>
     </ul>
     <br>
-
   </fieldset>
 
 
