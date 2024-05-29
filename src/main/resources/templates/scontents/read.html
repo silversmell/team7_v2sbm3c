@@ -114,7 +114,7 @@
         <div th:each="share_imageVO, status: ${share_imageVO}">
             <div style="display: flex; align-items: center;">
                 <div th:if="${share_imageVO.file_origin_name.endsWith('jpg') or share_imageVO.file_origin_name.endsWith('png') or share_imageVO.file_origin_name.endsWith('gif')}">
-                    <img th:src="@{|/contents/storage/${share_imageVO.file_upload_name}|}" style="width: 100%; height: auto; max-height: 520px; object-fit: contain; margin-top: 0.5%; margin-left: 20%;">
+                    <img th:src="@{|/contents/storage/${share_imageVO.file_thumb_name}|}" style=" height: auto; max-height: 520px; object-fit: contain; margin-top: 0.5%; ">
                 </div>
             </div>
         </div>
@@ -126,7 +126,7 @@
     </tr>
 					<br> 
 					</span> 
-					<span style="font-size: 1.5em; font-weight: bold;" th:text="${scontentsVO.scon_contents}"></span>
+					<span style="font-size: 1.5em; font-weight: bold;" th:text="${scontentsVO.scon_contents}"></span><br>
           <span style="font-size: 1em;" th:text="${scontentsVO.scon_date}"></span><br><br>
           <span style="font-size: 1em;" th:text="|조회수: ${scontentsVO.scon_views}|"></span>
           <span style="font-size: 1em;" th:text="|댓글수: ${cnt}|"></span>
