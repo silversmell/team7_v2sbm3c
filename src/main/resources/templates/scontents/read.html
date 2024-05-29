@@ -102,7 +102,7 @@
         <div style="width: 100%; word-break: break-all;">
 					<div class ="horizontal-container">
    		<tr th:each="item, status : ${list2}">
-   		<div class='hashtag' style = "padding:5px">
+   		<div class='read_hashtag' style = "padding:5px">
         <td >
             #<span th:text="${item}" class="bold;"></span>
         </td>
@@ -110,11 +110,11 @@
     </tr>
     </div>
 <div style='margin: 0px auto; width: 900px;'>
-    <div class="fotorama" data-width="80%" data-ratio="800/520" data-max-width="100%" style='margin: 0px auto;'>
+    <div class="fotorama" data-width="80%" data-ratio="800/520" data-max-width="100%" style='margin: 0px auto; display: flex; justify-content: center; align-items: center;'>
         <div th:each="share_imageVO, status: ${share_imageVO}">
-            <div style="display: flex; align-items: center;">
+            <div style="display: flex; justify-content: center; align-items: center;">
                 <div th:if="${share_imageVO.file_origin_name.endsWith('jpg') or share_imageVO.file_origin_name.endsWith('png') or share_imageVO.file_origin_name.endsWith('gif')}">
-                    <img th:src="@{|/contents/storage/${share_imageVO.file_thumb_name}|}" style=" height: auto; max-height: 520px; object-fit: contain; margin-top: 0.5%; ">
+                    <img th:src="@{|/contents/storage/${share_imageVO.file_thumb_name}|}" style="height: auto; max-height: 520px; object-fit: contain; margin-top: 0.5%;">
                 </div>
             </div>
         </div>
@@ -122,19 +122,19 @@
 </div>
 
 
-
-    </tr>
 					<br> 
-					</span> 
+					<div  style=" text-align: center;">
+					<div style="text-align:left;">
 					<span style="font-size: 1.5em; font-weight: bold;" th:text="${scontentsVO.scon_contents}"></span><br>
           <span style="font-size: 1em;" th:text="${scontentsVO.scon_date}"></span><br><br>
           <span style="font-size: 1em;" th:text="|조회수: ${scontentsVO.scon_views}|"></span>
           <span style="font-size: 1em;" th:text="|댓글수: ${cnt}|"></span>
+          </div>
           <input type="hidden" id="scon_no" name="scon_no" th:value="${scontentsVO.scon_no}">
           <input type="hidden" id="member_no" name="member_no" th:value="${member_no}">
           <div style="white-space: pre-wrap;"></div>
           	<span th:if="${scontentsVO.mark =='N'}">
-						<img 	src="/css/images/bookmark_off.png" id="bookmarkImage" class="icon" onclick="mark()">	</span>
+						<img 	src="/css/images/bookmark_off.png" id="bookmarkImage" class="icon" onclick="mark()" style="width:24px; height: 24px;">	</span>
 					<span th:unless="${scontentsVO.mark =='N'}"> <img
 							src="/css/images/bookmark_on.png" id="bookmarkImage" class="icon" onclick="mark()"> </span>
         </div>
@@ -183,6 +183,7 @@
        <textarea name='scmt_comment' id="comment" required="required" class="form-control" rows="5" style='width: 100%;'></textarea>
              <button type='submit'  style="margin-top: 8px; border: 1px solid black;">등록</button>
          </form> 
+    </div>
     </div>
       </li>
 

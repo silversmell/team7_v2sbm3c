@@ -87,7 +87,7 @@
 <div style="display: flex; justify-content: space-between; ">
 <div style="display: flex; margin-left:78px;">
     <div th:each="hashtag, status:${list_hashtag}" th:attr="onclick=|location.href='/scontents/read_hashtag/${hashtag.tag_no}?cate_no=1'|" style="cursor: pointer; ">
-    <div class="hashtag">
+    <div class="read_hashtag">
         <span style="font-weight: bold;" th:text="${hashtag.tag_name}"></span>
         </div>
     </div>
@@ -133,16 +133,19 @@
 <div th:each="scontentsVO, status:${list}" style="cursor: pointer; margin-left: 30px; margin-bottom:23px">
 		<div style="margin-bottom:1px;">
 			    <div class='td_basic' th:attr="onclick=|location.href='/scontents/read?cate_no=1&scon_no=${scontentsVO.scon_no}'|" style="cursor: pointer; margin-top:10px; margin-bottom:10px;">
-			    조회수: <span style="font-size: 1em;" th:text="${scontentsVO.scon_views}"></span><br>
 			        제목:<span th:text="${scontentsVO.scon_title}" style="font-weight: bold;"></span><br>
 			        <span th:if="${scontentsVO.scon_contents.length() > 160 }" th:text="|${scontentsVO.scon_contents.substring(0, 100)}...|"></span>
 			        <span th:if="${scontentsVO.scon_contents.length() <= 160 }" th:text="|${scontentsVO.scon_contents}|"></span>
 			        <br><br>
+                    <div style="flex-grow: 1;"></div> <!-- This creates space -->
+                    <div style="margin-left: auto; text-align: right;">
+                        조회수: <span th:text="${scontentsVO.scon_views}"></span>
+                    </div>
 			    </div>
 			</div>
 			</div>
 			</td>
-</tr>
+	</tr>
 
         <!-- 리스트가 비어있을 때 -->
         <tr th:if="${list_image.size() == 0}">
