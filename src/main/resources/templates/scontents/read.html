@@ -40,6 +40,15 @@
     		console.log('Error:',error);
     	});
     }
+    function confirmUpdate(member_no, acc_no, scon_no,cate_no){
+    	if(member_no != acc_no){
+    		alert("권한이 필요합니다.");
+    		return false;
+    	}
+    	const url = `./update_text/${member_no}?scon_no=${scon_no}&cate_no=${cate_no}`;
+    	window.location.href=url;
+    	return true;
+    }
     
     function confirmDelete(member_no, acc_no, scon_no,cate_no){
     	if(member_no != acc_no){
@@ -47,6 +56,16 @@
     		return false;
     	}
     	const url = `./delete/${member_no}?scon_no=${scon_no}&cate_no=${cate_no}`;
+    	window.location.href=url;
+    	return true;
+    }
+    
+    function confirmFile(member_no, acc_no, scon_no,cate_no){
+    	if(member_no != acc_no){
+    		alert("권한이 필요합니다.");
+    		return false;
+    	}
+    	const url = `./update_file/${member_no}?scon_no=${scon_no}&cate_no=${cate_no}`;
     	window.location.href=url;
     	return true;
     }
@@ -62,11 +81,11 @@
   <aside class="aside_right" >
     <a href="./create?cate_no=1">등록</a>
     <span class='menu_divide' >│</span>
-    <a th:href="@{|./update_text/${member_no!=null?member_no:0}?scon_no=${scontentsVO.scon_no}&cate_no=1|}">글 수정</a>
+    <a href="#" th:attr="onclick=|return confirmUpdate(${member_no}, '${acc_no}', ${scontentsVO.scon_no}, 1)|">글수정</a>
     <span class='menu_divide' >│</span>
-    <a th:href="@{|./update_file/${member_no!=null?member_no:0}?scon_no=${scontentsVO.scon_no}&cate_no=1|}">파일 수정</a>  
+    <a href="#" th:attr="onclick=|return confirmDelete(${member_no}, '${acc_no}', ${scontentsVO.scon_no}, 1)|">삭제</a>
     <span class='menu_divide' >│</span>
-   <a href="#" th:attr="onclick=|return confirmDelete(${member_no}, '${acc_no}', ${scontentsVO.scon_no}, 1)|">삭제</a>
+   <a href="#" th:attr="onclick=|return confirmFile(${member_no}, '${acc_no}', ${scontentsVO.scon_no}, 1)|">파일수정</a>
     <span class='menu_divide' >│</span>
 
     <a href="javascript:location.reload();">새로고침</a>
