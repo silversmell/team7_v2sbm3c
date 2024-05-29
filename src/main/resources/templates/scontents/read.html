@@ -4,6 +4,10 @@
 <div layout:fragment="content">
   
     <script>
+    
+    function delete_comment(){
+    	
+    }
     function mark(){
     	console.log("mark  클릭");
     	let scon_no = document.getElementById("scon_no").value;
@@ -130,20 +134,13 @@
             </div>
         </div>
     </div>
-
-
-
 					<br> 
 					<div style="text-align:left;">
 					<span style="font-size: 1.5em; font-weight: normal;" th:text="${scontentsVO.scon_contents}"></span><br>
 					          <div style="white-space: pre-wrap;"></div>
-
           </div>
           <input type="hidden" id="scon_no" name="scon_no" th:value="${scontentsVO.scon_no}">
           <input type="hidden" id="member_no" name="member_no" th:value="${member_no}">
-
-        
-	
 				<br>
 <div style="display:flex; flex-direction:row; justify-content: space-between;">
     <div>
@@ -182,11 +179,12 @@
         <div style="margin-left: auto;">
           <div style="display:flex;gap:10px;">
        <div name="update_co" style="cursor: pointer;" th:onclick="|location.href='./update_comment/${acc_no}/${scommentVO.scmt_no}?cate_no=1'|">수정</div>
+       
       <form name='frm' method='post'  th:action="@{|/scontents/delete_comment|}">
        <input type="hidden" name="scmt_no" th:value="${scommentVO.scmt_no}">
        <input type="hidden" name="cate_no" th:value="${categoryVO.cate_no}"> <!-- cate_no 데이터 값 가져옴 -->
        <span class='menu_divide' >│</span>
-      	<button type="submit" name="delete_co" style="border: none; background-color: white;">삭제</button>
+      	<button type="submit" name="delete_co" style="border: none; background-color: white;" >삭제</button>
        </form>
        </div>
       </div>     
@@ -196,7 +194,6 @@
       
     </tr>
     
-  
 	<div>
      <form name='frm' method='post'  th:action="@{|/scontents/create_comment|}">
        <label for="comment">댓글</label>
@@ -216,7 +213,6 @@
       </div>
     </ul>
     <br>
-
   </fieldset>
 
 
