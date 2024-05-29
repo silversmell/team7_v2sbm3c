@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout}">
 <head>
-<script>
-
-</script>
+  <script>
+    
+  </script>
 </head>
 
 <div layout:fragment="content">
   <div class='title_line'>
     <span th:text="${qna_contentsVO.qcon_name}" class="title_line_text"></span> > 글 조회
   </div>
+  
+  <aside class="aside_left">
+    <span style="font-size: 1em;" th:text="|조회수: ${qna_contentsVO.qcon_views}|"></span>
+  </aside>
   
   <aside class="aside_right">
     <a th:href="@{|/qcontents/qna_create?cate_no=2|}">등록</a>
@@ -43,7 +47,6 @@
             </div>
             <span style="font-size: 1.5em; font-weight: bold;" th:text="${qna_contentsVO.qcon_name}"></span>
             <span style="font-size: 1em;" th:text="${qna_contentsVO.qcon_date}"></span><br><br>
-            <span style="font-size: 1em;" th:text="|조회수: ${qna_contentsVO.qcon_views}|"></span><br><br>
             <div style="white-space: pre-wrap;"><span th:text="${qna_contentsVO.qcon_contents}"></span></div>
           </div>
         </li>
@@ -54,8 +57,23 @@
         </li>   
       </ul>
     </fieldset>
-  </form>
+    </form>
   
+    <!-- 댓글 등록 영역 -->
+    <form action="/qcontents/create_comment" method="post">
+      <input type="hidden" id="qcon_no" name="qcon_no" value="${qna_commentVO.qcon_no}">
+      <input type="hidden" id="acc_no" name="qna_commentVO.acc_no">
+        
+      <textarea id="content" name="content" placeholder="댓글 내용" required></textarea>
+      <button type="button" onclick="reply_create()">댓글 등록</button>
+    </form>
+    
+    <!-- 댓글 렌더링 영역 -->
+    <div id="qna_comment_list" class="cm_list">
+     <div th:each="cm_list : ${qna_comment_list}">
+     
+     </div>
+    </div>
 
 </div>
 </html>

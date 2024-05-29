@@ -2,15 +2,15 @@
 
   /* 폰트 선언 */
   @font-face {
-  	font-family: 'KyoboHandwriting2020A';
-  	src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2112@1.0/KyoboHandwriting2020A.woff') format('woff');
-  	font-weight: normal;
-  	font-style: normal;
+    font-family: 'NanumBarunpen';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/NanumBarunpen.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
   }
 
   /* 모든 태그에 적용 */
   * {
-  	font-family: 'KyoboHandwriting2020A';
+    font-family: 'NanumBarunpen';
   	font-size: 14px;
   	margin: 0px;
   	/* top right bottom left */
@@ -28,9 +28,8 @@
   */
   .top_menu_img {
   	width: 100%;
-  	height: 200px;
-  	background-image: url('./images/top_1920_300.jpg');
-  	margin-bottom: 0px;
+  	height: 80%;
+  	background-image: url('./images/#');
   }
 
   .top_menu_label {
@@ -79,13 +78,35 @@
 
   .content {
   	width: 90%;
-  	margin: 10px auto;
+  	margin: 20px auto;
   }
 
   .content_body {
   	width: 90%;
   	margin: 10px auto;
   }
+  
+  .content_body {
+    width: 90%;
+    margin: 10px auto;
+}
+
+/* 배경 색 */
+div {
+  
+}
+/* 테이블 스타일 */
+table {
+    width: 100%;
+    border-collapse: collapse; /* 경계선이 겹치지 않도록 설정 */
+    margin: 10px auto;
+}
+
+/* 테이블 경계선 */
+table, th, td {
+    border: 1px solid rgb(0, 0, 0); /* 경계선 색상 */
+}
+
 
   /* 화면 내용 하단 메뉴 우측 배치 */
   .content_body_bottom {
@@ -285,6 +306,7 @@
   	border-bottom: solid 1px #DDDDDD;
   	border-left: none;
   	text-align: center;
+  	border: 1px solid rgb(0, 0, 0); /* 경계선 색상 */
   }
 
   .td_left {
@@ -293,6 +315,7 @@
   	border-bottom: solid 1px #DDDDDD;
   	border-left: none;
   	text-align: left;
+  	border: 1px solid rgb(0, 0, 0); /* 경계선 색상 */
   }
 
   .td_bs {

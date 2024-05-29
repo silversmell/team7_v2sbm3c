@@ -139,13 +139,12 @@ public interface Qna_contentsProcInter {
    */
   public int qna_search_count_image(int qcon_no);
   
-  
   /**
    * 질문글 댓글 등록
    * @param qna_commentVO
    * @return
    */
-  public int qna_create_comment(Qna_commentVO qna_commentVO);
+  public int qna_create_comment(HashMap<String, Object> map);
   
   /**
    * 질문글 댓글 전체 목록
