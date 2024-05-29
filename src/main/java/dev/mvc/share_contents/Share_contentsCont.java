@@ -648,6 +648,7 @@ public class Share_contentsCont {
 	@PostMapping("/delete")
 	@ResponseBody
 	public String delete(@RequestBody String json_src) {
+		System.out.println("여기까지 성공");
 		System.out.println("-> json_src:" +json_src);
 		String cleanedJsonSrc = json_src.replace(";", "");
 		 JSONObject src = new JSONObject(cleanedJsonSrc);

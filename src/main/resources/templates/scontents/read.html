@@ -41,8 +41,16 @@
     	});
     }
     
+    function confirmDelete(member_no, acc_no, scon_no,cate_no){
+    	if(member_no != acc_no){
+    		alert("권한이 필요합니다.");
+    		return false;
+    	}
+    	const url = `./delete/${member_no}?scon_no=${scon_no}&cate_no=${cate_no}`;
+    	window.location.href=url;
+    	return true;
+    }
     
-
 
   </script>
 
@@ -58,7 +66,7 @@
     <span class='menu_divide' >│</span>
     <a th:href="@{|./update_file/${member_no!=null?member_no:0}?scon_no=${scontentsVO.scon_no}&cate_no=1|}">파일 수정</a>  
     <span class='menu_divide' >│</span>
-    <a th:href="@{|./delete/${member_no!=null?member_no:0}?scon_no=${scontentsVO.scon_no}&cate_no=1|}">삭제</a>  
+   <a href="#" th:attr="onclick=|return confirmDelete(${member_no}, '${acc_no}', ${scontentsVO.scon_no}, 1)|">삭제</a>
     <span class='menu_divide' >│</span>
 
     <a href="javascript:location.reload();">새로고침</a>
