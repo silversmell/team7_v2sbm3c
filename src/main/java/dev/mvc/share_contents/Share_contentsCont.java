@@ -144,7 +144,7 @@ public class Share_contentsCont {
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("scon_no", scon_no);
 		map.put("acc_no", session.getAttribute("acc_no")); 
-		int cnt1 = this.sconProc.bookmarK_create(map);
+		int cnt1 = this.sconProc.bookmark_create(map);
 
 		if (cnt1 == 1) {
 			System.out.println("북마크에 등록 성공");
@@ -163,6 +163,7 @@ public class Share_contentsCont {
 	@GetMapping("/down_priority/{scon_no}")
 	@ResponseBody
 	public String down_priority(@PathVariable("scon_no") Integer scon_no, int cate_no, RedirectAttributes ra,HttpSession session) {
+		System.out.println("여기까지 성공");
 		if(this.accountProc.isMember(session)) {
 		JSONObject obj = new JSONObject();
 		int cnt = this.sconProc.down_priority(scon_no);
@@ -636,7 +637,7 @@ public class Share_contentsCont {
 		this.sconProc.delete_comments(scon_no);
 		this.sconProc.delete_url(scon_no);
 		this.sconProc.delete_tag(scon_no);
-		this.sconProc.bookmark_delete(scon_no);
+		this.sconProc.bookmarall_delete(scon_no);
 		ArrayList<Share_imageVO> list = this.sconProc.read_image(scon_no);
 		for (Share_imageVO image : list) {
 			String file_saved = image.getFile_upload_name();

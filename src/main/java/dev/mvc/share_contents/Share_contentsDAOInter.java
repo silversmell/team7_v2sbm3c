@@ -265,7 +265,7 @@ public interface Share_contentsDAOInter {
 	  * @param map
 	  * @return int
 	  */
-	 public int bookmarK_create(HashMap<String,Object> map);
+	 public int bookmark_create(HashMap<String,Object> map);
 	 
 	 /**
 	  * scon_no에 따른 북마크 삭제
@@ -273,6 +273,13 @@ public interface Share_contentsDAOInter {
 	  * @return int
 	  */
 	 public int bookmark_delete(HashMap<String,Object> map);
+	 
+	 /**
+	  * 모든 북마크 삭제
+	  * @param scon_no
+	  * @return int
+	  */
+	 public int bookmarall_delete(int scon_no);
 	 /**
 	  * share_image에 있는 scon_no 중복 제거
 	  * @return

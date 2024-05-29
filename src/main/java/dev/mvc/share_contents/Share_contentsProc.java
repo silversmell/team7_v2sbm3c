@@ -374,8 +374,8 @@ public class Share_contentsProc implements Share_contentsProcInter {
 	}
 
 	@Override
-	public int bookmarK_create(HashMap<String, Object> map) {
-		int cnt = this.scontentsDAO.bookmarK_create(map);
+	public int bookmark_create(HashMap<String,Object> map) {
+		int cnt = this.scontentsDAO.bookmark_create(map);
 		return cnt;
 	}
 
@@ -384,6 +384,12 @@ public class Share_contentsProc implements Share_contentsProcInter {
 		int cnt = this.scontentsDAO.bookmark_delete(map);
 		return cnt;
 	}
+	@Override
+	public int bookmarall_delete(int scon_no) {
+		int cnt = this.scontentsDAO.bookmarall_delete(scon_no);
+		return cnt;
+	}
+
 
 	@Override
 	public ArrayList<Share_imageVO> distinct_sconno() {
@@ -444,4 +450,7 @@ public int sdelete_tag(List<Integer> scon_no) {
 	int cnt = this.scontentsDAO.sdelete_tag(scon_no);
 	return cnt;
 }
+
+
+
 }

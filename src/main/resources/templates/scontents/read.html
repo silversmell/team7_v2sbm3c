@@ -25,6 +25,7 @@
     	.then(rdata=>{
     		if(rdata.cnt==0){
     			alert("로그인이 필요합니다.");
+    			return;
     		}
     		if(rdata.cnt>0){
     			console.log("우선순위 변경 선공");

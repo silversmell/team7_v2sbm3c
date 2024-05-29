@@ -311,14 +311,19 @@
 		where scmt_comment=#{scmt_comment} AND scon_no=#{scon_no}
 	</select>
 	
-	<insert id ="bookmarK_create"  parameterType="HashMap" >
+	<insert id ="bookmark_create"  parameterType="HashMap" >
 		INSERT INTO bookmark(mark_no, acc_no, scon_no, qcon_no)
 		VALUES(BOOKMARK_SEQ.nextval, #{acc_no}, #{scon_no}, null)
 </insert>
 
-	<delete id ="bookmarK_delete"  parameterType="HashMap" >
+	<delete id ="bookmark_delete"  parameterType="HashMap" >
 	DELETE FROM bookmark
 	WHERE scon_no=#{scon_no} AND acc_no=#{acc_no}
+	</delete>
+	
+		<delete id ="bookmarall_delete"  parameterType="int" >
+	DELETE FROM bookmark
+	WHERE scon_no=#{scon_no}
 	</delete>
 	
 	<select id ="distinct_sconno" resultType="dev.mvc.share_contentsdto.Share_imageVO">
