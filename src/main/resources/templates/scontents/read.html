@@ -54,11 +54,11 @@
   <aside class="aside_right" >
     <a href="./create?cate_no=1">등록</a>
     <span class='menu_divide' >│</span>
-    <a th:href="@{|./update_text?scon_no=${scontentsVO.scon_no}&cate_no=1|}">글 수정</a>
+    <a th:href="@{|./update_text/${member_no!=null?member_no:0}?scon_no=${scontentsVO.scon_no}&cate_no=1|}">글 수정</a>
     <span class='menu_divide' >│</span>
-    <a th:href="@{|./update_file?scon_no=${scontentsVO.scon_no}&cate_no=1|}">파일 수정</a>  
+    <a th:href="@{|./update_file/${member_no!=null?member_no:0}?scon_no=${scontentsVO.scon_no}&cate_no=1|}">파일 수정</a>  
     <span class='menu_divide' >│</span>
-    <a th:href="@{|./delete?scon_no=${scontentsVO.scon_no}&cate_no=1|}">삭제</a>  
+    <a th:href="@{|./delete/${member_no!=null?member_no:0}?scon_no=${scontentsVO.scon_no}&cate_no=1|}">삭제</a>  
     <span class='menu_divide' >│</span>
 
     <a href="javascript:location.reload();">새로고침</a>
@@ -103,6 +103,7 @@
           <span style="font-size: 1em;" th:text="|조회수: ${scontentsVO.scon_views}|"></span><br><br>
           <span style="font-size: 1em;" th:text="|댓글수: ${cnt}|"></span><br><br>
           <input type="hidden" id="scon_no" name="scon_no" th:value="${scontentsVO.scon_no}">
+          <input type="hidden" id="member_no" name="member_no" th:value="${member_no}">
           <div style="white-space: pre-wrap;"></div>
           	<span th:if="${scontentsVO.mark =='N'}">
 						<img 	src="/css/images/bookmark_off.png" id="bookmarkImage" class="icon" onclick="mark()">	</span>

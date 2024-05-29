@@ -36,6 +36,10 @@
      })
      .then(response => response.json())
      .then(rdata =>{
+    	 if(rdata.cnt==0){
+    		 alert("관리자 권한이 필요합니다.");
+    		 return;
+    	 }
        if(rdata.cnt>0){
          console.log('삭제성공');
          window.location.reload();

@@ -66,11 +66,12 @@ public class Share_contentsCont {
 //	}
 
 	@GetMapping("/read") //글 조회
-	public String read(Model model, int scon_no, int cate_no, @RequestParam(name = "acc_id", defaultValue = "0") String acc_id,HttpSession session,
+	public String read(Model model, int scon_no, int cate_no, HttpSession session,
 			@RequestParam(name = "acc_no", defaultValue = "0") int acc_no) { // acc_no 필요(session)
 
-		model.addAttribute("acc_id",acc_id);
-		model.addAttribute("acc_no",acc_no);
+		
+		model.addAttribute("acc_id",session.getAttribute("acc_id"));
+		model.addAttribute("acc_no",session.getAttribute("acc_no"));
 		// 카테고리 가져오기
 		CategoryVO categoryVO = this.categoryProc.cate_read(cate_no); // 카테고리 읽어옴
 		model.addAttribute("categoryVO", categoryVO);
@@ -79,6 +80,7 @@ public class Share_contentsCont {
 
 		Share_contentsVO scontentsVO = this.sconProc.read(scon_no);
 		model.addAttribute("scontentsVO", scontentsVO);
+		model.addAttribute("member_no",scontentsVO.getacc_no());
 
 		ArrayList<Contents_tagVO> list1 = this.sconProc.read_contents_tag(scon_no); // scon_no에 맞는 컨텐츠 태그 가져오기
 		ArrayList<String> list2 = new ArrayList<>();
@@ -95,7 +97,7 @@ public class Share_contentsCont {
 
 		ArrayList<Share_commentsVO> list = this.sconProc.read_comment(scon_no); // 댓글 등록가져옴
 		model.addAttribute("list", list);
-		model.addAttribute("acc_no", 1);
+		//model.addAttribute("acc_no", session.getAttribute("acc_no"));
 
 		ArrayList<Contents_urlVO> url_list = this.sconProc.only_url(scon_no);
 
@@ -163,7 +165,6 @@ public class Share_contentsCont {
 	@GetMapping("/down_priority/{scon_no}")
 	@ResponseBody
 	public String down_priority(@PathVariable("scon_no") Integer scon_no, int cate_no, RedirectAttributes ra,HttpSession session) {
-		System.out.println("여기까지 성공");
 		if(this.accountProc.isMember(session)) {
 		JSONObject obj = new JSONObject();
 		int cnt = this.sconProc.down_priority(scon_no);
@@ -195,10 +196,11 @@ public class Share_contentsCont {
 	
   @PostMapping("/create_comment") 
   public String create_comment(String scmt_comment, int scon_no, int acc_no, RedirectAttributes ra, int cate_no,HttpSession session) {
+	 if(this.accountProc.isMember(session)) {
     HashMap<String, Object> map = new HashMap<String, Object>();
     map.put("scmt_comment", scmt_comment);
     map.put("scon_no", scon_no);
-    map.put("acc_no", acc_no);
+    map.put("acc_no", session.getAttribute("acc_no"));
     int cnt = this.sconProc.create_comment(map);
     
     AccountVO accountVO = this.accountProc.read(acc_no);
@@ -206,11 +208,13 @@ public class Share_contentsCont {
     String acc_id= accountVO.getAcc_id();
     ra.addAttribute("scon_no", scon_no);
     ra.addAttribute("cate_no", cate_no);
-    ra.addAttribute("acc_no", acc_no);
+    ra.addAttribute("acc_no", session.getAttribute("acc_no"));
     ra.addAttribute("acc_id",acc_id);
     
     return "redirect:/scontents/read";
-
+	 }else {
+		 return "account/login";
+	 }
   }
 
 //  @GetMapping("/create_comment")
@@ -232,7 +236,8 @@ public class Share_contentsCont {
 
 	@GetMapping("/update_comment/{acc_no}/{scmt_no}") //세션, 댓글 아이디와 같아야함
 	public String update_comment_form(Model model, @PathVariable("scmt_no") Integer scmt_no,@PathVariable("acc_no") Integer acc_no, int cate_no,HttpSession session) {
-		AccountVO accountVO = this.accountProc.read(acc_no);
+		if(this.accountProc.isMember(session) && (acc_no==session.getAttribute("acc_no"))) {
+		AccountVO accountVO = this.accountProc.read((int)session.getAttribute("acc_no"));
 		model.addAttribute("acc_id",accountVO.getAcc_id());
 		
 		CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
@@ -240,11 +245,14 @@ public class Share_contentsCont {
 
 		model.addAttribute("scmt_no", scmt_no);
 		return "scontents/update_comment";
+		}else {
+			return "account/login";
+		}
 	}
 
 	@PostMapping("/update_comment")
 	public String update_comment_forn(@RequestParam("scmt_no") int scmt_no, String acc_id,
-			@RequestParam("scmt_comment") String scmt_comment, RedirectAttributes ra, int cate_no) {
+			@RequestParam("scmt_comment") String scmt_comment, RedirectAttributes ra, int cate_no,HttpSession session) {
 		
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("scmt_no", scmt_no);
@@ -265,6 +273,7 @@ public class Share_contentsCont {
 
 	@PostMapping("/delete_comment")
 	public String delete_comment(int scmt_no, RedirectAttributes ra, int cate_no,HttpSession session) {
+	 if(this.accountProc.isMember(session)) {
 	  System.out.println("-> scmt_no :" + scmt_no);
 	  System.out.println("->cate_no:" +cate_no);
 		int scon_no = this.sconProc.scon_comment(scmt_no);
@@ -275,11 +284,15 @@ public class Share_contentsCont {
 		ra.addAttribute("cate_no", cate_no);
 		ra.addAttribute("scon_no", scon_no);
 		return "redirect:/scontents/read";
+	 }else {
+		 return "account/login";
+	 }
 	}
 	
 	@GetMapping("/select_delete")
 	@ResponseBody
 	public String select_delete(@RequestParam(value = "scon_no") List<Integer> scon_no,HttpSession session) {
+	if(this.accountProc.isMemberAdmin(session)) {
 	  System.out.println("-> select_delete scon_no:" +scon_no);
 	  this.sconProc.sdelete_image(scon_no);
 	  this.sconProc.sdelete_tag(scon_no);
@@ -294,10 +307,17 @@ public class Share_contentsCont {
     
     return obj.toString();
 	}
+    JSONObject obj = new JSONObject();
+    obj.put("cnt", 0);
+    return obj.toString();
+	}
 
-	@GetMapping("/update_text") // 글 수정
-	public String update_text_form(Model model, int scon_no, int cate_no,HttpSession session) {
-
+	@GetMapping("/update_text/{member_no}") // 글 수정
+	public String update_text_form(Model model,@PathVariable("member_no") Integer acc_no, int scon_no, int cate_no,HttpSession session) {
+		if(acc_no==0) {
+			return "account/login";
+		}
+		if(this.accountProc.isMember(session) && (acc_no==session.getAttribute("acc_no"))) {
 		CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
 		model.addAttribute("categoryVO", categoryVO);
 
@@ -316,6 +336,10 @@ public class Share_contentsCont {
 			model.addAttribute("url_list" + i, url_list.get(i).getUrl_link());
 		}
 		return "scontents/update_text";
+		}else {
+			return "account/login";
+		}
+		
 	}
 
 	@PostMapping("/update_text") // url 수정, 등록, 삭제
@@ -363,9 +387,12 @@ public class Share_contentsCont {
 		return "redirect:/scontents/list_by_search";
 	}
 
-	@GetMapping("/update_file") // 파일 수정
-	public String update_file_form(Model model, int scon_no, int cate_no,HttpSession session) {
-	  if(this.accountProc.isMember(session)) {
+	@GetMapping("/update_file/{member_no}") // 파일 수정
+	public String update_file_form(Model model, int scon_no, int cate_no,HttpSession session,@PathVariable("member_no") Integer acc_no) {
+		if(acc_no==0) {
+			return "account/login";
+		}
+		if(this.accountProc.isMember(session) && (acc_no==session.getAttribute("acc_no"))) {
 		Share_contentsVO scontentsVO = this.sconProc.read(scon_no);
 		model.addAttribute("scontentsVO", scontentsVO);
 
@@ -462,7 +489,6 @@ public class Share_contentsCont {
 
 	@GetMapping("/create")
 	public String create_form(Model model, Share_contentsVO scontentsVO, int cate_no,HttpSession session) {
-	  System.out.println("->session.getno:" + session.getAttribute("acc_no"));
 	  if(this.accountProc.isMember(session)) {
 	    System.out.println("->session.getno:" + session.getAttribute("acc_no"));
 		model.addAttribute("scontentsVO", scontentsVO);
@@ -574,9 +600,12 @@ public class Share_contentsCont {
 		return "redirect:/scontents/list_by_search";
 	}
 
-	@GetMapping("/delete")
-	public String delete(int scon_no, Model model, int cate_no,HttpSession session) {
-
+	@GetMapping("/delete/{member_no}")
+	public String delete(int scon_no, Model model, int cate_no,HttpSession session,@PathVariable("member_no") Integer acc_no) {
+		if(acc_no==0) {
+			return "account/login";
+		}
+		if(this.accountProc.isMember(session) && (session.getAttribute("acc_no")==acc_no)){
 		CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
 		model.addAttribute("categoryVO", categoryVO);
 
@@ -584,7 +613,9 @@ public class Share_contentsCont {
 		model.addAttribute("scontentsVO", scontentsVO);
 
 		return "scontents/delete";
-
+		}else {
+			return "account/login";
+		}
 	}
 //	
 //	@PostMapping("/delete")

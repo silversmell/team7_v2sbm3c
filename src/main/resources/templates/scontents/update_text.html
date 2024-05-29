@@ -15,7 +15,7 @@
   
   <div class='menu_line'></div>
   
-  <form name='frm' method='post' th:object="${scontentsVO}" action='./update_text' enctype="multipart/form-data">
+  <form name='frm' method='post' th:object="${scontentsVO}" action='/scontents/update_text' enctype="multipart/form-data">
     <input type="hidden" name="scon_no" th:value="${scontentsVO.scon_no }">
     <input type="hidden" name="cate_no" th:value="${categoryVO.cate_no}"> <!-- cate_no 데이터 값 가져옴 -->
     <!--<input type="hidden" name="now_page" th:value="${now_page}"> -->
