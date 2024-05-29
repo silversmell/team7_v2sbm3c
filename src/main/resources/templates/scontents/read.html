@@ -83,10 +83,11 @@
     <span class='menu_divide' >│</span>
     <a href="#" th:attr="onclick=|return confirmUpdate(${member_no}, '${acc_no}', ${scontentsVO.scon_no}, 1)|">글수정</a>
     <span class='menu_divide' >│</span>
+       <a href="#" th:attr="onclick=|return confirmFile(${member_no}, '${acc_no}', ${scontentsVO.scon_no}, 1)|">파일수정</a>
+    <span class='menu_divide' >│</span>
     <a href="#" th:attr="onclick=|return confirmDelete(${member_no}, '${acc_no}', ${scontentsVO.scon_no}, 1)|">삭제</a>
     <span class='menu_divide' >│</span>
-   <a href="#" th:attr="onclick=|return confirmFile(${member_no}, '${acc_no}', ${scontentsVO.scon_no}, 1)|">파일수정</a>
-    <span class='menu_divide' >│</span>
+
 
     <a href="javascript:location.reload();">새로고침</a>
 
@@ -127,8 +128,8 @@
 					</span> 
 					<span style="font-size: 1.5em; font-weight: bold;" th:text="${scontentsVO.scon_contents}"></span>
           <span style="font-size: 1em;" th:text="${scontentsVO.scon_date}"></span><br><br>
-          <span style="font-size: 1em;" th:text="|조회수: ${scontentsVO.scon_views}|"></span><br><br>
-          <span style="font-size: 1em;" th:text="|댓글수: ${cnt}|"></span><br><br>
+          <span style="font-size: 1em;" th:text="|조회수: ${scontentsVO.scon_views}|"></span>
+          <span style="font-size: 1em;" th:text="|댓글수: ${cnt}|"></span>
           <input type="hidden" id="scon_no" name="scon_no" th:value="${scontentsVO.scon_no}">
           <input type="hidden" id="member_no" name="member_no" th:value="${member_no}">
           <div style="white-space: pre-wrap;"></div>
@@ -137,25 +138,15 @@
 					<span th:unless="${scontentsVO.mark =='N'}"> <img
 							src="/css/images/bookmark_on.png" id="bookmarkImage" class="icon" onclick="mark()"> </span>
         </div>
-      </li>
-
-      <div>
-<div>
-	<a style="font-size: 1em;" th:href="${url_list0}" th:text="${url_list0}" th:if="${url_list0 != '1'}">Link1</a><br><br>
-	<a style="font-size: 1em;" th:href="${url_list1}" th:text="${url_list1}" th:if="${url_list1 != '1'}">Link2</a><br><br>
-	<a style="font-size: 1em;" th:href="${url_list2}" th:text="${url_list2}"  th:if="${url_list2 != '1'}">Link3</a><br><br>
-	<a style="font-size: 1em;" th:href="${url_list3}" th:text="${url_list3}"   th:if="${url_list3 != '1'}">Link4</a><br><br>
-	<a style="font-size: 1em;" th:href="${url_list4}" th:text="${url_list4}"  th:if="${url_list4 != '1'}">Link5</a><br><br>
-</div>
-
-      </div>
-      </div>
-    </ul>
-    <br>
-
-  </fieldset>
-        <tr th:each="scommentVO, status:${list}">
-      <div id="commentSection" style="margin-left:60px;" >
+        <div>
+				<a style="font-size: 1em;" th:href="${url_list0}" th:text="${url_list0}" th:if="${url_list0 != '1'}">Link1</a><br>
+				<a style="font-size: 1em;" th:href="${url_list1}" th:text="${url_list1}" th:if="${url_list1 != '1'}">Link2</a><br>
+				<a style="font-size: 1em;" th:href="${url_list2}" th:text="${url_list2}"  th:if="${url_list2 != '1'}">Link3</a><br>
+				<a style="font-size: 1em;" th:href="${url_list3}" th:text="${url_list3}"   th:if="${url_list3 != '1'}">Link4</a><br>
+				<a style="font-size: 1em;" th:href="${url_list4}" th:text="${url_list4}"  th:if="${url_list4 != '1'}">Link5</a><br>
+			</div><br><br>
+			        <tr th:each="scommentVO, status:${list}">
+      <div id="commentSection">
       <div style="display:flex;">
       <td class='td_left'>
           <div>
@@ -192,6 +183,14 @@
              <button type='submit'  style="margin-top: 4px;">등록</button>
          </form> 
     </div>
+      </li>
+
+      </div>
+    </ul>
+    <br>
+
+  </fieldset>
+
 
     <span id='id_msg'></span>  
 
