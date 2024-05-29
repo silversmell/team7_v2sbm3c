@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout}">
 <div layout:fragment="content">
+<style>
+  /* td 요소에 대해 수직 정렬을 설정합니다. */
+  td {
+    vertical-align: top; /* 상단에 정렬합니다. 필요에 따라 middle 등으로 변경 가능합니다. */
+  }
+
+  /* td 안의 div 요소에 대해 수직 정렬을 해제합니다. */
+
+</style>
+
   <script>
   function whole_delete(){
 	  let checkboxes = document.querySelectorAll('Input[name="scon_no"]');
@@ -107,7 +117,8 @@
 
 <tr th:if="${list_image.size() > 0}">
     <td class='td_basic' style="vertical-align: middle; text-align: center;">
-        <div th:each="share_imageVO, status:${list_image}"><div class="horizontal-container" style="margin-bottom:10px">
+        <div th:each="share_imageVO, status:${list_image}" style="margin-bottom:10px;">
+        <div class="horizontal-container" style="margin-bottom:10px">
         	<input type="checkbox" th:id="'scon_no_' + ${share_imageVO.scon_no}" name="scon_no" th:value="${share_imageVO.scon_no}">
             <div th:if="${share_imageVO.file_origin_name.endsWith('jpg') or share_imageVO.file_origin_name.endsWith('png') or share_imageVO.file_origin_name.endsWith('gif')}">
                 <img th:src="@{|/contents/storage/${share_imageVO.file_thumb_name}|}" style="width: 180px; height: 100px;">
@@ -116,20 +127,23 @@
                 <span th:text="${share_imageVO.file_origin_name}"></span>
             </div>
             </div>
-        </div>
+            </div>
     </td>
-    <td>
-<div th:each="scontentsVO, status:${list}" style="cursor: pointer; margin-left: 30px; margin-bottom:20px; margin-top:10px;">
-			    <div class='td_basic' th:attr="onclick=|location.href='/scontents/read?cate_no=1&scon_no=${scontentsVO.scon_no}'|" style="cursor: pointer;">
+    <td class='td_basic' style="vertical-align: middle; text-align: center;">
+<div th:each="scontentsVO, status:${list}" style="cursor: pointer; margin-left: 30px; margin-bottom:23px">
+		<div style="margin-bottom:1px;">
+			    <div class='td_basic' th:attr="onclick=|location.href='/scontents/read?cate_no=1&scon_no=${scontentsVO.scon_no}'|" style="cursor: pointer; margin-top:10px; margin-bottom:10px;">
 			    조회수: <span style="font-size: 1em;" th:text="${scontentsVO.scon_views}"></span><br>
 			        제목:<span th:text="${scontentsVO.scon_title}" style="font-weight: bold;"></span><br>
-			        <span th:if="${scontentsVO.scon_contents.length() > 160 }" th:text="|${scontentsVO.scon_contents.substring(0, 160)}...|"></span>
+			        <span th:if="${scontentsVO.scon_contents.length() > 160 }" th:text="|${scontentsVO.scon_contents.substring(0, 100)}...|"></span>
 			        <span th:if="${scontentsVO.scon_contents.length() <= 160 }" th:text="|${scontentsVO.scon_contents}|"></span>
 			        <br><br>
 			    </div>
 			</div>
+			</div>
 			</td>
 </tr>
+
 
 
         <!-- 리스트가 비어있을 때 -->

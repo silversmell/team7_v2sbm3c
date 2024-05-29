@@ -139,6 +139,7 @@
 							src="/css/images/bookmark_on.png" id="bookmarkImage" class="icon" onclick="mark()"> </span>
         </div>
         <div>
+        <br>
 				<a style="font-size: 1em;" th:href="${url_list0}" th:text="${url_list0}" th:if="${url_list0 != '1'}">Link1</a><br>
 				<a style="font-size: 1em;" th:href="${url_list1}" th:text="${url_list1}" th:if="${url_list1 != '1'}">Link2</a><br>
 				<a style="font-size: 1em;" th:href="${url_list2}" th:text="${url_list2}"  th:if="${url_list2 != '1'}">Link3</a><br>
@@ -176,11 +177,11 @@
       <div>
      <form name='frm' method='post'  th:action="@{|/scontents/create_comment|}">
        <label for="comment">댓글</label>
-       <input type="text" id="acc_no" name="acc_no" th:value="${acc_no}">
+       <input type="hidden" id="acc_no" name="acc_no" th:value="${acc_no}">
        <input type="hidden" id="cate_no" name="cate_no" th:value="${categoryVO.cate_no}"> <!-- cate_no 데이터 값 가져옴 -->
        <input type="hidden" id="scon_no" name="scon_no" th:value="${scontentsVO.scon_no}">
        <textarea name='scmt_comment' id="comment" required="required" value="" class="form-control" rows="5" style='width: 100%;'></textarea>
-             <button type='submit'  style="margin-top: 4px;">등록</button>
+             <button type='submit'  style="margin-top: 8px; border: 1px solid black;">등록</button>
          </form> 
     </div>
       </li>
