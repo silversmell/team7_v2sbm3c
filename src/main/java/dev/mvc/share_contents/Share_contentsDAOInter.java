@@ -272,7 +272,7 @@ public interface Share_contentsDAOInter {
 	  * @param scon_no
 	  * @return int
 	  */
-	 public int bookmark_delete(int scon_no);
+	 public int bookmark_delete(HashMap<String,Object> map);
 	 /**
 	  * share_image에 있는 scon_no 중복 제거
 	  * @return

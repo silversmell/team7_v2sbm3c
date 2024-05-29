@@ -380,8 +380,8 @@ public class Share_contentsProc implements Share_contentsProcInter {
 	}
 
 	@Override
-	public int bookmark_delete(int scon_no) {
-		int cnt = this.scontentsDAO.bookmark_delete(scon_no);
+	public int bookmark_delete(HashMap<String, Object> map) {
+		int cnt = this.scontentsDAO.bookmark_delete(map);
 		return cnt;
 	}
 

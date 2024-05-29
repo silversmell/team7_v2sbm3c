@@ -137,12 +137,13 @@ public class Share_contentsCont {
 	@GetMapping("/up_priority/{scon_no}")
 	@ResponseBody
 	public String up_priority(@PathVariable("scon_no") Integer scon_no, int cate_no, RedirectAttributes ra,HttpSession session) {
+		if(this.accountProc.isMember(session)) {
 		JSONObject obj = new JSONObject();
 		this.sconProc.up_priority(scon_no);
 		int cnt = this.sconProc.y_mark(scon_no);
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("scon_no", scon_no);
-		map.put("acc_no", 1); // acc_no 들어오면 바꿔야 할 것!
+		map.put("acc_no", session.getAttribute("acc_no")); 
 		int cnt1 = this.sconProc.bookmarK_create(map);
 
 		if (cnt1 == 1) {
@@ -150,6 +151,11 @@ public class Share_contentsCont {
 		}
 		obj.put("cnt", cnt);
 		return obj.toString();
+		}else {
+			JSONObject obj = new JSONObject();
+			obj.put("cnt",0);
+			return obj.toString();
+		}
 
 	}
 	
@@ -157,13 +163,17 @@ public class Share_contentsCont {
 	@GetMapping("/down_priority/{scon_no}")
 	@ResponseBody
 	public String down_priority(@PathVariable("scon_no") Integer scon_no, int cate_no, RedirectAttributes ra,HttpSession session) {
+		if(this.accountProc.isMember(session)) {
 		JSONObject obj = new JSONObject();
 		int cnt = this.sconProc.down_priority(scon_no);
 		int mark_down = this.sconProc.n_mark(scon_no);
 //    if(mark_down=='N') {
 //      System.out.println("MARK_N 성공");
 //    }
-		int cnt1 = this.sconProc.bookmark_delete(scon_no);
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("scon_no", scon_no);
+		map.put("acc_no", session.getAttribute("acc_no")); 
+		int cnt1 = this.sconProc.bookmark_delete(map);
 		if (cnt1 == 1) {
 			System.out.println("북마크 삭제 성공");
 		}
@@ -173,8 +183,13 @@ public class Share_contentsCont {
 		System.out.println("down_priority created");
 		obj.put("cnt", cnt);
 		return obj.toString();
-//		ra.addAttribute("cate_no", cate_no);
-//		return "redirect:/scontents/read?scon_no=" + scon_no;
+		}else {
+			JSONObject obj = new JSONObject();
+			obj.put("cnt",0);
+			return obj.toString();
+			
+		}
+
 	}
 	
   @PostMapping("/create_comment") 
@@ -466,7 +481,7 @@ public class Share_contentsCont {
 	}
 
 	@PostMapping("/create")
-	public String create(Model model, Share_contentsVO scontentsVO, String url_link, RedirectAttributes ra,
+	public String create(Model model, Share_contentsVO scontentsVO, String url_link, RedirectAttributes ra,HttpSession session,
 			List<MultipartFile> fnamesMF, @RequestParam("tag_no") int[] tag_no) {
 	  //System.out.println(" -> create acc_no :" +scontentsVO.getacc_no()); //로그인 시에 session 들어올 것
 		System.out.println("-> fnamesMF :" + fnamesMF);
