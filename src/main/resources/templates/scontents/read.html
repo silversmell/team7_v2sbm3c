@@ -100,6 +100,8 @@
     <div>
       <li class="li_none">
         <div style="width: 100%; word-break: break-all;">
+
+<div style='margin: 0px auto; width: 900px;'>
 					<div class ="horizontal-container">
    		<tr th:each="item, status : ${list2}">
    		<div class='read_hashtag' style = "padding:5px">
@@ -109,7 +111,6 @@
         </div>
     </tr>
     </div>
-<div style='margin: 0px auto; width: 900px;'>
     <div class="fotorama" data-width="80%" data-ratio="800/520" data-max-width="100%" style='margin: 0px auto; display: flex; justify-content: center; align-items: center;'>
         <div th:each="share_imageVO, status: ${share_imageVO}">
             <div style="display: flex; justify-content: center; align-items: center;">
@@ -119,26 +120,28 @@
             </div>
         </div>
     </div>
-</div>
+
 
 
 					<br> 
-					<div  style=" text-align: center;">
 					<div style="text-align:left;">
 					<span style="font-size: 1.5em; font-weight: bold;" th:text="${scontentsVO.scon_contents}"></span><br>
+					          <div style="white-space: pre-wrap;"></div>
+          	<span th:if="${scontentsVO.mark =='N'}">
+						<img 	src="/css/images/bookmark_off.png" id="bookmarkImage" class="icon" onclick="mark()" style="width:24px; height: 24px;">	</span>
+					<span th:unless="${scontentsVO.mark =='N'}"> <img
+							src="/css/images/bookmark_on.png" id="bookmarkImage" class="icon" onclick="mark()"> </span>
           <span style="font-size: 1em;" th:text="${scontentsVO.scon_date}"></span><br><br>
           <span style="font-size: 1em;" th:text="|조회수: ${scontentsVO.scon_views}|"></span>
           <span style="font-size: 1em;" th:text="|댓글수: ${cnt}|"></span>
           </div>
           <input type="hidden" id="scon_no" name="scon_no" th:value="${scontentsVO.scon_no}">
           <input type="hidden" id="member_no" name="member_no" th:value="${member_no}">
-          <div style="white-space: pre-wrap;"></div>
-          	<span th:if="${scontentsVO.mark =='N'}">
-						<img 	src="/css/images/bookmark_off.png" id="bookmarkImage" class="icon" onclick="mark()" style="width:24px; height: 24px;">	</span>
-					<span th:unless="${scontentsVO.mark =='N'}"> <img
-							src="/css/images/bookmark_on.png" id="bookmarkImage" class="icon" onclick="mark()"> </span>
-        </div>
+
         <div>
+	
+				<br>
+				<데스크 제품 목록>
         <br>
 				<a style="font-size: 1em;" th:href="${url_list0}" th:text="${url_list0}" th:if="${url_list0 != '1'}">Link1</a><br>
 				<a style="font-size: 1em;" th:href="${url_list1}" th:text="${url_list1}" th:if="${url_list1 != '1'}">Link2</a><br>
@@ -146,6 +149,7 @@
 				<a style="font-size: 1em;" th:href="${url_list3}" th:text="${url_list3}"   th:if="${url_list3 != '1'}">Link4</a><br>
 				<a style="font-size: 1em;" th:href="${url_list4}" th:text="${url_list4}"  th:if="${url_list4 != '1'}">Link5</a><br>
 			</div><br><br>
+			</div>
 			        <tr th:each="scommentVO, status:${list}">
       <div id="commentSection">
       <div style="display:flex;">
@@ -170,9 +174,11 @@
        </div>
       </div>     
       </div>
+      </div>
       <hr style="width: 100%;">
       </div>
     </tr>
+    
   
       <div>
      <form name='frm' method='post'  th:action="@{|/scontents/create_comment|}">

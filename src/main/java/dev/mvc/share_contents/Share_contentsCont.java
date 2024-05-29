@@ -450,7 +450,7 @@ public class Share_contentsCont {
 					file_upload_name = Upload.saveFileSpring(multipartFile, upDir);
 
 					if (Tool.isImage(file_origin_name)) {
-						file_thumb_name = Tool.preview(upDir, file_upload_name, 200, 150);
+						file_thumb_name = Tool.preview(upDir, file_upload_name, 800, 450);
 					}
 				}
 
