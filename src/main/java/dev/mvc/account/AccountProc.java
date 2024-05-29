@@ -104,15 +104,15 @@ public class AccountProc implements AccountProcInter {
 
 	@Override
 	public boolean isMemberAdmin(HttpSession session) {
-		boolean sw = false;	// 로그아웃 상태로 초기화
-		String acc_grade = (String)session.getAttribute("acc_grade");
-		
-		if(acc_grade != null) {
-			if(acc_grade.equals("admin")) {
-				sw = true;	// 로그인 상태로 전환
-			}
-		}
-		return sw;
+	  boolean sw = false; // 로그아웃 상태로 초기화
+    String acc_grade = (String)session.getAttribute("acc_grade");
+    
+    if(acc_grade != null) {
+      if(acc_grade.equals("admin")) {
+        sw = true;  // 로그인 상태로 전환
+      }
+    }
+    return sw;
 	}
 
 	@Override
