@@ -66,9 +66,7 @@ public class Share_contentsCont {
 //	}
 
 	@GetMapping("/read") //글 조회
-	public String read(Model model, int scon_no, int cate_no, HttpSession session,
-			@RequestParam(name = "acc_no", defaultValue = "0") int acc_no) { // acc_no 필요(session)
-
+	public String read(Model model, int scon_no, int cate_no, HttpSession session) { // acc_no 필요(session)
 		
 		model.addAttribute("acc_id",session.getAttribute("acc_id"));
 		model.addAttribute("acc_no",session.getAttribute("acc_no"));
@@ -97,7 +95,6 @@ public class Share_contentsCont {
 
 		ArrayList<Share_commentsVO> list = this.sconProc.read_comment(scon_no); // 댓글 등록가져옴
 		model.addAttribute("list", list);
-		//model.addAttribute("acc_no", session.getAttribute("acc_no"));
 
 		ArrayList<Contents_urlVO> url_list = this.sconProc.only_url(scon_no);
 
@@ -111,8 +108,7 @@ public class Share_contentsCont {
 		ArrayList<Share_imageVO> share_imageVO = this.sconProc.read_image(scon_no);
 
 		model.addAttribute("share_imageVO", share_imageVO);
-		
-
+	
 		return "scontents/read";
 	  }
 
@@ -490,7 +486,7 @@ public class Share_contentsCont {
 	@GetMapping("/create")
 	public String create_form(Model model, Share_contentsVO scontentsVO, int cate_no,HttpSession session) {
 	  if(this.accountProc.isMember(session)) {
-	    System.out.println("->session.getno:" + session.getAttribute("acc_no"));
+	    //System.out.println("->session.getno:" + session.getAttribute("acc_no"));
 		model.addAttribute("scontentsVO", scontentsVO);
 
 		// 카테고리 가져오기
