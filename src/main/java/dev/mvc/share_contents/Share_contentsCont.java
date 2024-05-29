@@ -191,7 +191,7 @@ public class Share_contentsCont {
 	}
 	
   @PostMapping("/create_comment") 
-  public String create_comment(String scmt_comment, int scon_no, int acc_no, RedirectAttributes ra, int cate_no,HttpSession session) {
+  public String create_comment(String scmt_comment, int scon_no, @RequestParam(name = "acc_no", defaultValue = "0") int acc_no, RedirectAttributes ra, int cate_no,HttpSession session) {
 	 if(this.accountProc.isMember(session)) {
     HashMap<String, Object> map = new HashMap<String, Object>();
     map.put("scmt_comment", scmt_comment);
