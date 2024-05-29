@@ -109,8 +109,15 @@
             #<span th:text="${item}" class="bold;"></span>
         </td>
         </div>
-    </tr>
-    </div><br>
+    </tr><br>
+    	<br>
+    
+    </div>
+    <br>
+    <div style="display:flex; align-items: center; margin-left:90px;">
+    <span th:text="${scontentsVO.scon_title}" style="font-size:2em;font-weight: bold;"></span>
+    <span style="font-size: 1em; margin-left:10px;" th:text="${scontentsVO.scon_date}"></span>
+    </div>
     <div class="fotorama" data-width="80%" data-ratio="800/520" data-max-width="100%" style='margin: 0px auto; display: flex; justify-content: center; align-items: center;'>
         <div th:each="share_imageVO, status: ${share_imageVO}">
             <div style="display: flex; justify-content: center; align-items: center;">
@@ -133,7 +140,7 @@
 					<span style="font-size: 1.5em; font-weight: normal;" th:text="${scontentsVO.scon_contents}"></span><br>
 					          <div style="white-space: pre-wrap;"></div>
 
-          <span style="font-size: 1em;" th:text="${scontentsVO.scon_date}"></span><br><br>
+          
           <span style="font-size: 1em;" th:text="|조회수: ${scontentsVO.scon_views}|"></span>
           <span style="font-size: 1em;" th:text="|댓글수: ${cnt}|"></span>
           </div>
