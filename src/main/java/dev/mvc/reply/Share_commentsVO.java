@@ -1,18 +1,22 @@
-package dev.mvc.share_contentsdto;
+package dev.mvc.reply;
 
 import lombok.Getter;
 import lombok.Setter;
 
 
 public class Share_commentsVO {
+	/** 댓글 번호 **/
 	private int scmt_no;
 	
+	/** 회원 번호 **/
 	private int acc_no;
 	
+	/** 공유게시글 번호 **/
 	private int scon_no;
 	
+	/** 내용 **/
 	private String scmt_comment;
-	
+	/** 댓글 날짜 **/
 	private String scmt_date;
 	
 

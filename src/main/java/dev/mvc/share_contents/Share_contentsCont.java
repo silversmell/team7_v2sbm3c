@@ -28,7 +28,8 @@ import dev.mvc.recommend.HashtagVO;
 import dev.mvc.share_contents.Contents;
 import dev.mvc.share_contentsdto.Contents_tagVO;
 import dev.mvc.share_contentsdto.Contents_urlVO;
-import dev.mvc.share_contentsdto.Share_commentsVO;
+import dev.mvc.reply.ReplyProcInter;
+import dev.mvc.reply.Share_commentsVO;
 import dev.mvc.share_contentsdto.Share_contentsVO;
 import dev.mvc.share_contentsdto.Share_imageVO;
 import dev.mvc.tool.Tool;
@@ -42,7 +43,11 @@ public class Share_contentsCont {
 	@Autowired
 	@Qualifier("dev.mvc.account.AccountProc")
 	private AccountProcInter accountProc;
-
+	
+	@Autowired
+	@Qualifier("dev.mvc.reply.ReplyProc")
+	private ReplyProcInter replyProc;
+	
 	@Autowired
 	@Qualifier("dev.mvc.category.CategoryProc")
 	private CategoryProcInter categoryProc;
@@ -66,8 +71,11 @@ public class Share_contentsCont {
 //	}
 
 	@GetMapping("/read") //글 조회
-	public String read(Model model, int scon_no, int cate_no, HttpSession session) { // acc_no 필요(session)
+	public String read(Model model, int scon_no, int cate_no, HttpSession session,@RequestParam(name = "word", defaultValue = "") String word,
+			 @RequestParam(name = "now_page", defaultValue = "1") int now_page) { // acc_no 필요(session)
 		
+		model.addAttribute("word",word);
+		model.addAttribute("now_page",now_page);
 		model.addAttribute("acc_id",session.getAttribute("acc_id"));
 		model.addAttribute("acc_no",session.getAttribute("acc_no"));
 		// 카테고리 가져오기
@@ -79,21 +87,15 @@ public class Share_contentsCont {
 		Share_contentsVO scontentsVO = this.sconProc.read(scon_no);
 		model.addAttribute("scontentsVO", scontentsVO);
 		model.addAttribute("member_no",scontentsVO.getacc_no());
+		
+		ArrayList<HashtagVO> list1 = this.sconProc.sconno_hashtag(scon_no);
 
-		ArrayList<Contents_tagVO> list1 = this.sconProc.read_contents_tag(scon_no); // scon_no에 맞는 컨텐츠 태그 가져오기
-		ArrayList<String> list2 = new ArrayList<>();
+		model.addAttribute("list2", list1);
 
-		for (int i = 0; i < list1.size(); i++) {
-			HashtagVO list3 = this.sconProc.select_hashname(list1.get(i).getTag_no());
-			list2.add(list3.getTag_name()); // 태그 이름을 갖고오기
-		}
-
-		model.addAttribute("list2", list2);
-
-		int cnt1 = this.sconProc.comment_search(scon_no);
+		int cnt1 = this.replyProc.comment_search(scon_no);
 		model.addAttribute("cnt", cnt1);
 
-		ArrayList<Share_commentsVO> list = this.sconProc.read_comment(scon_no); // 댓글 등록가져옴
+		ArrayList<Share_commentsVO> list = this.replyProc.read_comment(scon_no); // 댓글 등록가져옴
 		model.addAttribute("list", list);
 
 		ArrayList<Contents_urlVO> url_list = this.sconProc.only_url(scon_no);
@@ -112,25 +114,6 @@ public class Share_contentsCont {
 		return "scontents/read";
 	  }
 
-//	@GetMapping("/up_priority/{scon_no}")
-//	
-//	public String up_priority(@PathVariable("scon_no") Integer scon_no, int cate_no, RedirectAttributes ra,HttpSession session) {
-//
-//		this.sconProc.up_priority(scon_no);
-//		int cnt = this.sconProc.y_mark(scon_no);
-//		HashMap<String, Object> map = new HashMap<>();
-//		map.put("scon_no", scon_no);
-//		map.put("acc_no", 1); // acc_no 들어오면 바꿔야 할 것!
-//		int cnt1 = this.sconProc.bookmarK_create(map);
-//
-//		if (cnt1 == 1) {
-//			System.out.println("북마크에 등록 성공");
-//		}
-//
-//		// System.out.println("up_priority created");
-//		ra.addAttribute("cate_no", cate_no);
-//		return "redirect:/scontents/read?scon_no=" + scon_no;
-//	}
 	
 	@GetMapping("/up_priority/{scon_no}")
 	@ResponseBody
@@ -165,9 +148,7 @@ public class Share_contentsCont {
 		JSONObject obj = new JSONObject();
 		int cnt = this.sconProc.down_priority(scon_no);
 		int mark_down = this.sconProc.n_mark(scon_no);
-//    if(mark_down=='N') {
-//      System.out.println("MARK_N 성공");
-//    }
+
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("scon_no", scon_no);
 		map.put("acc_no", session.getAttribute("acc_no")); 
@@ -175,9 +156,7 @@ public class Share_contentsCont {
 		if (cnt1 == 1) {
 			System.out.println("북마크 삭제 성공");
 		}
-//    if(cnt==1) {
-//      System.out.println("scon_priority down 성공");
-//    }
+
 		System.out.println("down_priority created");
 		obj.put("cnt", cnt);
 		return obj.toString();
@@ -197,7 +176,7 @@ public class Share_contentsCont {
     map.put("scmt_comment", scmt_comment);
     map.put("scon_no", scon_no);
     map.put("acc_no", session.getAttribute("acc_no"));
-    int cnt = this.sconProc.create_comment(map);
+    int cnt = this.replyProc.create_comment(map);
     
     AccountVO accountVO = this.accountProc.read(acc_no);
     
@@ -231,14 +210,14 @@ public class Share_contentsCont {
 //  }
 
 	@GetMapping("/update_comment/{acc_no}/{scmt_no}") //세션, 댓글 아이디와 같아야함
-	public String update_comment_form(Model model, @PathVariable("scmt_no") Integer scmt_no,@PathVariable("acc_no") Integer acc_no, int cate_no,HttpSession session) {
+	public String update_comment_form(Model model, @PathVariable("scmt_no") Integer scmt_no,@PathVariable("acc_no") Integer acc_no, int cate_no,HttpSession session,int scon_no) {
 		if(this.accountProc.isMember(session) && (acc_no==session.getAttribute("acc_no"))) {
 		AccountVO accountVO = this.accountProc.read((int)session.getAttribute("acc_no"));
 		model.addAttribute("acc_id",accountVO.getAcc_id());
 		
 		CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
 		model.addAttribute("categoryVO", categoryVO);
-
+		model.addAttribute("scon_no",scon_no);
 		model.addAttribute("scmt_no", scmt_no);
 		return "scontents/update_comment";
 		}else {
@@ -247,19 +226,18 @@ public class Share_contentsCont {
 	}
 
 	@PostMapping("/update_comment")
-	public String update_comment_forn(@RequestParam("scmt_no") int scmt_no, String acc_id,
+	public String update_comment_forn(@RequestParam("scmt_no") int scmt_no, String acc_id,int scon_no,
 			@RequestParam("scmt_comment") String scmt_comment, RedirectAttributes ra, int cate_no,HttpSession session) {
 		
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("scmt_no", scmt_no);
 		map.put("scmt_comment", scmt_comment);
 
-		int cnt = this.sconProc.update_comment(map);
+		int cnt = this.replyProc.update_comment(map);
 
 		if (cnt == 1) {
 			System.out.println("댓글 수정 성공");
 		}
-		int scon_no = this.sconProc.scon_comment(scmt_no);
 		System.out.println("-> scon_no:" + scon_no);
 		ra.addAttribute("scon_no", scon_no);
 		ra.addAttribute("cate_no", cate_no);
@@ -268,12 +246,11 @@ public class Share_contentsCont {
 	}
 
 	@PostMapping("/delete_comment")
-	public String delete_comment(int scmt_no, RedirectAttributes ra, int cate_no,HttpSession session) {
+	public String delete_comment(int scmt_no, RedirectAttributes ra, int cate_no,HttpSession session,int scon_no) {
 	 if(this.accountProc.isMember(session)) {
 	  System.out.println("-> scmt_no :" + scmt_no);
 	  System.out.println("->cate_no:" +cate_no);
-		int scon_no = this.sconProc.scon_comment(scmt_no);
-		int cnt = this.sconProc.delete_scmtno(scmt_no);
+		int cnt = this.replyProc.delete_scmtno(scmt_no);
 		if (cnt == 1) {
 			System.out.println("댓글 삭제 성공");
 		}
@@ -292,7 +269,7 @@ public class Share_contentsCont {
 	  System.out.println("-> select_delete scon_no:" +scon_no);
 	  this.sconProc.sdelete_image(scon_no);
 	  this.sconProc.sdelete_tag(scon_no);
-	  this.sconProc.sdelete_comment(scon_no);
+	  this.replyProc.sdelete_comment(scon_no);
 	  this.sconProc.sdelete_url(scon_no);
 	  int cnt = this.sconProc.delete_sconno(scon_no);
 	  if(cnt>0) {
@@ -494,7 +471,7 @@ public class Share_contentsCont {
 		model.addAttribute("categoryVO", categoryVO);
 		model.addAttribute("acc_no",session.getAttribute("acc_no")); //로그인 시에 session 들어올 것
 		ArrayList<HashtagVO> list = this.sconProc.select_hashtag();
-		System.out.println("-> tag_no :" + list.get(0).getTag_no());
+		//System.out.println("-> tag_no :" + list.get(0).getTag_no());
 		model.addAttribute("list", list);
 
 		return "scontents/create";
@@ -661,7 +638,7 @@ public class Share_contentsCont {
 		Share_contentsVO share_contentsVO = this.sconProc.read(scon_no); // scon_no 가져오기
 		
 		this.sconProc.bookmarall_delete(scon_no);
-		this.sconProc.delete_comments(scon_no);
+		this.replyProc.delete_comments(scon_no);
 		this.sconProc.delete_url(scon_no);
 		this.sconProc.delete_tag(scon_no);
 		this.sconProc.bookmarall_delete(scon_no);
@@ -741,7 +718,11 @@ public class Share_contentsCont {
 		// model.addAttribute("list", list1);
 		model.addAttribute("word", word);
 
-		HashtagVO hashtag_VO = this.sconProc.select_hashname(tag_no); // tag_no에 따른 태그 이름
+		 ArrayList<HashtagVO>hashtag_VO = this.sconProc.read_hashtag_name(tag_no); //tag_no로 hashtag_name 가져오기
+//		 for(int i = 0;i<hashtag_VO.size();i++) {
+//			 System.out.println("-> tag_name:"+ hashtag_VO.get(i).getTag_name());
+//		 }
+
 		model.addAttribute("hashtag", hashtag_VO);
 
 		int count = this.sconProc.tag_count(tag_no);
@@ -749,11 +730,9 @@ public class Share_contentsCont {
 
 		//ArrayList<Contents_tagVO> tag_sconno = this.sconProc.select_sconno(tag_no);
 
-		System.out.println();
 		ArrayList<Share_imageVO> list_image = new ArrayList<>();
-		for (Contents_tagVO scon : sconno_list) { //조회시 대표사진 하나만 나오게
-			ArrayList<Share_imageVO> distinct_image = this.sconProc.read_image(scon.getScon_no());
-			list_image.add(distinct_image.get(0)); // 첫번째 것
+		for(Share_contentsVO list1:list) {
+			list_image.addAll(this.sconProc.distinct_image(list1.getScon_no())); //한 행만 image 로 나오게
 		}
 		
 		model.addAttribute("list_image", list_image);
@@ -798,14 +777,17 @@ public class Share_contentsCont {
 		model.addAttribute("list", list);
 		model.addAttribute("word", word);
 		// 사진 하나만 나오게 하기
+//		ArrayList<Share_imageVO> list_image = new ArrayList<>();
+//		
+//		for (Share_contentsVO list1 : list) {
+//			ArrayList<Share_imageVO> distinct_image = this.sconProc.read_image(list1.getScon_no());
+//			list_image.add(distinct_image.get(0)); // 첫번째 것
+//		}
 		ArrayList<Share_imageVO> list_image = new ArrayList<>();
-
-		for (Share_contentsVO list1 : list) {
-			ArrayList<Share_imageVO> distinct_image = this.sconProc.read_image(list1.getScon_no());
-			list_image.add(distinct_image.get(0)); // 첫번째 것
+		for(Share_contentsVO list1:list) {
+			list_image.addAll(this.sconProc.distinct_image(list1.getScon_no()));
 		}
-
-		model.addAttribute("list_image", list_image);
+		model.addAttribute("list_image",list_image);
 
 		int search_count = this.sconProc.list_by_cateno_search_count(map);
 		String paging = this.sconProc.pagingBox(now_page, word, "/scontents/list_by_search", search_count,
