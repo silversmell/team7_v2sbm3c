@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -11,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -18,11 +20,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import dev.mvc.account.AccountProc;
+import dev.mvc.account.AccountVO;
 import dev.mvc.admin.AdminProc;
 import dev.mvc.category.CategoryProcInter;
 import dev.mvc.category.CategoryVO;
 import dev.mvc.category.CategoryVOMenu;
-import dev.mvc.share_contentsdto.Share_contentsVO;
 import dev.mvc.tool.Tool;
 import dev.mvc.tool.Upload;
 import jakarta.servlet.http.HttpServletRequest;
@@ -97,13 +99,22 @@ public class Qna_contentsCont {
    * @return
    */
   @GetMapping(value="/qna_create")
-  public String qna_create(Model model, int cate_no) {
+  public String qna_create(Model model, int cate_no, HttpSession session, Qna_contentsVO qna_contentsVO) {
     
-    // 카테고리 가져오기
-    CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
-    model.addAttribute("categoryVO", categoryVO);
+    if (this.accountProc.isMember(session)) {
+      // 카테고리 가져오기
+      CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
+      model.addAttribute("categoryVO", categoryVO);
+      
+      model.addAttribute("qna_contentsVO", qna_contentsVO);
+      model.addAttribute("acc_no",session.getAttribute("acc_no")); 
+      
+      return "qcontents/qna_create"; // /templates/qcontents/create.html
+    } else {
+      return "redirect:/account/login";  // /account/login.html
+    }
     
-    return "qcontents/qna_create"; // /templates/qcontents/create.html
+  
   }
   
   /**
@@ -122,7 +133,6 @@ public class Qna_contentsCont {
                             Qna_imageVO qna_imageVO,
                             Qna_contentsVO qna_contentsVO) {
 
-    if (accountProc.isMember(session)) { // 관리자나 회원으로 로그인한 경우
       // 질문글 등록 전 출력
       System.out.println("-> [레코드 등록 전] qcon_no: " + qna_contentsVO.getQcon_no());
       System.out.println("-> [레코드 등록 전] file_no: " + qna_imageVO.getFile_no());
@@ -203,9 +213,6 @@ public class Qna_contentsCont {
           
           return "redirect:/account/login";
       }
-  } else {  // 로그인 실패 한 경우
-    return "redirect:/account/login";  // /account/login.html
-  }
 }
     
     
@@ -222,7 +229,7 @@ public class Qna_contentsCont {
    * @return
    */
   @GetMapping(value="/qna_list_all")
-  public String list_by_qna_search_paging(Model model, HttpSession session, int cate_no, int acc_no,
+  public String list_by_qna_search_paging(Model model, HttpSession session, int cate_no,
                                                     @RequestParam(name="word", defaultValue = "") String word,
                                                     @RequestParam(name="now_page", defaultValue = "1") int now_page) {
     
@@ -283,11 +290,17 @@ public class Qna_contentsCont {
    */
   @GetMapping(value="/qna_read")
   public String qna_read(Model model, 
+                               HttpSession session,
                                @RequestParam(name="cate_no", defaultValue = "2") int cate_no, 
                                int qcon_no, int now_page) {
     
+      model.addAttribute("acc_id",session.getAttribute("acc_id"));
+      model.addAttribute("acc_no",session.getAttribute("acc_no"));
       model.addAttribute("cate_no", cate_no);
       model.addAttribute("qcon_no", qcon_no);
+      model.addAttribute("acc_no",session.getAttribute("acc_no"));
+      
+      System.out.println("-> acc_no: " + session.getAttribute("acc_no"));
       
       // 카테고리 가져오기
       CategoryVO categoryVO = this.categoryProc.cate_read(cate_no); // 카테고리 읽어옴
@@ -299,6 +312,8 @@ public class Qna_contentsCont {
       // 질문글 가져오기
       Qna_contentsVO qna_contentsVO = this.qna_contentsProc.qna_read(qcon_no);
       model.addAttribute("qna_contentsVO", qna_contentsVO);
+      
+      model.addAttribute("acc_no", qna_contentsVO.getAcc_no());
       
       // 질문글 이미지 가져오기
       ArrayList<Qna_imageVO> qna_imageVO = this.qna_contentsProc.qna_read_image(qcon_no);
@@ -322,10 +337,11 @@ public class Qna_contentsCont {
                                             RedirectAttributes ra,
                                             String word, int now_page,
                                             @RequestParam(name="cate_no", defaultValue = "2") int cate_no, int qcon_no) {
+
+
     
-    model.addAttribute("word", word);
-    model.addAttribute("now_page", now_page);
-    
+    System.out.println("-> acc_no: " + session.getAttribute("acc_no"));
+
     if (accountProc.isMember(session)) { // 관리자, 회원으로 로그인 한 경우
       // 카테고리 가져오기
       CategoryVO categoryVO = this.categoryProc.cate_read(cate_no); // 카테고리 읽어옴
@@ -337,6 +353,9 @@ public class Qna_contentsCont {
       
       model.addAttribute("cate_no", cate_no);
       model.addAttribute("qcon_no", qcon_no);
+      model.addAttribute("word", word);
+      model.addAttribute("now_page", now_page);
+      model.addAttribute("acc_no",session.getAttribute("acc_no"));
       
       return "qcontents/qna_update_text";
     } else {  // 로그인 실패 한 경우      
@@ -363,7 +382,7 @@ public class Qna_contentsCont {
                                         int cate_no, int qcon_no) {
     
     
-    if (accountProc.isMember(session)) { // 관리자, 회원으로 로그인 한 경우
+
       int cnt = this.qna_contentsProc.qna_update_text(qna_contentsVO);
       
       HashMap<String, Object> map = new HashMap<String, Object>();
@@ -378,6 +397,7 @@ public class Qna_contentsCont {
         ra.addAttribute("qcon_no", qcon_no);
         ra.addAttribute("now_page", now_page);
         ra.addAttribute("word", search_word);
+        ra.addAttribute("acc_no", session.getAttribute("acc_no"));
         
         return "redirect:/qcontents/qna_read";
       } else { // 패스워드 불일치
@@ -386,11 +406,7 @@ public class Qna_contentsCont {
         ra.addAttribute("url", "/qcontents/msg"); // msg.html, redirect parameter 적용
         return "redirect:/qcontents/msg";  // @GetMapping(value="/msg")
       }
-    } else {  // 정상적인 로그인 아닌 경우
-      ra.addFlashAttribute("cnt", 0);
-      ra.addAttribute("url", "/account/login_cookie_need"); // /templates/account/login_cookie_need.html
-      return "redirect:/qcontents/msg";  //  @GetMapping(value="/msg")
-    }
+
   
   }
   
@@ -404,31 +420,39 @@ public class Qna_contentsCont {
    * @return
    */
   @GetMapping(value="/qna_update_file")
-  public String qna_update_file(HttpSession session, Model model,
+  public String qna_update_file(HttpSession session, RedirectAttributes ra, Model model,
                                       @RequestParam(name="cate_no", defaultValue = "2") int cate_no, 
                                       int qcon_no, int now_page) {
     
-    // 카테고리 가져오기
-    CategoryVO categoryVO = this.categoryProc.cate_read(cate_no); // 카테고리 읽어옴
-    model.addAttribute("categoryVO", categoryVO);
-    
-    // 질문글 가져오기
-    Qna_contentsVO qna_contentsVO = this.qna_contentsProc.qna_read(qcon_no);
-    model.addAttribute("qna_contentsVO", qna_contentsVO);
-    
-    ArrayList<Qna_imageVO> qimage = this.qna_contentsProc.qna_read_image(qcon_no);
-    for (int i = 1; i < qimage.size(); i++) {
-      long size = qimage.get(i).getFile_size();
-      String silze_label = Tool.unit(size);
-      qimage.get(i).setFlabel(silze_label);
+    System.out.println("-> acc_no: " + session.getAttribute("acc_no"));
+
+    if (accountProc.isMember(session)) { // 관리자, 회원으로 로그인한 경우
+      // 카테고리 가져오기
+      CategoryVO categoryVO = this.categoryProc.cate_read(cate_no); // 카테고리 읽어옴
+      model.addAttribute("categoryVO", categoryVO);
+      
+      // 질문글 가져오기
+      Qna_contentsVO qna_contentsVO = this.qna_contentsProc.qna_read(qcon_no);
+      model.addAttribute("qna_contentsVO", qna_contentsVO);
+      
+      ArrayList<Qna_imageVO> qimage = this.qna_contentsProc.qna_read_image(qcon_no);
+      for (int i = 1; i < qimage.size(); i++) {
+        long size = qimage.get(i).getFile_size();
+        String silze_label = Tool.unit(size);
+        qimage.get(i).setFlabel(silze_label);
+      }
+      model.addAttribute("qimage", qimage);
+      
+      model.addAttribute("now_page", now_page);
+      model.addAttribute("cate_no", cate_no);
+      model.addAttribute("qcon_no", qcon_no);
+      
+      return "qcontents/qna_update_file";
+    } else {  // 로그인 실패 한 경우      
+      ra.addAttribute("url", "/account/login_cookie_need"); // /templates/account/login_cookie_need.html
+      return "redirect:/account/login";  // /account/login.html
     }
-    model.addAttribute("qimage", qimage);
     
-    model.addAttribute("now_page", now_page);
-    model.addAttribute("cate_no", cate_no);
-    model.addAttribute("qcon_no", qcon_no);
-    
-    return "qcontents/qna_update_file";
   }
   
   /**
@@ -445,7 +469,6 @@ public class Qna_contentsCont {
                                         List<MultipartFile> fnamesMF,
                                         int cate_no, int qcon_no, int now_page) {
     
-    if (this.accountProc.isMember(session)) {
       model.addAttribute("cate_no", cate_no);
       model.addAttribute("qcon_no", qcon_no);
       
@@ -524,10 +547,7 @@ public class Qna_contentsCont {
       ra.addAttribute("now_page", now_page);
       
       return "redirect:/qcontents/qna_read";
-    } else { // 로그인하지 않았을 경우
-      ra.addAttribute("url", "/account/login_cookie_need");
-      return "redirect:/qcontents/msg";
-    }
+    
 
   }
   
@@ -544,6 +564,8 @@ public class Qna_contentsCont {
                                   @RequestParam(name="cate_no", defaultValue = "2") int cate_no, 
                                   int qcon_no, int now_page) {
     
+    System.out.println("-> acc_no: " + session.getAttribute("acc_no"));
+
     if (this.adminProc.isQuestionAdmin(session)) {
       model.addAttribute("cate_no", cate_no);
       model.addAttribute("now_page", now_page);
@@ -606,6 +628,40 @@ public class Qna_contentsCont {
 	  ra.addAttribute("now_page", now_page);
 	  
 	  return "redirect:/qcontents/qna_list_all";
+  }
+  
+  
+  @GetMapping(value="/list_by_qcmt_no_join")
+  @ResponseBody
+  public String list_by_qcmt_no_join(int qcon_no) {
+    List<Qna_Acc_commentVO> list = qna_contentsProc.list_by_qcmt_no_join(qcon_no);
+    
+    JSONObject obj = new JSONObject();
+    obj.put("res", list);
+    
+    System.out.println("-> obj.toString(): " + obj.toString());
+    
+    return obj.toString();     
+  }
+  
+  @PostMapping(value="/qna_create_comment")
+  @ResponseBody
+  public String qna_create_comment(@RequestBody Qna_commentVO qna_commentVO, HttpSession session) {
+    
+    System.out.println("-> 수신 데이터:" + qna_commentVO.toString());
+    
+    int acc_no = (int)session.getAttribute("acc_no");
+    qna_commentVO.setAcc_no(acc_no);
+    
+    System.out.println("-> acc_no: " + acc_no);
+    
+    int cnt = this.qna_contentsProc.qna_create_comment(qna_commentVO);
+    
+    JSONObject json = new JSONObject();
+    json.put("res", cnt);
+  
+    return json.toString();
+   
   }
  
 

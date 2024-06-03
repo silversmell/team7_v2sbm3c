@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout}"> <!-- layout.html 상속 -->
-  <div layout:fragment="content" style="width: 80%; margin: 50px auto; text-align: center;">
-    <img src="/images/AI_image.png" style="width: 50%;"> <!-- /static/images/main.jpg -->
+  <div layout:fragment="content" style="width: 80%; margin: 50px auto; text-align: center; display: flex; justify-content: space-between;">
+    <!-- 왼쪽 영역 -->
+    <div style="width: 45%; background-color: #f0f0f0; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); padding: 20px;">
+      <h2 style="margin-bottom: 20px;">랭킹 글</h2>
+      <p>여기에 북마크 수 높은 순 게시글 내용을 표시할 수 있습니다.</p>
+    </div>
+    
+    <!-- 오른쪽 영역 -->
+    <div style="width: 45%; background-color: #f0f0f0; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); padding: 20px;">
+      <h2 style="margin-bottom: 20px;">팁 게시글</h2>
+      <p>여기에 관리자만 작성 가능한 게시글 내용을 표시할 수 있습니다.</p>
+    </div>
   </div>
 </html>
