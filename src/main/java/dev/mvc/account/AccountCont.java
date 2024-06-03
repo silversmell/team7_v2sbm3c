@@ -351,9 +351,6 @@ public class AccountCont {
 		System.out.println("---> login_proc cnt: " + cnt);
 
 		model.addAttribute("cnt", cnt);
-		if(url.length()>0) {
-			return "redirect:"+url;
-		}
 
 		if (cnt == 1) {
 			// id를 이용한 회원 정보 조회
@@ -395,6 +392,9 @@ public class AccountCont {
 			ck_id_save.setPath("/");
 			ck_id_save.setMaxAge(60 * 60 * 24 * 30); // 30 days
 			response.addCookie(ck_id_save);
+			if(url.length()>0) {
+				return "redirect:"+url;
+			}
 
 			return "redirect:/";
 		}

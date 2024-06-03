@@ -17,7 +17,7 @@ public interface ReplyProcInter {
 	 * 댓글 전체 목록 조회
 	 * @return
 	 */
-	public ArrayList<Share_commentsVO> list(); 
+	public ArrayList<Share_commentVO> list(); 
 	
 	/**
 	 * 해당 게시글의 댓글 목록
@@ -66,6 +66,13 @@ public interface ReplyProcInter {
 	 * @return int count
 	 */
 	public int comment_search(int scon_no);
+	
+	/**
+	 * scon_no 에 따른 출력
+	 * @param scon_no
+	 * @return
+	 */
+	public List<ReplyMemberVO> list_by_contentsno_join_500(int scon_no);
 
 
 }

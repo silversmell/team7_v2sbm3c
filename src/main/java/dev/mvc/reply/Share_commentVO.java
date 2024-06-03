@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 
-public class Share_commentsVO {
+public class Share_commentVO {
 	/** 댓글 번호 **/
 	private int scmt_no;
 	
@@ -16,6 +16,7 @@ public class Share_commentsVO {
 	
 	/** 내용 **/
 	private String scmt_comment;
+	
 	/** 댓글 날짜 **/
 	private String scmt_date;
 	

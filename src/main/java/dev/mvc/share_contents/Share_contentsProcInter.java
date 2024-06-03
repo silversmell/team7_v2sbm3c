@@ -7,7 +7,7 @@ import java.util.List;
 import dev.mvc.recommend.HashtagVO;
 import dev.mvc.share_contentsdto.Contents_tagVO;
 import dev.mvc.share_contentsdto.Contents_urlVO;
-import dev.mvc.reply.Share_commentsVO;
+import dev.mvc.reply.Share_commentVO;
 import dev.mvc.share_contentsdto.Share_contentsVO;
 import dev.mvc.share_contentsdto.Share_imageVO;
 

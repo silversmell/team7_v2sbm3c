@@ -29,7 +29,7 @@ import dev.mvc.share_contents.Contents;
 import dev.mvc.share_contentsdto.Contents_tagVO;
 import dev.mvc.share_contentsdto.Contents_urlVO;
 import dev.mvc.reply.ReplyProcInter;
-import dev.mvc.reply.Share_commentsVO;
+import dev.mvc.reply.Share_commentVO;
 import dev.mvc.share_contentsdto.Share_contentsVO;
 import dev.mvc.share_contentsdto.Share_imageVO;
 import dev.mvc.tool.Tool;
@@ -95,7 +95,7 @@ public class Share_contentsCont {
 		int cnt1 = this.replyProc.comment_search(scon_no);
 		model.addAttribute("cnt", cnt1);
 
-		ArrayList<Share_commentsVO> list = this.replyProc.read_comment(scon_no); // 댓글 등록가져옴
+		ArrayList<Share_commentVO> list = this.replyProc.read_comment(scon_no); // 댓글 등록가져옴
 		model.addAttribute("list", list);
 
 		ArrayList<Contents_urlVO> url_list = this.sconProc.only_url(scon_no);
