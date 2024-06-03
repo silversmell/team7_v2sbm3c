@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- SB가 자동으로 구현하여 연동하는 interface -->
+<mapper namespace="dev.mvc.admin.AdminDAOInter"> <!-- SB가 자동으로 구현하여 연동하는
+  interface -->
+
+  <!-- 삽입,  CATEGORY 테이블과 ACCOUNT 테이블에서 가져온 데이터로 대체 -->
+  <insert id="adm_create"  parameterType="dev.mvc.admin.AdminVO">
+    INSERT INTO ADMIN (ADM_NO, CATE_NO, ACC_NO)
+    VALUES (ADMIN_SEQ.nextval, #{cate_no}, #{acc_no})
+  </insert>
+  
+  <!-- 조회 -->
+  <select id="adm_read" parameterType="dev.mvc.admin.AdminVO">
+    SELECT ADM_NO, CATE_NO, ACC_NO
+    FROM admin
+    WHERE acc_no = #{acc_no}
+  </select>
+
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

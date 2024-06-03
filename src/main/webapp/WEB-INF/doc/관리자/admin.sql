@@ -16,6 +16,7 @@ COMMENT ON TABLE ADMIN is '관리자';
 COMMENT ON COLUMN ADMIN.ADM_NO is '관리자 번호';
 COMMENT ON COLUMN ADMIN.CATE_NO is '카테고리 번호';
 COMMENT ON COLUMN ADMIN.CATE_NO is '회원 번호';
+COMMENT ON COLUMN ADMIN.ACC_GRADE is '회원 등급';
 
 DROP SEQUENCE ADMIN_SEQ;
 
@@ -31,4 +32,17 @@ commit;
 SELECT * FROM admin;
 -- Create, 등록: 1건 이상(임시 통합 관리자 계정)
 
+-- 삽입
+INSERT INTO ADMIN (ADM_NO, CATE_NO, ACC_NO)
+VALUES (ADMIN_SEQ.nextval, 1, 1);
 
+INSERT INTO ADMIN (ADM_NO, CATE_NO, ACC_NO)
+VALUES (ADMIN_SEQ.nextval, 2, 2);
+
+-- 조회
+SELECT ADM_NO, CATE_NO, ACC_NO
+FROM admin
+WHERE acc_no = 2;
+
+-- 삭제
+DELETE FROM admin

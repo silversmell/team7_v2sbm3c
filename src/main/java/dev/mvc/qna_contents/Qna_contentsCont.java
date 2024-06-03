@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -129,6 +130,9 @@ public class Qna_contentsCont {
       // 카테고리 번호 가져오기
       int cate_no = qna_contentsVO.getCate_no(); // 부모글 번호
       
+      int acc_no = (int) session.getAttribute("acc_no"); // memberno FK
+      qna_contentsVO.setAcc_no(acc_no);
+      
       // 질문글 등록 처리
       int cnt = this.qna_contentsProc.qna_create(qna_contentsVO);
       
@@ -186,6 +190,7 @@ public class Qna_contentsCont {
           // 질문글 등록 성공했을 때
           ra.addAttribute("cate_no", cate_no);
           ra.addAttribute("qcon_no", qcon_no);   
+          ra.addAttribute("acc_no", acc_no);
           ra.addAttribute("file_no", qna_imageVO.getFile_no());
 
           return "redirect:/qcontents/qna_list_all";
@@ -217,7 +222,7 @@ public class Qna_contentsCont {
    * @return
    */
   @GetMapping(value="/qna_list_all")
-  public String list_by_qna_search_paging(Model model, HttpSession session, int cate_no,
+  public String list_by_qna_search_paging(Model model, HttpSession session, int cate_no, int acc_no,
                                                     @RequestParam(name="word", defaultValue = "") String word,
                                                     @RequestParam(name="now_page", defaultValue = "1") int now_page) {
     
@@ -289,7 +294,7 @@ public class Qna_contentsCont {
       model.addAttribute("categoryVO", categoryVO);
       
       // 조회수 증가
-      this.qna_contentsProc.qna_update_view(qcon_no); 
+      this.qna_contentsProc.qna_update_view(qcon_no);
       
       // 질문글 가져오기
       Qna_contentsVO qna_contentsVO = this.qna_contentsProc.qna_read(qcon_no);
@@ -299,10 +304,12 @@ public class Qna_contentsCont {
       ArrayList<Qna_imageVO> qna_imageVO = this.qna_contentsProc.qna_read_image(qcon_no);
       model.addAttribute("qna_imageVO", qna_imageVO);
       model.addAttribute("now_page", now_page);
+
+      model.addAttribute("now_page", now_page);
       
       return "qcontents/qna_read"; // /templates/qcontents/qna_read;
   }
-
+  
   /**
    * 질문글 글 수정 폼
    * @param model
@@ -311,7 +318,7 @@ public class Qna_contentsCont {
    * @return
    */
   @GetMapping(value="/qna_update_text")
-  public String upqna_update_text(HttpSession session, Model model, 
+  public String qna_update_text(HttpSession session, Model model, 
                                             RedirectAttributes ra,
                                             String word, int now_page,
                                             @RequestParam(name="cate_no", defaultValue = "2") int cate_no, int qcon_no) {
@@ -600,7 +607,7 @@ public class Qna_contentsCont {
 	  
 	  return "redirect:/qcontents/qna_list_all";
   }
-  
+ 
 
 }
 
