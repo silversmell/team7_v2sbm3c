@@ -566,7 +566,7 @@ public class Qna_contentsCont {
     
     System.out.println("-> acc_no: " + session.getAttribute("acc_no"));
 
-    if (this.adminProc.isQuestionAdmin(session)) {
+    if (this.accountProc.isMemberAdmin(session)) {
       model.addAttribute("cate_no", cate_no);
       model.addAttribute("now_page", now_page);
       
@@ -580,8 +580,8 @@ public class Qna_contentsCont {
       
       return "qcontents/qna_delete";
     } else {
-      ra.addAttribute("url", "/admin/login_cookie_need");
-      return "redirect:/qcontents/msg"; 
+      ra.addAttribute("url", "/account/login_cookie_need"); // /templates/account/login_cookie_need.html
+      return "redirect:/account/login";  // /account/login.html
     }
    
   }
