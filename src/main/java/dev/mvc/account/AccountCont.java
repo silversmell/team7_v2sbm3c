@@ -76,12 +76,14 @@ public class AccountCont {
 	@GetMapping(value = "/checkName") // http://localhost:9093/account/checkName?acc_name=user1
 	@ResponseBody
 	public String checkName(String acc_name) {
-		// System.out.println("---> acc_name: " + acc_name);
+		System.out.println("---> checkName acc_name: " + acc_name);
 
 		int cnt = this.accountProc.checkName(acc_name);
 
 		JSONObject obj = new JSONObject();
 		obj.put("cnt", cnt);
+		
+		System.out.println("---> checkName cnt: " + cnt);
 
 		return obj.toString();
 	}
@@ -97,7 +99,7 @@ public class AccountCont {
 	@PostMapping(value = "/mail")
 	@ResponseBody
 	public Map<String, Object> mail(String receiver) {
-		System.out.println("Cont RECEIVER ---> : " + receiver);
+		System.out.println("---> Cont RECEIVER : " + receiver);
 
 		Map<String, Object> response = new HashMap<>();
 
