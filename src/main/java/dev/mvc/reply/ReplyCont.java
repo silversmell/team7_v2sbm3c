@@ -1,11 +1,13 @@
 package dev.mvc.reply;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import jakarta.servlet.http.HttpSession;
 
 
-@RequestMapping("/reply")
+@RequestMapping("/reply") //
 @Controller
 public class ReplyCont {
   public ReplyCont() {
@@ -53,6 +55,17 @@ public class ReplyCont {
 	  
 	  JSONObject json = new JSONObject();	  
 	  json.put("res", cnt);
+	  return json.toString();
+  }
+  
+  @GetMapping("/list_by_contentsno_join") //http://localhost:9093/reply/list_by_contentsno_join?scon_no=5
+  @ResponseBody
+  public String list_by_contentsno_join(int scon_no) {
+	  System.out.println("-> scon_no:" + scon_no);
+	  List<ReplyMemberVO> list=this.replyProc.list_by_contentsno_join_500(scon_no);
+	  JSONObject json = new JSONObject();	  
+	  json.put("res", list);
+	  
 	  return json.toString();
   }
   
