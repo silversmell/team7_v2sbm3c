@@ -2,11 +2,17 @@
 
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
 <div layout:fragment="content">
+			<script>
+					let reply_data; // 댓글 500건 저장
+					let reply_now_page=1; // 댓글 현재 페이지
+			</script>
+			
        <script>
        window.onload=() =>{
 					let content_tag=document.getElementById('content');
-					let btn_create_tag=document.getElementById('btn_create');
-					let btn_add_tag = document.getElementById("btn_add");
+					let btn_create_tag=document.getElementById('btn_create'); //등록
+					let btn_add_tag = document.getElementById("btn_add"); //더보기
+					let reply_list_tag = document.getElementById("reply_list"); //목록 출력
 					
 					content_tag.addEventListener('click',() =>{
 						let id = '[[${session.acc_id}]]'; //jaxascript -> thymeleaf -> session
@@ -42,6 +48,45 @@
 					        //result_animation_tag.innerHTML = '<img src="/static/images/progress.gif" style="width: 15%; margin-top: 0px;">';
 						}
 					});
+					//페이징 처리
+					btn_add_tag.addEventListener('click',()=>{ //더보기 출력
+						console.log(reply_data.length)
+						if(reply_data.length>reply_now_page*5){
+							console.log("들어옴")
+							let start = 0;
+							let end = 0;
+							if(reply_data.length>5){
+								start = reply_now_page *5;
+								end = (reply_now_page *5 ) +5;
+								
+								let msg = "";
+								let page_div = document.createElement('div');
+								for(let i = start;i<end;i++){
+									if(i==reply_data.length){
+										break;
+									}
+    			   			 let row = reply_data[i];
+	   	             msg += "<div id='"+row.scmt_no+"' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px;'>";
+	   	             msg += "<span style='font-weight: bold;'>" + row.acc_id + "</span>";
+	   	             msg += "  " + row.rdate;
+    	             
+    	             if("[[session.acc_no]]" == row.acc_no){
+    	                 msg += " <a href='javascript:reply_update("+row.scmt_no+")'><img src='/reply/images/update.png' style='width: 16px;'></a>";
+    	                 msg += " <a href='javascript:reply_delete("+row.scmt_no+")'><img src='/reply/images/delete.png' style='width: 16px;'></a>";
+    	             }
+    	             msg += " " + "<br>";
+    	             msg += row.scmt_comment;
+    	             msg += "</div>";
+									
+								}
+                 page_div.innerHTML = msg; //  페이지에 속한 레코드들 추가
+                 reply_list_tag.appendChild(page_div);
+                 
+                 reply_now_page = reply_now_page + 1;
+							}
+						}
+						
+					})
 					
 					list_by_contents_join();
 					
