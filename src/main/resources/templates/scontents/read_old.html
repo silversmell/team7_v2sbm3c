@@ -6,7 +6,6 @@
        window.onload=() =>{
 					let content_tag=document.getElementById('content');
 					let btn_create_tag=document.getElementById('btn_create');
-					let btn_add_tag = document.getElementById("btn_add");
 					
 					content_tag.addEventListener('click',() =>{
 						let id = '[[${session.acc_id}]]'; //jaxascript -> thymeleaf -> session
@@ -37,12 +36,12 @@
 					        })
 					        .then((response) => response.json())
 					        .then((data) =>{
+					        	alert('등록 완료.');
 					        	list_by_contents_join()
 					        });
 					        //result_animation_tag.innerHTML = '<img src="/static/images/progress.gif" style="width: 15%; margin-top: 0px;">';
 						}
 					});
-					
 					list_by_contents_join();
 					
        }
@@ -81,7 +80,9 @@
   
     <script>
     
-
+    function delete_comment(){
+    	
+    }
     function mark(){
     	console.log("mark  클릭");
     	let scon_no = document.getElementById("scon_no").value;
@@ -262,6 +263,36 @@
 			      </div>  
 			  </div>
     
+
+			        <tr th:each="scommentVO, status:${list}">
+      <div id="commentSection">
+      <div style="display:flex;">
+      <td class='td_left'>
+          <div>
+          <span id="scmt_date" style="font-size: 1em;" th:text="${scommentVO.scmt_date}"></span><br><br>
+        <span name="acc_id" id="acc_id"  th:value = "${acc_id}"  th:text="${acc_id}"></span><br>
+        <input type="hidden"  name="scmt_no" th:value="${scommentVO.scmt_no}" ></span>
+        <input type="hidden" style="font-size: 1em;" th:value="${acc_no}"></span>
+        <span id="scmt_comment" th:text="${scommentVO.scmt_comment}" style="font-weight: bold;"></span><br>
+        </div>
+      </td>
+        <div style="margin-left: auto;">
+          <div style="display:flex;gap:10px;">
+       <div name="update_co" style="cursor: pointer;" th:onclick="|location.href='./update_comment/${acc_no}/${scommentVO.scmt_no}?scon_no=${scontentsVO.scon_no}&cate_no=1'|">수정</div>
+       
+      <form name='frm' method='post'  th:action="@{|/scontents/delete_comment?scon_no=${scontentsVO.scon_no}|}">
+       <input type="hidden" name="scmt_no" th:value="${scommentVO.scmt_no}">
+       <input type="hidden" name="cate_no" th:value="${categoryVO.cate_no}"> <!-- cate_no 데이터 값 가져옴 -->
+       <span class='menu_divide' >│</span>
+      	<button type="submit" name="delete_co" style="border: none; background-color: white;" >삭제</button>
+       </form>
+       </div>
+      </div>     
+      </div>
+      </div>
+      <hr style="width: 100%;">
+      
+    </tr>
 
 </div>
     </div>

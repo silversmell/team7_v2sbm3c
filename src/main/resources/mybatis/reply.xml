@@ -62,7 +62,7 @@
 	FROM (
     SELECT acc_id,scmt_no,scon_no,scmt_comment,scmt_date,acc_no,rownum as r
     FROM(
-        SELECT a.acc_id, s.scmt_no,s.scon_no,s.scmt_comment,s.scmt_date,a.acc_id
+        SELECT a.acc_id, s.scmt_no,s.scon_no,s.scmt_comment,s.scmt_date,a.acc_no
         FROM share_comment s, account a
         WHERE s.acc_no=a.acc_no AND scon_no=#{scon_no}
         )
