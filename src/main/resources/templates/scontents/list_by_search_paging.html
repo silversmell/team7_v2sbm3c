@@ -67,7 +67,9 @@
 	<div class='title_line'>
 		<span th:if="${word != ''}" th:text="|> ${word} (${search_count} 건)|"
 			class="title_line_text"></span>
-		<span th:if="${tag_no != 0} and ${hashtag != null}" th:text="|> ${hashtag.tag_name} (${count} 건)|" class="title_line_text"></span>
+			 <div th:each="hashtag, status:${hashtag}" >
+		<span th:text="|> ${hashtag.tag_name} (${count} 건)|" class="title_line_text"></span>
+	</div>
 	</div>
 
 	<aside class="aside_right">

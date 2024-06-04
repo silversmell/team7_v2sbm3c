@@ -8,6 +8,7 @@
     <form name='frm' method='post'  action='/scontents/update_comment' enctype="multipart/form-data">
     		<input type='hidden' name='acc_id' id='acc_id' th:value='${acc_id}'>
         <input type='hidden' name='scmt_no' id='scmt_no' th:value='${scmt_no}'>
+        <input type='hidden' name='scon_no' id='scon_no th:value='${scon_no}'>
         <input type="hidden" name="cate_no" th:value="${categoryVO.cate_no}"> <!-- cate_no 데이터 값 가져옴 -->
         <textarea name='scmt_comment' id='scmt_comment' style='width: 100%; height: 60px;' placeholder="댓글 작성, 로그인해야 등록 할 수 있습니다."></textarea>
         <!--  <input type='password' name='passwd' id='passwd' placeholder="비밀번호"> -->
