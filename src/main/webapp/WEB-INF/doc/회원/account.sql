@@ -43,20 +43,21 @@ DROP SEQUENCE ACCOUNT_SEQ;
 
 
 -- 회원 가입
+-- password: 1111 -- encoding --> P+faf8xV+BRvnALZIp7rcQ==
 
 INSERT INTO ACCOUNT(acc_no, acc_id, acc_pw, acc_name, acc_date, acc_grade)
-VALUES(ACCOUNT_SEQ.nextval,'user1','1111','박은향',sysdate,1);
+VALUES(ACCOUNT_SEQ.nextval,'user1','P+faf8xV+BRvnALZIp7rcQ==','박은향',sysdate,1);
 INSERT INTO ACCOUNT(acc_no, acc_id, acc_pw, acc_name, acc_date, acc_grade)
-VALUES(ACCOUNT_SEQ.nextval,'user2','1111','장영은',sysdate,1);
+VALUES(ACCOUNT_SEQ.nextval,'user2','P+faf8xV+BRvnALZIp7rcQ==','장영은',sysdate,1);
 INSERT INTO ACCOUNT(acc_no, acc_id, acc_pw, acc_name, acc_date, acc_grade)
-VALUES(ACCOUNT_SEQ.nextval,'user3','1111','김수진',sysdate,1);
+VALUES(ACCOUNT_SEQ.nextval,'user3','P+faf8xV+BRvnALZIp7rcQ==','김수진',sysdate,1);
 
 INSERT INTO ACCOUNT(acc_no, acc_id, acc_pw, acc_name, acc_date, acc_grade)
-VALUES(ACCOUNT_SEQ.nextval,'user4','1111','RECO',sysdate,1);
+VALUES(ACCOUNT_SEQ.nextval,'user4','P+faf8xV+BRvnALZIp7rcQ==','RECO',sysdate,1);
 INSERT INTO ACCOUNT(acc_no, acc_id, acc_pw, acc_name, acc_date, acc_grade)
-VALUES(ACCOUNT_SEQ.nextval,'user5','1111','RECO2',sysdate,1);
+VALUES(ACCOUNT_SEQ.nextval,'user5','P+faf8xV+BRvnALZIp7rcQ==','RECO2',sysdate,1);
 INSERT INTO ACCOUNT(acc_no, acc_id, acc_pw, acc_name, acc_date, acc_grade)
-VALUES(ACCOUNT_SEQ.nextval,'user6','1111','RECO3',sysdate,1);
+VALUES(ACCOUNT_SEQ.nextval,'user6','P+faf8xV+BRvnALZIp7rcQ==','RECO3',sysdate,1);
 
 commit;
 --------------------------------------------------------------------------------

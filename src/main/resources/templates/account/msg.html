@@ -13,15 +13,15 @@
 						<!--<button type='button' th:attr="onclick=|location.href='./login?id=${id}'|"
               class="btn btn-primary btn-sm">로그인</button>-->
 					</div>
-					<div th:if="${code} == create_fail">
+					<div th:case="create_fail">
 						<span class="span_fail" th:text="|회원가입에 실패하였습니다.|"></span><br>
 					</div>
 
-					<div th:if="${code} == duplicate_id">
+					<div th:case="duplicate_id">
 						<span class="span_fail" th:text="|이미 존재하는 아이디 입니다.|"></span><br>
 					</div>
 
-					<div th:if="${code} == duplicate_name">
+					<div th:case="duplicate_name">
 						<span class="span_fail" th:text="|이미 존재하는 이름(닉네임) 입니다.|"></span><br>
 					</div>
 
@@ -55,6 +55,10 @@
 						<span class="span_success">비밀번호가 변경되었습니다.</span><br>
 					</div>
 
+					<div th:case="passwd_reset_success">
+						<span class="span_success">비밀번호가 변경되었습니다.</span><br>
+					</div>
+
 					<div th:case="passwd_update_fail">
 						<span class="span_fail">비밀번호 변경에 실패하였습니다.</span><br>
 					</div>
@@ -68,7 +72,7 @@
           <div th:case="delete_fail">
             <span class="span_fail">회원 정보 삭제에 실패했습니다.</span><br>
             삭제 실패된 회원 정보: <span th:text="${mname}"></span>
-          </div>
+          </div> 
 
 
 
@@ -85,14 +89,17 @@
 		  -->
 				</li>
 
-				<li class="li_none">
-					<div th:if="${cnt == 0}">
+				<li th:switch="${cnt}" class="li_none">
+					<div th:if="${code} == passwd_reset_success" style="display: inline-block; margin-right: 5px;">
+						<button type="button" onclick="location.href='/account/login'" class="btn btn-secondary btn-sm">로그인</button>
+					</div>
+					<div th:case="0">
 						<button type="button" onclick="history.back()" class="btn btn-secondary btn-sm">다시 시도</button>
 					</div>
-					<div th:if="${cnt == 1}">
+					<div th:case="1" style="display: inline-block; margin-right: 5px;">
 						<button type="button" onclick="location.href='/'" class="btn btn-secondary btn-sm">닫기</button>
 					</div>
-					<div th:if="${cnt == 2}">
+					<div th:case="2">
 						<button type="button" th:attr="onclick=|location.href='./read?acc_no=${accountVO.acc_no}'|"
 							class="btn btn-secondary btn-sm">확인</button>
 					</div>

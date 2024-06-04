@@ -127,11 +127,12 @@ public class AccountCont {
 	 */
 	@PostMapping(value = "/verifyCode")
 	@ResponseBody
-	public Map<String, Object> verifyCode(@RequestParam String code) {
+	public Map<String, Object> verifyCode(@RequestParam String code, @RequestParam String acc_id) {
 		Map<String, Object> response = new HashMap<>();
 
 		if (verify_code != null && verify_code.equals(code)) {
 			response.put("status", "success");
+			response.put("acc_id", acc_id);
 		} else {
 			response.put("status", "error");
 			response.put("msg", "인증번호가 일치하지 않습니다.");
@@ -615,6 +616,76 @@ public class AccountCont {
 		} else {
 			return "redirect:/account/login";
 		}
+
+	}
+	
+	/**
+	 * 비밀번호 재설정(비밀번호 찾기)
+	 * - 아이디 인증 페이지
+	 * - GET
+	 * 
+	 * @return
+	 */
+	@GetMapping(value="/find_passwd")
+	public String findPasswd() {
+
+		return "account/find_passwd";
+	}
+	
+	/**
+	 * 비밀번호 재설정(비밀번호 찾기)
+	 * - 아이디 인증 후 비밀번호 재설정 페이지로 이동
+	 * - POST(find_passwd에서 reset_passwd로 accountVO(acc_id) 전달)
+	 * 
+	 * @param model
+	 * @param acc_id
+	 * @return
+	 */
+	@PostMapping(value="/find_passwd")
+	public String findPasswd(Model model, @RequestParam String acc_id) {
+	    AccountVO accountVO = this.accountProc.readById(acc_id);
+	    model.addAttribute("accountVO", accountVO);
+	    
+	    return "account/reset_passwd";
+	}
+	
+
+	/**
+	 * 비밀번호 재설정(비밀번호 찾기)
+	 * - 아이디 재설정
+	 * - resetPasswd()
+	 * 
+	 * @param json_src
+	 * @return
+	 */
+	@PostMapping(value = "/reset_passwd")
+	public ResponseEntity<String> resetPasswd(@RequestBody String json_src) {
+		
+		System.out.println("---> json_src: " + json_src); // json_src: {"current_passwd":"1234"}
+		JSONObject src = new JSONObject(json_src); // String -> JSON
+		String acc_id = (String) src.get("acc_id"); // 값 가져오기
+		System.out.println("--> resetPasswd acc_id): " + acc_id);
+		String new_passwd = (String) src.get("new_passwd"); // 값 가져오기
+		System.out.println("--> resetPasswd new_passwd(plain): " + new_passwd);
+
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("acc_id", acc_id);
+		map.put("acc_pw", this.security.aesEncode(new_passwd));
+		System.out.println("--> resetPasswd new_passwd(encoded): " + new_passwd);
+
+		int cnt = this.accountProc.resetPasswd(map);
+		System.out.println("---> resetPasswd cnt: " + cnt);
+		
+		JSONObject response = new JSONObject();
+		response.put("cnt", cnt);
+	
+		if (cnt == 1) {
+			response.put("code", "passwd_reset_success");
+		} else {
+			response.put("code", "passwd_update_fail");
+		}
+		
+		return ResponseEntity.ok(response.toString());
 
 	}
 
