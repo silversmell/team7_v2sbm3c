@@ -711,5 +711,46 @@ tr:nth-child(even) {
     background-color: #f8f9fa;
     color: #000;
 }
+  button.button_2 {
+  border: 1px solid #cccccc;
+  outline: none;
+  font-size: 15px;
+  background: white;
+  margin: 3px;
+  color: black;
+  padding: 2px;
+  cursor: pointer;
+  border-radius: 1px;
+}
+  .hashtag {
+  border: 1px solid #cccccc;
+  outline: none;
+  font-size: 15px;
+  margin: 3px;
+  background: white;
+  color: black;
+  padding: 2px;
+  cursor: pointer;
+  border-radius: 20px;
+}
+.read_hashtag{
+	border: 1px solid #cccccc;
+  outline: none;
+  font-size: 15px;
+  margin: 3px;
+  background: white;
+  color: black;
+  padding: 2px;
+  cursor: pointer;
+  border-radius: 1px;
+	
+}
+	.horizontal-container{
+		display: flex;
+		flex-direction: row; /* 수평 방향으로 요소 배치 */
+		align-items:center;
+		gap: 10px;
+	}
+  
   
   

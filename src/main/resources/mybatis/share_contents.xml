@@ -374,9 +374,12 @@
 
 	<select id="read_hashtag_name"
 		resultType="dev.mvc.recommend.HashtagVO" parameterType="int">
-		SELECT hashtag.tag_name
+		SELECT tag_name,r
+		FROM(
+		SELECT hashtag.tag_name,rownum as r
 		FROM contents_tag,hashtag
-		WHERE hashtag.tag_no=contents_tag.tag_no AND contents_tag.tag_no=#{tag_no}
+		WHERE hashtag.tag_no=contents_tag.tag_no AND contents_tag.tag_no=#{tag_no})
+		WHERE R=1
 	</select>
 
 	<select id="sconno_hashtag"

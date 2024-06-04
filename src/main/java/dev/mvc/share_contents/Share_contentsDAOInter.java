@@ -3,6 +3,7 @@ package dev.mvc.share_contents;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import dev.mvc.bookmark.BookmarkVO;
 import dev.mvc.recommend.HashtagVO;
@@ -297,7 +298,7 @@ public interface Share_contentsDAOInter {
     * hashtag tag_no와 contents_tag tag_no와 tag_no  tag_name조회
     * @return
     */
-   public ArrayList<HashtagVO>read_hashtag_name(int tag_no);
+   public HashtagVO read_hashtag_name(int tag_no);
    
    /**
     * hashtag tag_no와 contents_tag tag_no와 tag_name조회

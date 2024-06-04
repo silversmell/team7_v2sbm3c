@@ -3,7 +3,7 @@ package dev.mvc.share_contents;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -394,9 +394,9 @@ public class Share_contentsProc implements Share_contentsProcInter {
 	}
 
 	@Override
-	public ArrayList<HashtagVO> read_hashtag_name(int tag_no) {
-		ArrayList<HashtagVO> list = this.scontentsDAO.read_hashtag_name(tag_no);
-		return list;
+	public HashtagVO read_hashtag_name(int tag_no) {
+		HashtagVO hash= this.scontentsDAO.read_hashtag_name(tag_no);
+		return hash;
 	}
 
 	@Override

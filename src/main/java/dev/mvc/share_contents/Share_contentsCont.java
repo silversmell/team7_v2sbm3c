@@ -3,6 +3,7 @@ package dev.mvc.share_contents;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,7 +76,7 @@ public class Share_contentsCont {
 	public String read(Model model, int scon_no, int cate_no, HttpSession session,@RequestParam(name = "word", defaultValue = "") String word,
 			 @RequestParam(name = "now_page", defaultValue = "1") int now_page) { // acc_no 필요(session)
 
-		
+		if(this.accountProc.isMember(session)) {
 		
 		model.addAttribute("word",word);
 		model.addAttribute("now_page",now_page);
@@ -91,7 +92,8 @@ public class Share_contentsCont {
 		HashMap<String,Object>map = new HashMap<>();
 		map.put("acc_no", (int)session.getAttribute("acc_no"));
 		map.put("scon_no", scon_no);
-		if(this.sconProc.mark_check(map).size()>0) {
+		if(this.sconProc.mark_check(map).size()>0) { //회원에 따라 마크 다르게 보이게 하기
+			System.out.println("");
 			scontentsVO.setMark("Y");
 		}else {
 			scontentsVO.setMark("N");
@@ -100,6 +102,7 @@ public class Share_contentsCont {
 		model.addAttribute("member_no",scontentsVO.getacc_no());
 		
 		ArrayList<HashtagVO> list1 = this.sconProc.sconno_hashtag(scon_no);
+		
 
 		model.addAttribute("list2", list1);
 
@@ -123,6 +126,8 @@ public class Share_contentsCont {
 		model.addAttribute("share_imageVO", share_imageVO);
 	
 		return "scontents/read";
+		}
+		return "redirect:/account/login";
 	  }
 
 	
@@ -729,12 +734,12 @@ public class Share_contentsCont {
 		// model.addAttribute("list", list1);
 		model.addAttribute("word", word);
 
-		 ArrayList<HashtagVO>hashtag_VO = this.sconProc.read_hashtag_name(tag_no); //tag_no로 hashtag_name 가져오기
+		HashtagVO hash = this.sconProc.read_hashtag_name(tag_no); //tag_no로 hashtag_name 가져오기
 //		 for(int i = 0;i<hashtag_VO.size();i++) {
 //			 System.out.println("-> tag_name:"+ hashtag_VO.get(i).getTag_name());
 //		 }
 
-		model.addAttribute("hashtag", hashtag_VO);
+		model.addAttribute("hashtag", hash);
 
 		int count = this.sconProc.tag_count(tag_no);
 		model.addAttribute("count", count);

@@ -259,6 +259,7 @@
     			console.log("우선순위 변경 선공");
     			if(currentImg.endsWith("bookmark_off.png")){
     				document.getElementById("bookmarkImage").src = "/css/images/bookmark_on.png";
+    				alert("찜하기에 등록했어요!");
     			}else{
     				document.getElementById("bookmarkImage").src = "/css/images/bookmark_off.png";
     			}
@@ -334,7 +335,7 @@
    		<tr th:each="item, status : ${list2}">
    		<div class='read_hashtag' style = "padding:5px">
         <td >
-            #<span th:text="${item.tag_name}" class="bold;"></span>
+            <span th:text="${item.tag_name}" class="bold;"></span>
         </td>
         </div>
     </tr><br>
