@@ -162,18 +162,24 @@ public interface Qna_contentsDAOInter {
   
   /**
    * 질문글에 따른 댓글 조회
-   * @param qcon_no
+   * @param qcmt_no
    * @return
    */
-  public ArrayList<Qna_commentVO> qna_read_comment(int qcon_no);
+  public Qna_commentVO qna_read_comment(int qcmt_no);
+  
+  /**
+   * 질문글 댓글 수정
+   * @param qna_commentVO
+   * @return
+   */
+  public int qna_update_comment(Qna_commentVO qna_commentVO);
   
   /**
    * 질문글 댓글 삭제
-   * @param qcon_no
-   * @param acc_no
+   * @param qcmt_no
    * @return
    */
-  public int qna_delete_comment(HashMap<String, Object> hashMap);
+  public int qna_delete_comment(int qcmt_no);
   
   /**
    * 질문글 댓글 수
