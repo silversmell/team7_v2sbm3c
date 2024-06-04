@@ -69,6 +69,62 @@ public class ReplyCont {
 	  return json.toString();
   }
   
+  @GetMapping("/read")
+  @ResponseBody
+  public String read(int scmt_no) {
+	  System.out.println("->scmt_no:" + scmt_no);
+	  Share_commentVO share_commentVO = this.replyProc.read(scmt_no);
+	  
+	  JSONObject row = new JSONObject();
+	  
+	  row.put("scmt_no", share_commentVO.getScmt_no());
+	  row.put("scon_no", share_commentVO.getScon_no());
+	  row.put("acc_no", share_commentVO.getacc_no());
+	  row.put("scmt_comment", share_commentVO.getScmt_comment());
+	  row.put("scmt_date",share_commentVO.getScmt_no());
+	  
+	  JSONObject json = new JSONObject();
+	  json.put("res",row);
+	  
+	  return json.toString();
+  }
+  
+  @PostMapping("/update")
+  @ResponseBody
+  public String update(@RequestBody Share_commentVO share_commentVO,HttpSession session) {
+	  if(share_commentVO.getacc_no() == (int)session.getAttribute("acc_no")) {
+		  System.out.println("회원이 같음");
+		  System.out.println("->shar_comment scmt_no:" + share_commentVO.getScmt_no());
+		  JSONObject json = new JSONObject();
+		  HashMap<String,Object> map = new HashMap<>();
+		  map.put("scmt_comment", share_commentVO.getScmt_comment());
+		  map.put("scmt_no", share_commentVO.getScmt_no());
+		  int cnt = this.replyProc.update_comment(map);
+		  if(cnt>0) {
+			  System.out.println("업데이트 성공");
+		  }
+		  json.put("res", cnt);
+		  return json.toString();
+	  }
+		  JSONObject json = new JSONObject();
+		  json.put("res",0);
+		  return json.toString();
+	  
+  }
+  @PostMapping("/delete")
+  @ResponseBody
+  public String delete(@RequestBody Share_commentVO share_commentVO,HttpSession session) {
+	  if((int)session.getAttribute("acc_no")==share_commentVO.getacc_no()) {
+		  JSONObject json = new JSONObject();
+		  int cnt = this.replyProc.delete_scmtno(share_commentVO.getScmt_no());
+		  json.put("res", cnt);
+		  return json.toString();
+	  }
+	  JSONObject json = new JSONObject();
+	  json.put("res", 0);
+	  return json.toString();
+  }
+  
 }
 
 

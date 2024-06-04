@@ -12,7 +12,14 @@
 					let content_tag=document.getElementById('content');
 					let btn_create_tag=document.getElementById('btn_create'); //등록
 					let btn_add_tag = document.getElementById("btn_add"); //더보기
+					let scmt_date_tag = document.getElementById("scmt_date");
+					
 					let reply_list_tag = document.getElementById("reply_list"); //목록 출력
+					let scmt_no_tag = document.getElementById("scmt_no");
+					let acc_no_tag = document.getElementById("acc_no");
+					
+					let btn_save_tag=document.getElementById("btn_save");
+					let btn_delete_tag = document.getElementById("btn_delete");
 					
 					content_tag.addEventListener('click',() =>{
 						let id = '[[${session.acc_id}]]'; //jaxascript -> thymeleaf -> session
@@ -68,9 +75,9 @@
     			   			 let row = reply_data[i];
 	   	             msg += "<div id='"+row.scmt_no+"' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px;'>";
 	   	             msg += "<span style='font-weight: bold;'>" + row.acc_id + "</span>";
-	   	             msg += "  " + row.rdate;
+	   	          	 msg += " "+row.scmt_date;
     	             
-    	             if("[[session.acc_no]]" == row.acc_no){
+    	             if("[[${session.acc_no}]]" == row.acc_no){
     	                 msg += " <a href='javascript:reply_update("+row.scmt_no+")'><img src='/reply/images/update.png' style='width: 16px;'></a>";
     	                 msg += " <a href='javascript:reply_delete("+row.scmt_no+")'><img src='/reply/images/delete.png' style='width: 16px;'></a>";
     	             }
@@ -86,11 +93,40 @@
 							}
 						}
 						
-					})
+					});
 					
-					list_by_contents_join();
-					
-       }
+						btn_save_tag.addEventListener('click',()=>{
+							let scmt_no = scmt_no_tag.value;
+							let content = content_tag.value;
+							let acc_no = acc_no_tag.value;
+								
+								if(content.length ==0){
+									alert("내용이 없습니다. 내용을 입력해주세요")
+								}else{
+									fetch("/reply/update",{
+										 "method": "post", 
+		                  "headers": {"Content-Type": "application/json"},
+		                  body: JSON.stringify({"acc_no": acc_no, "scmt_no": scmt_no, "scmt_comment": content})
+									})
+									.then((response) => response.json())
+									.then((data) =>{
+										if(data['res']==0){
+											alert("댓글 수정에 실패했습니다. 잠시후 다시 시도해 주세요")
+										}else{
+											list_by_contents_join()
+											content_tag.value="";
+											content_tag.focus();
+											btn_visible('default');
+											
+										}
+									});
+								}
+						
+					});
+
+						list_by_contents_join();
+       } // window.onload END
+       
        function list_by_contents_join(){
     	   let cnt = 0 //출력 순환 횟수
     	   fetch("/reply/list_by_contentsno_join?scon_no=[[${scontentsVO.scon_no}]]",{
@@ -106,22 +142,91 @@
     		   }
     		   let msg ="";
     		   for(let i = 0;i<cnt;i++){
-    			   let row = reply_data[i];
-             msg += "<div id='"+row.scmt_no+"' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px;'>";
-             msg += "<span style='font-weight: bold;'>" + row.acc_id + "</span>";
-             msg += "  " + row.rdate;
-             
-             if("[[session.acc_no]]" == row.acc_no){
-                 msg += " <a href='javascript:reply_update("+row.scmt_no+")'><img src='/reply/images/update.png' style='width: 16px;'></a>";
-                 msg += " <a href='javascript:reply_delete("+row.scmt_no+")'><img src='/reply/images/delete.png' style='width: 16px;'></a>";
-             }
-             msg += " " + "<br>";
-             msg += row.scmt_comment;
-             msg += "</div>";
+		   			 let row = reply_data[i];
+	   	             msg += "<div id='"+row.scmt_no+"' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px;'>";
+	   	             msg += "<span style='font-weight: bold;'>" + row.acc_id + "</span>";
+	   	          	 msg += " "+row.scmt_date;
+    	             
+    	             if("[[${session.acc_no}]]" == row.acc_no){
+    	                 msg += " <a href='javascript:reply_update("+row.scmt_no+")'><img src='/reply/images/update.png' style='width: 16px;'></a>";
+    	                 msg += " <a href='javascript:reply_delete("+row.scmt_no+")'><img src='/reply/images/delete.png' style='width: 16px;'></a>";
+    	             }
+    	             msg += " " + "<br>";
+    	             msg += row.scmt_comment;
+    	             msg += "</div>";
     		   }
     		   document.getElementById("reply_list").innerHTML = msg;
     	   });
        }
+       function reply_delete(scmt_no){
+    	   let content_tag = document.getElementById("content");
+    	   fetch("/reply/read?scmt_no=" + scmt_no,{
+    		   "method":"get",
+    		   "headers": {"Content-Type": "application/json"},
+    	   })
+    	   .then((response) =>response.json())
+    	   .then((data)=>{
+    		   let sw = confirm("「" + data['res']['scmt_comment'] + "」 삭제하시려면 확인 버튼을 누르세요. 삭제후 복구 할 수 없습니다." );
+    		   if(sw==true){
+    			   fetch("/reply/delete",{
+    			   "method":"POST",
+    			   "headers": {"Content-Type": "application/json"},
+    			   body: JSON.stringify({"scmt_no": scmt_no, "acc_no": data['res']['acc_no']})
+    			  
+    		   })
+    		   .then((response) =>response.json())
+    		   .then((data) =>{
+    			   if(data['res'] ==1){
+    				   list_by_contents_join();
+    				   content_tag.value="";
+    				   content_tag.focus();
+    			   }else{
+    				   alert("댓글 삭제에 실패했습니다. 잠시 후 다시 시도해주세요.")
+    			   }
+    		   });
+    	   }else{
+    		   alert("삭제를 취소 했습니다.");
+    		   }
+    	   });
+       }
+       
+       //수정폼
+       function reply_update(scmt_no){
+    	   let scmt_no_tag = document.getElementById("scmt_no")
+    	   let acc_no_tag = document.getElementById("acc_no")
+    	   let content_tag = document.getElementById("content");
+    	   
+    	   fetch("/reply/read?scmt_no=" + scmt_no,{
+    		   "method":"GET",
+    		   "headers": {"Content-Type": "application/json"},
+    	   })
+    	   .then((response) => response.json())
+    	   .then((data)=>{
+    		   scmt_no_tag.value=data['res']['scmt_no'];
+    		   acc_no_tag.value=data['res']['acc_no']
+    		   content_tag.value=data['res']['scmt_comment']
+    		   content_tag.focus();
+    		   btn_visible('update');
+    	   });
+    	   
+       }
+       function btn_visible(sw){
+           let btn_create =document.getElementById("btn_create");
+           let btn_save =document.getElementById("btn_save");
+           let btn_cancel =document.getElementById("btn_cancel");
+           
+           if(sw=='update'){
+        	   btn_create.style.display='none';
+        	   btn_save.style.display='';
+        	   btn_cancel.style.display=''
+           }else if(sw=='default'){
+              btn_create.style.display=''; 
+              btn_save.style.display='none';
+              btn_cancel.style.display='none';
+           }
+       }
+       
+
 					</script>
   
     <script>
@@ -271,7 +376,7 @@
 					          <div style="white-space: pre-wrap;"></div>
           </div>
           <input type="hidden" id="scon_no" name="scon_no" th:value="${scontentsVO.scon_no}">
-          <input type="hidden" id="member_no" name="member_no" th:value="${member_no}">
+          <input type="hidden" id="acc_id" name="acc_id" th:value="${session.acc_id}">
 				<br>
 		
 <div style="display:flex; flex-direction:row; justify-content: space-between;">
@@ -291,11 +396,16 @@
 			     <hr>  
 			      <form name='frm_reply' id='frm_reply'> 
 			          <input type='hidden' name='scon_no' id='scon_no' value='${scontentsVO.scon_no}'>
-			          <input type='hidden' name='acc_no' id='acc_no' value='${sessionScope.acc_no}'>
+			          <input type='hidden' name='acc_no' id='acc_no' value=''>
+			          <input type='hidden' name='scmt_no' id='scmt_no' value=''>
+			          
 			          <textarea name='content'  class='form-control' id='content' style='width: 100%;  height: 60px;' 
 			          							placeholder="댓글 작성, 로그인해야 등록 할 수 있습니다." autofocus='autofocus'></textarea>
 			          <div style='text-align: center;'> 
-                 <button type='button' id='btn_create'>  등  록  </button>
+      					 <button type='button' id='btn_create'>  등  록  </button>
+                 <button type='button' id='btn_save' style='display: none;'>  저  장  </button>
+                 <button type='button' id='btn_delete' style='display: none;'>  삭  제  </button>
+                 <button type='button' id='btn_cancel' style='display: none;'>  취  소  </button>
                </div>               
 			      </form>
 			      <hr>

@@ -80,6 +80,13 @@ public interface ReplyDAOInter {
 	 * @return
 	 */
 	public List<ReplyMemberVO> list_by_contentsno_join_500(int scon_no);
+	/**
+	 * 댓글 번호에 따른 댓글 찾기
+	 * @param scmt_no
+	 * @return
+	 */
+	public Share_commentVO read(int scmt_no);
+
 
 
 

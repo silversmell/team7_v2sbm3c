@@ -69,6 +69,13 @@
         )
         where r&lt;=500
   </select>
+    <select id="read" parameterType="int" resultType="dev.mvc.reply.Share_commentVO">
+	  select scmt_no ,scmt_comment,scmt_date,scon_no,acc_no
+		from share_comment
+		where  scmt_no=#{scmt_no}
+  </select>
+  
+
   
 
 

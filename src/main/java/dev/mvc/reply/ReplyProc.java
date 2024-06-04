@@ -32,7 +32,7 @@ public class ReplyProc implements ReplyProcInter {
 
 	@Override
 	public int update_comment(HashMap<String, Object> map) {
-		int cnt = this.update_comment(map);
+		int cnt = this.replyDAO.update_comment(map);
 		return cnt;
 	}
 
@@ -65,5 +65,12 @@ public class ReplyProc implements ReplyProcInter {
 		List<ReplyMemberVO> list = this.replyDAO.list_by_contentsno_join_500(scon_no);
 		return list;
 	}
+	
+	@Override
+	public Share_commentVO read(int scmt_no) {
+		Share_commentVO share_commentVO = this.replyDAO.read(scmt_no);
+ 		return share_commentVO;
+	}
+
 
 }
