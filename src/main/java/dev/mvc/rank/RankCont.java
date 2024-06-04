@@ -22,9 +22,14 @@ import dev.mvc.share_contentsdto.Share_imageVO;
 import dev.mvc.tool.Tool;
 import jakarta.servlet.http.HttpSession;
 @RequestMapping("/scontents")
-@Controller
 
-public class RankController {
+@Controller
+public class RankCont {
+  public RankCont() {
+	    System.out.println("-> RankCont created.");  
+	  }
+	
+
 	@Autowired
 	@Qualifier("dev.mvc.share_contents.Share_contentsProc")
 	private Share_contentsProc sconProc;
@@ -32,6 +37,10 @@ public class RankController {
 	@Autowired
 	@Qualifier("dev.mvc.category.CategoryProc")
 	private CategoryProcInter categoryProc;
+	
+	@Autowired
+	@Qualifier("dev.mvc.rank.RankProc")
+	private RankProcInter rankingProc;
 	
 	
 	@GetMapping("/rank")
@@ -53,16 +62,10 @@ public class RankController {
 		map.put("word", word);
 		map.put("now_page", now_page);
 
-		ArrayList<Share_contentsVO> list = this.sconProc.list_by_contents_search_paging(map);
+		ArrayList<Share_contentsVO> list = this.rankingProc.ranking(map);
 		model.addAttribute("list", list);
 		model.addAttribute("word", word);
-		// 사진 하나만 나오게 하기
-//		ArrayList<Share_imageVO> list_image = new ArrayList<>();
-//		
-//		for (Share_contentsVO list1 : list) {
-//			ArrayList<Share_imageVO> distinct_image = this.sconProc.read_image(list1.getScon_no());
-//			list_image.add(distinct_image.get(0)); // 첫번째 것
-//		}
+
 		ArrayList<Share_imageVO> list_image = new ArrayList<>();
 		for(Share_contentsVO list1:list) {
 			list_image.addAll(this.sconProc.distinct_image(list1.getScon_no()));
@@ -70,13 +73,13 @@ public class RankController {
 		model.addAttribute("list_image",list_image);
 
 		int search_count = this.sconProc.list_by_cateno_search_count(map);
-		String paging = this.sconProc.pagingBox(now_page, word, "/scontents/list_by_search", search_count,
+		String paging = this.sconProc.pagingBox(now_page, word, "/scontents/list_by_search", 8,
 				Contents.RECORD_PER_PAGE, cate_no, Contents.PAGE_PER_BLOCK);
 
 		model.addAttribute("paging", paging);
 		model.addAttribute("now_page", now_page);
 
-		model.addAttribute("search_count", search_count);
+		model.addAttribute("search_count", 8);
 
 		// 일련 변호 생성: 레코드 갯수 - ((현재 페이지수 -1) * 페이지당 레코드 수)
 		int no = search_count - ((now_page - 1) * Contents.RECORD_PER_PAGE);
