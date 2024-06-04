@@ -71,7 +71,7 @@ public interface AccountProcInter {
     public AccountVO read(int acc_no);
     
     /**
-     * 아이디로 회원 정보 조회(로그인)
+     * 아이디로 회원 정보 조회(로그인, 비밀번호 찾기)
      * 
      * @param acc_id
      * @return
@@ -148,6 +148,14 @@ public interface AccountProcInter {
      * @return 변경된 비밀번호 갯수
      */
     public int updatePasswd(HashMap<String, Object> map);
+    
+	/**
+	 * 비밀번호 재설정
+	 * 
+	 * @param map
+	 * @return
+	 */
+	public int resetPasswd(HashMap<String, Object> map);
     
     /** 
      * 회원 정보 삭제(관리자, 회원 목록)

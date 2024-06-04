@@ -67,7 +67,7 @@
 		WHERE acc_no = #{acc_no}
 	</select>
 
-	<!-- id로 회원 정보 조회(로그인) -->
+	<!-- 아이디로 회원 정보 조회(로그인, 비밀번호 찾기) -->
 	<select id="readById" resultType="dev.mvc.account.AccountVO"
 		parameterType="String">
 		SELECT acc_no, acc_id, acc_pw, acc_name, acc_tel, acc_age, acc_date,
@@ -125,6 +125,13 @@
 		UPDATE account
 		SET acc_pw=#{acc_pw}
 		WHERE acc_no=#{acc_no}
+	</update>
+
+	<!-- 비밀번호 재설정(비밀번호 찾기) -->
+	<update id="resetPasswd" parameterType="HashMap">
+		UPDATE account
+		SET acc_pw=#{acc_pw}
+		WHERE acc_id=#{acc_id}
 	</update>
 
 	<!-- 회원 정보 삭제(관리자, 회원 목록) -->

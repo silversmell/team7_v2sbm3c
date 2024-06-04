@@ -152,12 +152,17 @@ public class AccountProc implements AccountProcInter {
 	}
 	
 	@Override
+	public int resetPasswd(HashMap<String, Object> map) {
+		int cnt = this.accountDAO.resetPasswd(map);
+		return cnt;
+	}
+
+	
+	@Override
 	public int delete(int acc_no) {
 		int cnt = this.accountDAO.delete(acc_no);
 		return cnt;
 	}
-
-
 
 
 
