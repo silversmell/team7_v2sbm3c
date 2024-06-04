@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import dev.mvc.bookmark.BookmarkVO;
 import dev.mvc.recommend.HashtagVO;
 import dev.mvc.share_contents.Contents;
 import dev.mvc.share_contentsdto.Contents_tagVO;
@@ -413,6 +414,12 @@ public class Share_contentsProc implements Share_contentsProcInter {
 	@Override
 	public ArrayList<HashtagVO> sconno_hashtag(int scon_no) {
 		ArrayList<HashtagVO> list = this.scontentsDAO.sconno_hashtag(scon_no);
+		return list;
+	}
+
+	@Override
+	public ArrayList<BookmarkVO> mark_check(HashMap<String,Object>map) {
+		ArrayList<BookmarkVO> list = this.scontentsDAO.mark_check(map);
 		return list;
 	}
 

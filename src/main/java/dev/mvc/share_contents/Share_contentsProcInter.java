@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import dev.mvc.bookmark.BookmarkVO;
 import dev.mvc.recommend.HashtagVO;
 import dev.mvc.share_contentsdto.Contents_tagVO;
 import dev.mvc.share_contentsdto.Contents_urlVO;
@@ -332,6 +333,13 @@ public interface Share_contentsProcInter {
     * @return
     */
    public ArrayList<HashtagVO>sconno_hashtag(int scon_no);
+   
+   /**
+    * mark 체크하기 위함.
+    * @param scon_no
+    * @return
+    */
+   public ArrayList<BookmarkVO>mark_check(HashMap<String,Object>map);
 
 	 
 

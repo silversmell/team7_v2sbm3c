@@ -22,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ch.qos.logback.core.recovery.ResilientSyslogOutputStream;
 import dev.mvc.account.AccountProcInter;
 import dev.mvc.account.AccountVO;
+import dev.mvc.bookmark.BookmarkVO;
 import dev.mvc.category.CategoryProcInter;
 import dev.mvc.category.CategoryVO;
 import dev.mvc.recommend.HashtagVO;
@@ -73,6 +74,8 @@ public class Share_contentsCont {
 	@GetMapping("/read") //글 조회
 	public String read(Model model, int scon_no, int cate_no, HttpSession session,@RequestParam(name = "word", defaultValue = "") String word,
 			 @RequestParam(name = "now_page", defaultValue = "1") int now_page) { // acc_no 필요(session)
+
+		
 		
 		model.addAttribute("word",word);
 		model.addAttribute("now_page",now_page);
@@ -85,6 +88,14 @@ public class Share_contentsCont {
 		int cnt = this.sconProc.update_view(scon_no); // 조회수 업데이트
 
 		Share_contentsVO scontentsVO = this.sconProc.read(scon_no);
+		HashMap<String,Object>map = new HashMap<>();
+		map.put("acc_no", (int)session.getAttribute("acc_no"));
+		map.put("scon_no", scon_no);
+		if(this.sconProc.mark_check(map).size()>0) {
+			scontentsVO.setMark("Y");
+		}else {
+			scontentsVO.setMark("N");
+		}
 		model.addAttribute("scontentsVO", scontentsVO);
 		model.addAttribute("member_no",scontentsVO.getacc_no());
 		
@@ -756,8 +767,8 @@ public class Share_contentsCont {
 
 	@GetMapping("/list_by_search")
 	public String list_by_search(Model model, int cate_no, @RequestParam(name = "word", defaultValue = "") String word,
-			@RequestParam(name = "now_page", defaultValue = "1") int now_page) {
-		
+			@RequestParam(name = "now_page", defaultValue = "1") int now_page,HttpSession session) {
+		//System.out.println("->acc_no:" +session.getAttribute("acc_no"));
 		word = Tool.checkNull(word).trim();
 		
 		// cate_no를 가져오기 위한 카테고리 가져오기

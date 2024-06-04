@@ -33,10 +33,10 @@ public class ReplyCont {
   @PostMapping(value="/create")
   @ResponseBody
   public String create(@RequestBody Share_commentVO share_commentVO,HttpSession session) {
-	  System.out.println("->수신 데이터:"+ share_commentVO.toString());
-	  System.out.println("-> acc_no:" +session.getAttribute("acc_no"));
+	  //System.out.println("->수신 데이터:"+ share_commentVO.toString());
+	  //System.out.println("-> acc_no:" +session.getAttribute("acc_no"));
 	  int acc_no = (int)session.getAttribute("acc_no");
-	  System.out.println("-> acc_no:"  + (int)session.getAttribute("acc_no"));
+	 // System.out.println("-> acc_no:"  + (int)session.getAttribute("acc_no"));
 	  share_commentVO.setacc_no(acc_no);
 	  
 	  HashMap<String,Object> map = new HashMap<>();
@@ -47,10 +47,10 @@ public class ReplyCont {
 	  
 	  int cnt = this.replyProc.create_comment(map);
 	  if(cnt>0) {
-		  System.out.println("등록 성공");
+		  //System.out.println("등록 성공");
 	  }
 	  else {
-		  System.out.println("등록 실패");
+		  //System.out.println("등록 실패");
 	  }
 	  
 	  JSONObject json = new JSONObject();	  
@@ -61,7 +61,7 @@ public class ReplyCont {
   @GetMapping("/list_by_contentsno_join") //http://localhost:9093/reply/list_by_contentsno_join?scon_no=5
   @ResponseBody
   public String list_by_contentsno_join(int scon_no) {
-	  System.out.println("-> scon_no:" + scon_no);
+	  //System.out.println("-> scon_no:" + scon_no);
 	  List<ReplyMemberVO> list=this.replyProc.list_by_contentsno_join_500(scon_no);
 	  JSONObject json = new JSONObject();	  
 	  json.put("res", list);
@@ -93,8 +93,8 @@ public class ReplyCont {
   @ResponseBody
   public String update(@RequestBody Share_commentVO share_commentVO,HttpSession session) {
 	  if(share_commentVO.getacc_no() == (int)session.getAttribute("acc_no")) {
-		  System.out.println("회원이 같음");
-		  System.out.println("->shar_comment scmt_no:" + share_commentVO.getScmt_no());
+		  //System.out.println("회원이 같음");
+		 // System.out.println("->shar_comment scmt_no:" + share_commentVO.getScmt_no());
 		  JSONObject json = new JSONObject();
 		  HashMap<String,Object> map = new HashMap<>();
 		  map.put("scmt_comment", share_commentVO.getScmt_comment());

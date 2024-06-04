@@ -298,9 +298,6 @@
 		where scon_no=#{scon_no}
 	</delete>
 
-
-
-
 	<select id="tag_count" parameterType="int">
 		select count(*)
 		from
@@ -400,7 +397,14 @@
 		SELECT file_no, scon_no, file_origin_name, file_upload_name,
 		file_thumb_name, file_size, file_date
 		FROM share_image
-		WHERE scon_no = 5 AND ROWNUM &lt;= 1
+		WHERE scon_no = #{scon_no} AND ROWNUM &lt;= 1
+	</select>
+	
+	<select id="mark_check" resultType="dev.mvc.bookmark.BookmarkVO" parameterType="HashMap">
+		select acc_no,scon_no
+		from bookmark
+		where scon_no=#{scon_no} AND acc_no=#{acc_no}
+		ORDER BY acc_no asc
 	</select>
 
 </mapper>
