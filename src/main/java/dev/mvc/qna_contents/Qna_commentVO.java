@@ -33,5 +33,5 @@ public class Qna_commentVO {
   private String qcmt_contents="";
   
   /** 질문 게시글 댓글 등록일 */
-  private String qcmt_date = "";
+  private String qcmt_date;
 }

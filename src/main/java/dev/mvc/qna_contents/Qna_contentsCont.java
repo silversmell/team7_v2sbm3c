@@ -608,11 +608,6 @@ public class Qna_contentsCont {
 	  map.put("qcon_no", qcon_no);
 	  map.put("acc_no", acc_no);
 	  
-	  int cnt_comment = this.qna_contentsProc.qna_delete_comment(map); // 댓글 삭제
-	  if(cnt_comment>0) {
-		  System.out.println("댓글 삭제 성공");
-	  }
-	  
 	  int cnt_image = this.qna_contentsProc.qna_delete_image(qcon_no); //이미지 삭제
 	  if(cnt_image>0) {
 		  System.out.println("이미지 삭제 성공");
@@ -630,20 +625,12 @@ public class Qna_contentsCont {
 	  return "redirect:/qcontents/qna_list_all";
   }
   
-  
-  @GetMapping(value="/list_by_qcmt_no_join")
-  @ResponseBody
-  public String list_by_qcmt_no_join(int qcon_no) {
-    List<Qna_Acc_commentVO> list = qna_contentsProc.list_by_qcmt_no_join(qcon_no);
-    
-    JSONObject obj = new JSONObject();
-    obj.put("res", list);
-    
-    System.out.println("-> obj.toString(): " + obj.toString());
-    
-    return obj.toString();     
-  }
-  
+  /**
+   * 댓글 등록은 부모글(질문글) 조회에서 진행함
+   * @param qna_commentVO
+   * @param session
+   * @return
+   */
   @PostMapping(value="/qna_create_comment")
   @ResponseBody
   public String qna_create_comment(@RequestBody Qna_commentVO qna_commentVO, HttpSession session) {
@@ -661,9 +648,46 @@ public class Qna_contentsCont {
     json.put("res", cnt);
   
     return json.toString();
-   
   }
- 
+  
+  /**
+   * 질문글 댓글 목록
+   * @param qconno
+   * @return
+   */
+  @GetMapping(value="/list_by_qcmt_no_join")
+  @ResponseBody
+  public String list_by_qcmt_no_join(int qconno) {
+    List<Qna_Acc_commentVO> list = qna_contentsProc.list_by_qcmt_no_join(qconno);
+    
+    JSONObject obj = new JSONObject();
+    obj.put("res", list);
+
+    return obj.toString();
+  }
+  
+  /**
+   * 댓글 조회
+   * @param qcmt_no
+   * @return
+   */
+  @GetMapping(value="qna_read", produces ="application/json")
+  @ResponseBody
+  public String qna_read_comment(int qcmt_no) {
+    Qna_commentVO qna_commentVO = this.qna_contentsProc.qna_read_comment(qcmt_no);
+    
+    JSONObject row = new JSONObject();
+    row.put("qcmt_no", qna_commentVO.getQcmt_no());
+    row.put("acc_no", qna_commentVO.getAcc_no());
+    row.put("qcon_no", qna_commentVO.getQcon_no());
+    row.put("qcmt_contents", qna_commentVO.getQcmt_contents());
+    row.put("qcmt_date", qna_commentVO.getQcmt_date());
+    
+    JSONObject obj = new JSONObject();
+    obj.put("res", row);
+    
+    return obj.toString();
+  }
 
 }
 
