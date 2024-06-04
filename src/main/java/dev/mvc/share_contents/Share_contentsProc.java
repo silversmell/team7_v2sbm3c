@@ -3,15 +3,16 @@ package dev.mvc.share_contents;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import dev.mvc.bookmark.BookmarkVO;
 import dev.mvc.recommend.HashtagVO;
 import dev.mvc.share_contents.Contents;
 import dev.mvc.share_contentsdto.Contents_tagVO;
 import dev.mvc.share_contentsdto.Contents_urlVO;
-import dev.mvc.share_contentsdto.Share_commentsVO;
+import dev.mvc.reply.Share_commentVO;
 import dev.mvc.share_contentsdto.Share_contentsVO;
 import dev.mvc.share_contentsdto.Share_imageVO;
 
@@ -63,18 +64,6 @@ public class Share_contentsProc implements Share_contentsProcInter {
 	}
 
 	@Override
-	public int create_comment(HashMap<String, Object> map) {
-		int cnt = this.scontentsDAO.create_comment(map);
-		return cnt;
-	}
-
-	@Override
-	public ArrayList read_comment(int scon_no) {
-		ArrayList<Share_commentsVO> list = this.scontentsDAO.read_comment(scon_no);
-		return list;
-	}
-
-	@Override
 	public int create_image(Share_imageVO share_imageVO) {
 		int cnt = this.scontentsDAO.create_image(share_imageVO);
 		return cnt;
@@ -108,24 +97,24 @@ public class Share_contentsProc implements Share_contentsProcInter {
 		 * r >= 21 AND r <= 30
 		 */
 
-		 System.out.println("begin_of_page: " + begin_of_page);
-		 System.out.println("WHERE r >= "+start_num+" AND r <= " + end_num);
+		System.out.println("begin_of_page: " + begin_of_page);
+		System.out.println("WHERE r >= " + start_num + " AND r <= " + end_num);
 
 		map.put("start_num", start_num);
 		map.put("end_num", end_num);
 
 		ArrayList<Share_contentsVO> list = this.scontentsDAO.list_by_contents_search_paging(map);
-		
+
 		return list;
 	}
-	
-  @Override
-  public ArrayList contents_tag_search_paging(HashMap<String, Object> map) {
 
-    ArrayList<Contents_tagVO> list = this.scontentsDAO.contents_tag_search_paging(map);
-    return list;
-    
-  }
+	@Override
+	public ArrayList contents_tag_search_paging(HashMap<String, Object> map) {
+
+		ArrayList<Contents_tagVO> list = this.scontentsDAO.contents_tag_search_paging(map);
+		return list;
+
+	}
 
 	@Override
 	public String pagingBox(int now_page, String word, String list_file, int search_count, int record_per_page,
@@ -224,12 +213,6 @@ public class Share_contentsProc implements Share_contentsProcInter {
 	}
 
 	@Override
-	public int comment_search(int scon_no) {
-		int cnt = this.scontentsDAO.comment_search(scon_no);
-		return cnt;
-	}
-
-	@Override
 	public int create_url(HashMap<String, Object> map) {
 		int cnt = this.scontentsDAO.create_url(map);
 		return cnt;
@@ -260,12 +243,6 @@ public class Share_contentsProc implements Share_contentsProcInter {
 	}
 
 	@Override
-	public int delete_comments(int scon_no) {
-		int cnt = this.scontentsDAO.delete_comments(scon_no);
-		return cnt;
-	}
-
-	@Override
 	public int insert_tag(HashMap<String, Object> map) {
 		int cnt = this.scontentsDAO.insert_tag(map);
 		return cnt;
@@ -289,11 +266,6 @@ public class Share_contentsProc implements Share_contentsProcInter {
 		return list;
 	}
 
-	@Override
-	public HashtagVO select_hashname(int tag_no) {
-		HashtagVO hashtagVO = this.scontentsDAO.select_hashname(tag_no);
-		return hashtagVO;
-	}
 
 	@Override
 	public ArrayList select_sconno(int tag_no) {
@@ -362,26 +334,56 @@ public class Share_contentsProc implements Share_contentsProcInter {
 	}
 
 	@Override
-	public int update_comment(HashMap<String, Object> map) {
-		int cnt = this.scontentsDAO.update_comment(map);
+	public int bookmark_create(HashMap<String, Object> map) {
+		int cnt = this.scontentsDAO.bookmark_create(map);
 		return cnt;
 	}
 
 	@Override
-	public int read_scmtno(HashMap<String, Object> map) {
-		int cnt = this.scontentsDAO.read_scmtno(map);
+	public int bookmark_delete(HashMap<String, Object> map) {
+		int cnt = this.scontentsDAO.bookmark_delete(map);
 		return cnt;
 	}
 
 	@Override
-	public int bookmarK_create(HashMap<String, Object> map) {
-		int cnt = this.scontentsDAO.bookmarK_create(map);
+	public int bookmarall_delete(int scon_no) {
+		int cnt = this.scontentsDAO.bookmarall_delete(scon_no);
 		return cnt;
 	}
 
 	@Override
-	public int bookmark_delete(int scon_no) {
-		int cnt = this.scontentsDAO.bookmark_delete(scon_no);
+	public int delete_tag(int scon_no) {
+		int cnt = this.scontentsDAO.delete_tag(scon_no);
+		return cnt;
+	}
+
+	@Override
+	public int tag_count(int tag_no) {
+		int cnt = this.scontentsDAO.tag_count(tag_no);
+		return cnt;
+	}
+
+	@Override
+	public int delete_sconno(List<Integer> scon_no) {
+		int cnt = this.scontentsDAO.delete_sconno(scon_no);
+		return cnt;
+	}
+
+	@Override
+	public int sdelete_image(List<Integer> scon_no) {
+		int cnt = this.scontentsDAO.sdelete_image(scon_no);
+		return cnt;
+	}
+
+	@Override
+	public int sdelete_url(List<Integer> scon_no) {
+		int cnt = this.scontentsDAO.sdelete_url(scon_no);
+		return cnt;
+	}
+
+	@Override
+	public int sdelete_tag(List<Integer> scon_no) {
+		int cnt = this.scontentsDAO.sdelete_tag(scon_no);
 		return cnt;
 	}
 
@@ -392,56 +394,33 @@ public class Share_contentsProc implements Share_contentsProcInter {
 	}
 
 	@Override
-	public int delete_tag(int scon_no) {
-		int cnt = this.scontentsDAO.delete_tag(scon_no);
-		return cnt;
+	public HashtagVO read_hashtag_name(int tag_no) {
+		HashtagVO hash= this.scontentsDAO.read_hashtag_name(tag_no);
+		return hash;
 	}
 
 	@Override
-	public int scon_comment(int scon_no) {
-		int scon = this.scontentsDAO.scon_comment(scon_no);
-		return scon;
+	public ArrayList<Share_imageVO> distinct_image(int scon_no) {
+		ArrayList<Share_imageVO> share_imageVO = this.scontentsDAO.distinct_image(scon_no);
+		return share_imageVO;
 	}
 
 	@Override
-	public int delete_scmtno(int scmt_no) {
-		int cnt = this.scontentsDAO.delete_scmtno(scmt_no);
-		return cnt;
+	public ArrayList<HashtagVO> all_hashtag_name() {
+		ArrayList<HashtagVO> list = this.scontentsDAO.all_hashtag_name();
+		return list;
 	}
 
 	@Override
-	public int tag_count(int tag_no) {
-		int cnt = this.scontentsDAO.tag_count(tag_no);
-		return cnt;
+	public ArrayList<HashtagVO> sconno_hashtag(int scon_no) {
+		ArrayList<HashtagVO> list = this.scontentsDAO.sconno_hashtag(scon_no);
+		return list;
 	}
 
-  @Override
-  public int delete_sconno(List<Integer> scon_no) {
-    int cnt = this.scontentsDAO.delete_sconno(scon_no);
-    return cnt;
-  }
+	@Override
+	public ArrayList<BookmarkVO> mark_check(HashMap<String,Object>map) {
+		ArrayList<BookmarkVO> list = this.scontentsDAO.mark_check(map);
+		return list;
+	}
 
-@Override
-public int sdelete_image(List<Integer> scon_no) {
-	int cnt = this.scontentsDAO.sdelete_image(scon_no);
-	return cnt;
-}
-
-@Override
-public int sdelete_url(List<Integer> scon_no) {
-	int cnt = this.scontentsDAO.sdelete_url(scon_no);
-	return cnt;
-}
-
-@Override
-public int sdelete_comment(List<Integer> scon_no) {
-	int cnt = this.scontentsDAO.sdelete_comment(scon_no);
-	return cnt;
-}
-
-@Override
-public int sdelete_tag(List<Integer> scon_no) {
-	int cnt = this.scontentsDAO.sdelete_tag(scon_no);
-	return cnt;
-}
 }

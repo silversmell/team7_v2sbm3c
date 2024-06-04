@@ -1,15 +1,13 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout}">
-<head>
-<script>
-
-</script>
-</head>
-
 <div layout:fragment="content">
   <div class='title_line'>
     <span th:text="${qna_contentsVO.qcon_name}" class="title_line_text"></span> > 글 조회
   </div>
+  
+  <aside class="aside_left">
+    <span style="font-size: 1em;" th:text="|조회수: ${qna_contentsVO.qcon_views}|"></span>
+  </aside>
   
   <aside class="aside_right">
     <a th:href="@{|/qcontents/qna_create?cate_no=2|}">등록</a>
@@ -43,7 +41,6 @@
             </div>
             <span style="font-size: 1.5em; font-weight: bold;" th:text="${qna_contentsVO.qcon_name}"></span>
             <span style="font-size: 1em;" th:text="${qna_contentsVO.qcon_date}"></span><br><br>
-            <span style="font-size: 1em;" th:text="|조회수: ${qna_contentsVO.qcon_views}|"></span><br><br>
             <div style="white-space: pre-wrap;"><span th:text="${qna_contentsVO.qcon_contents}"></span></div>
           </div>
         </li>
@@ -51,11 +48,116 @@
           <div>
             첨부 파일: <a th:href="@{|/download?dir=/contents/storage&filename=${image.file_upload_name}&downname=${image.file_origin_name}|}" th:text="|${image.file_origin_name}|"></a>
           </div>
-        </li>   
+        </li>
+        
+        <li class="li_none">
+        <script>
+           window.onload = () => {
+                let content_tag = document.getElementById('qcmt_contents');
+                let btn_create_tag = document.getElementById('btn_create');
+                
+                content_tag.addEventListener('click', () => {
+                  let id =  '[[${session.acc_id}]]'; //  javascript -> Thymeleaf -> session
+                  // alert('Click!: ' + id);
+                  if (id == '') {
+                    alert('로그인해야 댓글을 입력 할 수 있습니다.');
+                    location.href="/account/login?url=/qconents/qna_read?qcon_no=[[${qna_contentsVO.qcon_no}]]%26word=[[${word}]]%26now_page=[[${now_page}]]";
+                  } else {
+                    // alert('로그인 됨');
+                    // content_tag.focus();
+                  }
+                });
+                
+                btn_create_tag.addEventListener('click', () => {
+                  let content = content_tag.value.trim();
+                  
+                  if (content.length == 0) {
+                    alert('내용이 없습니다. 내용을 입력해주세요.');
+                  } else {
+                    // alert('content: ' + content_tag.value);
+                    // {"sentence":"안녕하세요.","language":"영어","age":"25"}
+                    // console.log(JSON.stringify({sentence, language, age}))
+                    // return;
+            
+                    // Spring Security를 사용하지 않고 CORS 설정시 접근 안됨.
+                    // fetch("http://127.0.0.1:9091/reply/create", {
+                    fetch("/qna_contents/qna_create_comment", {
+                      "method": "post", 
+                      "headers": {"Content-Type": "application/json"},
+                      body: JSON.stringify({"qcon_no": "[[${qna_contentsVO.qcon_no}]]", "content": content})
+                    })
+                    .then((response) => response.json())
+                    .then((data) => {
+                      list_by_qcmt_no_join(); // 목록 출력
+                    });
+            
+                    // result_animation_tag.innerHTML = '<img src="/static/images/progress.gif" style="width: 15%; margin-top: 0px;">';
+    
+                  }
+    
+                });
+                
+                list_by_qcmt_no_join(); // 목록 출력
+              }
+              
+              function list_by_qcmt_no_join() { // 목록 출력
+                // Spring Security를 사용하지 않고 CORS 설정시 접근 안됨.
+                // fetch("http://127.0.0.1:9091/reply/create", {
+                fetch("/qconents/list_by_qcmt_no_join?qcon_no=[[${qna_contentsVO.qcon_no}]]", {
+                  "method": "get" 
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                  // alert('res: ' + data['res']);
+                  // result_tag.value = data['res'];
+                  // result_animation_tag.innerHTML = '';
+                  let msg = '';
+                  for (let i=0; i < data['res'].length; i++) {
+                    let row = data['res'][i];
+                    msg += "<div id='"+row.qcmt_no+"' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px;'>";
+                    msg += "<span style='font-weight: bold;'>" + row.id + "</span>";
+                    msg += "  " + row.qcmt_date;
+              
+                    if ('[[${session.acc_no}]]' == row.acc_no) { // 글쓴이 일치여부 확인, 본인의 글만 삭제 가능함 ★
+                      msg += " <a href='javascript:reply_update("+row.qcmt_no+")'><img src='/qcontents/images/update.png' style='width: 16px;'></a>";
+                      msg += " <a href='javascript:reply_delete("+row.qcmt_no+")'><img src='/qcontents/images/delete.png' style='width: 16px;'></a>";
+                    }
+                    msg += "  " + "<br>"; 
+                    msg += row.qcmt_contents;
+                    msg += "</div>";
+                  }
+                  
+                 document.getElementById("reply_list").innerHTML = msg;               
+                  
+                });
+          
+              }
+        </script>
+        
+        <div style='width: 100%; margin: 0px auto; clear: both;'>
+            <form name='frm_reply' id='frm_reply'> 
+                <input type='hidden' name='qcon_no' id='qcon_no' value='${qcon_no}'>
+                <input type='hidden' name='acc_no' id='acc_no' value='${sessionScope.acc_no}'>
+                
+                <textarea name='qcmt_contents' id='qcmt_contents' class="form-control" style='width: 100%; height: 60px;' 
+                               placeholder="댓글 작성, 로그인해야 등록 할 수 있습니다." autofocus='autofocus'></textarea>
+               <div style='text-align: center;'> 
+                 <button type='button' id='btn_create'>&nbsp;&nbsp;등&nbsp;&nbsp;록&nbsp;&nbsp;</button>
+               </div>               
+            </form>
+            <div id='reply_list' data-replypage='1'>  <!-- 목록 -->
+              등록된 댓글이 없습니다.
+            </div>
+            <div id='reply_list_btn' style='border: none'>
+                <button id='btn_add' style='width: 100%;'>더보기 ▽</button>
+            </div>  
+              
+          </div>
+      </li>
+           
       </ul>
     </fieldset>
-  </form>
-  
+    </form>
 
 </div>
 </html>

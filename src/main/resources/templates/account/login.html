@@ -21,7 +21,7 @@
 	<div style="width: 60%; margin: 0px auto">
 		<!-- 회원가입 폼 -->
 		<form name="login_frm" id="login_frm" th:object="${accountVO}" method="post" action="/account/login">
-
+			<input type='hidden' name='url' id='url'  th:value='${url}'><!--  이동할 주소 -->
 			<!-- 아이디(이메일) -->
 			<div style="display: flex; align-items: center;">
 				<label for="acc_id" style="margin-right: 10px;">아이디(이메일)</label>

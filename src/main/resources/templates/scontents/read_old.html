@@ -1,0 +1,312 @@
+<!DOCTYPE html> 
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+       <script>
+       window.onload=() =>{
+					let content_tag=document.getElementById('content');
+					let btn_create_tag=document.getElementById('btn_create');
+					
+					content_tag.addEventListener('click',() =>{
+						let id = '[[${session.acc_id}]]'; //jaxascript -> thymeleaf -> session
+						//alert('Click!: ' +id);
+						if(id==''){
+							alert('로그인해야 댓글을 입력 할 수 있습니다.');
+							location.href="/account/login?url=/scontents/read?cate_no=1%26scon_no=[[${scontentsVO.scon_no}]]%26word=[[${word}]]%26now_page=[[${now_page}]] ";
+							
+						}else{
+							//alert('로그인 됨');
+							//content_tag.focus();
+						}
+					});
+					
+					btn_create_tag.addEventListener('click',() =>{
+					let content = content_tag.value.trim();
+						if(content.length == 0){
+							alert('내용이 없습니다. 내용을 입력해주세요.');
+						}else{
+							// {"sentence":"안녕하세요.","language":"영어","age":"25"}
+					        // console.log(JSON.stringify({sentence, language, age}))
+					        // return;
+					        //
+					        fetch("/reply/create",{
+		                  "method": "post", 
+		                  "headers": {"Content-Type": "application/json"},
+					        	body:JSON.stringify({"scon_no":"[[${scontentsVO.scon_no}]]","scmt_comment":content})
+					        })
+					        .then((response) => response.json())
+					        .then((data) =>{
+					        	alert('등록 완료.');
+					        	list_by_contents_join()
+					        });
+					        //result_animation_tag.innerHTML = '<img src="/static/images/progress.gif" style="width: 15%; margin-top: 0px;">';
+						}
+					});
+					list_by_contents_join();
+					
+       }
+       function list_by_contents_join(){
+    	   let cnt = 0 //출력 순환 횟수
+    	   fetch("/reply/list_by_contentsno_join?scon_no=[[${scontentsVO.scon_no}]]",{
+    		   "method":"get"
+    	   })
+    	   .then((response) => response.json())
+    	   .then((data) => {
+    		   reply_data=data['res'];
+    		   if(reply_data.length>5){
+    			   cnt=5;
+    		   }else{
+    			   cnt = reply_data.length;
+    		   }
+    		   let msg ="";
+    		   for(let i = 0;i<cnt;i++){
+    			   let row = reply_data[i];
+             msg += "<div id='"+row.scmt_no+"' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px;'>";
+             msg += "<span style='font-weight: bold;'>" + row.acc_id + "</span>";
+             msg += "  " + row.rdate;
+             
+             if("[[session.acc_no]]" == row.acc_no){
+                 msg += " <a href='javascript:reply_update("+row.scmt_no+")'><img src='/reply/images/update.png' style='width: 16px;'></a>";
+                 msg += " <a href='javascript:reply_delete("+row.scmt_no+")'><img src='/reply/images/delete.png' style='width: 16px;'></a>";
+             }
+             msg += " " + "<br>";
+             msg += row.scmt_comment;
+             msg += "</div>";
+    		   }
+    		   document.getElementById("reply_list").innerHTML = msg;
+    	   });
+       }
+					</script>
+  
+    <script>
+    
+    function delete_comment(){
+    	
+    }
+    function mark(){
+    	console.log("mark  클릭");
+    	let scon_no = document.getElementById("scon_no").value;
+    	let cate_no = document.getElementById("cate_no").value;
+    	
+    	let url;
+    	let currentImg = document.getElementById("bookmarkImage").src;
+    	
+    	if(currentImg.endsWith("bookmark_off.png")){
+    		url = './up_priority/'+scon_no+'?cate_no=' +cate_no;
+    	}else{
+    		url='./down_priority/'+scon_no+'?cate_no=' +cate_no;
+    	}
+  
+    	fetch(url,{
+    		method:'GET',
+    	})
+    	.then(response =>response.json())
+    	.then(rdata=>{
+    		if(rdata.cnt==0){
+    			alert("로그인이 필요합니다.");
+    			return;
+    		}
+    		if(rdata.cnt>0){
+    			console.log("우선순위 변경 선공");
+    			if(currentImg.endsWith("bookmark_off.png")){
+    				document.getElementById("bookmarkImage").src = "/css/images/bookmark_on.png";
+    			}else{
+    				document.getElementById("bookmarkImage").src = "/css/images/bookmark_off.png";
+    			}
+    		}
+    	})
+    	.catch(error =>{
+    		console.log('Error:',error);
+    	});
+    }
+    function confirmUpdate(member_no, acc_no, scon_no,cate_no){
+    	if(member_no != acc_no){
+    		alert("권한이 필요합니다.");
+    		return false;
+    	}
+    	const url = `./update_text/${member_no}?scon_no=${scon_no}&cate_no=${cate_no}`;
+    	window.location.href=url;
+    	return true;
+    }
+    
+    function confirmDelete(member_no, acc_no, scon_no,cate_no){
+    	if(member_no != acc_no){
+    		alert("권한이 필요합니다.");
+    		return false;
+    	}
+    	const url = `./delete/${member_no}?scon_no=${scon_no}&cate_no=${cate_no}`;
+    	window.location.href=url;
+    	return true;
+    }
+    
+    function confirmFile(member_no, acc_no, scon_no,cate_no){
+    	if(member_no != acc_no){
+    		alert("권한이 필요합니다.");
+    		return false;
+    	}
+    	const url = `./update_file/${member_no}?scon_no=${scon_no}&cate_no=${cate_no}`;
+    	window.location.href=url;
+    	return true;
+    }
+    
+
+  </script>
+
+  <div class='title_line'>
+    <span th:text="${scontentsVO.scon_title}" class="title_line_text"></span > 
+    > 글 조회
+  </div>
+  
+  <aside class="aside_right" >
+    <a href="./create?cate_no=1">등록</a>
+    <span class='menu_divide' >│</span>
+    <a href="#" th:attr="onclick=|return confirmUpdate(${member_no}, '${acc_no}', ${scontentsVO.scon_no}, 1)|">글수정</a>
+    <span class='menu_divide' >│</span>
+       <a href="#" th:attr="onclick=|return confirmFile(${member_no}, '${acc_no}', ${scontentsVO.scon_no}, 1)|">파일수정</a>
+    <span class='menu_divide' >│</span>    
+    <a href="#" th:attr="onclick=|return confirmDelete(${member_no}, '${acc_no}', ${scontentsVO.scon_no}, 1)|">삭제</a>
+    <span class='menu_divide' >│</span>
+
+
+    <a href="javascript:location.reload();">새로고침</a>
+
+  </aside> 
+
+  <div class='menu_line'></div>
+
+  <fieldset class="fieldset_basic">
+    <ul>
+    <div>
+      <li class="li_none">
+        <div style="width: 100%; word-break: break-all;">
+
+<div style='margin: 0px auto; width: 900px;'>
+					<div class ="horizontal-container">
+   		<tr th:each="item, status : ${list2}">
+   		<div class='read_hashtag' style = "padding:5px">
+        <td >
+            #<span th:text="${item.tag_name}" class="bold;"></span>
+        </td>
+        </div>
+    </tr><br>
+    	<br>
+    
+    </div>
+    <br>
+    <div style="display:flex; align-items: center; margin-left:90px; flex-direction:row; justify-content: space-between;" > 
+    <span th:text="${scontentsVO.scon_title}" style="font-size:2em;font-weight: bold;"></span>
+    <span style="font-size: 1em; margin-left:10px;" th:text="|조회수: ${scontentsVO.scon_views}|"></span>
+    <div style="margin-left: auto; margin-right:90px;">
+    <span style="font-size: 1em; margin-left:10px;" th:text="${scontentsVO.scon_date}"></span>
+    </div>
+    </div>
+
+        <div style="float:right;">
+        <span th:if="${scontentsVO.mark =='N'}">
+            <img src="/css/images/bookmark_off.png" id="bookmarkImage" class="icon" onclick="mark()" style="width:24px; height: 24px;">
+        </span>
+        <span th:unless="${scontentsVO.mark =='N'}">
+            <img src="/css/images/bookmark_on.png" id="bookmarkImage" class="icon" onclick="mark()" style="width:24px; height: 24px;">
+        </span>
+    </div>
+
+    <div class="fotorama" data-width="80%" data-ratio="800/520" data-max-width="100%" style='margin: 0px auto; display: flex; justify-content: center; align-items: center;'>
+        <div th:each="share_imageVO, status: ${share_imageVO}">
+            <div style="display: flex; justify-content: center; align-items: center;">
+                <div th:if="${share_imageVO.file_origin_name.endsWith('jpg') or share_imageVO.file_origin_name.endsWith('png') or share_imageVO.file_origin_name.endsWith('gif')}">
+                    <img th:src="@{|/contents/storage/${share_imageVO.file_thumb_name}|}" style="height: auto; max-height: 520px; object-fit: contain; margin-top: 0.5%;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+  			
+					<br> 
+					<div style="text-align:left;">
+					<span style="font-size: 1.5em; font-weight: normal;" th:text="${scontentsVO.scon_contents}"></span><br>
+					          <div style="white-space: pre-wrap;"></div>
+          </div>
+          <input type="hidden" id="scon_no" name="scon_no" th:value="${scontentsVO.scon_no}">
+          <input type="hidden" id="member_no" name="member_no" th:value="${member_no}">
+				<br>
+		
+<div style="display:flex; flex-direction:row; justify-content: space-between;">
+    <div>
+        <span style="font-size:1.5em">데스크 제품 목록</span>
+        
+        <br>
+        <a style="font-size: 1em;" th:href="${url_list0}" th:text="${url_list0}" th:if="${url_list0 != '1'}">Link1</a><br>
+        <a style="font-size: 1em;" th:href="${url_list1}" th:text="${url_list1}" th:if="${url_list1 != '1'}">Link2</a><br>
+        <a style="font-size: 1em;" th:href="${url_list2}" th:text="${url_list2}"  th:if="${url_list2 != '1'}">Link3</a><br>
+        <a style="font-size: 1em;" th:href="${url_list3}" th:text="${url_list3}"   th:if="${url_list3 != '1'}">Link4</a><br>
+        <a style="font-size: 1em;" th:href="${url_list4}" th:text="${url_list4}"  th:if="${url_list4 != '1'}">Link5</a>
+    </div>
+</div>
+			<br><br>
+			  <div style='width: 80%; margin: 0px auto; clear:both; text-align:center;'>
+			     <hr>  
+			      <form name='frm_reply' id='frm_reply'> 
+			          <input type='hidden' name='scon_no' id='scon_no' value='${scontentsVO.scon_no}'>
+			          <input type='hidden' name='acc_no' id='acc_no' value='${sessionScope.acc_no}'>
+			          <textarea name='content'  class='form-control' id='content' style='width: 100%;  height: 60px;' 
+			          							placeholder="댓글 작성, 로그인해야 등록 할 수 있습니다." autofocus='autofocus'></textarea>
+			          <div style='text-align: center;'> 
+                 <button type='button' id='btn_create'>  등  록  </button>
+               </div>               
+			      </form>
+			      <hr>
+			      <div id='reply_list' data-replypage='1'>  
+			      등록된 댓글이 없습니다.
+			      </div>
+			      <div id='reply_list_btn' style='border:none;'>
+			          <button id='btn_add' style='width: 100%;'>더보기 ▽</button>
+			      </div>  
+			  </div>
+    
+
+			        <tr th:each="scommentVO, status:${list}">
+      <div id="commentSection">
+      <div style="display:flex;">
+      <td class='td_left'>
+          <div>
+          <span id="scmt_date" style="font-size: 1em;" th:text="${scommentVO.scmt_date}"></span><br><br>
+        <span name="acc_id" id="acc_id"  th:value = "${acc_id}"  th:text="${acc_id}"></span><br>
+        <input type="hidden"  name="scmt_no" th:value="${scommentVO.scmt_no}" ></span>
+        <input type="hidden" style="font-size: 1em;" th:value="${acc_no}"></span>
+        <span id="scmt_comment" th:text="${scommentVO.scmt_comment}" style="font-weight: bold;"></span><br>
+        </div>
+      </td>
+        <div style="margin-left: auto;">
+          <div style="display:flex;gap:10px;">
+       <div name="update_co" style="cursor: pointer;" th:onclick="|location.href='./update_comment/${acc_no}/${scommentVO.scmt_no}?scon_no=${scontentsVO.scon_no}&cate_no=1'|">수정</div>
+       
+      <form name='frm' method='post'  th:action="@{|/scontents/delete_comment?scon_no=${scontentsVO.scon_no}|}">
+       <input type="hidden" name="scmt_no" th:value="${scommentVO.scmt_no}">
+       <input type="hidden" name="cate_no" th:value="${categoryVO.cate_no}"> <!-- cate_no 데이터 값 가져옴 -->
+       <span class='menu_divide' >│</span>
+      	<button type="submit" name="delete_co" style="border: none; background-color: white;" >삭제</button>
+       </form>
+       </div>
+      </div>     
+      </div>
+      </div>
+      <hr style="width: 100%;">
+      
+    </tr>
+
+</div>
+    </div>
+    </div>
+      </li>
+
+      </div>
+    </ul>
+    <br>
+  </fieldset>
+
+
+    <span id='id_msg'></span>  
+
+</div>
+
+</html>

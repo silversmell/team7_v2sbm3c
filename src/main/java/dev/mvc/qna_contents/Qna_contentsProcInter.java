@@ -2,6 +2,7 @@ package dev.mvc.qna_contents;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 
 public interface Qna_contentsProcInter {
@@ -139,7 +140,6 @@ public interface Qna_contentsProcInter {
    */
   public int qna_search_count_image(int qcon_no);
   
-  
   /**
    * 질문글 댓글 등록
    * @param qna_commentVO
@@ -158,7 +158,7 @@ public interface Qna_contentsProcInter {
    * @param qcon_no
    * @return
    */
-  public ArrayList<Qna_commentVO> list_by_qcmt_no_join(int qcon_no);
+  public List<Qna_Acc_commentVO> list_by_qcmt_no_join(int qcon_no);
   
   /**
    * 질문글 댓글 삭제

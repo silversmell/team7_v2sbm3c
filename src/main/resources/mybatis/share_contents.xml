@@ -69,25 +69,6 @@
 		VALUES(share_contents_SEQ.nextval,#{scon_title},#{scon_contents},1,0,sysdate,#{acc_no},1)
 	</insert>
 
-	<delete id="delete" parameterType="int">
-		DELETE FROM share_contents
-		WHERE scon_no=#{scon_no}
-	</delete>
-
-	<insert id="create_comment" parameterType="HashMap">
-		INSERT INTO
-		share_comment(scmt_no, scon_no, scmt_comment,scmt_date,acc_no)
-		VALUES(share_comment_SEQ.nextval,#{scon_no},#{scmt_comment},sysdate,#{acc_no})
-	</insert>
-
-	<select id="read_comment"
-		resultType="dev.mvc.share_contentsdto.Share_commentsVO"
-		parameterType="Integer">
-		SELECT scmt_comment,scmt_date,acc_no,scmt_no
-		FROM share_comment
-		WHERE scon_no=#{scon_no}
-	</select>
-
 
 	<!-- 카테고리별 검색 + 페이징 목록 -->
 	<select id="list_by_contents_search_paging"
@@ -145,11 +126,7 @@
 		</choose>
 	</select>
 
-	<select id="comment_search" resultType="int" parameterType="int">
-		select count(*)
-		from share_comment
-		where scon_no=#{scon_no}
-	</select>
+
 	<insert id="create_url" parameterType="HashMap">
 		INSERT INTO
 		contents_url(url_no,scon_no,url_link)
@@ -162,7 +139,7 @@
 		SELECT url_no,scon_no,url_link
 		FROM contents_url
 		where
-		scon_no=#{scon_no} 
+		scon_no=#{scon_no}
 	</select>
 	<select id="only_url"
 		resultType="dev.mvc.share_contentsdto.Contents_urlVO"
@@ -184,11 +161,7 @@
 		where scon_no=#{scon_no}
 	</delete>
 
-	<delete id="delete_comments" parameterType="int">
-		delete from
-		share_comment
-		where scon_no=#{scon_no}
-	</delete>
+
 
 	<insert id="insert_tag" parameterType="HashMap">
 		INSERT INTO
@@ -217,12 +190,6 @@
 		FROM hashtag
 	</select>
 
-	<select id="select_hashname"
-		resultType="dev.mvc.recommend.HashtagVO">
-		select tag_name
-		from hashtag
-		where tag_no=#{tag_no}
-	</select>
 
 	<select id="select_sconno"
 		resultType="dev.mvc.share_contentsdto.Contents_tagVO">
@@ -231,7 +198,7 @@
 		where tag_no=#{tag_no}
 	</select>
 
- <!--  전체 이미지 조회 -->
+	<!-- 전체 이미지 조회 -->
 	<select id="list_image"
 		resultType="dev.mvc.share_contentsdto.Share_imageVO">
 		SELECT
@@ -295,122 +262,153 @@
 
 	<update id="n_mark" parameterType="int">
 		update share_contents
-		set mark='N'
+		set
+		mark='N'
 		where scon_no=#{scon_no}
 	</update>
-	
-	<update id ="update_comment" parameterType="HashMap">
-		update share_comment
-		set scmt_comment = #{scmt_comment}
-		where scmt_no=#{scmt_no}
-	</update>
-	
-	<select id = "read_scmtno" parameterType="HashMap">
-		select scmt_no
-		from share_comment
-		where scmt_comment=#{scmt_comment} AND scon_no=#{scon_no}
-	</select>
-	
-	<insert id ="bookmarK_create"  parameterType="HashMap" >
-		INSERT INTO bookmark(mark_no, acc_no, scon_no, qcon_no)
-		VALUES(BOOKMARK_SEQ.nextval, #{acc_no}, #{scon_no}, null)
-</insert>
 
-	<delete id="bookmark_delete" parameterType="int">
-	DELETE FROM bookmark
-	WHERE scon_no=#{scon_no}
-	
+
+
+	<insert id="bookmark_create" parameterType="HashMap">
+		INSERT INTO
+		bookmark(mark_no, acc_no, scon_no, qcon_no)
+		VALUES(BOOKMARK_SEQ.nextval, #{acc_no}, #{scon_no}, null)
+	</insert>
+
+	<delete id="bookmark_delete" parameterType="HashMap">
+		DELETE FROM bookmark
+		WHERE scon_no=#{scon_no} AND acc_no=#{acc_no}
 	</delete>
-	
-	<select id ="distinct_sconno" resultType="dev.mvc.share_contentsdto.Share_imageVO">
+
+	<delete id="bookmarall_delete" parameterType="int">
+		DELETE FROM bookmark
+		WHERE scon_no=#{scon_no}
+	</delete>
+
+	<select id="distinct_sconno"
+		resultType="dev.mvc.share_contentsdto.Share_imageVO">
 		select distinct scon_no
 		from share_image
-		ORDER BY scon_no DESC
+		ORDER BY scon_no
+		DESC
 	</select>
-	
+
 	<delete id="delete_tag" parameterType="int">
-	delete from contents_tag
-	where scon_no=#{scon_no}
+		delete from contents_tag
+		where scon_no=#{scon_no}
 	</delete>
-		<select id ="scon_comment" parameterType="int">
-	select scon_no
-	from share_comment
-	where scmt_no=#{scmt_no}
-	</select>
-	
-	<delete id="delete_scmtno" parameterType="int">
-		delete from share_comment
-		where scmt_no=#{scmt_no}
-	</delete>
-	
-	<select id = "tag_count" parameterType="int">
+
+	<select id="tag_count" parameterType="int">
 		select count(*)
-		from contents_tag
+		from
+		contents_tag
 		where tag_no=#{tag_no}
 	</select>
-	
-	 <!-- 카테고리별 검색 + 페이징 목록 -->
-  <select id="contents_tag_search_paging"
-    resultType="dev.mvc.share_contentsdto.Contents_tagVO"
-    parameterType="HashMap">
-      select scon_no,tag_no,contents_tag_no,r
-      FROM(
-      select scon_no,tag_no,contents_tag_no,rownum as r
-      from (
-      select scon_no,tag_no,contents_tag_no
-      from contents_tag
-      where tag_no=#{tag_no}
-      ORDER BY scon_no DESC
-      )
-      )
-      WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>
 
-    <!-- 1 page: WHERE r >= 1 AND r <= 10; 2 page: WHERE r >= 11 AND r <= 20; 
-      3 page: WHERE r >= 21 AND r <= 30; -->
-  </select>
-  <!-- scon_no에 따른 선택삭제 -->
-<delete id="delete_sconno" parameterType="list">
-    DELETE FROM share_contents
-    WHERE scon_no IN 
-    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
-        #{item}
-    </foreach>
-</delete>
+	<!-- 카테고리별 검색 + 페이징 목록 -->
+	<select id="contents_tag_search_paging"
+		resultType="dev.mvc.share_contentsdto.Contents_tagVO"
+		parameterType="HashMap">
+		select scon_no,tag_no,contents_tag_no,r
+		FROM(
+		select scon_no,tag_no,contents_tag_no,rownum as r
+		from (
+		select scon_no,tag_no,contents_tag_no
+		from contents_tag
+		where tag_no=#{tag_no}
+		ORDER BY scon_no DESC
+		)
+		)
+		WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>
 
-<!--  scon_no에 따른 이미지 삭제 -->
-<delete id="sdelete_image" parameterType="list">
-    DELETE FROM share_image
-    WHERE scon_no IN 
-    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
-        #{item}
-    </foreach>
-</delete>
-
-<!--  scon_no에 따른 url삭제 -->
-<delete id="sdelete_url" parameterType="list">
-    DELETE FROM contents_url
-    WHERE scon_no IN 
-    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
-        #{item}
-    </foreach>
-</delete>
-<!--  scon_no에 따른 comment삭제 -->
-<delete id="sdelete_comment" parameterType="list">
-		DELETE FROM share_comment
+		<!-- 1 page: WHERE r >= 1 AND r <= 10; 2 page: WHERE r >= 11 AND r <= 20; 
+			3 page: WHERE r >= 21 AND r <= 30; -->
+	</select>
+	<!-- scon_no에 따른 선택삭제 -->
+	<delete id="delete_sconno" parameterType="list">
+		DELETE FROM share_contents
 		WHERE scon_no IN
-    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
-        #{item}
-    </foreach>
-</delete>
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
 
-<!--  scon_no에 따른 태그 삭제 -->
-<delete id="sdelete_tag" parameterType="list">
+	<!-- scon_no에 따른 이미지 삭제 -->
+	<delete id="sdelete_image" parameterType="list">
+		DELETE FROM share_image
+		WHERE scon_no IN
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+	<!-- scon_no에 따른 url삭제 -->
+	<delete id="sdelete_url" parameterType="list">
+		DELETE FROM contents_url
+		WHERE scon_no IN
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+
+	<!-- scon_no에 따른 태그 삭제 -->
+	<delete id="sdelete_tag" parameterType="list">
 		DELETE FROM contents_tag
 		WHERE scon_no IN
-    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
-        #{item}
-    </foreach>
-</delete>
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+	<select id="all_hashtag_name"
+		resultType="dev.mvc.recommend.HashtagVO">
+		SELECT hashtag.tag_name
+		FROM contents_tag,hashtag
+		WHERE hashtag.tag_no=contents_tag.tag_no
+	</select>
+
+	<select id="read_hashtag_name"
+		resultType="dev.mvc.recommend.HashtagVO" parameterType="int">
+		SELECT tag_name,r
+		FROM(
+		SELECT hashtag.tag_name,rownum as r
+		FROM contents_tag,hashtag
+		WHERE hashtag.tag_no=contents_tag.tag_no AND contents_tag.tag_no=#{tag_no})
+		WHERE R=1
+	</select>
+
+	<select id="sconno_hashtag"
+		resultType="dev.mvc.recommend.HashtagVO" parameterType="int">
+		SELECT tag_name,tag_no
+		FROM hashtag
+		WHERE hashtag.tag_no IN (
+		SELECT contents_tag.tag_no
+		FROM share_contents RIGHT OUTER JOIN contents_tag
+		ON(share_contents.scon_no = contents_tag.scon_no)
+		WHERE share_contents.scon_no=#{scon_no})
+
+	</select>
+
+	<select id="distinct_image"
+		resultType="dev.mvc.share_contentsdto.Share_imageVO"
+		parameterType="int">
+		SELECT file_no, scon_no, file_origin_name, file_upload_name,
+		file_thumb_name, file_size, file_date
+		FROM share_image
+		WHERE scon_no = #{scon_no} AND ROWNUM &lt;= 1
+	</select>
+	
+	<select id="mark_check" resultType="dev.mvc.bookmark.BookmarkVO" parameterType="HashMap">
+		select acc_no,scon_no
+		from bookmark
+		where scon_no=#{scon_no} AND acc_no=#{acc_no}
+		ORDER BY acc_no asc
+	</select>
 
 </mapper>
 

@@ -16,6 +16,7 @@ COMMENT ON TABLE ADMIN is '관리자';
 COMMENT ON COLUMN ADMIN.ADM_NO is '관리자 번호';
 COMMENT ON COLUMN ADMIN.CATE_NO is '카테고리 번호';
 COMMENT ON COLUMN ADMIN.CATE_NO is '회원 번호';
+COMMENT ON COLUMN ADMIN.ACC_GRADE is '회원 등급';
 
 DROP SEQUENCE ADMIN_SEQ;
 
@@ -31,72 +32,17 @@ commit;
 SELECT * FROM admin;
 -- Create, 등록: 1건 이상(임시 통합 관리자 계정)
 
+-- 삽입
+INSERT INTO ADMIN (ADM_NO, CATE_NO, ACC_NO)
+VALUES (ADMIN_SEQ.nextval, 1, 1);
 
-INSERT INTO admin(adm_no, cate_no, adm_id, adm_pw, adm_name, adm_date, adm_grade)
-VALUES(admin_seq.nextval, 2, 'admin1@gmail.com', '1234', '박은향', sysdate, 1);
+INSERT INTO ADMIN (ADM_NO, CATE_NO, ACC_NO)
+VALUES (ADMIN_SEQ.nextval, 2, 2);
 
-INSERT INTO admin(adm_no, cate_no, adm_id, adm_pw, adm_name, adm_date, adm_grade)
-VALUES(admin_seq.nextval, 1, 'kim20267878@gmail.com', '1234', '김수진', sysdate, 1);
-
-INSERT INTO admin(adm_no, cate_no, adm_id, adm_pw, adm_name, adm_date, adm_grade)
-VALUES(admin_seq.nextval, 2, 'kim20267878@gmail.com', '1234', '김수진', sysdate, 1);
-
-INSERT INTO admin(adm_no, cate_no, adm_id, adm_pw, adm_name, adm_date, adm_grade)
-VALUES(admin_seq.nextval, 1, 'admin3@gmail.com', '1234', '장영은', sysdate, 1);
-
-INSERT INTO admin(adm_no, cate_no, adm_id, adm_pw, adm_name, adm_date, adm_grade)
-VALUES(admin_seq.nextval, 2, 'admin3@gmail.com', '1234', '장영은', sysdate, 1);
-
--- 목록
--- 검색을 하지 않는 경우, 전체 목록 출력, 오름차순
-SELECT adm_no, cate_no, adm_id, adm_pw, adm_name, adm_date
+-- 조회
+SELECT ADM_NO, CATE_NO, ACC_NO
 FROM admin
-ORDER BY adm_grade ASC, adm_id ASC;
-     
-     
-COMMIT;
-rollback;
--- 수정
--- PK: 변경 못함, UNIQUE: 변경을 권장하지 않음(id)
-UPDATE admin 
-SET adm_name='박은향', adm_id='admin@gmail.com', adm_pw='1111', adm_grade=0
-WHERE adm_no=1;
+WHERE acc_no = 2;
 
-
-COMMIT;
-rollback;
 -- 삭제
--- 모두 삭제
-DELETE FROM admin;
- 
--- 특정 관리자 계정 삭제
 DELETE FROM admin
-WHERE adm_no=1;
-
-
--- 로그인
-SELECT COUNT(adm_no) as cnt
-FROM admin
-WHERE adm_id='admin1@gmail.com' AND adm_pw='1234';
-
-
--- 패스워드
--- 패스워드 검사
-SELECT COUNT(adm_no) as cnt
-FROM admin
-WHERE adm_no=1 AND adm_pw='1234';
-
-COMMIT;
-rollback;
--- 패스워드 수정
-UPDATE admin
-SET adm_pw='1111'
-WHERE adm_no=1;
-
-
-COMMIT;
-rollback;
--- 등급 변경
-UPDATE admin
-SET adm_grade=2
-WHERE adm_no=1;

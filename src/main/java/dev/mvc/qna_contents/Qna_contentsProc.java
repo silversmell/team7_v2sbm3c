@@ -2,12 +2,14 @@ package dev.mvc.qna_contents;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import dev.mvc.tool.Security;
+import dev.mvc.tool.Tool;
 
 
 @Service("dev.mvc.qna_contents.Qna_contentsProc")
@@ -191,9 +193,15 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
 
   @Override
   public int qna_password_check(HashMap<String, Object> hashMap) {
-    String passwd = (String)hashMap.get("passwd");
-    passwd = this.security.aesEncode(passwd);
-    hashMap.put("passwd", passwd);
+    String qcon_passwd = (String)hashMap.get("qcon_passwd");
+    
+    // Null 체크 추가
+    if (qcon_passwd == null) {
+        return 0; // 패스워드가 null인 경우 불일치로 처리
+    }
+
+    qcon_passwd = this.security.aesEncode(qcon_passwd);
+    hashMap.put("passwd", qcon_passwd);
     
     int cnt = this.qna_contentsDAO.qna_password_check(hashMap);
     return cnt;
@@ -277,9 +285,16 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
   }
 
   @Override
-  public ArrayList<Qna_commentVO> list_by_qcmt_no_join(int qcon_no) {
-    ArrayList<Qna_commentVO> list = this.qna_contentsDAO.list_by_qcmt_no_join(qcon_no);
+  public List<Qna_Acc_commentVO> list_by_qcmt_no_join(int qcon_no) {
+    List<Qna_Acc_commentVO> list = this.qna_contentsDAO.list_by_qcmt_no_join(qcon_no);
+    String qcmt_contents = "";
     
+    // 특수문자 변경
+    for (Qna_Acc_commentVO qna_acc_commentVO:list) {
+      qcmt_contents = qna_acc_commentVO.getQcmt_contents();
+      qcmt_contents = Tool.convertChar(qcmt_contents);
+      qna_acc_commentVO.setQcmt_contents(qcmt_contents);;
+    }
     return list;
   }
 

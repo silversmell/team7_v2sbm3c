@@ -1,3 +1,4 @@
+<link href="/css/style.css" rel="Stylesheet" type="text/css">
 <div th:fragment="navbarFragment">
   <div class="top_menu_img">
     <div class="top_menu_label">데스크 투어</div>
@@ -22,7 +23,6 @@
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" 
                          role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="관리자">                                                            
                     </a>
-                    
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                       <li class="nav-item"><a class="nav-link" href="/category/cate_list_search">카테고리 전체 목록</a></li>
                       <li class="nav-item"><a class="nav-link" href="/account/list">회원 목록</a></li>
@@ -68,11 +68,7 @@
                 <li class="nav-item">
                   <a class="nav-link" href="http://localhost:9093/scontents/rank?cate_no=4" th:text="랭킹게시판"></a>
                 </li>
-                
-                <li class="nav-item">
-                  
-                </li> 
-				
+
 				<li class="nav-item">
 				     <span th:if="${session.acc_no == null}"><a class="nav-link" href="/account/login" th:text="@{|로그인|}"></a></span>
 				     <span th:if="${session.acc_no != null}">
@@ -80,8 +76,8 @@
 						<a class="nav-link" href="/account/logout" th:text="@{|${session.acc_id} 로그아웃|}" style="display: inline-block;"></a>
 					</span>
 				</li>  
-                 
-                
+
+
             </ul>
           <!-- 메뉴 종료 -->
             

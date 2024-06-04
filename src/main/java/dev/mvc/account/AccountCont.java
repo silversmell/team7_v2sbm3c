@@ -303,7 +303,7 @@ public class AccountCont {
 	 * @return
 	 */
 	@GetMapping(value = "/login")
-	public String login_form(Model model, HttpServletRequest request) {
+	public String login_form(Model model, HttpServletRequest request,String url) {
 
 		/* Cookie */
 		Cookie[] cookies = request.getCookies();
@@ -327,7 +327,7 @@ public class AccountCont {
 
 		model.addAttribute("ck_id", ck_id);
 		model.addAttribute("ck_id_save", ck_id_save);
-
+		model.addAttribute("url",url);
 		return "account/login";
 	}
 
@@ -338,7 +338,7 @@ public class AccountCont {
 	 * @return
 	 */
 	@PostMapping(value = "/login")
-	public String login_proc(HttpSession session, HttpServletRequest request, HttpServletResponse response, Model model,
+	public String login_proc(HttpSession session, HttpServletRequest request, HttpServletResponse response, Model model,String url,
 			String acc_id, String acc_pw, @RequestParam(value = "id_save", defaultValue = "") String id_save) {
 
 		String ip = request.getRemoteAddr(); // IP
@@ -393,9 +393,13 @@ public class AccountCont {
 			ck_id_save.setPath("/");
 			ck_id_save.setMaxAge(60 * 60 * 24 * 30); // 30 days
 			response.addCookie(ck_id_save);
+			if(url.length()>0) {
+				return "redirect:"+url;
+			}
 
 			return "redirect:/";
-		} else {
+		}
+		else {
 			model.addAttribute("code", "login_fail");
 			model.addAttribute("cnt", 0);
 			return "account/msg";

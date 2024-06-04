@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -17,10 +20,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import dev.mvc.account.AccountProc;
+import dev.mvc.account.AccountVO;
+import dev.mvc.admin.AdminProc;
 import dev.mvc.category.CategoryProcInter;
 import dev.mvc.category.CategoryVO;
 import dev.mvc.category.CategoryVOMenu;
-import dev.mvc.share_contentsdto.Share_contentsVO;
 import dev.mvc.tool.Tool;
 import dev.mvc.tool.Upload;
 import jakarta.servlet.http.HttpServletRequest;
@@ -43,9 +47,13 @@ public class Qna_contentsCont {
   @Qualifier("dev.mvc.account.AccountProc")
   private AccountProc accountProc;
   
-  public Qna_contentsCont() {
-    System.out.println("-> Qna_contentsCont created.");
-  }
+  @Autowired
+  @Qualifier("dev.mvc.admin.AdminProc")
+  private AdminProc adminProc;
+  
+//  public Qna_contentsCont() {
+//    System.out.println("-> Qna_contentsCont created.");
+//  }
   
   
   /**
@@ -63,13 +71,24 @@ public class Qna_contentsCont {
     return url; // /forward, /templates/...
   }
   
+  /**
+   * 전체 목록, 관리자만 사용 가능
+   * @param model
+   * @return
+   */
   @GetMapping("/list_all")
-  public String list_all(Model model) { 
+  public String list_all(HttpSession session, Model model) { 
     // System.out.println("list_all 생성");
-    ArrayList<Qna_contentsVO> list = this.qna_contentsProc.qna_list_all();
-    model.addAttribute("list", list);
+    
+    if (this.accountProc.isMemberAdmin(session)) {
+      ArrayList<Qna_contentsVO> list = this.qna_contentsProc.qna_list_all();
+      model.addAttribute("list", list);
+      
+      return "qcontents/qna_list_all";
+    } else { // 관리자 아닐 경우
+      return "redirect:/account/login";
+    }
 
-    return "qcontents/qna_list_all";
   }
   
   /**
@@ -80,13 +99,22 @@ public class Qna_contentsCont {
    * @return
    */
   @GetMapping(value="/qna_create")
-  public String qna_create(Model model, int cate_no) {
+  public String qna_create(Model model, int cate_no, HttpSession session, Qna_contentsVO qna_contentsVO) {
     
-    // 카테고리 가져오기
-    CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
-    model.addAttribute("categoryVO", categoryVO);
+    if (this.accountProc.isMember(session)) {
+      // 카테고리 가져오기
+      CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
+      model.addAttribute("categoryVO", categoryVO);
+      
+      model.addAttribute("qna_contentsVO", qna_contentsVO);
+      model.addAttribute("acc_no",session.getAttribute("acc_no")); 
+      
+      return "qcontents/qna_create"; // /templates/qcontents/create.html
+    } else {
+      return "redirect:/account/login";  // /account/login.html
+    }
     
-    return "qcontents/qna_create"; // /templates/qcontents/create.html
+  
   }
   
   /**
@@ -105,83 +133,89 @@ public class Qna_contentsCont {
                             Qna_imageVO qna_imageVO,
                             Qna_contentsVO qna_contentsVO) {
 
-    // 질문글 등록 전 출력
-    System.out.println("-> [레코드 등록 전] qcon_no: " + qna_contentsVO.getQcon_no());
-    System.out.println("-> [레코드 등록 전] file_no: " + qna_imageVO.getFile_no());
-    
-    // 카테고리 번호 가져오기
-    int cate_no = qna_contentsVO.getCate_no(); // 부모글 번호
-    
-    // 질문글 등록 처리
-    int cnt = this.qna_contentsProc.qna_create(qna_contentsVO);
-    
-    // 질문글 등록 성공 여부 확인
-    if (cnt == 1) { // 질문글 등록 성공
-      System.out.println("등록 성공");
-      System.out.println("-> cate_no: " + qna_contentsVO.getCate_no());
-      this.categoryProc.cnt_plus(qna_contentsVO.getCate_no()); // 관련 글 수 증가
+      // 질문글 등록 전 출력
+      System.out.println("-> [레코드 등록 전] qcon_no: " + qna_contentsVO.getQcon_no());
+      System.out.println("-> [레코드 등록 전] file_no: " + qna_imageVO.getFile_no());
       
-      // 새로 등록된 질문글 번호 가져오기
-      int qcon_no = qna_contentsVO.getQcon_no();
-      System.out.println("-> [레코드 등록 후] qcon_no: " + qcon_no);
+      // 카테고리 번호 가져오기
+      int cate_no = qna_contentsVO.getCate_no(); // 부모글 번호
       
-      // ---------------------------------------------------------------
-      // 파일 전송 코드 시작
-      // ---------------------------------------------------------------
-      String file_origin_name = ""; // 원본 파일명
-      String file_upload_name = ""; // 업로드된 파일명
-      long file_size = 0;  // 파일 사이즈
-      String file_thumb_name = ""; // Preview 이미지
+      int acc_no = (int) session.getAttribute("acc_no"); // memberno FK
+      qna_contentsVO.setAcc_no(acc_no);
       
-      String upDir = Contents.getUploadDir(); // 파일을 업로드할 폴더 준비
+      // 질문글 등록 처리
+      int cnt = this.qna_contentsProc.qna_create(qna_contentsVO);
       
-      // 전송 파일이 없어서도 fnamesMF 객체가 생성됨.
-      List<MultipartFile> fnamesMF = qna_imageVO.getFnamesMF();
-      
-      int count = fnamesMF.size(); // 전송 파일 갯수
-      
-      if (count > 0) {
-        for (MultipartFile multipartFile:fnamesMF) { // 파일 추출, 1개이상 파일 처리
-          file_size = multipartFile.getSize();  // 파일 크기
-          if (file_size > 0) { // 파일 크기 체크
-            file_origin_name = multipartFile.getOriginalFilename(); // 원본 파일명
-            file_upload_name = Upload.saveFileSpring(multipartFile, upDir); // 파일 저장, 업로드된 파일명
-            
-            if (Tool.isImage(file_origin_name)) { // 이미지인지 검사
-              file_thumb_name = Tool.preview(upDir, file_upload_name, 200, 150); // thumb 이미지 생성
-            }
-          }
+      // 질문글 등록 성공 여부 확인
+      if (cnt == 1) { // 질문글 등록 성공
+          System.out.println("등록 성공");
+          System.out.println("-> cate_no: " + qna_contentsVO.getCate_no());
+          this.categoryProc.cnt_plus(qna_contentsVO.getCate_no()); // 관련 글 수 증가
           
-          qna_imageVO.setQcon_no(qcon_no);
-          qna_imageVO.setFile_origin_name(file_origin_name);
-          qna_imageVO.setFile_upload_name(file_upload_name);
-          qna_imageVO.setFile_thumb_name(file_thumb_name);
-          qna_imageVO.setFile_size(file_size);
-        }
-      }    
-      // -----------------------------------------------------
-      // 파일 전송 코드 종료
-      // -----------------------------------------------------
-      
-      // 이미지 파일 등록 처리
-      this.qna_contentsProc.qna_attach_create(qna_imageVO);
-      
-      // 질문글 등록 성공했을 때
-      ra.addAttribute("cate_no", cate_no);
-      ra.addAttribute("qcon_no", qcon_no);   
-      ra.addAttribute("file_no", qna_imageVO.getFile_no());
+          // 새로 등록된 질문글 번호 가져오기
+          int qcon_no = qna_contentsVO.getQcon_no();
+          System.out.println("-> [레코드 등록 후] qcon_no: " + qcon_no);
+          
+          // ---------------------------------------------------------------
+          // 파일 전송 코드 시작
+          // ---------------------------------------------------------------
+          String file_origin_name = ""; // 원본 파일명
+          String file_upload_name = ""; // 업로드된 파일명
+          long file_size = 0;  // 파일 사이즈
+          String file_thumb_name = ""; // Preview 이미지
+          
+          String upDir = Contents.getUploadDir(); // 파일을 업로드할 폴더 준비
+          
+          // 전송 파일이 없어서도 fnamesMF 객체가 생성됨.
+          List<MultipartFile> fnamesMF = qna_imageVO.getFnamesMF();
+          
+          int count = fnamesMF.size(); // 전송 파일 갯수
+          
+          if (count > 0) {
+              for (MultipartFile multipartFile : fnamesMF) { // 파일 추출, 1개이상 파일 처리
+                  file_size = multipartFile.getSize();  // 파일 크기
+                  if (file_size > 0) { // 파일 크기 체크
+                      file_origin_name = multipartFile.getOriginalFilename(); // 원본 파일명
+                      file_upload_name = Upload.saveFileSpring(multipartFile, upDir); // 파일 저장, 업로드된 파일명
+                      
+                      if (Tool.isImage(file_origin_name)) { // 이미지인지 검사
+                          file_thumb_name = Tool.preview(upDir, file_upload_name, 200, 150); // thumb 이미지 생성
+                      }
+                  }
+                  
+                  qna_imageVO.setQcon_no(qcon_no);
+                  qna_imageVO.setFile_origin_name(file_origin_name);
+                  qna_imageVO.setFile_upload_name(file_upload_name);
+                  qna_imageVO.setFile_thumb_name(file_thumb_name);
+                  qna_imageVO.setFile_size(file_size);
+              }
+          }    
+          // -----------------------------------------------------
+          // 파일 전송 코드 종료
+          // -----------------------------------------------------
+          
+          // 이미지 파일 등록 처리
+          this.qna_contentsProc.qna_attach_create(qna_imageVO);
+          
+          // 질문글 등록 성공했을 때
+          ra.addAttribute("cate_no", cate_no);
+          ra.addAttribute("qcon_no", qcon_no);   
+          ra.addAttribute("acc_no", acc_no);
+          ra.addAttribute("file_no", qna_imageVO.getFile_no());
 
-      return "redirect:/qcontents/qna_list_all";
-    } else { // 질문글 등록 실패
-      System.out.println("질문글 등록 실패");
-      
-      ra.addFlashAttribute("code", "qna_create_fail"); // 등록 실패
-      ra.addFlashAttribute("cnt", 0); // cnt: 0, 질문글 등록 실패
-      ra.addFlashAttribute("url", "/qcontents/msg"); // /templates/qcontents/msg.html
-      
-      return "#";
-    }
-  }
+          return "redirect:/qcontents/qna_list_all";
+      } else { // 질문글 등록 실패
+          System.out.println("질문글 등록 실패");
+          
+          ra.addFlashAttribute("code", "qna_create_fail"); // 등록 실패
+          ra.addFlashAttribute("cnt", 0); // cnt: 0, 질문글 등록 실패
+          ra.addFlashAttribute("url", "/qcontents/msg"); // /templates/qcontents/msg.html
+          
+          return "redirect:/account/login";
+      }
+}
+    
+    
 
   /**
    * 질문글 목록 + 검색 + 페이징
@@ -256,31 +290,41 @@ public class Qna_contentsCont {
    */
   @GetMapping(value="/qna_read")
   public String qna_read(Model model, 
+                               HttpSession session,
                                @RequestParam(name="cate_no", defaultValue = "2") int cate_no, 
                                int qcon_no, int now_page) {
     
+      model.addAttribute("acc_id",session.getAttribute("acc_id"));
+      model.addAttribute("acc_no",session.getAttribute("acc_no"));
       model.addAttribute("cate_no", cate_no);
       model.addAttribute("qcon_no", qcon_no);
+      model.addAttribute("acc_no",session.getAttribute("acc_no"));
+      
+      System.out.println("-> acc_no: " + session.getAttribute("acc_no"));
       
       // 카테고리 가져오기
       CategoryVO categoryVO = this.categoryProc.cate_read(cate_no); // 카테고리 읽어옴
       model.addAttribute("categoryVO", categoryVO);
       
       // 조회수 증가
-      this.qna_contentsProc.qna_update_view(qcon_no); 
+      this.qna_contentsProc.qna_update_view(qcon_no);
       
       // 질문글 가져오기
       Qna_contentsVO qna_contentsVO = this.qna_contentsProc.qna_read(qcon_no);
       model.addAttribute("qna_contentsVO", qna_contentsVO);
       
+      model.addAttribute("acc_no", qna_contentsVO.getAcc_no());
+      
       // 질문글 이미지 가져오기
       ArrayList<Qna_imageVO> qna_imageVO = this.qna_contentsProc.qna_read_image(qcon_no);
       model.addAttribute("qna_imageVO", qna_imageVO);
       model.addAttribute("now_page", now_page);
+
+      model.addAttribute("now_page", now_page);
       
       return "qcontents/qna_read"; // /templates/qcontents/qna_read;
   }
-
+  
   /**
    * 질문글 글 수정 폼
    * @param model
@@ -289,26 +333,36 @@ public class Qna_contentsCont {
    * @return
    */
   @GetMapping(value="/qna_update_text")
-  public String upqna_update_text(HttpSession session, Model model, 
+  public String qna_update_text(HttpSession session, Model model, 
                                             RedirectAttributes ra,
                                             String word, int now_page,
                                             @RequestParam(name="cate_no", defaultValue = "2") int cate_no, int qcon_no) {
+
+
     
-    model.addAttribute("word", word);
-    model.addAttribute("now_page", now_page);
-    
-    // 카테고리 가져오기
-    CategoryVO categoryVO = this.categoryProc.cate_read(cate_no); // 카테고리 읽어옴
-    model.addAttribute("categoryVO", categoryVO);
-    
-    // 질문글 가져오기
-    Qna_contentsVO qna_contentsVO = this.qna_contentsProc.qna_read(qcon_no);
-    model.addAttribute("qna_contentsVO", qna_contentsVO);
-    
-    model.addAttribute("cate_no", cate_no);
-    model.addAttribute("qcon_no", qcon_no);
-    
-    return "qcontents/qna_update_text";
+    System.out.println("-> acc_no: " + session.getAttribute("acc_no"));
+
+    if (accountProc.isMember(session)) { // 관리자, 회원으로 로그인 한 경우
+      // 카테고리 가져오기
+      CategoryVO categoryVO = this.categoryProc.cate_read(cate_no); // 카테고리 읽어옴
+      model.addAttribute("categoryVO", categoryVO);
+      
+      // 질문글 가져오기
+      Qna_contentsVO qna_contentsVO = this.qna_contentsProc.qna_read(qcon_no);
+      model.addAttribute("qna_contentsVO", qna_contentsVO);
+      
+      model.addAttribute("cate_no", cate_no);
+      model.addAttribute("qcon_no", qcon_no);
+      model.addAttribute("word", word);
+      model.addAttribute("now_page", now_page);
+      model.addAttribute("acc_no",session.getAttribute("acc_no"));
+      
+      return "qcontents/qna_update_text";
+    } else {  // 로그인 실패 한 경우      
+      ra.addAttribute("url", "/account/login_cookie_need"); // /templates/account/login_cookie_need.html
+      return "redirect:/account/login";  // /account/login.html
+    }
+   
   }
   
   /**
@@ -327,20 +381,33 @@ public class Qna_contentsCont {
                                         String search_word, int now_page,
                                         int cate_no, int qcon_no) {
     
-    int cnt = this.qna_contentsProc.qna_update_text(qna_contentsVO);
     
-    HashMap<String, Object> map = new HashMap<String, Object>();
-    map.put("qcon_no", qna_contentsVO.getQcon_no());
-    map.put("qcon_passwd", qna_contentsVO.getQcon_passwd());
 
-    this.qna_contentsProc.qna_update_text(qna_contentsVO);
-    
-    ra.addAttribute("cate_no", cate_no);
-    ra.addAttribute("qcon_no", qcon_no);
-    ra.addAttribute("now_page", now_page);
-    ra.addAttribute("word", search_word);
-    
-    return "redirect:/qcontents/qna_read";
+      int cnt = this.qna_contentsProc.qna_update_text(qna_contentsVO);
+      
+      HashMap<String, Object> map = new HashMap<String, Object>();
+      map.put("qcon_no", qna_contentsVO.getQcon_no());
+      map.put("qcon_passwd", qna_contentsVO.getQcon_passwd());
+      
+      if (this.qna_contentsProc.qna_password_check(map) == 1) { // 패스워드 일치
+        this.qna_contentsProc.qna_update_text(qna_contentsVO);
+        
+        ra.addFlashAttribute("cnt", 1);
+        ra.addAttribute("cate_no", cate_no);
+        ra.addAttribute("qcon_no", qcon_no);
+        ra.addAttribute("now_page", now_page);
+        ra.addAttribute("word", search_word);
+        ra.addAttribute("acc_no", session.getAttribute("acc_no"));
+        
+        return "redirect:/qcontents/qna_read";
+      } else { // 패스워드 불일치
+        ra.addFlashAttribute("code", "passwd_fail");
+        ra.addFlashAttribute("cnt", 0);
+        ra.addAttribute("url", "/qcontents/msg"); // msg.html, redirect parameter 적용
+        return "redirect:/qcontents/msg";  // @GetMapping(value="/msg")
+      }
+
+  
   }
   
   /**
@@ -353,31 +420,39 @@ public class Qna_contentsCont {
    * @return
    */
   @GetMapping(value="/qna_update_file")
-  public String qna_update_file(HttpSession session, Model model,
+  public String qna_update_file(HttpSession session, RedirectAttributes ra, Model model,
                                       @RequestParam(name="cate_no", defaultValue = "2") int cate_no, 
                                       int qcon_no, int now_page) {
     
-    // 카테고리 가져오기
-    CategoryVO categoryVO = this.categoryProc.cate_read(cate_no); // 카테고리 읽어옴
-    model.addAttribute("categoryVO", categoryVO);
-    
-    // 질문글 가져오기
-    Qna_contentsVO qna_contentsVO = this.qna_contentsProc.qna_read(qcon_no);
-    model.addAttribute("qna_contentsVO", qna_contentsVO);
-    
-    ArrayList<Qna_imageVO> qimage = this.qna_contentsProc.qna_read_image(qcon_no);
-    for (int i = 1; i < qimage.size(); i++) {
-      long size = qimage.get(i).getFile_size();
-      String silze_label = Tool.unit(size);
-      qimage.get(i).setFlabel(silze_label);
+    System.out.println("-> acc_no: " + session.getAttribute("acc_no"));
+
+    if (accountProc.isMember(session)) { // 관리자, 회원으로 로그인한 경우
+      // 카테고리 가져오기
+      CategoryVO categoryVO = this.categoryProc.cate_read(cate_no); // 카테고리 읽어옴
+      model.addAttribute("categoryVO", categoryVO);
+      
+      // 질문글 가져오기
+      Qna_contentsVO qna_contentsVO = this.qna_contentsProc.qna_read(qcon_no);
+      model.addAttribute("qna_contentsVO", qna_contentsVO);
+      
+      ArrayList<Qna_imageVO> qimage = this.qna_contentsProc.qna_read_image(qcon_no);
+      for (int i = 1; i < qimage.size(); i++) {
+        long size = qimage.get(i).getFile_size();
+        String silze_label = Tool.unit(size);
+        qimage.get(i).setFlabel(silze_label);
+      }
+      model.addAttribute("qimage", qimage);
+      
+      model.addAttribute("now_page", now_page);
+      model.addAttribute("cate_no", cate_no);
+      model.addAttribute("qcon_no", qcon_no);
+      
+      return "qcontents/qna_update_file";
+    } else {  // 로그인 실패 한 경우      
+      ra.addAttribute("url", "/account/login_cookie_need"); // /templates/account/login_cookie_need.html
+      return "redirect:/account/login";  // /account/login.html
     }
-    model.addAttribute("qimage", qimage);
     
-    model.addAttribute("now_page", now_page);
-    model.addAttribute("cate_no", cate_no);
-    model.addAttribute("qcon_no", qcon_no);
-    
-    return "qcontents/qna_update_file";
   }
   
   /**
@@ -390,88 +465,90 @@ public class Qna_contentsCont {
    * @return
    */
   @PostMapping(value="qna_update_file")
-  public String qna_update_file(Model model, RedirectAttributes ra,
+  public String qna_update_file(HttpSession session, Model model, RedirectAttributes ra,
                                         List<MultipartFile> fnamesMF,
                                         int cate_no, int qcon_no, int now_page) {
     
-    model.addAttribute("cate_no", cate_no);
-    model.addAttribute("qcon_no", qcon_no);
-    
-    // 삭제할 파일 정보를 읽어옴, 기존에 등록된 레코드 저장용
-    ArrayList<Qna_imageVO> qimage_old = this.qna_contentsProc.qna_read_image(qcon_no);
-    
-    for (Qna_imageVO qimage: qimage_old) {
-      // -------------------------------------------------------------------
-      // 파일 삭제 시작
-      // -------------------------------------------------------------------
-      String file1saved = qimage.getFile_upload_name();
-      String thumb = qimage.getFile_thumb_name();
+      model.addAttribute("cate_no", cate_no);
+      model.addAttribute("qcon_no", qcon_no);
       
-      String upDir = Contents.getUploadDir();
-      Tool.deleteFile(upDir, file1saved);
-      Tool.deleteFile(upDir, thumb);
-      // -------------------------------------------------------------------
-      // 파일 삭제 종료
-      // -------------------------------------------------------------------
-    }
-    long size1 = 0;
-    // -------------------------------------------------------------------
-    // 파일 전송 시작
-    // -------------------------------------------------------------------
-    Qna_imageVO qna_imageVO = new Qna_imageVO();
-    String upDir = Contents.getUploadDir(); // 업로드할 폴더
-    String file_origin_name = "";
-    String file_upload_name = "";
-    String file_thumb_name = "";
-    
-    long file_size = 0;
-    qna_imageVO.setFnamesMF(fnamesMF);
-    int count = fnamesMF.size();
-    System.out.println("-> count: " + count);
-
-    if (count > 0) {
-      int cnt1 = 0;
-      for (MultipartFile multipartFile : fnamesMF) {
-        file_size = multipartFile.getSize();
-        if (file_size > 0) {
-          file_origin_name = multipartFile.getOriginalFilename();
-          file_upload_name = Upload.saveFileSpring(multipartFile, upDir);
-
-          if (Tool.isImage(file_origin_name)) {
-            file_thumb_name = Tool.preview(upDir, file_upload_name, 200, 150);
-          }
-        }
+      // 삭제할 파일 정보를 읽어옴, 기존에 등록된 레코드 저장용
+      ArrayList<Qna_imageVO> qimage_old = this.qna_contentsProc.qna_read_image(qcon_no);
+      
+      for (Qna_imageVO qimage: qimage_old) {
+        // -------------------------------------------------------------------
+        // 파일 삭제 시작
+        // -------------------------------------------------------------------
+        String file1saved = qimage.getFile_upload_name();
+        String thumb = qimage.getFile_thumb_name();
         
-        // System.out.println("-> cnt1: " + cnt1 + ", image_list_old.size(): " +
-        // image_list_old.size());
-        if (qimage_old.size() <= cnt1) { // 수정할 이미지 갯수가 원래 이미지 갯수보다 많을 경우
-          qna_imageVO.setQcon_no(qcon_no);
-          qna_imageVO.setFile_origin_name(file_origin_name);
-          qna_imageVO.setFile_thumb_name(file_thumb_name);
-          qna_imageVO.setFile_upload_name(file_upload_name);
-          qna_imageVO.setFile_size(count);
-
-          int image_cnt = this.qna_contentsProc.qna_attach_create(qna_imageVO);
-          // System.out.println("image 수정 중 create 완료");
-        } else {
-          qna_imageVO.setFile_no(qimage_old.get(cnt1).getFile_no());
-          qna_imageVO.setFile_origin_name(file_origin_name);
-          qna_imageVO.setFile_thumb_name(file_thumb_name);
-          qna_imageVO.setFile_upload_name(file_upload_name);
-          qna_imageVO.setFile_size(count);
-          int image_cnt = this.qna_contentsProc.qna_update_file(qna_imageVO);
-          System.out.println("-> image_cnt: " + image_cnt);
-        }
-        cnt1++;
+        String upDir = Contents.getUploadDir();
+        Tool.deleteFile(upDir, file1saved);
+        Tool.deleteFile(upDir, thumb);
+        // -------------------------------------------------------------------
+        // 파일 삭제 종료
+        // -------------------------------------------------------------------
       }
-  
-    }
+      long size1 = 0;
+      // -------------------------------------------------------------------
+      // 파일 전송 시작
+      // -------------------------------------------------------------------
+      Qna_imageVO qna_imageVO = new Qna_imageVO();
+      String upDir = Contents.getUploadDir(); // 업로드할 폴더
+      String file_origin_name = "";
+      String file_upload_name = "";
+      String file_thumb_name = "";
+      
+      long file_size = 0;
+      qna_imageVO.setFnamesMF(fnamesMF);
+      int count = fnamesMF.size();
+      System.out.println("-> count: " + count);
+
+      if (count > 0) {
+        int cnt1 = 0;
+        for (MultipartFile multipartFile : fnamesMF) {
+          file_size = multipartFile.getSize();
+          if (file_size > 0) {
+            file_origin_name = multipartFile.getOriginalFilename();
+            file_upload_name = Upload.saveFileSpring(multipartFile, upDir);
+
+            if (Tool.isImage(file_origin_name)) {
+              file_thumb_name = Tool.preview(upDir, file_upload_name, 200, 150);
+            }
+          }
+          
+          // System.out.println("-> cnt1: " + cnt1 + ", image_list_old.size(): " +
+          // image_list_old.size());
+          if (qimage_old.size() <= cnt1) { // 수정할 이미지 갯수가 원래 이미지 갯수보다 많을 경우
+            qna_imageVO.setQcon_no(qcon_no);
+            qna_imageVO.setFile_origin_name(file_origin_name);
+            qna_imageVO.setFile_thumb_name(file_thumb_name);
+            qna_imageVO.setFile_upload_name(file_upload_name);
+            qna_imageVO.setFile_size(count);
+
+            int image_cnt = this.qna_contentsProc.qna_attach_create(qna_imageVO);
+            // System.out.println("image 수정 중 create 완료");
+          } else {
+            qna_imageVO.setFile_no(qimage_old.get(cnt1).getFile_no());
+            qna_imageVO.setFile_origin_name(file_origin_name);
+            qna_imageVO.setFile_thumb_name(file_thumb_name);
+            qna_imageVO.setFile_upload_name(file_upload_name);
+            qna_imageVO.setFile_size(count);
+            int image_cnt = this.qna_contentsProc.qna_update_file(qna_imageVO);
+            System.out.println("-> image_cnt: " + image_cnt);
+          }
+          cnt1++;
+        }
     
-    ra.addAttribute("cate_no", cate_no);
-    ra.addAttribute("qcon_no", qcon_no);
-    ra.addAttribute("now_page", now_page);
+      }
+      
+      ra.addAttribute("cate_no", cate_no);
+      ra.addAttribute("qcon_no", qcon_no);
+      ra.addAttribute("now_page", now_page);
+      
+      return "redirect:/qcontents/qna_read";
     
-    return "redirect:/qcontents/qna_read";
+
   }
   
   /**
@@ -483,21 +560,30 @@ public class Qna_contentsCont {
   @GetMapping("/qna_delete")
   public String qna_delete(HttpSession session, 
                                   Model model, 
+                                  RedirectAttributes ra,
                                   @RequestParam(name="cate_no", defaultValue = "2") int cate_no, 
                                   int qcon_no, int now_page) {
     
-    model.addAttribute("cate_no", cate_no);
-    model.addAttribute("now_page", now_page);
-    
-    // 카테고리 가져오기
-    CategoryVO categoryVO = this.categoryProc.cate_read(cate_no); // 카테고리 읽어옴
-    model.addAttribute("categoryVO", categoryVO);
-    
-    // 질문글 가져오기
-    Qna_contentsVO qna_contentsVO = this.qna_contentsProc.qna_read(qcon_no);
-    model.addAttribute("qna_contentsVO", qna_contentsVO);
-	  
-	  return "qcontents/qna_delete";
+    System.out.println("-> acc_no: " + session.getAttribute("acc_no"));
+
+    if (this.accountProc.isMemberAdmin(session)) {
+      model.addAttribute("cate_no", cate_no);
+      model.addAttribute("now_page", now_page);
+      
+      // 카테고리 가져오기
+      CategoryVO categoryVO = this.categoryProc.cate_read(cate_no); // 카테고리 읽어옴
+      model.addAttribute("categoryVO", categoryVO);
+      
+      // 질문글 가져오기
+      Qna_contentsVO qna_contentsVO = this.qna_contentsProc.qna_read(qcon_no);
+      model.addAttribute("qna_contentsVO", qna_contentsVO);
+      
+      return "qcontents/qna_delete";
+    } else {
+      ra.addAttribute("url", "/account/login_cookie_need"); // /templates/account/login_cookie_need.html
+      return "redirect:/account/login";  // /account/login.html
+    }
+   
   }
   
   /**
@@ -544,6 +630,40 @@ public class Qna_contentsCont {
 	  return "redirect:/qcontents/qna_list_all";
   }
   
+  
+  @GetMapping(value="/list_by_qcmt_no_join")
+  @ResponseBody
+  public String list_by_qcmt_no_join(int qcon_no) {
+    List<Qna_Acc_commentVO> list = qna_contentsProc.list_by_qcmt_no_join(qcon_no);
+    
+    JSONObject obj = new JSONObject();
+    obj.put("res", list);
+    
+    System.out.println("-> obj.toString(): " + obj.toString());
+    
+    return obj.toString();     
+  }
+  
+  @PostMapping(value="/qna_create_comment")
+  @ResponseBody
+  public String qna_create_comment(@RequestBody Qna_commentVO qna_commentVO, HttpSession session) {
+    
+    System.out.println("-> 수신 데이터:" + qna_commentVO.toString());
+    
+    int acc_no = (int)session.getAttribute("acc_no");
+    qna_commentVO.setAcc_no(acc_no);
+    
+    System.out.println("-> acc_no: " + acc_no);
+    
+    int cnt = this.qna_contentsProc.qna_create_comment(qna_commentVO);
+    
+    JSONObject json = new JSONObject();
+    json.put("res", cnt);
+  
+    return json.toString();
+   
+  }
+ 
 
 }
 

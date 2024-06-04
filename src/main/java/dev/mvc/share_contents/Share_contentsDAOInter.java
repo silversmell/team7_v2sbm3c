@@ -3,11 +3,12 @@ package dev.mvc.share_contents;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
+import dev.mvc.bookmark.BookmarkVO;
 import dev.mvc.recommend.HashtagVO;
 import dev.mvc.share_contentsdto.Contents_tagVO;
 import dev.mvc.share_contentsdto.Contents_urlVO;
-import dev.mvc.share_contentsdto.Share_commentsVO;
 import dev.mvc.share_contentsdto.Share_contentsVO;
 import dev.mvc.share_contentsdto.Share_imageVO;
 
@@ -66,20 +67,6 @@ public interface Share_contentsDAOInter {
 	 public int delete(int scon_no);
 	 
 	 /**
-	  * 댓글 작성
-	  * @param share_commentsVO
-	  * @return int
-	  */
-	 public int create_comment(HashMap<String, Object> map);
-	 
-	 /**
-	  * 해당 게시글의 댓글 목록
-	  * @param scon_no
-	  * @return int
-	  */
-	 public ArrayList read_comment(int scon_no);
-	 
-	 /**
 	  * 이미지 등록
 	  * @param share_imageVO
 	  * @return int
@@ -101,13 +88,6 @@ public interface Share_contentsDAOInter {
 	 public int list_by_cateno_search_count(HashMap<String,Object> map);
 	 
 
-	 /**
-	  * 각 게시글의 댓글 개수
-	  * @param scon_no
-	  * @return int count
-	  */
-	 public int comment_search(int scon_no);
-	 
 	 /**
 	  * url create
 	  * @param HashMap
@@ -142,12 +122,7 @@ public interface Share_contentsDAOInter {
 	  * @return int
 	  */
 	 public int delete_url(int scon_no);
-   /**
-    * 해당하는 게시글 댓글 삭제
-    * @param scon_no
-    * @return int
-    */
-	 public int delete_comments(int scon_no);
+
 	 
 	 /**
 	  * 해당 게시글의 해시태그 삽입
@@ -171,12 +146,6 @@ public interface Share_contentsDAOInter {
 	  */
 	 public ArrayList select_hashtag();
 	 
-	 /**
-	  * tag_no에 따른 hashtag 조회
-	  * @param tag_no
-	  * @return HashtagVO
-	  */
-	 public HashtagVO select_hashname(int tag_no);
 	 
 	 /**
 	  * tag_no에 따른 태그 scon_no
@@ -248,31 +217,25 @@ public interface Share_contentsDAOInter {
 	 public int n_mark(int scon_no);
 	 
 	 /**
-	  * 댓글 수정
-	  * @param map
-	  * @return int
-	  */
-	 public int update_comment(HashMap<String,Object>map);
-	 
-	 /**
-	  * 댓글로 scmt no 조회
-	  * @param map
-	  * @return int
-	  */
-	 public int read_scmtno(HashMap<String,Object> map);
-	 /**
 	  * bookmark acc_no, 게시글 번호 등록
 	  * @param map
 	  * @return int
 	  */
-	 public int bookmarK_create(HashMap<String,Object> map);
+	 public int bookmark_create(HashMap<String,Object> map);
 	 
 	 /**
 	  * scon_no에 따른 북마크 삭제
 	  * @param scon_no
 	  * @return int
 	  */
-	 public int bookmark_delete(int scon_no);
+	 public int bookmark_delete(HashMap<String,Object> map);
+	 
+	 /**
+	  * 모든 북마크 삭제
+	  * @param scon_no
+	  * @return int
+	  */
+	 public int bookmarall_delete(int scon_no);
 	 /**
 	  * share_image에 있는 scon_no 중복 제거
 	  * @return
@@ -286,19 +249,8 @@ public interface Share_contentsDAOInter {
 	  */
 	 public int delete_tag(int scon_no);
 	 
-	 /**
-	  * scmt_no 에 따른 scon_no
-	  * @param scon_no
-	  * @return
-	  */
-	 public int scon_comment(int scon_no);
 
-	 /**
-	  * sctm_no에 따른 댓글 삭제
-	  * @param scmt_no
-	  * @return
-	  */
-	 public int delete_scmtno(int scmt_no);
+
 	 
 	 /**
 	  * 해시태그에 따른 게시물 갯수
@@ -334,31 +286,45 @@ public interface Share_contentsDAOInter {
     * @return int
     */
    public int sdelete_url(List<Integer> scon_no);
-   /** 
-    * scon_no에 따른 comment 삭제
-    * @param scon_no
-    * @return int
-    */
-   public int sdelete_comment(List<Integer> scon_no);
+
    /** 
     * scon_no에 따른 tag 삭제
     * @param scon_no
     * @return int
     */
    public int sdelete_tag (List<Integer> scon_no);
+   
+   /**
+    * hashtag tag_no와 contents_tag tag_no와 tag_no  tag_name조회
+    * @return
+    */
+   public HashtagVO read_hashtag_name(int tag_no);
+   
+   /**
+    * hashtag tag_no와 contents_tag tag_no와 tag_name조회
+    * @return
+    */
+   public ArrayList<HashtagVO>all_hashtag_name();
+   /**
+    * scon_no로 이미지 중복 제거
+    * @param scon_no
+    * @return
+    */
+   public ArrayList<Share_imageVO> distinct_image(int scon_no);
+   
+   /**
+    * scon_no에 대한 hashtag
+    * @param scon_no
+    * @return
+    */
+   public ArrayList<HashtagVO>sconno_hashtag(int scon_no);
+   
+   /**
+    * mark 체크하기 위함.
+    * @param scon_no
+    * @return
+    */
+   public ArrayList<BookmarkVO>mark_check(HashMap<String,Object>map);
 
-//	 /**
-//	  * 우선순위 올림
-//	  * @param scon_no 
-//	  * @return int
-//	  */
-//	 public int up_priority(int scon_no);
-//	 
-//	 /**
-//	  * 우선순위 내림
-//	  * @param scon_no
-//	  * @return int
-//	  */
-//	 public int down_priority(int scon_no);
-//	 
+
 }

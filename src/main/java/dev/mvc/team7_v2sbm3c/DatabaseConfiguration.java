@@ -23,7 +23,10 @@ import com.zaxxer.hikari.HikariDataSource;
 @MapperScan(basePackages= {"dev.mvc.share_contents"}) // DAO interface를 찾는 위치
 @MapperScan(basePackages= {"dev.mvc.category"}) // categoryDAO interface를 찾는 위치
 @MapperScan(basePackages= {"dev.mvc.account"}) // accountDAO interface를 찾는 위치
-@MapperScan(basePackages= {"dev.mvc.qna_contents"}) // qna_contentsDAO interface를 찾는 위치
+@MapperScan(basePackages= {"dev.mvc.qna_contents"})
+@MapperScan(basePackages= {"dev.mvc.reply"})// qna_contentsDAO interface를 찾는 위치
+@MapperScan(basePackages= {"dev.mvc.admin"})
+
 
 public class DatabaseConfiguration {
     
