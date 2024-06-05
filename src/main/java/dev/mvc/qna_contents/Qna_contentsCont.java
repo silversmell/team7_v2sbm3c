@@ -164,7 +164,7 @@ public class Qna_contentsCont {
           long file_size = 0;  // 파일 사이즈
           String file_thumb_name = ""; // Preview 이미지
           
-          String upDir = Contents.getUploadDir(); // 파일을 업로드할 폴더 준비
+          String upDir = Qcontents.getUploadDir(); // 파일을 업로드할 폴더 준비
           
           // 전송 파일이 없어서도 fnamesMF 객체가 생성됨.
           List<MultipartFile> fnamesMF = qna_imageVO.getFnamesMF();
@@ -266,7 +266,7 @@ public class Qna_contentsCont {
     // 페이징
     int search_count = this.qna_contentsProc.list_by_qna_search_count(map);
     String paging = this.qna_contentsProc.pagingBox(cate_no, now_page, word, "/qcontents/qna_list_all", 
-        search_count, Contents.RECORD_PER_PAGE, Contents.PAGE_PER_BLOCK);
+        search_count, Qcontents.RECORD_PER_PAGE, Qcontents.PAGE_PER_BLOCK);
     model.addAttribute("paging", paging);
     model.addAttribute("now_page", now_page);
     model.addAttribute("search_count", search_count);
@@ -274,7 +274,7 @@ public class Qna_contentsCont {
     model.addAttribute("qna_imageVO", qna_imageVO);
     
     // 일련 변호 생성: 레코드 갯수 - ((현재 페이지수 -1) * 페이지당 레코드 수)
-    int no = search_count - ((now_page - 1) * Contents.RECORD_PER_PAGE);
+    int no = search_count - ((now_page - 1) * Qcontents.RECORD_PER_PAGE);
     model.addAttribute("no", no);
     
     return "qcontents/list_by_qna_search_paging"; // /templates/qcontents/list_by_qna_search_paging.html
@@ -482,7 +482,7 @@ public class Qna_contentsCont {
         String file1saved = qimage.getFile_upload_name();
         String thumb = qimage.getFile_thumb_name();
         
-        String upDir = Contents.getUploadDir();
+        String upDir = Qcontents.getUploadDir();
         Tool.deleteFile(upDir, file1saved);
         Tool.deleteFile(upDir, thumb);
         // -------------------------------------------------------------------
@@ -494,7 +494,7 @@ public class Qna_contentsCont {
       // 파일 전송 시작
       // -------------------------------------------------------------------
       Qna_imageVO qna_imageVO = new Qna_imageVO();
-      String upDir = Contents.getUploadDir(); // 업로드할 폴더
+      String upDir = Qcontents.getUploadDir(); // 업로드할 폴더
       String file_origin_name = "";
       String file_upload_name = "";
       String file_thumb_name = "";

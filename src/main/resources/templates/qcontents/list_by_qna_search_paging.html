@@ -21,8 +21,8 @@
        
   <table class="table table-striped" style='width: 100%;'>
     <colgroup>
-      <col style='width: 10%;'/>
-      <col style='width: 90%;'/>
+      <col style='width: 30%;'/>
+      <col style='width: 70%;'/>
     </colgroup>
     <thead>
       <tr>
@@ -36,18 +36,20 @@
            style="cursor: pointer; height: 90px;">
         <td class='td_basic' style="vertical-align: middle; text-align: center;">
           <div th:if="${#lists.size(qna_imageVO) > status.index and qna_imageVO[status.index] != null}">
-            <img th:src="@{|/contents/storage/${qna_imageVO[status.index].file_thumb_name}|}" style="width: 120px; height: 90px;">
+              <img th:src="@{|/qcontents/storage/${qna_imageVO[status.index].file_thumb_name}|}" style="width: 120px; height: 90px;">
           </div>
-          <div th:unless="${#lists.size(qna_imageVO) > status.index and qna_imageVO[status.index] != null}">
-            <img src="/contents/images/none1.png" style="width: 120px; height: 90px;">
+          <div th:unless="${#lists.size(qna_imageVO) > status.index and qna_imageVO[status.index] != null}" 
+               style="width: 120px; height: 90px;">
+              <!-- 빈 공간을 위한 빈 div -->
           </div>
         </td>
         <td class='td_left'>
           <span th:text="${qna_contentsVO.qcon_name}" style="font-weight: bold;"></span>
           <span th:text="|&nbsp;${qna_contentsVO.qcon_date.substring(0, 10)}|"></span><br>
-          <span th:if="${qna_contentsVO.qcon_contents.length() > 160}" 
-                th:text="|${qna_contentsVO.qcon_contents.substring(0, 160)}...|"></span>
-          <span th:if="${qna_contentsVO.qcon_contents.length() <= 160}" 
+          <span style="font-size: 1em;" th:text="|조회수: ${qna_contentsVO.qcon_views}|"></span><br>
+          <span th:if="${qna_contentsVO.qcon_contents.length() > 180}" 
+                th:text="|${qna_contentsVO.qcon_contents.substring(0, 180)}...|"></span>
+          <span th:if="${qna_contentsVO.qcon_contents.length() <= 180}" 
                 th:text="|${qna_contentsVO.qcon_contents}|"></span>
         </td>
       </tr>

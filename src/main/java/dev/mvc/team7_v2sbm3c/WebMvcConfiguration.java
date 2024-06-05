@@ -5,6 +5,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import dev.mvc.account.PicUpload;
+import dev.mvc.qna_contents.Qcontents;
 import dev.mvc.share_contents.Contents;
 import dev.mvc.tool.Tool;
 
@@ -21,14 +22,17 @@ public class WebMvcConfiguration implements WebMvcConfigurer{
         // Ubuntu: path = "/home/ubuntu/deploy/resort_v2sbm3c_blog/contents/storage";
         // ▶ file:////home/ubuntu/deploy/resort_v2sbm3c_blog/contents/storage
       
-        // JSP 인식되는 경로: http://localhost:9093/contents/storage";
-        registry.addResourceHandler("/contents/storage/**").addResourceLocations("file:///" +  Contents.getUploadDir());
-        
         // JSP 인식되는 경로: http://localhost:9091/attachfile/storage";
         // registry.addResourceHandler("/contents/storage/**").addResourceLocations("file:///" +  Tool.getOSPath() + "/attachfile/storage/");
-        
-        // JSP 인식되는 경로: http://localhost:9093/account/storage";
+      
+        // JSP 인식되는 경로: http://localhost:9093/contents/storage;
+        registry.addResourceHandler("/contents/storage/**").addResourceLocations("file:///" +  Contents.getUploadDir());
+          
+        // JSP 인식되는 경로: http://localhost:9093/contents/storage";
         registry.addResourceHandler("/contents/storage/**").addResourceLocations("file:///" +  PicUpload.getUploadDir());
+        
+        // JSP 인식되는 경로: http://localhost:9093/qcontents/storage";
+        registry.addResourceHandler("/qcontents/storage/**").addResourceLocations("file:///" +  Qcontents.getUploadDir());
     }
  
 }

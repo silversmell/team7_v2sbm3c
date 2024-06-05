@@ -236,9 +236,10 @@ table, th, td {
 
   .title_line {
   	text-align: left;
-  	border-bottom: solid 3px #555555;
+  	border-bottom: solid 3px rgb(0, 0, 255);
   	width: 100%;
   	margin: 20px auto;
+  	margin-top: 10px;
   	font-size: 20px;
   }
 

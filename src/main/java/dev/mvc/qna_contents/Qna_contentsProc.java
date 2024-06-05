@@ -73,7 +73,7 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
      * - 1) * 10 --> 0 2 페이지 시작 rownum: now_page = 2, (2 - 1) * 10 --> 10 3 페이지 시작
      * rownum: now_page = 3, (3 - 1) * 10 --> 20
      */
-    int begin_of_page = ((int)hashMap.get("now_page") - 1) * Contents.RECORD_PER_PAGE;
+    int begin_of_page = ((int)hashMap.get("now_page") - 1) * Qcontents.RECORD_PER_PAGE;
 
     // 시작 rownum 결정
     // 1 페이지 = 0 + 1: 1
@@ -85,7 +85,7 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
     // 1 페이지 = 0 + 10: 10
     // 2 페이지 = 10 + 10: 20
     // 3 페이지 = 20 + 10: 30
-    int end_num = begin_of_page + Contents.RECORD_PER_PAGE;
+    int end_num = begin_of_page + Qcontents.RECORD_PER_PAGE;
     /*
      * 1 페이지: WHERE r >= 1 AND r <= 10 2 페이지: WHERE r >= 11 AND r <= 20 3 페이지: WHERE
      * r >= 21 AND r <= 30
@@ -155,7 +155,7 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
     // now_grp: 3 (21 ~ 30 page)
     // 현재 2그룹일 경우: (2 - 1) * 10 = 1그룹의 마지막 페이지 10
     // 현재 3그룹일 경우: (3 - 1) * 10 = 2그룹의 마지막 페이지 20
-    int _now_page = (now_grp - 1) * Contents.PAGE_PER_BLOCK;
+    int _now_page = (now_grp - 1) * Qcontents.PAGE_PER_BLOCK;
     if (now_grp >= 2) { // 현재 그룹번호가 2이상이면 페이지수가 11페이지 이상임으로 이전 그룹으로 갈수 있는 링크 생성
       str.append("<span class='span_box_1'><A href='" + list_file + "?cate_no=" + cate_no + "&word=" + word + "&now_page=" + _now_page
           + "'>이전</A></span>");
@@ -181,7 +181,7 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
     // 현재 페이지 5일경우 -> 현재 1그룹: (1 * 10) + 1 = 2그룹의 시작페이지 11
     // 현재 페이지 15일경우 -> 현재 2그룹: (2 * 10) + 1 = 3그룹의 시작페이지 21
     // 현재 페이지 25일경우 -> 현재 3그룹: (3 * 10) + 1 = 4그룹의 시작페이지 31
-    _now_page = (now_grp * Contents.PAGE_PER_BLOCK) + 1; // 최대 페이지수 + 1
+    _now_page = (now_grp * Qcontents.PAGE_PER_BLOCK) + 1; // 최대 페이지수 + 1
     if (now_grp < total_grp) {
       str.append("<span class='span_box_1'><A href='" + list_file +  "?word=" + word + "&now_page=" + _now_page
           + "'>다음</A></span>");
