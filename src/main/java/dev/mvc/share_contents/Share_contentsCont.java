@@ -3,6 +3,7 @@ package dev.mvc.share_contents;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.json.JSONObject;
@@ -72,6 +73,23 @@ public class Share_contentsCont {
 //		return "scontents/list_all";
 //	}
 
+//	@GetMapping("/read_acc_no") //회원 읽기
+//	@ResponseBody
+//	public String read_acc_no(@RequestParam("scon_no") int[] scon_no) {
+//		JSONObject json= new JSONObject();
+//		for(int i =0;i<scon_no.length;i++) {
+//			Share_contentsVO list = this.sconProc.read(scon_no[i]);
+//			String acc_no= "acc_no" +(i+1);
+//			json.put(acc_no, list.getacc_no());
+//			System.out.println("acc_no ->:"+list.getacc_no());
+//		}
+//		JSONObject jsr= new JSONObject();
+//		jsr.put("res", json);
+//		System.out.println("-> jsr.toString: " +jsr.toString());
+//		return jsr.toString();
+//		
+//	}
+	
 	@GetMapping("/read") //글 조회
 	public String read(Model model, int scon_no, int cate_no, HttpSession session,@RequestParam(name = "word", defaultValue = "") String word,
 			 @RequestParam(name = "now_page", defaultValue = "1") int now_page) { // acc_no 필요(session)
@@ -278,27 +296,31 @@ public class Share_contentsCont {
 	 }
 	}
 	
-	@GetMapping("/select_delete")
+	@PostMapping("/select_delete")
 	@ResponseBody
-	public String select_delete(@RequestParam(value = "scon_no") List<Integer> scon_no,HttpSession session) {
-	if(this.accountProc.isMemberAdmin(session)) {
-	  System.out.println("-> select_delete scon_no:" +scon_no);
-	  this.sconProc.sdelete_image(scon_no);
-	  this.sconProc.sdelete_tag(scon_no);
-	  this.replyProc.sdelete_comment(scon_no);
-	  this.sconProc.sdelete_url(scon_no);
-	  int cnt = this.sconProc.delete_sconno(scon_no);
-	  if(cnt>0) {
-	    System.out.println("삭제 성공");
-	  }
-    JSONObject obj = new JSONObject();
-    obj.put("cnt", cnt);
-    
-    return obj.toString();
-	}
-    JSONObject obj = new JSONObject();
-    obj.put("cnt", 0);
-    return obj.toString();
+	public String select_delete(@RequestBody Map<String, Object> scon_no, HttpSession session) {
+		System.out.println("->cate_no:" +scon_no.get("cate_no"));
+		System.out.println("select_delete");
+		JSONObject obj = new JSONObject();
+		int cnt = 0;
+		if(this.accountProc.isMemberAdmin(session)) {
+		List<Integer> sconNoList = (List<Integer>) scon_no.get("scon_no");
+
+		this.sconProc.sdelete_image(sconNoList);
+		this.sconProc.sdelete_tag(sconNoList);
+		this.replyProc.sdelete_comment(sconNoList);
+		this.sconProc.sdelete_url(sconNoList);
+		cnt = this.sconProc.delete_sconno(sconNoList);
+		for(int i =0;i<sconNoList.size();i++) {
+			this.categoryProc.cnt_minus((int)scon_no.get("cate_no"));
+		}
+
+		obj.put("cnt", cnt);
+		return obj.toString();
+		}else {
+			obj.put("cnt", cnt);
+			return obj.toString();
+		}
 	}
 
 	@GetMapping("/update_text/{member_no}") // 글 수정
@@ -791,6 +813,7 @@ public class Share_contentsCont {
 
 		ArrayList<Share_contentsVO> list = this.sconProc.list_by_contents_search_paging(map);
 		model.addAttribute("list", list);
+		System.err.println("->acc_no: "+list.get(0).getacc_no());
 		model.addAttribute("word", word);
 		// 사진 하나만 나오게 하기
 //		ArrayList<Share_imageVO> list_image = new ArrayList<>();

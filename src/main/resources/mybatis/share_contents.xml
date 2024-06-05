@@ -74,14 +74,14 @@
 	<select id="list_by_contents_search_paging"
 		resultType="dev.mvc.share_contentsdto.Share_contentsVO"
 		parameterType="HashMap">
-		SELECT scon_no, scon_title, scon_contents, scon_views, scon_comment,
+		SELECT scon_no, scon_title, scon_contents, scon_views, scon_comment,acc_no,
 		scon_date,scon_priority, r
 		FROM (
-		SELECT scon_no, scon_title,
+		SELECT scon_no, scon_title,acc_no,
 		scon_contents, scon_views, scon_comment,
 		scon_date,scon_priority,rownum as r
 		FROM (
-		SELECT scon_no, scon_title,
+		SELECT scon_no, scon_title,acc_no,
 		scon_contents, scon_views, scon_comment,
 		scon_date,scon_priority
 		FROM

@@ -256,7 +256,7 @@
     			return;
     		}
     		if(rdata.cnt>0){
-    			console.log("우선순위 변경 선공");
+    			//console.log("우선순위 변경 선공");
     			if(currentImg.endsWith("bookmark_off.png")){
     				document.getElementById("bookmarkImage").src = "/css/images/bookmark_on.png";
     				alert("찜하기에 등록했어요!");
@@ -331,27 +331,16 @@
         <div style="width: 100%; word-break: break-all;">
 
 <div style='margin: 0px auto; width: 900px;'>
-					<div class ="horizontal-container">
-   		<tr th:each="item, status : ${list2}">
-   		<div class='read_hashtag' style = "padding:5px">
-        <td >
-            <span th:text="${item.tag_name}" class="bold;"></span>
-        </td>
-        </div>
-    </tr><br>
-    	<br>
-    
-    </div>
+
     <br>
     <div style="display:flex; align-items: center; margin-left:90px; flex-direction:row; justify-content: space-between;" > 
-    <span th:text="${scontentsVO.scon_title}" style="font-size:2em;font-weight: bold;"></span>
-    <span style="font-size: 1em; margin-left:10px;" th:text="|조회수: ${scontentsVO.scon_views}|"></span>
-    <div style="margin-left: auto; margin-right:90px;">
-    <span style="font-size: 1em; margin-left:10px;" th:text="${scontentsVO.scon_date}"></span>
+    	<span th:text="${scontentsVO.scon_title}" style="font-size:2em;font-weight: bold;"></span>
+    	<span style="font-size: 1em; margin-left:10px;" th:text="|조회수: ${scontentsVO.scon_views}|"></span>
+    		<div style="margin-left: auto; margin-right:90px;">
+    			<span style="font-size: 1em; margin-left:10px;" th:text="${scontentsVO.scon_date}"></span>
+    		</div>
     </div>
-    </div>
-
-        <div style="float:right;">
+     <div style="float:right; ">
         <span th:if="${scontentsVO.mark =='N'}">
             <img src="/css/images/bookmark_off.png" id="bookmarkImage" class="icon" onclick="mark()" style="width:24px; height: 24px;">
         </span>
@@ -360,19 +349,31 @@
         </span>
     </div>
 
-    <div class="fotorama" data-width="80%" data-ratio="800/520" data-max-width="100%" style='margin: 0px auto; display: flex; justify-content: center; align-items: center;'>
+
+    <div class="fotorama" data-width="80%" data-ratio="800/520" data-max-width="100%" style='display: flex; justify-content: center; align-items: center;'>
         <div th:each="share_imageVO, status: ${share_imageVO}">
             <div style="display: flex; justify-content: center; align-items: center;">
                 <div th:if="${share_imageVO.file_origin_name.endsWith('jpg') or share_imageVO.file_origin_name.endsWith('png') or share_imageVO.file_origin_name.endsWith('gif')}">
-                    <img th:src="@{|/contents/storage/${share_imageVO.file_thumb_name}|}" style="height: auto; max-height: 520px; object-fit: contain; margin-top: 0.5%;">
+                    <img th:src="@{|/contents/storage/${share_imageVO.file_thumb_name}|}" style="height: auto;  object-fit: contain; margin-top: 0.5%;">
                 </div>
             </div>
         </div>
     </div>
 
-  			
-					<br> 
-					<div style="text-align:left;">
+    <br>
+    
+		<div class ="horizontal-container">
+   		<tr th:each="item, status : ${list2}">
+   			<div class='read_hashtag' style = "padding:5px">
+        	<td>
+            	#<span th:text="${item.tag_name}" class="bold;"></span>
+        	</td>
+      	</div>
+    	</tr>
+    </div>
+
+
+					<div style="text-align:left; margin-top:5px;" >
 					<span style="font-size: 1.5em; font-weight: normal;" th:text="${scontentsVO.scon_contents}"></span><br>
 					          <div style="white-space: pre-wrap;"></div>
           </div>
