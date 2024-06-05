@@ -168,6 +168,13 @@ public interface Qna_contentsProcInter {
   public List<Qna_Acc_commentVO> list_by_qcmt_no_join(int qcon_no);
   
   /**
+   * 최신 댓글 500건
+   * @param qcon_no
+   * @return
+   */
+  public List<Qna_Acc_commentVO> list_by_qcmt_no_join_500(int qcon_no);
+  
+  /**
    * 질문글 댓글 수정
    * @param qna_commentVO
    * @return

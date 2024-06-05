@@ -4,6 +4,247 @@
   <!-- Fotorama -->
   <link href="/fotorama/fotorama.css" rel="stylesheet">
   <script src="/fotorama/fotorama.js"></script>
+
+  <script>
+    let reply_data; // 댓글 500건 저장
+    let reply_now_page = 1; // 댓글 현재 페이지
+  </script>
+
+  <script>
+    window.onload = () => {
+      let qcmt_contents_tag = document.getElementById('qcmt_contents');
+      let btn_create_tag = document.getElementById('btn_create'); // 등록
+      let btn_add_tag = document.getElementById('btn_add'); // 더보기
+      let reply_list_tag = document.getElementById('reply_list'); // 목록 출력 panel
+
+      let btn_save_tag = document.getElementById("btn_save"); // 수정 저장
+      let qcmt_no_tag = document.getElementById("qcmt_no"); // 수정할 레코드 번호
+      let acc_no_tag = document.getElementById("acc_no");  // 댓글 작성 회원 번호
+
+      let btn_delete_tag = document.getElementById("btn_delete"); // 삭제 처리
+      let btn_cancel_tag = document.getElementById("btn_cancel"); // 수정/삭제 취소
+
+      // 댓글 입력
+      qcmt_contents_tag.addEventListener('click', () => {
+        let acc_id = '[[${session.acc_id}]]'; //  javascript -> Thymeleaf -> session
+        // alert('Click!: ' + id);
+        if (acc_id == '') {
+          alert('로그인해야 댓글을 입력 할 수 있습니다.');
+          location.href = "/account/login?url=/qcontents/qna_read?qcon_no=[[${qna_contentsVO.qcon_no}]]%26word=[[${word}]]%26now_page=[[${now_page}]]";
+        } else {
+          // alert('로그인 됨');
+          // content_tag.focus();
+        }
+      });
+
+      btn_create_tag.addEventListener('click', () => {
+        let qcmt_contents = qcmt_contents_tag.value.trim();
+
+        if (qcmt_contents.length == 0) {
+          alert('내용이 없습니다. 내용을 입력해주세요.');
+        } else {
+          fetch("/qcontents/qna_create_comment", {
+            "method": "post",
+            "headers": {"Content-Type": "application/json"},
+            body: JSON.stringify({"qcon_no": "[[${qna_contentsVO.qcon_no}]]", "qcmt_contents": qcmt_contents})
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              list_by_qcmt_no_join(); // 목록 출력
+              qcmt_contents_tag.value = '';
+              qcmt_contents_tag.focus();
+            });
+        }
+      });
+
+      // 페이징 처리
+      // 자바 스크립트는 변수명에 '-' 사용 못함.
+      btn_add_tag.addEventListener('click', () => {
+        // 현재 페이지보다 레코드 갯수가 더 많은 경우만 실행
+        if (reply_data.length > reply_now_page * 5) { // 5, 10, 15, 20, 25 X 
+          let start = 0; // 출력 순환 시작 index
+          let end = 0;  // 출력 순환 종료 index
+          if (reply_data.length > 5) {
+            start = reply_now_page * 5;
+            end = (reply_now_page * 5) + 5; // 시작 index + 페이지 당 레코드 수
+
+            let msg = '';
+            let page_div = document.createElement('div'); // 글내용
+            for (let i = start; i < end; i++) { // 5 ~ 9, 10 탈출
+              if (i == reply_data.length) { // 모든 태그를 출력한 이후인지 검사
+                break;
+              }
+
+              let row = reply_data[i];
+              msg += "<div id='" + row.replyno + "' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px;'>";
+              msg += "<span style='font-weight: bold;'>" + row.id + "</span>";
+              msg += "  " + row.rdate;
+
+              if ('[[${session.acc_no}]]' == row.acc_no) { // 글쓴이 일치여부 확인, 본인의 글만 삭제 가능함 ★
+                msg += " <a href='javascript:qna_update_comment(" + row.qcmt_no + ")'><img src='/reply/images/update.png' style='width: 16px;'></a>";
+                msg += " <a href='javascript:qna_delete_comment(" + row.qcmt_no + ")'><img src='/reply/images/delete.png' style='width: 16px;'></a>";
+              }
+              msg += "  " + "<br>";
+              msg += row.qcmt_contents;
+              msg += "</div>";
+
+            }
+            page_div.innerHTML = msg; //  페이지에 속한 레코드들 추가
+            reply_list_tag.appendChild(page_div);
+
+            reply_now_page = reply_now_page + 1;
+          }
+
+        }
+      });
+      
+      // 수정 처리
+      btn_save_tag.addEventListener('click', () => {
+        let qcmt_no = qcmt_no_tag.value;
+        let qcmt_contents = qcmt_contents_tag.value.trim();
+        let acc_no = acc_no_tag.value;
+
+        if (qcmt_contents.length == 0) {
+          alert('내용이 없습니다. 내용을 입력해주세요.');
+        } else {
+          fetch("/qcontents/qna_update_comment", {
+            "method": "post",
+            "headers": {"Content-Type": "application/json"},
+            body: JSON.stringify({"qcmt_no": qcmt_no, "acc_no": acc_no, "qcmt_contents": qcmt_contents})
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data['res'] == 0) {
+                alert('댓글 수정에 실패 했습니다.\n 잠시후 다시 시도해 주세요(관리자: 02-123-1234)');
+              } else {
+                list_by_qcmt_no_join(); // 목록 출력
+                qcmt_contents_tag.value = '';
+                qcmt_contents_tag.focus();
+                btn_visible('default');
+              }
+            });
+        }
+      });
+
+      list_by_qcmt_no_join(); // 목록 출력
+    } // window.onload END
+
+    // 목록 출력
+    // 5건 미만이면 5회 미만 순환, 5건 이상 5회 순환
+    function list_by_qcmt_no_join() { // 목록 출력
+      let cnt = 0; // 출력 순환 횟수  
+
+      fetch("/qcontents/list_by_qcmt_no_join?qcon_no=[[${qna_contentsVO.qcon_no}]]", {
+        "method": "get"
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          reply_data = data['res'];
+
+          if (reply_data.length > 5) {
+            cnt = 5;
+          } else {
+            cnt = reply_data.length;
+          }
+
+          let msg = '';
+          for (let i = 0; i < cnt; i++) {
+            // let row = data['res'][i];
+            let row = reply_data[i];
+            msg += "<div id='" + row.qcmt_no + "' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px;'>";
+            msg += "<span style='font-weight: bold;'>" + row.acc_id + "</span>";
+            msg += "  " + row.qcmt_date;
+
+            if ('[[${session.acc_no}]]' == row.acc_no) { // 글쓴이 일치여부 확인, 본인의 글만 삭제 가능함 ★
+              msg += " <a href='javascript:qna_update_comment(" + row.qcmt_no + ")'><img src='/reply/images/update.png' style='width: 16px;'></a>";
+              msg += " <a href='javascript:qna_delete_comment(" + row.qcmt_no + ")'><img src='/reply/images/delete.png' style='width: 16px;'></a>";
+            }
+            msg += "  " + "<br>";
+            msg += row.qcmt_contents;
+            msg += "</div>";
+          }
+
+          document.getElementById("reply_list").innerHTML = msg;
+        });
+    }
+
+    // 수정 폼 
+    function qna_update_comment(qcmt_no) {
+      let qcmt_no_tag = document.getElementById('qcmt_no')
+      let acc_no_tag = document.getElementById('acc_no')
+      let qcmt_contents_tag = document.getElementById('qcmt_contents')
+
+      // fetch로 데이터 읽어 오기
+      fetch("/qcontents/qna_read_comment?qcmt_no=" + qcmt_no, {
+        "method": "get",
+        "headers": {"Content-Type": "application/json"},
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          // alert(data['res']['content']);
+          qcmt_no_tag.value = data['res']['qcmt_no'];
+          acc_no_tag.value = data['res']['acc_no'];
+          qcmt_contents_tag.value = data['res']['qcmt_contents'];
+          qcmt_contents_tag.focus();
+          btn_visible('update');
+        });
+    }
+
+    // 삭제 폼 + 삭제 처리
+    function qna_delete_comment(qcmt_no) {
+      let qcmt_contents_tag = document.getElementById('qcmt_contents');
+
+      // fetch로 데이터 읽어 오기
+      fetch("/qcontents/qna_read_comment?qcmt_no=" + qcmt_no, {
+        "method": "get",
+        "headers": {"Content-Type": "application/json"},
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          let sw = confirm("「" + data['res']['qcmt_contents'] + "」 삭제하시려면 확인 버튼을 누르세요. 삭제후 복구 할 수 없습니다.");
+          if (sw == true) {
+            // alert('삭제를 진행합니다.');
+            
+            fetch("/qcontents/qna_delete_comment", {
+              "method": "post",
+              "headers": {"Content-Type": "application/json"},
+              body: JSON.stringify({"qcmt_no": qcmt_no, "acc_no": data['res']['acc_no']})
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                if (data['res'] == 1) {
+                  list_by_qcmt_no_join(); // 목록 출력
+                  content_tag.value = '';
+                  content_tag.focus();
+                  alert('댓글을 삭제했습니다.');
+                } else {
+                  alert('댓글 삭제에 실패했습니다. 잠시후 다시 시도해주세요.');
+                }
+              });
+          } else {
+            alert('삭제를 취소 했습니다.');
+          }
+        });
+    }
+
+    // 버튼 출력
+    function btn_visible(sw) {
+      let btn_create = document.getElementById("btn_create");
+      let btn_save = document.getElementById("btn_save");
+      let btn_cancel = document.getElementById("btn_cancel");
+
+      if (sw == 'update') {
+        btn_create.style.display = 'none'; // hidden
+        btn_save.style.display = ''; // show
+        btn_cancel.style.display = '';
+      } else if (sw == 'default') {
+        btn_create.style.display = '';
+        btn_save.style.display = 'none';
+        btn_cancel.style.display = 'none';
+      }
+
+    }
+  </script>
 </head>
 
 <div layout:fragment="content">
@@ -62,109 +303,31 @@
         </li>
         
         <li class="li_none">
-        <script>
-           window.onload = () => {
-                let content_tag = document.getElementById('qcmt_contents');
-                let btn_create_tag = document.getElementById('btn_create');
-                
-                content_tag.addEventListener('click', () => {
-                  let id =  '[[${session.acc_id}]]'; //  javascript -> Thymeleaf -> session
-                  // alert('Click!: ' + id);
-                  if (id == '') {
-                    alert('로그인해야 댓글을 입력 할 수 있습니다.');
-                    location.href="/account/login?url=/qconents/qna_read?qcon_no=[[${qna_contentsVO.qcon_no}]]%26word=[[${word}]]%26now_page=[[${now_page}]]";
-                  } else {
-                    // alert('로그인 됨');
-                    // content_tag.focus();
-                  }
-                });
-                
-                btn_create_tag.addEventListener('click', () => {
-                  let content = content_tag.value.trim();
-                  
-                  if (content.length == 0) {
-                    alert('내용이 없습니다. 내용을 입력해주세요.');
-                  } else {
-                    // alert('content: ' + content_tag.value);
-                    // {"sentence":"안녕하세요.","language":"영어","age":"25"}
-                    // console.log(JSON.stringify({sentence, language, age}))
-                    // return;
-            
-                    // Spring Security를 사용하지 않고 CORS 설정시 접근 안됨.
-                    // fetch("http://127.0.0.1:9091/reply/create", {
-                    fetch("/qna_contents/qna_create_comment", {
-                      "method": "post", 
-                      "headers": {"Content-Type": "application/json"},
-                      body: JSON.stringify({"qcon_no": "[[${qna_contentsVO.qcon_no}]]", "content": content})
-                    })
-                    .then((response) => response.json())
-                    .then((data) => {
-                      list_by_qcmt_no_join(); // 목록 출력
-                    });
-            
-                    // result_animation_tag.innerHTML = '<img src="/static/images/progress.gif" style="width: 15%; margin-top: 0px;">';
-    
-                  }
-    
-                });
-                
-                list_by_qcmt_no_join(); // 목록 출력
-              }
-              
-              function list_by_qcmt_no_join() { // 목록 출력
-                // Spring Security를 사용하지 않고 CORS 설정시 접근 안됨.
-                // fetch("http://127.0.0.1:9091/reply/create", {
-                fetch("/qconents/list_by_qcmt_no_join?qcon_no=[[${qna_contentsVO.qcon_no}]]", {
-                  "method": "get" 
-                })
-                .then((response) => response.json())
-                .then((data) => {
-                  // alert('res: ' + data['res']);
-                  // result_tag.value = data['res'];
-                  // result_animation_tag.innerHTML = '';
-                  let msg = '';
-                  for (let i=0; i < data['res'].length; i++) {
-                    let row = data['res'][i];
-                    msg += "<div id='"+row.qcmt_no+"' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px;'>";
-                    msg += "<span style='font-weight: bold;'>" + row.id + "</span>";
-                    msg += "  " + row.qcmt_date;
-              
-                    if ('[[${session.acc_no}]]' == row.acc_no) { // 글쓴이 일치여부 확인, 본인의 글만 삭제 가능함 ★
-                      msg += " <a href='javascript:reply_update("+row.qcmt_no+")'><img src='/qcontents/images/update.png' style='width: 16px;'></a>";
-                      msg += " <a href='javascript:reply_delete("+row.qcmt_no+")'><img src='/qcontents/images/delete.png' style='width: 16px;'></a>";
-                    }
-                    msg += "  " + "<br>"; 
-                    msg += row.qcmt_contents;
-                    msg += "</div>";
-                  }
-                  
-                 document.getElementById("reply_list").innerHTML = msg;               
-                  
-                });
-          
-              }
-        </script>
+        <!-- ------------------------------ 댓글 영역 시작 ------------------------------ -->
+          <div style='width: 100%; margin: 0px auto; clear: both;'>
+              <form name='frm_reply' id='frm_reply'> 
+                  <input type='hidden' name='acc_no' id='acc_no' value=''>
+                  <input type='hidden' name='qcmt_no' id='qcmt_no' value=''>
         
-        <div style='width: 100%; margin: 0px auto; clear: both;'>
-            <form name='frm_reply' id='frm_reply'> 
-                <input type='hidden' name='qcon_no' id='qcon_no' value='${qcon_no}'>
-                <input type='hidden' name='acc_no' id='acc_no' value='${sessionScope.acc_no}'>
-                
-                <textarea name='qcmt_contents' id='qcmt_contents' class="form-control" style='width: 100%; height: 60px;' 
-                               placeholder="댓글 작성, 로그인해야 등록 할 수 있습니다." autofocus='autofocus'></textarea>
-               <div style='text-align: center;'> 
-                 <button type='button' id='btn_create'>&nbsp;&nbsp;등&nbsp;&nbsp;록&nbsp;&nbsp;</button>
-               </div>               
-            </form>
-            <div id='reply_list' data-replypage='1'>  <!-- 목록 -->
-              등록된 댓글이 없습니다.
-            </div>
-            <div id='reply_list_btn' style='border: none'>
-                <button id='btn_add' style='width: 100%;'>더보기 ▽</button>
-            </div>  
-              
+                  <textarea name='qcmt_contents' id='qcmt_contents' class="form-control" style='width: 100%; height: 60px;' 
+                                 placeholder="댓글 작성, 로그인해야 등록 할 수 있습니다." autofocus='autofocus'></textarea>
+                 <div style='text-align: center;'> 
+                   <button type='button' id='btn_create'>&nbsp;&nbsp;등&nbsp;&nbsp;록&nbsp;&nbsp;</button>
+                   <button type='button' id='btn_save' style='display: none;'>&nbsp;&nbsp;저&nbsp;&nbsp;장&nbsp;&nbsp;</button>
+                   <button type='button' id='btn_delete' style='display: none;'>&nbsp;&nbsp;삭&nbsp;&nbsp;제&nbsp;&nbsp;</button>
+                   <button type='button' id='btn_cancel' style='display: none;'>&nbsp;&nbsp;취&nbsp;&nbsp;소&nbsp;&nbsp;</button>
+                 </div>               
+              </form>
+              <div id='reply_list' data-replypage='1'>  <!-- 목록 -->
+                등록된 댓글이 없습니다.
+              </div>
+              <div id='reply_list_btn' style='border: none'>
+                  <button id='btn_add' style='width: 100%;'>더보기 ▽</button>
+              </div>  
+            
           </div>
-      </li>
+          <!-- ------------------------------ 댓글 영역 종료 ------------------------------  -->
+        </li>   
            
       </ul>
     </fieldset>

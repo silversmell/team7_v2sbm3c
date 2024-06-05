@@ -295,6 +295,14 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
       qcmt_contents = Tool.convertChar(qcmt_contents);
       qna_acc_commentVO.setQcmt_contents(qcmt_contents);;
     }
+    
+    return list;
+  }
+  
+  @Override
+  public List<Qna_Acc_commentVO> list_by_qcmt_no_join_500(int qcon_no) {
+    List<Qna_Acc_commentVO> list = this.qna_contentsDAO.list_by_qcmt_no_join_500(qcon_no);
+    
     return list;
   }
 

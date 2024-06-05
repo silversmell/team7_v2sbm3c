@@ -657,8 +657,8 @@ public class Qna_contentsCont {
    */
   @GetMapping(value="/list_by_qcmt_no_join")
   @ResponseBody
-  public String list_by_qcmt_no_join(int qconno) {
-    List<Qna_Acc_commentVO> list = qna_contentsProc.list_by_qcmt_no_join(qconno);
+  public String list_by_qcmt_no_join(int qcon_no) {
+    List<Qna_Acc_commentVO> list = qna_contentsProc.list_by_qcmt_no_join_500(qcon_no);
     
     JSONObject obj = new JSONObject();
     obj.put("res", list);
@@ -671,7 +671,7 @@ public class Qna_contentsCont {
    * @param qcmt_no
    * @return
    */
-  @GetMapping(value="qna_read", produces ="application/json")
+  @GetMapping(value="/qna_read_comment", produces ="application/json")
   @ResponseBody
   public String qna_read_comment(int qcmt_no) {
     Qna_commentVO qna_commentVO = this.qna_contentsProc.qna_read_comment(qcmt_no);
@@ -687,6 +687,54 @@ public class Qna_contentsCont {
     obj.put("res", row);
     
     return obj.toString();
+  }
+  
+  /**
+   * 댓글 수정 처리
+   * @param session
+   * @param qna_commentVO
+   * @return
+   */
+  @PostMapping(value="/qna_update_comment")
+  @ResponseBody
+  public String qna_update_comment(HttpSession session, @RequestBody Qna_commentVO qna_commentVO) {
+    System.out.println("-> 수정할 수신 댓글: " + qna_commentVO.toString());
+    
+    int acc_no = (int)session.getAttribute("acc_no");
+    
+    int cnt = 0;
+    if (acc_no == qna_commentVO.getAcc_no()) { // 회원 자신이 쓴 댓글만 수정 가능
+      cnt = this.qna_contentsProc.qna_update_comment(qna_commentVO);
+    }
+    
+    System.out.println("-> qcmt_no: " + qna_commentVO.getQcmt_no());
+    
+    JSONObject json = new JSONObject();
+    json.put("res", cnt);  // 1: 성공, 0: 실패
+
+    return json.toString();
+  }
+  
+  /**
+   * 댓글 삭제 처리
+   * @param session
+   * @param qna_commentVO
+   * @return
+   */
+  @PostMapping(value="/qna_delete_comment")
+  @ResponseBody
+  public String qna_delete_comment(HttpSession session, @RequestBody Qna_commentVO qna_commentVO) {
+    int acc_no = (int)session.getAttribute("acc_no");
+    
+    int cnt = 0;
+    if (acc_no == qna_commentVO.getAcc_no()) { // 회원 자신이 쓴 댓글만 삭제 가능
+      cnt = this.qna_contentsProc.qna_delete_comment(qna_commentVO.getQcmt_no());
+    }
+    
+    JSONObject json = new JSONObject();
+    json.put("res", cnt);  // 1: 성공, 0: 실패
+
+    return json.toString();
   }
 
 }

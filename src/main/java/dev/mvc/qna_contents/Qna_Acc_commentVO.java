@@ -8,7 +8,7 @@ import lombok.Setter;
 public class Qna_Acc_commentVO {
   
   /** 아이디(이메일) */
-  private String id = "";
+  private String acc_id = "";
   
   /** 댓글 번호 */
   private int qcmt_no;

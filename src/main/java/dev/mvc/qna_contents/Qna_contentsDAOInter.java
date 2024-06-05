@@ -161,6 +161,13 @@ public interface Qna_contentsDAOInter {
   public List<Qna_Acc_commentVO> list_by_qcmt_no_join(int qcon_no);
   
   /**
+   * 최신 댓글 500건
+   * @param qcon_no
+   * @return
+   */
+  public List<Qna_Acc_commentVO> list_by_qcmt_no_join_500(int qcon_no);
+  
+  /**
    * 질문글에 따른 댓글 조회
    * @param qcmt_no
    * @return

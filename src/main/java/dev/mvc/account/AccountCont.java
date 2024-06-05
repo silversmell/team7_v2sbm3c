@@ -437,10 +437,7 @@ public class AccountCont {
 		if (checkName_cnt <= 1) {
 			int cnt = this.accountProc.update(accountVO);
 			if (cnt == 1) { // 수정 성공
-				model.addAttribute("acc_name", accountVO.getAcc_name());
-				model.addAttribute("acc_tel", accountVO.getAcc_tel());
-				model.addAttribute("acc_age", accountVO.getAcc_age());
-
+				
 				// 기존의 추천 해시태그 삭제
 				this.accountProc.deleteRecommend(accountVO.getAcc_no());
 
@@ -450,7 +447,7 @@ public class AccountCont {
 					recommendVO.setTag_no(tag_no);
 					this.accountProc.insertRecommend(recommendVO);
 				}
-
+				
 				model.addAttribute("code", "update_success");
 				model.addAttribute("cnt", cnt);
 			} else {
