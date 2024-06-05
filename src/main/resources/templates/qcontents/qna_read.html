@@ -1,5 +1,11 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout}">
+<head>
+  <!-- Fotorama -->
+  <link href="/fotorama/fotorama.css" rel="stylesheet">
+  <script src="/fotorama/fotorama.js"></script>
+</head>
+
 <div layout:fragment="content">
   <div class='title_line'>
     <span th:text="${qna_contentsVO.qcon_name}" class="title_line_text"></span> > 글 조회
@@ -34,16 +40,21 @@
       <ul>
         <li class="li_none">
           <div style="width: 100%; word-break: break-all;">
-            <div th:each="image : ${qna_imageVO}">
-              <div th:if="${image.file_origin_name.endsWith('jpg') or image.file_origin_name.endsWith('png') or image.file_origin_name.endsWith('gif')}">
-                <img th:src="@{|/contents/storage/${image.file_upload_name}|}" style='width: 50%; float: left; margin-top: 0.5%; margin-right: 1%;'>
+          
+            <div class="fotorama" data-autoplay="5000" data-nav="thumbs" data-ratio="800/520" style="margin:  0px auto; width: 100%;">
+              <div th:each="image : ${qna_imageVO}">
+                <div th:if="${image.file_origin_name.endsWith('jpg') or image.file_origin_name.endsWith('png') or image.file_origin_name.endsWith('gif')}">
+                  <img th:src="@{|/contents/storage/${image.file_upload_name}|}" style='width: 75%; float: left; margin-top: 0.5%; margin-right: 1%;'>
+                </div>
               </div>
             </div>
+            
             <span style="font-size: 1.5em; font-weight: bold;" th:text="${qna_contentsVO.qcon_name}"></span>
             <span style="font-size: 1em;" th:text="${qna_contentsVO.qcon_date}"></span><br><br>
             <div style="white-space: pre-wrap;"><span th:text="${qna_contentsVO.qcon_contents}"></span></div>
           </div>
         </li>
+        
         <li class="li_none" th:each="image : ${qna_imageVO}" th:if="${image.file_size > 0}">
           <div>
             첨부 파일: <a th:href="@{|/download?dir=/contents/storage&filename=${image.file_upload_name}&downname=${image.file_origin_name}|}" th:text="|${image.file_origin_name}|"></a>

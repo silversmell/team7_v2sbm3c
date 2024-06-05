@@ -148,6 +148,13 @@ public interface Qna_contentsProcInter {
   public int qna_create_comment(Qna_commentVO qna_commentVO);
   
   /**
+   * 질문글에 따른 댓글 조회
+   * @param qcmt_no
+   * @return
+   */
+  public Qna_commentVO qna_read_comment(int qcmt_no);
+  
+  /**
    * 질문글 댓글 전체 목록
    * @return
    */
@@ -161,12 +168,18 @@ public interface Qna_contentsProcInter {
   public List<Qna_Acc_commentVO> list_by_qcmt_no_join(int qcon_no);
   
   /**
-   * 질문글 댓글 삭제
-   * @param qcon_no
-   * @param acc_no
+   * 질문글 댓글 수정
+   * @param qna_commentVO
    * @return
    */
-  public int qna_delete_comment(HashMap<String, Object> hashMap);
+  public int qna_update_comment(Qna_commentVO qna_commentVO);
+  
+  /**
+   * 질문글 댓글 삭제
+   * @param qcmt_no
+   * @return
+   */
+  public int qna_delete_comment(int qcmt_no);
   
   /**
    * 질문글 당 댓글 수

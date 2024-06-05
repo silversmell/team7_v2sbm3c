@@ -41,7 +41,7 @@
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 						<li class="nav-item" th:if="${session.acc_no == null}">
-							<a class="nav-link" href="/account/create">회원 가입</a>
+							
 							<a class="nav-link" href="#">아이디 찾기</a>
 							<a class="nav-link" href="/account/find_passwd">비밀번호 찾기</a>
 						</li>
@@ -70,7 +70,10 @@
                 </li>
 
 				<li class="nav-item">
-				     <span th:if="${session.acc_no == null}"><a class="nav-link" href="/account/login" th:text="@{|로그인|}"></a></span>
+				     <span th:if="${session.acc_no == null}">
+						<a class="nav-link" href="/account/login" th:text="@{|로그인|}" style="display: inline-block; margin-right: 5px;"></a>
+						<a class="nav-link" href="/account/create" th:text="@{|회원 가입|}" style="display: inline-block;"></a>
+					</span>
 				     <span th:if="${session.acc_no != null}">
 						<a class="nav-link" href="http://localhost:9093/admin/tip?cate_no=5" th:text="마이페이지" style="display: inline-block;"></a>
 						<a class="nav-link" href="/account/logout" th:text="@{|${session.acc_id} 로그아웃|}" style="display: inline-block;"></a>

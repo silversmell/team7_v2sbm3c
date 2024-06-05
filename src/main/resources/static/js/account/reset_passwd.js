@@ -33,7 +33,7 @@ function send() {
 			console.log("Server response: ", rdata);
 			//alert("rdata cnt: " + rdata.cnt);
 			if (rdata.cnt != 0) { // 비밀번호 변경 성공
-				alert('비밀번호가 변경되었습니다.');
+				//alert('비밀번호가 변경되었습니다.');
 			    //window.location.href = './login';
 			    window.location.href = `./msg?code=${rdata.code}&cnt=${rdata.cnt}`;
 			} else {

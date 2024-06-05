@@ -80,6 +80,7 @@ function addVerifyField() {
 
 
 function verifyCode() {
+	let acc_id = document.getElementById("acc_id").value;
 	let verify_code = document.getElementById("verify_code").value;
 	let verify_code_msg = document.getElementById("verify_code_msg");
 
@@ -90,6 +91,7 @@ function verifyCode() {
 			"Content-Type": "application/x-www-form-urlencoded"
 		},
 		body: new URLSearchParams({
+			acc_id: acc_id,
 			code: verify_code
 		})
 	})

@@ -299,20 +299,32 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
   }
 
   @Override
+  public Qna_commentVO qna_read_comment(int qcmt_no) {
+    Qna_commentVO qna_commentVO = this.qna_contentsDAO.qna_read_comment(qcmt_no);
+    
+    return qna_commentVO;
+  }
+  
+  @Override
   public int qna_search_count_comment(int qcon_no) {
     int cnt = this.qna_contentsDAO.qna_search_count_comment(qcon_no);
     
     return cnt;
   }
-
-@Override
-public int qna_delete_comment(HashMap<String, Object> hashMap) {
-	int cnt = this.qna_contentsDAO.qna_delete_comment(hashMap);
-	return cnt;
-}
-
-
   
-  
+  @Override
+  public int qna_update_comment(Qna_commentVO qna_commentVO) {
+    int cnt = this.qna_contentsDAO.qna_update_comment(qna_commentVO);
+    
+    return cnt;
+  }
+
+  @Override
+  public int qna_delete_comment(int qcmt_no) {
+  	int cnt = this.qna_contentsDAO.qna_delete_comment(qcmt_no);
+  	
+  	return cnt;
+  }
+
   
 }

@@ -56,7 +56,7 @@
   </select>
   
   <!-- 특정 글에 따른 댓글 -->
-  <select id="qna_read_comment" resultType="dev.mvc.qna_contents.Qna_Acc_commentVO" parameterType="Integer">
+  <select id="qna_read_comment" resultType="dev.mvc.qna_contents.Qna_commentVO" parameterType="int">
     SELECT qcmt_no, qcon_no, acc_no, qcmt_contents, qcmt_date
     FROM qna_comment
     WHERE qcmt_no=#{qcmt_no}
@@ -69,10 +69,16 @@
     WHERE qcon_no=#{qcon_no}
   </select>
   
+  <!-- 댓글 수정 -->
+  <update id="qna_update_comment" parameterType="dev.mvc.qna_contents.Qna_commentVO">
+    UPDATE qna_comment SET qcmt_contents=#{qcmt_contents}
+    WHERE qcmt_no = #{qcmt_no}
+  </update>
+  
   <!-- 댓글 삭제 -->
   <delete id="qna_delete_comment" parameterType="int">
     DELETE FROM qna_comment 
-    WHERE qcon_no = #{qcon_no}
+    WHERE qcmt_no = #{qcmt_no}
   </delete>
   
   <!-- 전체 파일 목록 -->
