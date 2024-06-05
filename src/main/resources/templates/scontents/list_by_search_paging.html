@@ -83,7 +83,6 @@
 		th:replace="~{scontents/list_search_component::list_search_fragment}"></div>
 
 	<div class='menu_line'></div>
-	
 <div style="display: flex; justify-content: space-between; ">
 <div style="display: flex; margin-left:78px;">
     <div th:each="hashtag, status:${list_hashtag}" th:attr="onclick=|location.href='/scontents/read_hashtag/${hashtag.tag_no}?cate_no=1'|" style="cursor: pointer; ">
@@ -116,36 +115,49 @@
 
 
 <tr th:if="${list_image.size() > 0}">
-    <td class='td_basic' style="vertical-align: middle; text-align: center;">
-        <div th:each="share_imageVO, status:${list_image}" style="margin-bottom:10px;">
-        <div class="horizontal-container" style="margin-bottom:10px">
-        	<input type="checkbox" th:id="'scon_no_' + ${share_imageVO.scon_no}" name="scon_no" th:value="${share_imageVO.scon_no}">
-            <div th:if="${share_imageVO.file_origin_name.endsWith('jpg') or share_imageVO.file_origin_name.endsWith('png') or share_imageVO.file_origin_name.endsWith('gif')}">
-                <img th:src="@{|/contents/storage/${share_imageVO.file_thumb_name}|}" style="width: 180px; height: 100px;">
-            </div>
-            <div th:if="${((share_imageVO.file_origin_name.endsWith('jpg') or share_imageVO.file_origin_name.endsWith('png') or share_imageVO.file_origin_name.endsWith('gif')) == false) and (share_imageVO.file_size > 0)}">
-                <span th:text="${share_imageVO.file_origin_name}"></span>
-            </div>
-            </div>
-            </div>
-    </td>
-    <td class='td_basic' style="vertical-align: middle; text-align: center;">
-<div th:each="scontentsVO, status:${list}" style="cursor: pointer; margin-left: 30px; margin-bottom:23px">
-		<div style="margin-bottom:1px;">
-			    <div class='td_basic' th:attr="onclick=|location.href='/scontents/read?cate_no=1&scon_no=${scontentsVO.scon_no}'|" style="cursor: pointer; margin-top:10px; margin-bottom:10px;">
-			        제목:<span th:text="${scontentsVO.scon_title}" style="font-weight: bold;"></span><br>
-			        <span th:if="${scontentsVO.scon_contents.length() > 160 }" th:text="|${scontentsVO.scon_contents.substring(0, 100)}...|"></span>
-			        <span th:if="${scontentsVO.scon_contents.length() <= 160 }" th:text="|${scontentsVO.scon_contents}|"></span>
-			        <br><br>
-                    <div style="flex-grow: 1;"></div> <!-- This creates space -->
-                    <div style="margin-left: auto; text-align: right;">
-                        조회수: <span th:text="${scontentsVO.scon_views}"></span>
+
+    <td class='td_basic' style="vertical-align: middle; text-align: center; margin-bottom: 10px;">
+        <div th:each="share_imageVO, status:${list_image}" style="margin-bottom: 15px; display: flex; justify-content: center;">
+            <div class="horizontal-container" style="margin-bottom: 10px; display: flex; align-items: center;">
+                <input type="checkbox" th:id="'scon_no_' + ${share_imageVO.scon_no}" name="scon_no" th:value="${share_imageVO.scon_no}" style="margin-right: 5px;">
+                <div style="width: 180px; height: 100px; overflow: hidden;">
+                    <div th:if="${share_imageVO.file_origin_name.endsWith('jpg') or share_imageVO.file_origin_name.endsWith('png') or share_imageVO.file_origin_name.endsWith('gif')}">
+                        <img th:src="@{|/contents/storage/${share_imageVO.file_thumb_name}|}" style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
-			    </div>
-			</div>
-			</div>
-			</td>
-	</tr>
+                    <div th:if="${((share_imageVO.file_origin_name.endsWith('jpg') or share_imageVO.file_origin_name.endsWith('png') or share_imageVO.file_origin_name.endsWith('gif')) == false) and (share_imageVO.file_size > 0)}" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+                        <span th:text="${share_imageVO.file_origin_name}"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </td>
+
+    <td class='td_basic' style="vertical-align: middle; text-align: center;">
+    <div style=  "margin-bottom: 20px; margin-top:10px;">
+        <div th:each="scontentsVO, status:${list}" style="cursor: pointer;  margin-left: 5px; display: flex; justify-content: center;">
+            <div style="width: 260%; height: 102px; margin-bottom: 23px;">
+                <div style="display:flex; align-items: center; width: 100%; height: 100%;">
+                    <div style="margin-bottom: 13px; width: 100%; height: 100%;">
+                        <div class='td_basic' th:attr="onclick=|location.href='/scontents/read?cate_no=1&scon_no=${scontentsVO.scon_no}'|" style="cursor: pointer; margin-top: 10px; margin-bottom: 60px; width: 100%; height: 100%;">
+                            <br>제목:<span th:text="${scontentsVO.scon_title}" style="font-weight: bold;"></span><br>
+                            <span th:if="${scontentsVO.scon_contents.length() > 160 }" th:text="|${scontentsVO.scon_contents.substring(0, 100)}...|"></span>
+                            <span th:if="${scontentsVO.scon_contents.length() <= 160 }" th:text="|${scontentsVO.scon_contents}|"></span>
+                            <br>
+                            <div style="margin-left: auto; text-align: right; margin-right: 10px;">
+                                조회수: <span th:text="${scontentsVO.scon_views}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </td>
+</tr>
+
+
+
+
 
         <!-- 리스트가 비어있을 때 -->
         <tr th:if="${list_image.size() == 0}">
@@ -154,6 +166,7 @@
     </tbody>
 </table>
 </div>
+
 
 	<!-- 페이지 버튼 목록 출력 시작 -->
 	<div class="bottom_menu" th:utext="${paging}"></div>
