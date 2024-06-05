@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<head>
+  <!-- Fotorama -->
+  <link href="/fotorama/fotorama.css" rel="stylesheet">
+  <script src="/fotorama/fotorama.js"></script>
+</head>
+
 <div layout:fragment="content">
   <div class='title_line'>
      <span th:text="${qna_contentsVO.qcon_name}" class="title_line_text"></span > 
@@ -24,11 +30,15 @@
   <fieldset class="fieldset_basic">
     <ul>
       <li class="li_none">
-       <tr th:each="qimage, status:${qimage}">  
-          <div th:if="${qimage.file_origin_name.endsWith('jpg') or qimage.file_origin_name.endsWith('png') or qimage.file_origin_name.endsWith('gif')}">
-                <img th:src="@{|/qcontents/storage/${qimage.file_upload_name}|}" style='width: 50%; float: left; margin-top: 0.5%; margin-right: 1%;'>
+       <tr>  
+          <div class="fotorama" data-width="700" data-ratio="700/467" data-max-width="100%"
+                  style='width: 50%; float: left; margin-top: 0.5%; margin-right: 1%;'>
+                <img th:each="qimage, status:${qimage}" th:src="@{|/qcontents/storage/${qimage.file_upload_name}|}"
+                        th:if="${qimage.file_origin_name.endsWith('jpg') or qimage.file_origin_name.endsWith('png') or qimage.file_origin_name.endsWith('gif')}">
           </div>
         </tr>
+        
+
     
         <div style='text-align: left; width: 47%; float: left;'>
           <span style='font-size: 1.5em;' th:text="${qna_contentsVO.qcon_name}"></span>
