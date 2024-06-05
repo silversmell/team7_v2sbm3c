@@ -27,59 +27,12 @@
     VALUES(qna_image_seq.nextval, #{qcon_no}, #{file_origin_name}, #{file_upload_name}, #{file_thumb_name}, #{file_size}, sysdate)
   </insert>
   
-  <!-- 댓글 등록 -->
-  <insert id="qna_create_comment" parameterType="dev.mvc.qna_contents.Qna_commentVO">
-    INSERT INTO qna_comment(qcmt_no, acc_no, qcon_no, qcmt_contents, qcmt_date)
-    VALUES(qna_comment_seq.nextval, #{acc_no}, #{qcon_no}, #{qcmt_contents}, sysdate)
-  </insert>
-  
-  <!-- 댓글 목록 -->
-  <select id="qna_list_all_comment" resultType="dev.mvc.qna_contents.Qna_commentVO">
-    SELECT qcmt_no, acc_no, qcon_no, qcmt_contents, qcmt_date
-    FROM qna_comment
-    ORDER BY qcmt_no DESC
-  </select>
-  
   <!-- 특정 글에 따른 목록 -->
   <select id="list_by_qcon_no" resultType="dev.mvc.qna_contents.Qna_contentsVO">
     SELECT qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_comment, qcon_date, qcon_passwd
     FROM qna_contents
     where qcon_no=#{qcon_no}
   </select>
-  
-  <!-- 특정 글에 따른 댓글 목록 -->
-  <select id="list_by_qcmt_no_join" resultType="dev.mvc.qna_contents.Qna_Acc_commentVO" parameterType="int">
-     SELECT a.acc_id, qc.qcmt_no, qc.acc_no, qc.qcon_no, qc.qcmt_contents, qc.qcmt_date 
-     FROM account a, qna_comment qc 
-     WHERE (a.acc_no = qc.qcmt_no) AND qc.qcon_no=#{qc.qcon_no} 
-     ORDER BY qc.qcmt_no DESC
-  </select>
-  
-  <!-- 특정 글에 따른 댓글 -->
-  <select id="qna_read_comment" resultType="dev.mvc.qna_contents.Qna_commentVO" parameterType="int">
-    SELECT qcmt_no, qcon_no, acc_no, qcmt_contents, qcmt_date
-    FROM qna_comment
-    WHERE qcmt_no=#{qcmt_no}
-  </select>
-  
-  <!-- 댓글 수 -->
-  <select id="qna_search_count_comment" resultType="int" parameterType="int">
-    SELECT count(*)
-    FROM qna_comment
-    WHERE qcon_no=#{qcon_no}
-  </select>
-  
-  <!-- 댓글 수정 -->
-  <update id="qna_update_comment" parameterType="dev.mvc.qna_contents.Qna_commentVO">
-    UPDATE qna_comment SET qcmt_contents=#{qcmt_contents}
-    WHERE qcmt_no = #{qcmt_no}
-  </update>
-  
-  <!-- 댓글 삭제 -->
-  <delete id="qna_delete_comment" parameterType="int">
-    DELETE FROM qna_comment 
-    WHERE qcmt_no = #{qcmt_no}
-  </delete>
   
   <!-- 전체 파일 목록 -->
   <select id="qna_list_all_image" resultType="dev.mvc.qna_contents.Qna_imageVO">
@@ -239,19 +192,76 @@
     WHERE acc_no=#{acc_no}
   </delete>
   
-  <!-- 댓글 수 증가 -->
-   <update id="increaseReplycnt" parameterType="int">
-     UPDATE contents
-     SET replycnt = replycnt + 1
-     WHERE contentsno = #{contentsno}
-   </update>
+   <!-- 댓글 등록 -->
+  <insert id="qna_create_comment" parameterType="dev.mvc.qna_contents.Qna_commentVO">
+    INSERT INTO qna_comment(qcmt_no, acc_no, qcon_no, qcmt_contents, qcmt_date)
+    VALUES(qna_comment_seq.nextval, #{acc_no}, #{qcon_no}, #{qcmt_contents}, sysdate)
+  </insert>
+  
+  <!-- 특정 글에 따른 댓글 목록 -->
+  <select id="list_by_qcmt_no_join" resultType="dev.mvc.qna_contents.Qna_Acc_commentVO" parameterType="int">
+     SELECT a.acc_id, qc.qcmt_no, qc.acc_no, qc.qcon_no, qc.qcmt_contents, qc.qcmt_date 
+     FROM account a, qna_comment qc 
+     WHERE (a.acc_no = qc.qcmt_no) AND qc.qcon_no=#{qc.qcon_no} 
+     ORDER BY qc.qcmt_no DESC
+  </select>
+  
+  <!-- 최신 댓글 500건 -->
+  <select id="list_by_qcmt_no_join_500"  resultType="dev.mvc.qna_contents.Qna_Acc_commentVO" parameterType="int">
+    SELECT acc_id, qcmt_no, qcon_no, acc_no, qcmt_contents, qcmt_date, r
+    FROM (
+          SELECT acc_id, qcmt_no, qcon_no, acc_no, qcmt_contents, qcmt_date, rownum as r
+          FROM (
+                SELECT  a.acc_id, 
+                         q.qcmt_no, q.qcon_no, q.acc_no, q.qcmt_contents, q.qcmt_date
+                FROM account a, qna_comment q      
+                WHERE (a.acc_no = q.acc_no) AND q.qcon_no=#{qcon_no}
+                ORDER BY q.qcmt_no DESC
+          )
+    )
+    WHERE r &lt;= 500
+  </select>
+  
+  <!-- 특정 글에 따른 댓글 -->
+  <select id="qna_read_comment" resultType="dev.mvc.qna_contents.Qna_commentVO" parameterType="int">
+    SELECT qcmt_no, qcon_no, acc_no, qcmt_contents, qcmt_date
+    FROM qna_comment
+    WHERE qcmt_no=#{qcmt_no}
+  </select>
+  
+  <!-- 댓글 수 -->
+  <select id="qna_search_count_comment" resultType="int" parameterType="int">
+    SELECT count(*)
+    FROM qna_comment
+    WHERE qcon_no=#{qcon_no}
+  </select>
+  
+ <!-- 댓글 수 증가 -->
+ <update id="increaseReplycnt" parameterType="int">
+   UPDATE qna_contents
+   SET qcon_comment = qcon_comment + 1
+   WHERE qcon_no = #{qcon_no}
+ </update>
 
-   <!-- 댓글 수 감소 -->
-   <update id="decreaseReplycnt" parameterType="int">
-     UPDATE contents
-     SET replycnt = replycnt - 1
-     WHERE contentsno = #{contentsno}
-   </update>
+ <!-- 댓글 수 감소 -->
+ <update id="decreaseReplycnt" parameterType="int">
+   UPDATE qna_contents
+   SET qcon_comment = qcon_comment - 1
+   WHERE qcon_no = #{qcon_no}
+ </update>
+   
+  <!-- 댓글 수정 -->
+  <update id="qna_update_comment" parameterType="dev.mvc.qna_contents.Qna_commentVO">
+    UPDATE qna_comment SET qcmt_contents=#{qcmt_contents}
+    WHERE qcmt_no = #{qcmt_no}
+  </update>
+  
+  <!-- 댓글 삭제 -->
+  <delete id="qna_delete_comment" parameterType="int">
+    DELETE FROM qna_comment 
+    WHERE qcmt_no = #{qcmt_no}
+  </delete>
+  
   
 </mapper>
 
