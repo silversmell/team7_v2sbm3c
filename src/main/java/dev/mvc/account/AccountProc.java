@@ -90,6 +90,12 @@ public class AccountProc implements AccountProcInter {
 	}
 	
 	@Override
+	public int recordLog(AccLogVO AccLogVO) {
+		int cnt = this.accountDAO.recordLog(AccLogVO);
+		return cnt;
+	}
+	
+	@Override
 	public boolean isMember(HttpSession session) {
 		boolean sw = false;	// 로그아웃 상태로 초기화
 		String acc_grade = (String)session.getAttribute("acc_grade");
@@ -163,8 +169,6 @@ public class AccountProc implements AccountProcInter {
 		int cnt = this.accountDAO.delete(acc_no);
 		return cnt;
 	}
-
-
 
 	
 }

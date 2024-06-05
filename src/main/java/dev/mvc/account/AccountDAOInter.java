@@ -85,6 +85,14 @@ public interface AccountDAOInter {
 	 * @return
 	 */
 	public int login(HashMap<String, Object> map);
+	
+	/**
+	 * 회원 로그 기록
+	 * 
+	 * @param AccLogVO
+	 * @return 추가된 레코드 갯수
+	 */
+	public int recordLog(AccLogVO AccLogVO);
 
 	/**
 	 * 선택된 해시태그 조회(회원 정보 조회)

@@ -85,6 +85,14 @@ public interface AccountProcInter {
      * @return
      */
     public int login(HashMap<String, Object> map);
+	
+	/**
+	 * 회원 로그 기록
+	 * 
+	 * @param AccLogVO
+	 * @return 추가된 레코드 갯수
+	 */
+	public int recordLog(AccLogVO AccLogVO);
     
     /**
      * 로그인된 회원 계정인지 검사

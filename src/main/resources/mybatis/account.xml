@@ -84,6 +84,13 @@
 		WHERE acc_id=#{acc_id} AND acc_pw=#{acc_pw}
 	</select>
 
+	<!-- 회원 로그 기록 -->
+	<insert id="recordLog" parameterType="dev.mvc.account.AccLogVO">
+		INSERT INTO ACC_LOG(acc_log_no, acc_no, acc_log_ip, acc_log_date)
+		VALUES(ACC_LOG_SEQ.nextval, #{acc_no}, #{acc_log_ip}, sysdate)
+	</insert>
+
+
 	<!-- 선택된 해시태그 조회(회원 정보 조회) -->
 	<select id="selectedTags" resultType="String" parameterType="int">
 		SELECT LISTAGG(h.tag_name, ',') WITHIN GROUP (ORDER BY tag_code DESC) AS

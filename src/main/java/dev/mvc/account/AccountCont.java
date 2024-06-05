@@ -305,7 +305,7 @@ public class AccountCont {
 	 * @return
 	 */
 	@GetMapping(value = "/login")
-	public String login_form(Model model, HttpServletRequest request,String url) {
+	public String login_form(Model model, HttpServletRequest request, AccLogVO accLogVO, String url) {
 
 		/* Cookie */
 		Cookie[] cookies = request.getCookies();
@@ -332,7 +332,7 @@ public class AccountCont {
 		model.addAttribute("url",url);
 		return "account/login";
 	}
-
+	
 	/**
 	 * 로그인 처리 (쿠키 기반)
 	 * 
@@ -340,8 +340,15 @@ public class AccountCont {
 	 * @return
 	 */
 	@PostMapping(value = "/login")
-	public String login_proc(HttpSession session, HttpServletRequest request, HttpServletResponse response, Model model,String url,
-			String acc_id, String acc_pw, @RequestParam(value = "id_save", defaultValue = "") String id_save) {
+	public String login_proc(HttpSession session,
+							 HttpServletRequest request,
+							 HttpServletResponse response,
+							 Model model,
+							 AccLogVO accLogVO,
+							 String url,
+							 String acc_id,
+							 String acc_pw,
+							 @RequestParam(value = "id_save", defaultValue = "") String id_save) {
 
 		String ip = request.getRemoteAddr(); // IP
 		System.out.println("---> 접속한 IP: " + ip);
@@ -375,6 +382,12 @@ public class AccountCont {
 			} else {
 				session.setAttribute("acc_grade", "guest");
 			}
+			
+			/* 회원 로그 저장 */
+			accLogVO.setAcc_no(accountVO.getAcc_no());
+			accLogVO.setAcc_log_ip(ip);
+			int log_cnt = this.accountProc.recordLog(accLogVO);
+			System.out.println("---> Record_log_cnt: " + log_cnt);
 
 			/* Cookie */
 			/* acc_id 관련 쿠키 저장 */
