@@ -39,11 +39,7 @@
 
 		<form name="update_frm" id="update_frm" th:object="${accountVO}" method="post" action="/account/update">
 			<input type="hidden" name="acc_no" th:value="${accountVO.acc_no}">
-			<!--
-			acc_no, acc_id, acc_pw, acc_name, acc_tel, acc_age, acc_date, acc_grade,
-					acc_img, acc_saved_img, acc_thumb_img, acc_img_size -->
-					
-			<hr>
+			<input type="hidden" id="my_acc_name" th:value="${accountVO.acc_name}">
 			
 			<span style="font-size: 18px;">필수 정보</span>
 
