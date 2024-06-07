@@ -771,6 +771,28 @@ public class Qna_contentsCont {
     return json.toString();
   }
   
+  /**
+   * 질문글 북마크 추가 처리
+   * @param session
+   * @param qna_commentVO
+   * @return
+   */
+  @PostMapping(value="/bookmark_add")
+  @ResponseBody
+  public String bookmark_add(HttpSession session, @RequestBody Qna_contentsVO qna_contentsVO) {
+    int acc_no = (int)session.getAttribute("acc_no");
+    
+    HashMap<String, Object> map = new HashMap<String, Object>();
+    map.put("qcon_no", qna_contentsVO.getQcon_no());
+    map.put("acc_no", acc_no);
+    int cnt = this.qna_contentsProc.bookmark_add(map);
+    
+    JSONObject json = new JSONObject();
+    json.put("res", cnt);  // 1: 성공, 0: 실패
+
+    return json.toString();
+  }
+  
   
     
 }
