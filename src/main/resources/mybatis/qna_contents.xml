@@ -5,7 +5,7 @@
 
   <!-- 전체 목록 -->
   <select id="qna_list_all" resultType="dev.mvc.qna_contents.Qna_contentsVO">
-    SELECT qcon_no, qcon_name, qcon_contents, qcon_views, qcon_comment, qcon_date
+    SELECT qcon_no, qcon_name, qcon_contents, qcon_views, qcon_comment, qcon_date, qcon_bookcnt
     FROM qna_contents
     ORDER BY qcon_no ASC
   </select>
@@ -17,7 +17,7 @@
       SELECT qna_contents_seq.nextval FROM dual
     </selectKey>
     
-    INSERT INTO QNA_CONTENTS(qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_comment, qcon_date, qcon_passwd)
+    INSERT INTO QNA_CONTENTS(qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookcnt, qcon_comment, qcon_date, qcon_passwd)
     VALUES(#{qcon_no}, #{cate_no}, #{acc_no}, #{qcon_name}, #{qcon_contents}, 0, 0, 0, sysdate, #{qcon_passwd})
   </insert>
   
@@ -29,7 +29,7 @@
   
   <!-- 특정 글에 따른 목록 -->
   <select id="list_by_qcon_no" resultType="dev.mvc.qna_contents.Qna_contentsVO">
-    SELECT qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_comment, qcon_date, qcon_passwd
+    SELECT qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookcnt, qcon_comment, qcon_date, qcon_passwd, qcon_bookmark
     FROM qna_contents
     where qcon_no=#{qcon_no}
   </select>
@@ -43,7 +43,7 @@
   
   <!-- 일반적인 조회 -->
   <select id="qna_read" resultType="dev.mvc.qna_contents.Qna_contentsVO" parameterType="int">
-    SELECT qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_comment, qcon_date, qcon_passwd
+    SELECT qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookcnt, qcon_comment, qcon_date, qcon_passwd, qcon_bookmark
     FROM qna_contents
     WHERE qcon_no= #{qcon_no}
   </select> 
@@ -57,7 +57,7 @@
 
   <!-- 카테고리별 검색 목록 -->
   <select id="list_by_qna_search" resultType="dev.mvc.qna_contents.Qna_contentsVO" parameterType="HashMap">
-    SELECT qcon_no, acc_no, cate_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_comment, qcon_date, word
+    SELECT qcon_no, acc_no, cate_no, qcon_name, qcon_contents, qcon_views, qcon_bookcnt, qcon_comment, qcon_date, word
     FROM qna_contents
     <choose>
       <when test="word == null or word == ''"> <!-- 검색하지 않는 경우 -->
@@ -90,11 +90,11 @@
 
   <!-- 카테고리별 검색 + 페이징 목록 -->
   <select id="list_by_qna_search_paging" resultType="dev.mvc.qna_contents.Qna_contentsVO" parameterType="HashMap">
-    SELECT qcon_no, acc_no, cate_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_comment, qcon_date, r
+    SELECT qcon_no, acc_no, cate_no, qcon_name, qcon_contents, qcon_views, qcon_bookcnt, qcon_comment, qcon_date, r
     FROM (
-              SELECT qcon_no, acc_no, cate_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_comment, qcon_date, rownum as r
+              SELECT qcon_no, acc_no, cate_no, qcon_name, qcon_contents, qcon_views, qcon_bookcnt, qcon_comment, qcon_date, rownum as r
               FROM (
-                        SELECT qcon_no, acc_no, cate_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_comment, qcon_date
+                        SELECT qcon_no, acc_no, cate_no, qcon_name, qcon_contents, qcon_views, qcon_bookcnt, qcon_comment, qcon_date
                         FROM qna_contents
                         <choose>
                           <when test="word == null or word == ''"> <!-- 검색하지 않는 경우 -->
@@ -262,6 +262,31 @@
     WHERE qcmt_no = #{qcmt_no}
   </delete>
   
+  <!-- 북마크 등록 -->
+  <insert id="bookmark_insert" parameterType="HashMap">
+    INSERT INTO bookmark(mark_no, acc_no, scon_no, qcon_no)
+    VALUES(BOOKMARK_SEQ.nextval, #{acc_no}, #{scon_no}, #{qcon_no})
+  </insert>
+  
+  <!-- 북마크 취소 -->
+  <delete id="bookmark_cancle" parameterType="HashMap">
+    DELETE FROM bookmark
+    WHERE qcon_no=#{qcon_no} AND acc_no=#{acc_no}
+  </delete>
+  
+  <!-- 질문글 북마크 공개 설정 -->
+  <update id="bookmark_update_visible_y" parameterType="Integer">
+    UPDATE qna_contents
+    SET qna_bookmark='Y'
+    WHERE qcon_no=#{qcon_no}
+  </update>
+  
+  <!-- 질문글 북마크 비공개 설정 -->
+  <update id="bookmark_update_visible_n" parameterType="Integer">
+    UPDATE qna_contents
+    SET qna_bookmark='N'
+    WHERE qcon_no=#{qcon_no}
+  </update>
   
 </mapper>
 

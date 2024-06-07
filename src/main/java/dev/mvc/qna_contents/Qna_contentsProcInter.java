@@ -195,4 +195,32 @@ public interface Qna_contentsProcInter {
    */
   public int qna_search_count_comment(int qcon_no);
   
+  /**
+   * 북마크 테이블 질문글 번호 등록
+   * @param map
+   * @return
+   */
+  public int bookmark_insert(HashMap<String, Object> map);
+  
+  /**
+   * 북마크 테이블 질문글 번호 삭제
+   * @param map
+   * @return
+   */
+  public int bookmark_cancle(HashMap<String, Object> map);
+  
+  /**
+   * 질문글 북마크 공개 설정
+   * @param qcon_no
+   * @return
+   */
+  public int bookmark_update_visible_y(int qcon_no);
+  
+  /**
+   * 질문글 북마크 비공개 설정
+   * @param qcon_no
+   * @return
+   */
+  public int bookmark_update_visible_n(int qcon_no);
+  
 }

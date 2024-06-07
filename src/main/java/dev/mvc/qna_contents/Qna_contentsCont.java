@@ -107,7 +107,7 @@ public class Qna_contentsCont {
       model.addAttribute("categoryVO", categoryVO);
       
       model.addAttribute("qna_contentsVO", qna_contentsVO);
-      model.addAttribute("acc_no",session.getAttribute("acc_no")); 
+      model.addAttribute("acc_no", session.getAttribute("acc_no")); 
       
       return "qcontents/qna_create"; // /templates/qcontents/create.html
     } else {
@@ -125,95 +125,89 @@ public class Qna_contentsCont {
    * @param ra
    * @return
    */
-  @PostMapping(value="/qna_create")
-  public String qna_create(Model model,
-                            HttpServletRequest request,
-                            HttpSession session,
-                            RedirectAttributes ra,
-                            Qna_imageVO qna_imageVO,
-                            Qna_contentsVO qna_contentsVO) {
+  @PostMapping(value = "/qna_create")
+  public String qna_create(Model model, HttpServletRequest request, HttpSession session, RedirectAttributes ra,
+      Qna_imageVO qna_imageVO, Qna_contentsVO qna_contentsVO) {
 
-      // 질문글 등록 전 출력
-      System.out.println("-> [레코드 등록 전] qcon_no: " + qna_contentsVO.getQcon_no());
-      System.out.println("-> [레코드 등록 전] file_no: " + qna_imageVO.getFile_no());
-      
-      // 카테고리 번호 가져오기
-      int cate_no = qna_contentsVO.getCate_no(); // 부모글 번호
-      
-      int acc_no = (int) session.getAttribute("acc_no"); // memberno FK
-      qna_contentsVO.setAcc_no(acc_no);
-      
-      // 질문글 등록 처리
-      int cnt = this.qna_contentsProc.qna_create(qna_contentsVO);
-      
-      // 질문글 등록 성공 여부 확인
-      if (cnt == 1) { // 질문글 등록 성공
-          System.out.println("등록 성공");
-          System.out.println("-> cate_no: " + qna_contentsVO.getCate_no());
-          this.categoryProc.cnt_plus(qna_contentsVO.getCate_no()); // 관련 글 수 증가
-          
-          // 새로 등록된 질문글 번호 가져오기
-          int qcon_no = qna_contentsVO.getQcon_no();
-          System.out.println("-> [레코드 등록 후] qcon_no: " + qcon_no);
-          
-          // ---------------------------------------------------------------
-          // 파일 전송 코드 시작
-          // ---------------------------------------------------------------
-          String file_origin_name = ""; // 원본 파일명
-          String file_upload_name = ""; // 업로드된 파일명
-          long file_size = 0;  // 파일 사이즈
-          String file_thumb_name = ""; // Preview 이미지
-          
-          String upDir = Qcontents.getUploadDir(); // 파일을 업로드할 폴더 준비
-          
-          // 전송 파일이 없어서도 fnamesMF 객체가 생성됨.
-          List<MultipartFile> fnamesMF = qna_imageVO.getFnamesMF();
-          
-          int count = fnamesMF.size(); // 전송 파일 갯수
-          
-          if (count > 0) {
-              for (MultipartFile multipartFile : fnamesMF) { // 파일 추출, 1개이상 파일 처리
-                  file_size = multipartFile.getSize();  // 파일 크기
-                  if (file_size > 0) { // 파일 크기 체크
-                      file_origin_name = multipartFile.getOriginalFilename(); // 원본 파일명
-                      file_upload_name = Upload.saveFileSpring(multipartFile, upDir); // 파일 저장, 업로드된 파일명
-                      
-                      if (Tool.isImage(file_origin_name)) { // 이미지인지 검사
-                          file_thumb_name = Tool.preview(upDir, file_upload_name, 200, 150); // thumb 이미지 생성
-                      }
-                  }
-                  
-                  qna_imageVO.setQcon_no(qcon_no);
-                  qna_imageVO.setFile_origin_name(file_origin_name);
-                  qna_imageVO.setFile_upload_name(file_upload_name);
-                  qna_imageVO.setFile_thumb_name(file_thumb_name);
-                  qna_imageVO.setFile_size(file_size);
-              }
-          }    
-          // -----------------------------------------------------
-          // 파일 전송 코드 종료
-          // -----------------------------------------------------
-          
-          // 이미지 파일 등록 처리
-          this.qna_contentsProc.qna_attach_create(qna_imageVO);
-          
-          // 질문글 등록 성공했을 때
-          ra.addAttribute("cate_no", cate_no);
-          ra.addAttribute("qcon_no", qcon_no);   
-          ra.addAttribute("acc_no", acc_no);
-          ra.addAttribute("file_no", qna_imageVO.getFile_no());
+    // 질문글 등록 전 출력
+    System.out.println("-> [레코드 등록 전] qcon_no: " + qna_contentsVO.getQcon_no());
+    System.out.println("-> [레코드 등록 전] file_no: " + qna_imageVO.getFile_no());
 
-          return "redirect:/qcontents/qna_list_all";
-      } else { // 질문글 등록 실패
-          System.out.println("질문글 등록 실패");
-          
-          ra.addFlashAttribute("code", "qna_create_fail"); // 등록 실패
-          ra.addFlashAttribute("cnt", 0); // cnt: 0, 질문글 등록 실패
-          ra.addFlashAttribute("url", "/qcontents/msg"); // /templates/qcontents/msg.html
-          
-          return "redirect:/account/login";
+    // 카테고리 번호 가져오기
+    int cate_no = qna_contentsVO.getCate_no(); // 부모글 번호
+
+    int acc_no = (int) session.getAttribute("acc_no"); // memberno FK
+    qna_contentsVO.setAcc_no(acc_no);
+
+    // 질문글 등록 처리
+    int cnt = this.qna_contentsProc.qna_create(qna_contentsVO);
+
+    // 질문글 등록 성공 여부 확인
+    if (cnt == 1) { // 질문글 등록 성공
+      System.out.println("등록 성공");
+      System.out.println("-> cate_no: " + qna_contentsVO.getCate_no());
+      this.categoryProc.cnt_plus(qna_contentsVO.getCate_no()); // 관련 글 수 증가
+
+      // 새로 등록된 질문글 번호 가져오기
+      int qcon_no = qna_contentsVO.getQcon_no();
+      System.out.println("-> [레코드 등록 후] qcon_no: " + qcon_no);
+
+      // ---------------------------------------------------------------
+      // 파일 전송 코드 시작
+      // ---------------------------------------------------------------
+      String upDir = Qcontents.getUploadDir(); // 파일을 업로드할 폴더 준비
+
+      // 전송 파일이 없어서도 fnamesMF 객체가 생성됨.
+      List<MultipartFile> fnamesMF = qna_imageVO.getFnamesMF();
+
+      int count = fnamesMF.size(); // 전송 파일 갯수
+
+      if (count > 0) {
+        for (MultipartFile multipartFile : fnamesMF) { // 파일 추출, 1개이상 파일 처리
+          long file_size = multipartFile.getSize(); // 파일 크기
+          if (file_size > 0) { // 파일 크기 체크
+            String file_origin_name = multipartFile.getOriginalFilename(); // 원본 파일명
+            String file_upload_name = Upload.saveFileSpring(multipartFile, upDir); // 파일 저장, 업로드된 파일명
+            String file_thumb_name = ""; // Preview 이미지
+
+            if (Tool.isImage(file_origin_name)) { // 이미지인지 검사
+              file_thumb_name = Tool.preview(upDir, file_upload_name, 200, 150); // thumb 이미지 생성
+            }
+
+            // 개별 파일에 대한 Qna_imageVO 객체 생성
+            Qna_imageVO imageVO = new Qna_imageVO();
+            imageVO.setQcon_no(qcon_no);
+            imageVO.setFile_origin_name(file_origin_name);
+            imageVO.setFile_upload_name(file_upload_name);
+            imageVO.setFile_thumb_name(file_thumb_name);
+            imageVO.setFile_size(file_size);
+
+            // 이미지 파일 등록 처리
+            this.qna_contentsProc.qna_attach_create(imageVO);
+          }
+        }
       }
-}
+      // -----------------------------------------------------
+      // 파일 전송 코드 종료
+      // -----------------------------------------------------
+
+      // 질문글 등록 성공했을 때
+      ra.addAttribute("cate_no", cate_no);
+      ra.addAttribute("qcon_no", qcon_no);
+      ra.addAttribute("acc_no", acc_no);
+
+      return "redirect:/qcontents/qna_list_all";
+    } else { // 질문글 등록 실패
+      System.out.println("질문글 등록 실패");
+
+      ra.addFlashAttribute("code", "qna_create_fail"); // 등록 실패
+      ra.addFlashAttribute("cnt", 0); // cnt: 0, 질문글 등록 실패
+      ra.addFlashAttribute("url", "/qcontents/msg"); // /templates/qcontents/msg.html
+
+      return "redirect:/account/login";
+    }
+  }
+
     
     
 
@@ -566,7 +560,7 @@ public class Qna_contentsCont {
     
     System.out.println("-> acc_no: " + session.getAttribute("acc_no"));
 
-    if (this.accountProc.isMemberAdmin(session)) {
+    if (accountProc.isMemberAdmin(session)) {
       model.addAttribute("cate_no", cate_no);
       model.addAttribute("now_page", now_page);
       
@@ -736,6 +730,8 @@ public class Qna_contentsCont {
 
     return json.toString();
   }
+  
+  
 
 }
 
