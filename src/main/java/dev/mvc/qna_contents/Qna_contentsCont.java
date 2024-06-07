@@ -223,7 +223,7 @@ public class Qna_contentsCont {
    * @return
    */
   @GetMapping(value="/qna_list_all")
-  public String list_by_qna_search_paging(Model model, HttpSession session, int cate_no,
+  public String list_by_qna_search_paging(Model model, HttpSession session, int cate_no, 
                                                     @RequestParam(name="word", defaultValue = "") String word,
                                                     @RequestParam(name="now_page", defaultValue = "1") int now_page) {
     
@@ -271,6 +271,13 @@ public class Qna_contentsCont {
     int no = search_count - ((now_page - 1) * Qcontents.RECORD_PER_PAGE);
     model.addAttribute("no", no);
     
+    // 댓글 수 조회 및 저장
+    for (Qna_contentsVO qna_contentsVO : list) {
+        int qcon_no = qna_contentsVO.getQcon_no();
+        int comment_cnt = this.qna_contentsProc.qna_search_count_comment(qcon_no);
+        qna_contentsVO.setQcon_comment(comment_cnt);
+    }
+    
     return "qcontents/list_by_qna_search_paging"; // /templates/qcontents/list_by_qna_search_paging.html
   }
   
@@ -303,6 +310,11 @@ public class Qna_contentsCont {
       // 조회수 증가
       this.qna_contentsProc.qna_update_view(qcon_no);
       
+      // 댓글 수 조회
+      int comment_cnt = this.qna_contentsProc.qna_search_count_comment(qcon_no);
+      // System.out.println("질문글 댓글 수: " + comment_cnt);
+      model.addAttribute("comment_cnt", comment_cnt);
+      
       // 질문글 가져오기
       Qna_contentsVO qna_contentsVO = this.qna_contentsProc.qna_read(qcon_no);
       model.addAttribute("qna_contentsVO", qna_contentsVO);
@@ -313,6 +325,19 @@ public class Qna_contentsCont {
       ArrayList<Qna_imageVO> qna_imageVO = this.qna_contentsProc.qna_read_image(qcon_no);
       model.addAttribute("qna_imageVO", qna_imageVO);
       model.addAttribute("now_page", now_page);
+      
+      // 질문글 북마크
+      HashMap<String, Object> map = new HashMap<String, Object>();
+      map.put("qcon_no", qna_contentsVO.getQcon_no());
+      map.put("acc_no", (int)session.getAttribute("acc_no"));
+      
+      int qcon_bookcnt = this.qna_contentsProc.is_bookmarked(map);
+      if(qcon_bookcnt > 0) {
+        qna_contentsVO.setQcon_bookmark("Y");
+      } else {
+        qna_contentsVO.setQcon_bookmark("N");
+      }
+      
 
       model.addAttribute("now_page", now_page);
       
@@ -551,7 +576,7 @@ public class Qna_contentsCont {
    * @param qcon_no
    * @return
    */
-  @GetMapping("/qna_delete")
+  @GetMapping(value="/qna_delete")
   public String qna_delete(HttpSession session, 
                                   Model model, 
                                   RedirectAttributes ra,
@@ -587,14 +612,14 @@ public class Qna_contentsCont {
    * @param ra
    * @return
    */
-  @PostMapping("/qna_delete")
+  @PostMapping(value="/qna_delete")
   public String qna_delete(RedirectAttributes ra, 
                                   int qcon_no, int cate_no, int now_page) {
     
 //	  System.out.println("-> qcon_no:" + qcon_no);
 	  ArrayList<Qna_contentsVO> list = this.qna_contentsProc.list_by_qcon_no(qcon_no); //회원정보 불러오기 위함.
 	  
-	  Qna_contentsVO qna_contentsVO = this.qna_contentsProc.qna_read(qcon_no); // scon_no 가져오기
+	  Qna_contentsVO qna_contentsVO = this.qna_contentsProc.qna_read(qcon_no);
 	  
 	  int acc_no = list.get(0).getAcc_no(); //댓글 삭제 parameter 값에 넣을 회원번호
 	  
@@ -611,6 +636,11 @@ public class Qna_contentsCont {
 	  if(cnt_contents>0) {
 		  System.out.println("글 삭제 성공");
 		  this.categoryProc.cnt_minus(qna_contentsVO.getCate_no()); // 관련 글 수 감소
+	  }
+	  
+	  int cnt_comments = this.qna_contentsProc.all_qna_delete_comment(qcon_no);
+	  if(cnt_comments>0) {
+	    System.out.println("댓글 삭제 성공");
 	  }
 	  
 	  ra.addAttribute("cate_no",cate_no);
@@ -731,8 +761,49 @@ public class Qna_contentsCont {
     return json.toString();
   }
   
-  
+  /**
+   * 질문글 북마크 추가 또는 삭제
+   * @param session
+   * @param qcon_no
+   * @param action
+   * @return
+   */
+  @PostMapping(value = "/bookmark/{qcon_no}/{action}")
+  @ResponseBody
+  public String toggleBookmark(HttpSession session, @PathVariable int qcon_no, @PathVariable String action) {
+      JSONObject json = new JSONObject();
 
+      if (this.accountProc.isMember(session)) {
+          int acc_no = (int) session.getAttribute("acc_no");
+
+          HashMap<String, Object> map = new HashMap<>();
+          map.put("qcon_no", qcon_no);
+          map.put("acc_no", acc_no);
+
+          int cnt;
+          if ("add".equals(action)) {
+              cnt = this.qna_contentsProc.bookmark_add(map);
+          } else if ("cancel".equals(action)) {
+              cnt = this.qna_contentsProc.bookmark_cancel(map);
+          } else {
+              // 잘못된 액션 요청
+              json.put("cnt", 0);
+              return json.toString();
+          }
+
+          if (cnt == 1) {
+              json.put("cnt", cnt);
+          } else {
+              json.put("cnt", 0);
+          }
+      } else {
+          json.put("cnt", 0);
+      }
+
+      return json.toString();
+  }
+
+    
 }
 
 

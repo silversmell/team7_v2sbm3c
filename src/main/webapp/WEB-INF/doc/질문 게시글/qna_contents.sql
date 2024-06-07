@@ -11,11 +11,12 @@ CREATE TABLE QNA_CONTENTS(
 		QCON_NAME VARCHAR2(100) NOT NULL,
 		QCON_CONTENTS VARCHAR2(3000),
 		QCON_VIEWS NUMBER(7) DEFAULT 0 NOT NULL,
-		QCON_BOOKMARK NUMBER(7) DEFAULT 0 NOT NULL,
+		QCON_BOOKCNT NUMBER(7) DEFAULT 0 NOT NULL,
+        QCON_BOOKMARK CHAR(1) DEFAULT 'N' NOT NULL,
 		QCON_COMMENT NUMBER(7) DEFAULT 0 NOT NULL,
 		QCON_DATE DATE NOT NULL,
         WORD VARCHAR2(30)             NULL,
-        QCON_PASSWD  VARCHAR2(100)          NOT NULL,
+        QCON_PASSWD  VARCHAR2(30)          NOT NULL,
   FOREIGN KEY (CATE_NO) REFERENCES CATEGORY (CATE_NO),
   FOREIGN KEY (ACC_NO) REFERENCES ACCOUNT (ACC_NO)
 );
@@ -27,7 +28,8 @@ COMMENT ON COLUMN QNA_CONTENTS.ACC_NO is '회원 번호';
 COMMENT ON COLUMN QNA_CONTENTS.QCON_NAME is '제목';
 COMMENT ON COLUMN QNA_CONTENTS.QCON_CONTENTS is '내용';
 COMMENT ON COLUMN QNA_CONTENTS.QCON_VIEWS is '조회수';
-COMMENT ON COLUMN QNA_CONTENTS.QCON_BOOKMARK is '북마크수';
+COMMENT ON COLUMN QNA_CONTENTS.QCON_BOOKMARK is '북마크';
+COMMENT ON COLUMN QNA_CONTENTS.QCON_BOOKCNT is '북마크수';
 COMMENT ON COLUMN QNA_CONTENTS.QCON_COMMENT is '댓글수';
 COMMENT ON COLUMN QNA_CONTENTS.QCON_DATE is '등록일';
 COMMENT ON COLUMN QNA_CONTENTS.WORD is '검색어';
@@ -46,15 +48,9 @@ commit;
 SELECT * FROM qna_contents;
 
 -- Create, 등록: 1건 이상
-INSERT INTO QNA_CONTENTS(qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_comment, qcon_date, word, qcon_passwd)
-VALUES(qna_contents_seq.nextval, 2, 1, '찾아주세요!', '사진 속 물건과 비슷한게 있을까요?', 0, 0, 0, sysdate, 0, '1234');
-
-INSERT INTO QNA_CONTENTS(qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_comment, qcon_date, word, qcon_passwd)
-VALUES(qna_contents_seq.nextval, 2, 2, '가성비', '화이트 데스크테리어에 어울릴만한 가성비 아이템 추천해주세요.', 0, 0, 0, sysdate, 0, '1234');
-
-INSERT INTO QNA_CONTENTS(qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_comment, qcon_date, word, qcon_passwd)
-VALUES(qna_contents_seq.nextval, 2, 3, '대신 골라주삼', '내 책상과 어울릴만한 아이템 하나 골라주라', 0, 0, 0, sysdate, 0, '1234');
-
+INSERT INTO QNA_CONTENTS(qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_bookcnt, qcon_comment, qcon_date, word, qcon_passwd)
+VALUES(qna_contents_seq.nextval, 2, 1, '찾아주세요!', '사진 속 물건과 비슷한게 있을까요?', 0, 'N', 0, 0, sysdate, 0, '1234');
+rollback;
 commit;
 
 -- 전체 목록
@@ -145,3 +141,21 @@ WHERE acc_no=1;
 -- 특정 회원에 속한 모든 레코드 삭제
 DELETE FROM qna_contents
 WHERE acc_no=1;
+
+-- 북마크 수 확인
+SELECT count(*)
+FROM bookmark
+WHERE qcon_no=1 AND acc_no=3;
+
+-- 북마크 추가
+INSERT INTO bookmark(mark_no, acc_no, qcon_no)
+VALUES(bookmark_seq.nextval, 3, 1);
+
+-- 북마크 삭제
+DELETE FROM bookmark
+WHERE qcon_no=6 AND acc_no=3;
+
+-- 특정 질문글 댓글 전체 삭제
+DELETE FROM qna_comment 
+WHERE qcon_no = 2; 
+

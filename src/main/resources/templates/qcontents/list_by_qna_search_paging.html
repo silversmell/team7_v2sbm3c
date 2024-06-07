@@ -46,7 +46,8 @@
         <td class='td_left'>
           <span th:text="${qna_contentsVO.qcon_name}" style="font-weight: bold;"></span>
           <span th:text="|&nbsp;${qna_contentsVO.qcon_date.substring(0, 10)}|"></span><br>
-          <span style="font-size: 1em;" th:text="|조회수: ${qna_contentsVO.qcon_views}|"></span><br>
+          <span style="font-size: 1em;" th:text="|조회수: ${qna_contentsVO.qcon_views}|"></span>
+          <span style="font-size: 1em;" th:text="|댓글수: ${qna_contentsVO.qcon_comment}|"></span><br>
           <span th:if="${qna_contentsVO.qcon_contents.length() > 180}" 
                 th:text="|${qna_contentsVO.qcon_contents.substring(0, 180)}...|"></span>
           <span th:if="${qna_contentsVO.qcon_contents.length() <= 180}" 
@@ -54,10 +55,10 @@
         </td>
       </tr>
       <tr th:if="${list.size() == 0 || qna_imageVO.size() == 0}">
-          <td colspan="2" style="text-align: center;">관련 글이 등록되지 않았습니다.</td>
-      </tr>
-      <tr th:if="${list.size() > 0 && qna_imageVO.size() == 0}">
-          <td colspan="2" style="text-align: center;">관련된 이미지가 없습니다.</td>
+          <td colspan="2" style="text-align: center;">
+              <span th:if="${list.size() == 0}">관련된 글이 등록되지 않았습니다.</span>
+              <span th:if="${qna_imageVO.size() == 0}">이미지를 등록하고싶을 땐, 달리AI를 이용해보세요!</span>
+          </td>
       </tr>
     </tbody>
   </table>

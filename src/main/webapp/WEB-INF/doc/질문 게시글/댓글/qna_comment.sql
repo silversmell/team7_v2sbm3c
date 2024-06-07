@@ -58,3 +58,8 @@ SELECT qcmt_no, acc_no, qcon_no, qcmt_contents, qcmt_date
 FROM qna_comment
 WHERE qcon_no=1
 ORDER BY qcmt_no DESC;
+
+-- 특정 질문글 전체 댓글
+SELECT count(*)
+FROM qna_comment
+WHERE qcon_no=6;

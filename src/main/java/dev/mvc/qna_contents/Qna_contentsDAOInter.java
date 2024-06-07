@@ -189,38 +189,41 @@ public interface Qna_contentsDAOInter {
   public int qna_delete_comment(int qcmt_no);
   
   /**
+   * 질문글 전체 댓글 삭제
+   * @param qcmt_no
+   * @return
+   */
+  public int all_qna_delete_comment(int qcon_no);
+  
+  /**
    * 질문글 댓글 수
    * @param qcon_no
    * @return
    */
   public int qna_search_count_comment(int qcon_no);
-  
+   
   /**
-   * 북마크 테이블 질문글 번호 등록
-   * @param map
-   * @return
-   */
-  public int bookmark_insert(HashMap<String, Object> map);
-  
-  /**
-   * 북마크 테이블 질문글 번호 삭제
-   * @param map
-   * @return
-   */
-  public int bookmark_cancle(HashMap<String, Object> map);
-  
-  /**
-   * 질문글 북마크 공개 설정
+   * 질문글 북마크 확인
+   * @param acc_no
    * @param qcon_no
    * @return
    */
-  public int bookmark_update_visible_y(int qcon_no);
+  public int is_bookmarked(HashMap<String, Object> map);
   
   /**
-   * 질문글 북마크 비공개 설정
+   * 질문글 북마크 추가
+   * @param acc_no
    * @param qcon_no
    * @return
    */
-  public int bookmark_update_visible_n(int qcon_no);
+  public int bookmark_add(HashMap<String, Object> map);
+  
+  /**
+   * 질문글 북마크 삭제
+   * @param acc_no
+   * @param qcon_no
+   * @return
+   */
+  public int bookmark_cancel(HashMap<String, Object> map);
   
 }

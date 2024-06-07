@@ -262,31 +262,30 @@
     WHERE qcmt_no = #{qcmt_no}
   </delete>
   
-  <!-- 북마크 등록 -->
-  <insert id="bookmark_insert" parameterType="HashMap">
-    INSERT INTO bookmark(mark_no, acc_no, scon_no, qcon_no)
-    VALUES(BOOKMARK_SEQ.nextval, #{acc_no}, #{scon_no}, #{qcon_no})
-  </insert>
+  <!-- 특정 질문글 댓글 전체 삭제 -->
+  <delete id="all_qna_delete_comment" parameterType="int">
+    DELETE FROM qna_comment 
+    WHERE qcon_no = #{qcon_no}
+  </delete>
   
-  <!-- 북마크 취소 -->
-  <delete id="bookmark_cancle" parameterType="HashMap">
+  <!-- 질문글 북마크 확인 -->
+  <select id="is_bookmarked" parameterType="HashMap" resultType="int">
+    SELECT count(*)
+    FROM bookmark
+    WHERE qcon_no=#{qcon_no} AND acc_no=#{acc_no}
+  </select>
+  
+  <!-- 질문글 북마크 추가 -->
+  <insert id="bookmark_add" parameterType="HashMap">
+    INSERT INTO bookmark(mark_no, acc_no, qcon_no)
+    VALUES(bookmark_seq.nextval, #{acc_no}, #{qcon_no}) 
+  </insert>
+
+  <!-- 질문글 북마크 취소 -->
+  <delete id="bookmark_cancel" parameterType="HashMap">
     DELETE FROM bookmark
     WHERE qcon_no=#{qcon_no} AND acc_no=#{acc_no}
   </delete>
-  
-  <!-- 질문글 북마크 공개 설정 -->
-  <update id="bookmark_update_visible_y" parameterType="Integer">
-    UPDATE qna_contents
-    SET qna_bookmark='Y'
-    WHERE qcon_no=#{qcon_no}
-  </update>
-  
-  <!-- 질문글 북마크 비공개 설정 -->
-  <update id="bookmark_update_visible_n" parameterType="Integer">
-    UPDATE qna_contents
-    SET qna_bookmark='N'
-    WHERE qcon_no=#{qcon_no}
-  </update>
   
 </mapper>
 

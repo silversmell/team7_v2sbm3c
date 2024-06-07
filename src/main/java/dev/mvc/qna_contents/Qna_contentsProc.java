@@ -335,32 +335,31 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
   }
   
   @Override
-  public int bookmark_insert(HashMap<String, Object> map) {
-    int cnt = this.qna_contentsDAO.bookmark_insert(map);
+  public int all_qna_delete_comment(int qcon_no) {
+    int cnt = this.qna_contentsDAO.all_qna_delete_comment(qcon_no);
     
     return cnt;
   }
   
-  @Override
-  public int bookmark_cancle(HashMap<String, Object> map) {
-    int cnt = this.qna_contentsDAO.bookmark_cancle(map);
-    
-    return cnt;
-  }
-  
-  @Override
-  public int bookmark_update_visible_y(int qcon_no) {
-    int cnt = this.qna_contentsDAO.bookmark_update_visible_y(qcon_no);
-    
-    return cnt;
-  }
-  
-  @Override
-  public int bookmark_update_visible_n(int qcon_no) {
-    int cnt = this.qna_contentsDAO.bookmark_update_visible_n(qcon_no);
-    
-    return cnt;
-  }
+ @Override
+ public int is_bookmarked(HashMap<String, Object> map) {
+   int cnt =  this.qna_contentsDAO.is_bookmarked(map);
+   
+   return cnt;
+ }
 
+ @Override
+ public int bookmark_add(HashMap<String, Object> map) {
+   int cnt =  this.qna_contentsDAO.bookmark_add(map);
+   
+   return cnt;
+ }
+ 
+ @Override
+ public int bookmark_cancel(HashMap<String, Object> map) {
+   int cnt =  this.qna_contentsDAO.bookmark_cancel(map);
+   
+   return cnt;
+ }
   
 }
