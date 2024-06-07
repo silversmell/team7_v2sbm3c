@@ -338,7 +338,6 @@ public class Qna_contentsCont {
         qna_contentsVO.setQcon_bookmark("N");
       }
       
-
       model.addAttribute("now_page", now_page);
       
       return "qcontents/qna_read"; // /templates/qcontents/qna_read;
@@ -697,7 +696,7 @@ public class Qna_contentsCont {
    */
   @GetMapping(value="/qna_read_comment", produces ="application/json")
   @ResponseBody
-  public String qna_read_comment(int qcmt_no) {
+  public String qna_read_comment(int qcmt_no, int qcon_no) {
     Qna_commentVO qna_commentVO = this.qna_contentsProc.qna_read_comment(qcmt_no);
     
     JSONObject row = new JSONObject();
@@ -709,6 +708,9 @@ public class Qna_contentsCont {
     
     JSONObject obj = new JSONObject();
     obj.put("res", row);
+    
+    int commentCount = this.qna_contentsProc.qna_search_count_comment(qcon_no);
+    obj.put("commentCount", commentCount);
     
     return obj.toString();
   }
@@ -761,48 +763,7 @@ public class Qna_contentsCont {
     return json.toString();
   }
   
-  /**
-   * 질문글 북마크 추가 또는 삭제
-   * @param session
-   * @param qcon_no
-   * @param action
-   * @return
-   */
-  @PostMapping(value = "/bookmark/{qcon_no}/{action}")
-  @ResponseBody
-  public String toggleBookmark(HttpSession session, @PathVariable int qcon_no, @PathVariable String action) {
-      JSONObject json = new JSONObject();
-
-      if (this.accountProc.isMember(session)) {
-          int acc_no = (int) session.getAttribute("acc_no");
-
-          HashMap<String, Object> map = new HashMap<>();
-          map.put("qcon_no", qcon_no);
-          map.put("acc_no", acc_no);
-
-          int cnt;
-          if ("add".equals(action)) {
-              cnt = this.qna_contentsProc.bookmark_add(map);
-          } else if ("cancel".equals(action)) {
-              cnt = this.qna_contentsProc.bookmark_cancel(map);
-          } else {
-              // 잘못된 액션 요청
-              json.put("cnt", 0);
-              return json.toString();
-          }
-
-          if (cnt == 1) {
-              json.put("cnt", cnt);
-          } else {
-              json.put("cnt", 0);
-          }
-      } else {
-          json.put("cnt", 0);
-      }
-
-      return json.toString();
-  }
-
+  
     
 }
 

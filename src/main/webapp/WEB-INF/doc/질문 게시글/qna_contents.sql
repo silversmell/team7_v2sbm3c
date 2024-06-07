@@ -157,5 +157,14 @@ WHERE qcon_no=6 AND acc_no=3;
 
 -- 특정 질문글 댓글 전체 삭제
 DELETE FROM qna_comment 
-WHERE qcon_no = 2; 
+WHERE qcon_no = 2;
 
+-- 질문글 북마크 공개
+update qna_contents
+set qcon_bookmark='Y'
+where qcon_no=1;
+
+-- 질문글 북마크 비공개
+update qna_contents
+set qcon_bookmark='N'
+where qcon_no=1;

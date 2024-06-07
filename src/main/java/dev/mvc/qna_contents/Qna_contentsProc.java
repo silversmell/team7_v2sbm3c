@@ -361,5 +361,19 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
    
    return cnt;
  }
+ 
+ @Override
+ public int bookmark_y(int qcon_no, int acc_no) {
+   int cnt = this.qna_contentsDAO.bookmark_y(qcon_no, acc_no);
+   
+   return cnt;
+ }
+ 
+ @Override
+ public int bookmark_n(int qcon_no, int acc_no) {
+   int cnt = this.qna_contentsDAO.bookmark_n(qcon_no, acc_no);
+   
+   return cnt;
+ }
   
 }

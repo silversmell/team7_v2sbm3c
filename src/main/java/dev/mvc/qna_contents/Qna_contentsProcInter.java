@@ -219,11 +219,27 @@ public interface Qna_contentsProcInter {
   public int bookmark_add(HashMap<String, Object> map);
   
   /**
-   * 질문글 북마크 삭제
+   * 질문글 북마크 취소
    * @param acc_no
    * @param qcon_no
    * @return
    */
   public int bookmark_cancel(HashMap<String, Object> map);
+  
+  /**
+   * 질문글 북마크 공개
+   * @param qcon_no
+   * @param acc_no
+   * @return
+   */
+  public int bookmark_y(int qcon_no, int acc_no);
+  
+  /**
+   * 질문글 북마크 비공개
+   * @param qcon_no
+   * @param acc_no
+   * @return
+   */
+  public int bookmark_n(int qcon_no, int acc_no);
   
 }
