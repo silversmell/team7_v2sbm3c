@@ -337,9 +337,17 @@
     	<span th:text="${scontentsVO.scon_title}" style="font-size:2em;font-weight: bold;"></span>
     	<span style="font-size: 1em; margin-left:10px;" th:text="|조회수: ${scontentsVO.scon_views}|"></span>
     		<div style="margin-left: auto; margin-right:90px;">
+                   <span th:if="${scontentsVO.mark =='N'}">
+            <img src="/css/images/bookmark_off.png" id="bookmarkImage" class="icon" onclick="mark()" style="width:24px; height: 24px;">
+        </span>
+        <span  th:unless="${scontentsVO.mark =='N'}">
+            <img src="/css/images/bookmark_on.png" id="bookmarkImage" class="icon" onclick="mark()" style="width:24px; height: 24px;">
+        </span>
     			<span style="font-size: 1em; margin-left:10px;" th:text="${scontentsVO.scon_date}"></span>
     		</div>
     </div>
+    <hr size="10;" style="height: 10px; ">
+    <!-- 
      <div style="float:right; ">
         <span th:if="${scontentsVO.mark =='N'}">
             <img src="/css/images/bookmark_off.png" id="bookmarkImage" class="icon" onclick="mark()" style="width:24px; height: 24px;">
@@ -347,7 +355,7 @@
         <span th:unless="${scontentsVO.mark =='N'}">
             <img src="/css/images/bookmark_on.png" id="bookmarkImage" class="icon" onclick="mark()" style="width:24px; height: 24px;">
         </span>
-    </div>
+    </div> -->
 
 
     <div class="fotorama" data-width="80%" data-ratio="800/520" data-max-width="100%" style='display: flex; justify-content: center; align-items: center;'>
