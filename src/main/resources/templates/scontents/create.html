@@ -13,6 +13,9 @@ function send(){
 	      isChecked = true;
 	    }
 	  });
+	    var urlInput = document.getElementById("url");
+	    var url = urlInput.value.trim();
+
 	  let title_tag = document.getElementById("title");
 	  if(title_tag.value==' '){
 		  alert("제목을 입력해주세요");
@@ -26,6 +29,10 @@ function send(){
 		  alert("이미지를 선택하세요.");
 		  return false;
 	  }
+	    if (url === "") {
+	        alert("URL을 입력해주세요.");
+	        return false;
+	    }
 	 
 	  document.getElementById('frm').submit(); 
 	}
@@ -86,19 +93,19 @@ function send(){
     </div>   -->
         <div>
        <label>url1</label>
-       <input type='url' name='url_link'  
-                 autofocus="autofocus" class="form-control" style='width: 100%;'/>
+       <input type="url" name='url_link'  id="url" value=' '     
+                 autofocus="autofocus" class="form-control" style='width: 100%;' required />
        <label>url2</label>
-       <input type='url'  name='url_link'  value=" "
+       <input type="url" name='url_link'  value=" "
                  autofocus="autofocus" class="form-control" style='width: 100%;'>
        <label>url3</label>
-       <input type='url' name='url_link'  value=" "
+       <input type="url" name='url_link'  value=" "
                  autofocus="autofocus" class="form-control" style='width: 100%;'>
        <label>url4</label>
-       <input type='url'  name='url_link' value=" "
+       <input type="url" name='url_link' value=" "
                  autofocus="autofocus" class="form-control" style='width: 100%;'>
        <label>url5</label>
-       <input type='url' name='url_link'  value=" "
+       <input type="url"name='url_link'  value=" "
                  autofocus="autofocus" class="form-control" style='width: 100%;'>
       </div>
       

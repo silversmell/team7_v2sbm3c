@@ -113,7 +113,15 @@
 			delete from comment_like
 			where scmt_no=#{scmt_no}
 		</delete>
-
+		<!--  
+		<select id="count_like" parameterType="int" resultType="">
+		SELECT  COUNT(*) AS cnt
+		FROM comment_like
+		where scon_no=#{scon_no}
+		GROUP BY scon_no, scmt_no
+		ORDER BY scmt_no DESC
+		</select>
+-->
 
 	  
 	  
