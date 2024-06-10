@@ -126,5 +126,11 @@ public class ReplyProc implements ReplyProcInter {
 		return list;
 	}
 
+	@Override
+	public int like_delete(int scmt_no) {
+		int cnt = this.replyDAO.like_delete(scmt_no);
+		return cnt;
+	}
+
 
 }

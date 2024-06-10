@@ -127,11 +127,15 @@ public class ReplyCont {
 		 System.out.println("acc_no가 같음");
 		  JSONObject json = new JSONObject();
 		  int cnt = this.replyProc.delete_scmtno(share_commentVO.getScmt_no());
-		  if(cnt>0) {
-			  System.out.println("삭제 성공");
+//		  if(cnt>0) {
+//			  System.out.println("삭제 성공");
+//		  }
+		  int cnt1 =this.replyProc.like_delete(share_commentVO.getScmt_no());
+		  if(cnt1>0) {
+			  System.out.println("좋아요 삭제 성공");
 		  }
 		  json.put("res", cnt);
-		  System.out.println("댓글 삭제");
+		  //System.out.println("댓글 삭제");
 		  return json.toString();
 	  }
 	  JSONObject json = new JSONObject();

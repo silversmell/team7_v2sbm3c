@@ -121,6 +121,14 @@ public interface ReplyDAOInter {
 	 */
 	public List<Comment_likeVO>scon_no_read(HashMap<String,Object> map);
 	
+	/**
+	 * 댓글 삭제시 좋아요 삭제
+	 * @param scmt_no
+	 * @return
+	 */
+	public int like_delete(int scmt_no);
+	
+	
 	
 //	/**
 //	 * 댓글 나빠요
