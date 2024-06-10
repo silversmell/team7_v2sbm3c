@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import dev.mvc.account.AccountProcInter;
 import jakarta.servlet.http.HttpSession;
 
 
@@ -22,6 +23,10 @@ public class ReplyCont {
   public ReplyCont() {
     System.out.println("-> ReplyCont created.");  
   }
+	@Autowired
+	@Qualifier("dev.mvc.account.AccountProc")
+	private AccountProcInter accountProc;
+	
   
   @Autowired
   @Qualifier("dev.mvc.reply.ReplyProc")
@@ -58,14 +63,17 @@ public class ReplyCont {
 	  return json.toString();
   }
   
-  @GetMapping("/list_by_contentsno_join") //http://localhost:9093/reply/list_by_contentsno_join?scon_no=5
+  @GetMapping("/list_by_contentsno_join") //http://localhost:9093/reply/list_by_contentsno_join?scon_no=5&acc_no=1
   @ResponseBody
-  public String list_by_contentsno_join(int scon_no) {
+  public String list_by_contentsno_join(int scon_no,int acc_no) {
+	  HashMap<String,Object> map = new HashMap<>();
+	  map.put("scon_no",scon_no);
+	  map.put("acc_no", acc_no);
+	  
 	  //System.out.println("-> scon_no:" + scon_no);
-	  List<ReplyMemberVO> list=this.replyProc.list_by_contentsno_join_500(scon_no);
+	  List<ReplyMemberVO> list=this.replyProc.list_by_contentsno_join_500(map);
 	  JSONObject json = new JSONObject();	  
 	  json.put("res", list);
-	  
 	  return json.toString();
   }
   
@@ -114,16 +122,68 @@ public class ReplyCont {
   @PostMapping("/delete")
   @ResponseBody
   public String delete(@RequestBody Share_commentVO share_commentVO,HttpSession session) {
+	  //System.out.println("들어옴");
 	  if((int)session.getAttribute("acc_no")==share_commentVO.getacc_no()) {
+		 System.out.println("acc_no가 같음");
 		  JSONObject json = new JSONObject();
 		  int cnt = this.replyProc.delete_scmtno(share_commentVO.getScmt_no());
+		  if(cnt>0) {
+			  System.out.println("삭제 성공");
+		  }
 		  json.put("res", cnt);
+		  System.out.println("댓글 삭제");
 		  return json.toString();
 	  }
 	  JSONObject json = new JSONObject();
 	  json.put("res", 0);
 	  return json.toString();
   }
+  
+  @PostMapping("/like")
+  @ResponseBody
+  public String like(@RequestBody Comment_likeVO comment_likeVO ) {
+
+	  JSONObject json = new JSONObject();
+	  System.out.println("->comment_likeVO.ACCNO:" + comment_likeVO.getAcc_no());
+	  System.out.println("->comment_likeVO.SCMT_NO:" + comment_likeVO.getScmt_no());
+	 
+	  HashMap<String,Object> map = new HashMap<>();
+	  map.put("acc_no", comment_likeVO.getAcc_no());
+	  map.put("scmt_no", comment_likeVO.getScmt_no());
+	  map.put("scon_no", comment_likeVO.getScon_no());
+	  
+	  int cnt = this.replyProc.like(map);
+
+//	  if(cnt>0) {
+//		  System.out.println("좋아요 성공");
+//	  }
+	  
+	  json.put("cnt", cnt);
+	  return json.toString();
+
+  }
+  
+  @PostMapping("/like_cancel")
+  @ResponseBody
+  public String like_cancel(@RequestBody Comment_likeVO comment_likeVO) {
+	  JSONObject json = new JSONObject();
+	  System.out.println("->comment_likeVO.ACCNO:" + comment_likeVO.getAcc_no());
+	  System.out.println("->comment_likeVO.SCMT_NO:" + comment_likeVO.getScmt_no());
+	  
+	  HashMap<String,Object> map = new HashMap<>();
+	  map.put("acc_no", comment_likeVO.getAcc_no());
+	  map.put("scmt_no", comment_likeVO.getScmt_no());
+	  map.put("scon_no", comment_likeVO.getScon_no());
+	  
+	  int cnt = this.replyProc.like_cancel(map);
+	  if(cnt>0) {
+		  System.out.println("좋아요 취소 성공");
+	  }
+	  json.put("cnt", cnt);
+	  
+	  return json.toString();
+  }
+  
   
 }
 

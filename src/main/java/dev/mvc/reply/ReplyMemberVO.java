@@ -24,6 +24,7 @@ public class ReplyMemberVO {
 	  /** 내용 */
 	  private String scmt_comment;
 	  
+	  private char mark='N';
 	  /** 등록일 */
 	  private String scmt_date;
 	  

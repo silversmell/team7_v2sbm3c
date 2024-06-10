@@ -79,15 +79,69 @@ public interface ReplyDAOInter {
 	 * @param scon_no
 	 * @return
 	 */
-	public List<ReplyMemberVO> list_by_contentsno_join_500(int scon_no);
+	public List<ReplyMemberVO> list_by_contentsno_join_500(HashMap<String,Object> map);
 	/**
 	 * 댓글 번호에 따른 댓글 찾기
 	 * @param scmt_no
 	 * @return
 	 */
 	public Share_commentVO read(int scmt_no);
-
-
+	/**
+	 * 댓글 좋아요
+	 * @param scmt_no
+	 * @return
+	 */
+	public int like(HashMap<String,Object> map);
+	
+	/**
+	 * 댓글 좋아요 회원 중복
+	 * @param map
+	 * @return
+	 */
+	public int like_check(HashMap<String,Object> map);
+	
+	/**
+	 * 댓글 좋아요시 mark 'Y'로 표시
+	 * @param map
+	 * @return
+	 */
+	public int like_update(HashMap<String,Object> map);
+	
+	/**
+	 * 댓글 좋아요시 mark 'N'로 표시
+	 * @param map
+	 * @return
+	 */
+	public int like_cancel(HashMap<String,Object> map);
+	
+	/**
+	 * scon_no, acc_no에 따라서 좋아요 조회
+	 * @param map
+	 * @return
+	 */
+	public List<Comment_likeVO>scon_no_read(HashMap<String,Object> map);
+	
+	
+//	/**
+//	 * 댓글 나빠요
+//	 * @param scmt_no
+//	 * @return
+//	 */
+//	public int dislike(int scmt_no);
+//	
+//	/**
+//	 * 댓글 좋아요 갯수
+//	 * @param scmt_no
+//	 * @return
+//	 */
+//	public int like_count(int scmt_no);
+//	
+//	/**
+//	 * 댓글 나빠요 갯수
+//	 * @param scmt_no
+//	 * @return
+//	 */
+//	public int dislike_count(int scmt_no);
 
 
 }

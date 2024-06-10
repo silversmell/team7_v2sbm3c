@@ -61,8 +61,8 @@ public class ReplyProc implements ReplyProcInter {
 	}
 
 	@Override
-	public List<ReplyMemberVO> list_by_contentsno_join_500(int scon_no) {
-		List<ReplyMemberVO> list = this.replyDAO.list_by_contentsno_join_500(scon_no);
+	public List<ReplyMemberVO> list_by_contentsno_join_500(HashMap<String,Object> map) {
+		List<ReplyMemberVO> list = this.replyDAO.list_by_contentsno_join_500(map);
 		return list;
 	}
 	
@@ -70,6 +70,60 @@ public class ReplyProc implements ReplyProcInter {
 	public Share_commentVO read(int scmt_no) {
 		Share_commentVO share_commentVO = this.replyDAO.read(scmt_no);
  		return share_commentVO;
+	}
+
+//	@Override
+//	public int like(int scmt_no) {
+//		int cnt = this.replyDAO.like(scmt_no);
+//		return cnt;
+//	}
+//
+//	@Override
+//	public int dislike(int scmt_no) {
+//		int cnt = this.replyDAO.dislike(scmt_no);
+//		return cnt;
+//	}
+//
+//	@Override
+//	public int like_count(int scmt_no) {
+//		int cnt = this.replyDAO.like_count(scmt_no);
+//		return cnt;
+//	}
+//
+//	@Override
+//	public int dislike_count(int scmt_no) {
+//		int cnt = this.replyDAO.dislike_count(scmt_no);
+//		return cnt;
+//	}
+
+	@Override
+	public int like(HashMap<String, Object> map) {
+		int cnt = this.replyDAO.like(map);
+		return cnt;
+	}
+
+	@Override
+	public int like_check(HashMap<String, Object> map) {
+		int cnt = this.replyDAO.like_check(map);
+		return cnt;
+	}
+
+	@Override
+	public int like_update(HashMap<String, Object> map) {
+		int cnt = this.replyDAO.like_update(map);
+		return cnt;
+	}
+
+	@Override
+	public int like_cancel(HashMap<String, Object> map) {
+		int cnt = this.replyDAO.like_cancel(map);
+		return cnt;
+	}
+
+	@Override
+	public List<Comment_likeVO> scon_no_read(HashMap<String, Object> map) {
+		List<Comment_likeVO> list = this.replyDAO.scon_no_read(map);
+		return list;
 	}
 
 

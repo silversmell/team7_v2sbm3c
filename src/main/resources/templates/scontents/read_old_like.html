@@ -13,7 +13,7 @@
 					let btn_create_tag=document.getElementById('btn_create'); //등록
 					let btn_add_tag = document.getElementById("btn_add"); //더보기
 					let scmt_date_tag = document.getElementById("scmt_date");
-
+					let like_comment_tag = document.getElemenetById("like_comment");
 					
 					let reply_list_tag = document.getElementById("reply_list"); //목록 출력
 					let scmt_no_tag = document.getElementById("scmt_no");
@@ -89,7 +89,7 @@
 					   	          	 
 						   	          msg += "<span>";
 							   	       if (row.mark === 'N') {
-							   	           msg += "<a href='javascript:reply_like(" + row.scmt_no + ")'><img src='/reply/images/likes.png' style='width: 16px;'></a>";
+							   	           msg += "<div id='like_comment'><a href='javascript:reply_like(" + row.scmt_no + ")'><img src='/reply/images/likes.png' style='width: 16px;'></a>";
 							   	       } else {
 							   	           msg += "<a href='javascript:reply_cancel(" + row.scmt_no + ")'><img src='/reply/images/likes_check.png' style='width: 16px;'></a>";
 							   	       }

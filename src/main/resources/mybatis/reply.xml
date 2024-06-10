@@ -57,23 +57,65 @@
 		where scon_no=#{scon_no}
   </select>
   
-  <select id="list_by_contentsno_join_500" parameterType="int">
-  SELECT acc_id,scmt_no,scon_no,scmt_comment,scmt_date,acc_no,r
+  <select id="list_by_contentsno_join_500" parameterType="HashMap">
+  SELECT acc_id,scmt_no,scon_no,scmt_comment,scmt_date,acc_no,mark,r
 	FROM (
-    SELECT acc_id,scmt_no,scon_no,scmt_comment,scmt_date,acc_no,rownum as r
+    SELECT acc_id,scmt_no,scon_no,scmt_comment,scmt_date,acc_no,mark,rownum as r
     FROM(
-        SELECT a.acc_id, s.scmt_no,s.scon_no,s.scmt_comment,s.scmt_date,a.acc_no
-        FROM share_comment s, account a
-        WHERE s.acc_no=a.acc_no AND scon_no=#{scon_no}
+        SELECT a.acc_id, s.scmt_no,s.scon_no,s.scmt_comment,s.scmt_date,a.acc_no,c.mark
+        FROM share_comment s left outer join account a
+        on s.acc_no=a.acc_no AND scon_no=#{scon_no}
+        left outer join comment_like c
+        on s.scmt_no=c.scmt_no and c.acc_no=#{acc_no}
         )
         )
         where r&lt;=500
+        ORDER BY scmt_no desc
+
   </select>
     <select id="read" parameterType="int" resultType="dev.mvc.reply.Share_commentVO">
 	  select scmt_no ,scmt_comment,scmt_date,scon_no,acc_no
 		from share_comment
 		where  scmt_no=#{scmt_no}
   </select>
+  
+	  <insert id="like" parameterType="HashMap">
+		INSERT INTO comment_like(like_no,scmt_no,acc_no,scon_no,mark)
+		VALUES (like_no_seq.nextval,#{scmt_no},#{acc_no},#{scon_no},'Y')
+	  </insert>
+	  
+	  <select id="like_check" parameterType="HashMap" resultType="int">
+		SELECT count(*)
+		FROM comment_like
+		WHERE scmt_no = #{scmt_no} AND acc_no=#{acc_no}
+		GROUP BY scmt_no, acc_no
+	  </select>
+	  
+	  <update id="like_update" parameterType="HashMap">
+			UPDATE comment_like
+			SET mark='Y'
+			where scmt_no=#{scmt_no} and acc_no=#{acc_no}
+		</update>
+		
+		<update id="like_cancel" parameterType="HashMap">
+			UPDATE comment_like
+			set mark='N'
+			where scmt_no=#{scmt_no} and acc_no=#{acc_no}
+		</update>
+		
+		<select id = "scon_no_read" parameterType="HashMap" resultType="dev.mvc.reply.Comment_likeVO">
+				SELECT like_no, scon_no, acc_no, scmt_no ,mark
+				FROM comment_like
+				WHERE scon_no=#{scon_no} and acc_no=#{acc_no}
+		</select>
+		
+
+
+	  
+	  
+  
+
+  
   
 
   
