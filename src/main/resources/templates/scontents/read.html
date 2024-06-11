@@ -417,7 +417,7 @@
     </div> -->
 
 
-      <div class="fotorama" data-autoplay="5000" data-nav="thumbs" data-ratio="800/520" style="margin: 0px auto; width: 100%;">
+      <div class="fotorama" data-autoplay="5000" data-nav="thumbs" data-ratio="800/520" style='display: flex; justify-content: center; align-items: center; width: 100%;'>
         <img th:src="@{|/contents/storage/${share_imageVO.file_thumb_name}|}"  th:each="share_imageVO, status: ${share_imageVO}"
                 th:if="${share_imageVO.file_origin_name.endsWith('jpg') or share_imageVO.file_origin_name.endsWith('png') or share_imageVO.file_origin_name.endsWith('gif')}">
                    
