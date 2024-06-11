@@ -49,8 +49,8 @@ public class ReplyProc implements ReplyProcInter {
 	}
 
 	@Override
-	public int delete_comments(int scon_no) {
-		int cnt = this.replyDAO.delete_comments(scon_no);
+	public int delete_comment(int scon_no) {
+		int cnt = this.replyDAO.delete_comment(scon_no);
 		return cnt;
 	}
 

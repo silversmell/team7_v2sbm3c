@@ -88,11 +88,7 @@
 					   	          	 msg += " "+row.scmt_date;
 					   	          	 
 						   	          msg += "<span>";
-							   	       if (row.mark === 'N') {
-							   	           msg += "<a href='javascript:reply_like(" + row.scmt_no + ")'><img src='/reply/images/likes.png' style='width: 16px;'></a>";
-							   	       } else {
-							   	           msg += "<a href='javascript:reply_cancel(" + row.scmt_no + ")'><img src='/reply/images/likes_check.png' style='width: 16px;'></a>";
-							   	       }
+
 							   	       msg += "</span>";
 
 					    	             if("[[${session.acc_no}]]" == row.acc_no){
@@ -166,13 +162,7 @@
  	             msg += "<div id='"+row.scmt_no+"' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px;'>";
  	             msg += "<span style='font-weight: bold;'>" + row.acc_id + "</span><br>";
  	          	 msg += " "+row.scmt_date;
-	   	         msg += "<span>"; // 자바스크립트에서 조건을 확인하기 위한 span 열기
-	   	       if (row.mark === 'N') {
-	   	           msg += "<a href='javascript:reply_like(" + row.scmt_no + ")'><img src='/reply/images/likes.png' style='width: 16px;'></a>";
-	   	       } else {
-	   	           msg += "<a href='javascript:reply_cancel(" + row.scmt_no + ")'><img src='/reply/images/likes_check.png' style='width: 16px;'></a>";
-	   	       }
-	   	       msg += "</span>";
+
 	   	          	 
     	             if("[[${session.acc_no}]]" == row.acc_no){
     	                 msg += " <a href='javascript:reply_update("+row.scmt_no+")'>수정</a>";
@@ -471,7 +461,9 @@
     </div>
 </div>
 			<br><br>
+			 
 			  <div style='width: 80%; margin: 0px auto; clear:both; text-align:center;'>
+			 <div style="float:left;">댓글수: <span th:text="${count}"></span></div><br>
 			     <hr>  
 			      <form name='frm_reply' id='frm_reply'> 
 			          <input type='hidden' name='scon_no' id='scon_no' value='${scontentsVO.scon_no}'>

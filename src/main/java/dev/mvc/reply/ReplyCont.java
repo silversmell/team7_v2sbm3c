@@ -52,7 +52,7 @@ public class ReplyCont {
 	  
 	  int cnt = this.replyProc.create_comment(map);
 	  if(cnt>0) {
-		  //System.out.println("등록 성공");
+		  System.out.println("등록 성공");
 	  }
 	  else {
 		  //System.out.println("등록 실패");
@@ -65,10 +65,9 @@ public class ReplyCont {
   
   @GetMapping("/list_by_contentsno_join") //http://localhost:9093/reply/list_by_contentsno_join?scon_no=5&acc_no=1
   @ResponseBody
-  public String list_by_contentsno_join(int scon_no,int acc_no) {
+  public String list_by_contentsno_join(int scon_no) {
 	  HashMap<String,Object> map = new HashMap<>();
 	  map.put("scon_no",scon_no);
-	  map.put("acc_no", acc_no);
 	  
 	  //System.out.println("-> scon_no:" + scon_no);
 	  List<ReplyMemberVO> list=this.replyProc.list_by_contentsno_join_500(map);
@@ -126,14 +125,15 @@ public class ReplyCont {
 	  if((int)session.getAttribute("acc_no")==share_commentVO.getacc_no()) {
 		 System.out.println("acc_no가 같음");
 		  JSONObject json = new JSONObject();
+		  System.out.println("scmt_no의 번호: " +share_commentVO.getScmt_no() );
 		  int cnt = this.replyProc.delete_scmtno(share_commentVO.getScmt_no());
 //		  if(cnt>0) {
 //			  System.out.println("삭제 성공");
 //		  }
-		  int cnt1 =this.replyProc.like_delete(share_commentVO.getScmt_no());
-		  if(cnt1>0) {
-			  System.out.println("좋아요 삭제 성공");
-		  }
+//		  int cnt1 =this.replyProc.like_delete(share_commentVO.getScmt_no());
+//		  if(cnt1>0) {
+//			  System.out.println("좋아요 삭제 성공");
+//		  }
 		  json.put("res", cnt);
 		  //System.out.println("댓글 삭제");
 		  return json.toString();

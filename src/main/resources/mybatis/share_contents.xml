@@ -297,6 +297,11 @@
 		delete from contents_tag
 		where scon_no=#{scon_no}
 	</delete>
+	
+		<delete id="delete" parameterType="int">
+		delete from share_contents
+		where scon_no=#{scon_no}
+	</delete>
 
 	<select id="tag_count" parameterType="int">
 		select count(*)

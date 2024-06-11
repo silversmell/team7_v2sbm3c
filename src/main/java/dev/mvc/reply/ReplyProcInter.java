@@ -57,7 +57,7 @@ public interface ReplyProcInter {
 	 * @param scon_no
 	 * @return int
 	 */
-	public int delete_comments(int scon_no);
+	public int delete_comment(int scon_no);
 
 	/**
 	 * 각 게시글의 댓글 개수

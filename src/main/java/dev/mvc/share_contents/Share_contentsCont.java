@@ -118,7 +118,8 @@ public class Share_contentsCont {
 		}
 		model.addAttribute("scontentsVO", scontentsVO);
 		model.addAttribute("member_no",scontentsVO.getacc_no());
-		
+		int count = this.replyProc.comment_search(scon_no);
+		model.addAttribute("count",count);
 		ArrayList<HashtagVO> list1 = this.sconProc.sconno_hashtag(scon_no);
 		
 
@@ -676,7 +677,7 @@ public class Share_contentsCont {
 		Share_contentsVO share_contentsVO = this.sconProc.read(scon_no); // scon_no 가져오기
 		
 		this.sconProc.bookmarall_delete(scon_no);
-		this.replyProc.delete_comments(scon_no);
+		this.replyProc.delete_comment(scon_no);
 		this.sconProc.delete_url(scon_no);
 		this.sconProc.delete_tag(scon_no);
 		this.sconProc.bookmarall_delete(scon_no);
@@ -695,8 +696,10 @@ public class Share_contentsCont {
 //		}
 		
 		int cnt = this.sconProc.delete(scon_no);
+		if(cnt>0) {
+			System.out.println("게시글 삭제 성공");
+		}
 		
-		//System.out.println("게시글 삭제 성공");
 
 		this.categoryProc.cnt_minus(share_contentsVO.getCate_no()); // 관련 글 수 감소
 		//System.out.println(" -> 삭제 한 scon_no:" + scon_no);
