@@ -131,7 +131,7 @@ public interface Share_contentsProcInter {
 	 public int update_url(HashMap<String,Object> map);
 	 
 	 /**
-	  * 해당하는 게시글 url 삭제
+	  * 해당하는 게시글 url 삭제de
 	  * @param scon_no
 	  * @return int
 	  */
