@@ -14,15 +14,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import dev.mvc.category.CategoryProcInter;
+import dev.mvc.category.CategoryVO;
 import dev.mvc.recommend.HashtagVO;
 import dev.mvc.recommend.RecommendVO;
+import dev.mvc.share_contents.Contents;
+import dev.mvc.share_contents.Share_contentsProc;
+import dev.mvc.share_contentsdto.Contents_urlVO;
+import dev.mvc.share_contentsdto.Share_contentsVO;
+import dev.mvc.share_contentsdto.Share_imageVO;
 import dev.mvc.tool.MailTool;
 import dev.mvc.tool.Security;
 import dev.mvc.tool.Tool;
@@ -38,6 +47,14 @@ public class AccountCont {
 	@Autowired
 	@Qualifier("dev.mvc.account.AccountProc") // @Service("dev.mvc.account.AccountProc")
 	private AccountProcInter accountProc;
+
+	@Autowired
+	@Qualifier("dev.mvc.category.CategoryProc")
+	private CategoryProcInter categoryProc;
+
+	@Autowired
+	@Qualifier("dev.mvc.share_contents.Share_contentsProc")
+	private Share_contentsProc scontentsProc;
 
 	@Autowired
 	Security security;
@@ -80,7 +97,7 @@ public class AccountCont {
 
 		JSONObject obj = new JSONObject();
 		obj.put("cnt", cnt);
-		
+
 		System.out.println("---> checkName cnt: " + cnt);
 
 		return obj.toString();
@@ -327,10 +344,10 @@ public class AccountCont {
 
 		model.addAttribute("ck_id", ck_acc_id);
 		model.addAttribute("ck_id_save", ck_id_save);
-		model.addAttribute("url",url);
+		model.addAttribute("url", url);
 		return "account/login";
 	}
-	
+
 	/**
 	 * 로그인 처리 (쿠키 기반)
 	 * 
@@ -338,15 +355,9 @@ public class AccountCont {
 	 * @return
 	 */
 	@PostMapping(value = "/login")
-	public String login_proc(HttpSession session,
-							 HttpServletRequest request,
-							 HttpServletResponse response,
-							 Model model,
-							 AccLogVO accLogVO,
-							 String url,
-							 String acc_id,
-							 String acc_pw,
-							 @RequestParam(value = "id_save", defaultValue = "") String id_save) {
+	public String login_proc(HttpSession session, HttpServletRequest request, HttpServletResponse response, Model model,
+			AccLogVO accLogVO, String url, String acc_id, String acc_pw,
+			@RequestParam(value = "id_save", defaultValue = "") String id_save) {
 
 		String ip = request.getRemoteAddr(); // IP
 		System.out.println("---> 접속한 IP: " + ip);
@@ -359,7 +370,7 @@ public class AccountCont {
 		System.out.println("---> login_proc cnt: " + cnt);
 
 		model.addAttribute("cnt", cnt);
-		
+
 		if (id_save.equals("Y")) { // Checkbox 체크, acc_id 저장
 			Cookie ck_acc_id = new Cookie("acc_id", acc_id);
 			ck_acc_id.setPath("/"); // root 폴더에 쿠키를 기록 -> 모든 경로에서 쿠키 접근 가능
@@ -377,11 +388,11 @@ public class AccountCont {
 		ck_id_save.setPath("/");
 		ck_id_save.setMaxAge(60 * 60 * 24 * 30); // 30 days
 		response.addCookie(ck_id_save);
-		if(url.length()>0) {
-			return "redirect:"+url;
+		if (url.length() > 0) {
+			return "redirect:" + url;
 		}
 
-		if (cnt == 1) {	// 로그인 성공
+		if (cnt == 1) { // 로그인 성공
 			// id를 이용한 회원 정보 조회
 			AccountVO accountVO = this.accountProc.readById(acc_id);
 			session.setAttribute("acc_no", accountVO.getAcc_no());
@@ -401,7 +412,7 @@ public class AccountCont {
 			} else {
 				session.setAttribute("acc_grade", "guest");
 			}
-			
+
 			/* 회원 로그 저장 */
 			accLogVO.setAcc_no(accountVO.getAcc_no());
 			accLogVO.setAcc_log_ip(ip);
@@ -413,18 +424,16 @@ public class AccountCont {
 			ck_acc_id.setPath("/"); // root 폴더에 쿠키를 기록 -> 모든 경로에서 쿠키 접근 가능
 			ck_acc_id.setMaxAge(60 * 60 * 24 * 30); // 30 days, 초단위
 			response.addCookie(ck_acc_id); // acc_id 저장
-			
-			
+
 			return "redirect:/";
-		}
-		else {
+		} else {
 			model.addAttribute("code", "login_fail");
 			model.addAttribute("cnt", 0);
 			return "account/msg";
 		}
 
 	}
-	
+
 	/* 회원 전체 로그 조회 */
 	@GetMapping(value = "/log_list")
 	public String log_list(Model model) {
@@ -433,7 +442,7 @@ public class AccountCont {
 
 		return "account/log_list";
 	}
-	
+
 	/**
 	 * 로그아웃
 	 * 
@@ -441,7 +450,7 @@ public class AccountCont {
 	 * @param model
 	 * @return
 	 */
-	@GetMapping(value="/logout")
+	@GetMapping(value = "/logout")
 	public String logout(HttpSession session, Model model) {
 		session.invalidate(); // 모든 세션 변수 삭제
 		return "redirect:/";
@@ -462,7 +471,7 @@ public class AccountCont {
 		if (checkName_cnt <= 1) {
 			int cnt = this.accountProc.update(accountVO);
 			if (cnt == 1) { // 수정 성공
-				
+
 				// 기존의 추천 해시태그 삭제
 				this.accountProc.deleteRecommend(accountVO.getAcc_no());
 
@@ -472,7 +481,7 @@ public class AccountCont {
 					recommendVO.setTag_no(tag_no);
 					this.accountProc.insertRecommend(recommendVO);
 				}
-				
+
 				model.addAttribute("code", "update_success");
 				model.addAttribute("cnt", cnt);
 			} else {
@@ -620,7 +629,7 @@ public class AccountCont {
 			int cnt = this.accountProc.checkPasswd(map);
 
 			if (cnt == 0) { // 현재 패스워드 불일치
-				
+
 			} else { // 현재 패스워드 일치
 				HashMap<String, Object> map_new_passwd = new HashMap<String, Object>();
 				map_new_passwd.put("acc_no", acc_no);
@@ -642,49 +651,43 @@ public class AccountCont {
 		}
 
 	}
-	
+
 	/**
-	 * 비밀번호 재설정(비밀번호 찾기)
-	 * - 아이디 인증 페이지
-	 * - GET
+	 * 비밀번호 재설정(비밀번호 찾기) - 아이디 인증 페이지 - GET
 	 * 
 	 * @return
 	 */
-	@GetMapping(value="/find_passwd")
+	@GetMapping(value = "/find_passwd")
 	public String findPasswd() {
 
 		return "account/find_passwd";
 	}
-	
+
 	/**
-	 * 비밀번호 재설정(비밀번호 찾기)
-	 * - 아이디 인증 후 비밀번호 재설정 페이지로 이동
-	 * - POST(find_passwd에서 reset_passwd로 accountVO(acc_id) 전달)
+	 * 비밀번호 재설정(비밀번호 찾기) - 아이디 인증 후 비밀번호 재설정 페이지로 이동 - POST(find_passwd에서
+	 * reset_passwd로 accountVO(acc_id) 전달)
 	 * 
 	 * @param model
 	 * @param acc_id
 	 * @return
 	 */
-	@PostMapping(value="/find_passwd")
+	@PostMapping(value = "/find_passwd")
 	public String findPasswd(Model model, @RequestParam String acc_id) {
-	    AccountVO accountVO = this.accountProc.readById(acc_id);
-	    model.addAttribute("accountVO", accountVO);
-	    
-	    return "account/reset_passwd";
+		AccountVO accountVO = this.accountProc.readById(acc_id);
+		model.addAttribute("accountVO", accountVO);
+
+		return "account/reset_passwd";
 	}
-	
 
 	/**
-	 * 비밀번호 재설정(비밀번호 찾기)
-	 * - 아이디 재설정
-	 * - resetPasswd()
+	 * 비밀번호 재설정(비밀번호 찾기) - 아이디 재설정 - resetPasswd()
 	 * 
 	 * @param json_src
 	 * @return
 	 */
 	@PostMapping(value = "/reset_passwd")
 	public ResponseEntity<String> resetPasswd(@RequestBody String json_src) {
-		
+
 		System.out.println("---> json_src: " + json_src); // json_src: {"current_passwd":"1234"}
 		JSONObject src = new JSONObject(json_src); // String -> JSON
 		String acc_id = (String) src.get("acc_id"); // 값 가져오기
@@ -699,16 +702,16 @@ public class AccountCont {
 
 		int cnt = this.accountProc.resetPasswd(map);
 		System.out.println("---> resetPasswd cnt: " + cnt);
-		
+
 		JSONObject response = new JSONObject();
 		response.put("cnt", cnt);
-	
+
 		if (cnt == 1) {
 			response.put("code", "passwd_reset_success");
 		} else {
 			response.put("code", "passwd_update_fail");
 		}
-		
+
 		return ResponseEntity.ok(response.toString());
 
 	}
@@ -745,6 +748,194 @@ public class AccountCont {
 			model.addAttribute("code", "delete_fail");
 			return "account/msg";
 		}
+	}
+
+	/* 마이페이지 */
+
+	/**
+	 * 내가 쓴 게시글 - 목록
+	 * 
+	 * @param session
+	 * @param model
+	 * @return
+	 */
+	@GetMapping("/mycontents")
+	public String myContents(HttpSession session, Model model) {
+		Integer acc_no = (Integer) session.getAttribute("acc_no");
+		System.out.println("account/mycontents session ==> acc_no: " + acc_no);
+
+		if (acc_no != null) {
+			ArrayList<Share_contentsVO> list = this.accountProc.myContents(acc_no);
+
+			// 각 게시글에 대한 이미지
+			Map<Integer, List<Share_imageVO>> contentImages = new HashMap<>();
+			for (Share_contentsVO content : list) {
+				List<Share_imageVO> image = this.accountProc.contentImages(content.getScon_no());
+				contentImages.put(content.getScon_no(), image);
+			}
+
+			model.addAttribute("acc_no", acc_no);
+			model.addAttribute("list", list);
+			model.addAttribute("contentImages", contentImages);
+			model.addAttribute("count", list.size());
+
+		} else {
+			model.addAttribute("code", "login_need");
+		}
+
+		return "account/my_contents";
+	}
+
+	/**
+	 * 내가 쓴 게시글 - 수정(GET)
+	 * 
+	 * @param session
+	 * @param model
+	 * @param scon_no
+	 * @param cate_no
+	 * @return
+	 */
+	@GetMapping("/updatemc")
+	public String updateMyContents(HttpSession session, Model model, int scon_no, int cate_no) {
+		Integer acc_no = (Integer) session.getAttribute("acc_no");
+		System.out.println("account/update_mycontents session ==> acc_no: " + acc_no);
+
+		if (acc_no != 0) {
+			if (acc_no == session.getAttribute("acc_no")) {
+				CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
+				model.addAttribute("categoryVO", categoryVO);
+
+				Share_contentsVO scontentsVO = this.scontentsProc.read(scon_no);
+				model.addAttribute("scontentsVO", scontentsVO);
+
+				ArrayList<Contents_urlVO> url_list = this.scontentsProc.only_url(scon_no);
+				for (int i = 0; i < url_list.size(); i++) {
+					String url = url_list.get(i).getUrl_link();
+					System.out.println("url[i]" + url_list.get(i).getUrl_link());
+
+					if (url.equals("1")) { // 구분자 확인
+						url_list.get(i).setUrl_link(" ");
+					}
+
+					model.addAttribute("url_list" + i, url_list.get(i).getUrl_link());
+				}
+
+				ArrayList<Share_imageVO> share_image = this.scontentsProc.read_image(scon_no);
+				for (int i = 1; i < share_image.size(); i++) {
+					long size = share_image.get(i).getFile_size();
+					String silze_label = Tool.unit(size);
+					share_image.get(i).setFlabel(silze_label);
+				}
+
+				model.addAttribute("share_imageVO", share_image);
+			}
+
+		} else { // acc_no가 session 값과 다름
+			model.addAttribute("code", "diff_acc");
+		}
+
+		return "account/update_mycontents";
+	}
+
+	/**
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 */
+
+	@PostMapping("/updatemc")
+	public String updateMyContents(RedirectAttributes ra, Model model, List<MultipartFile> fnamesMF,
+			Share_contentsVO scontentsVO, int scon_no, int cate_no, String url_link) {
+
+		int count = fnamesMF.size();
+		System.out.println("/updatemc fnameMF.size(): " + count);
+		if (count > 0) { // 새로운 파일이 선택됨
+			// 기존 이미지 삭제
+			ArrayList<Share_imageVO> image_list_old = this.scontentsProc.read_image(scon_no);
+			String upDir = Contents.getUploadDir(); // 파일을 업로드할 폴더
+
+			for (Share_imageVO image : image_list_old) {
+				System.out.println("---> image_list_old size : " + image_list_old.size());
+
+				String file1saved = image.getFile_upload_name();
+				String thumb = image.getFile_thumb_name();
+
+				// 파일 삭제
+				Tool.deleteFile(upDir, file1saved);
+				Tool.deleteFile(upDir, thumb);
+
+				// 데이터베이스에서 삭제
+				this.scontentsProc.delete_image(image.getScon_no());
+			}
+
+			// 새 이미지 추가
+			Share_imageVO share_imageVO = new Share_imageVO();
+			long file_size = 0;
+			String file_origin_name = "";
+			String file_upload_name = "";
+			String file_thumb_name = "";
+
+			for (MultipartFile multipartFile : fnamesMF) {
+				file_size = multipartFile.getSize();
+				if (file_size > 0) {
+					file_origin_name = multipartFile.getOriginalFilename();
+					file_upload_name = Upload.saveFileSpring(multipartFile, upDir);
+
+					if (Tool.isImage(file_origin_name)) {
+						file_thumb_name = Tool.preview(upDir, file_upload_name, 800, 450);
+					}
+
+					share_imageVO.setScon_no(scon_no);
+					share_imageVO.setFile_origin_name(file_origin_name);
+					share_imageVO.setFile_thumb_name(file_thumb_name);
+					share_imageVO.setFile_upload_name(file_upload_name);
+					share_imageVO.setFile_size((int)file_size);
+
+					int image_cnt = this.scontentsProc.attach_create(share_imageVO);
+					System.out.println("---> attach_create image_cnt: " + image_cnt);
+				}
+				
+			}
+
+		}
+
+
+		// 게시글 수
+		int cnt = this.scontentsProc.update_text(scontentsVO);
+
+		HashMap<String, Object> map = new HashMap<>();
+
+		ArrayList<Contents_urlVO> arr = this.scontentsProc.url_read(scon_no);
+
+		String[] list = url_link.split(",");
+
+		System.out.println("---> url_link 사이즈(개수): " + list.length);
+
+		for (int i = 0; i < list.length; i++) { // list가 5개 다 있을 경우 하나를 삭제했을 때
+			if (list[i].equals("")) {
+				list[i] = "1";
+			}
+			map.put("url_link", list[i].trim());
+			map.put("scon_no", scon_no);
+			map.put("url_no", arr.get(i).getUrl_no());
+			this.scontentsProc.update_url(map);
+		}
+
+		if (list.length != arr.size()) { // list.length와 arr.size 가 다를 경우
+			for (int i = arr.size() - 1; i >= list.length; i--) { // url_link가 가 없는 경우
+				map.put("url_link", "1");
+				map.put("scon_no", scon_no);
+				map.put("url_no", arr.get(i).getUrl_no());
+				this.scontentsProc.update_url(map);
+				System.out.println("1로 변환");
+
+			}
+		}
+		ra.addAttribute("cate_no", cate_no);
+
+		return "redirect:/scontents/list_by_search";
 	}
 
 }

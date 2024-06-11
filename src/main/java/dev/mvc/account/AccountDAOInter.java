@@ -6,6 +6,8 @@ import java.util.List;
 
 import dev.mvc.recommend.HashtagVO;
 import dev.mvc.recommend.RecommendVO;
+import dev.mvc.share_contentsdto.Share_contentsVO;
+import dev.mvc.share_contentsdto.Share_imageVO;
 
 public interface AccountDAOInter {
 
@@ -164,5 +166,21 @@ public interface AccountDAOInter {
 	 * @return
 	 */
 	public int delete(int acc_no);
+	
+	/**
+	 * 내가 쓴 게시글
+	 * 
+	 * @param acc_no
+	 * @return
+	 */
+	public ArrayList<Share_contentsVO> myContents(int acc_no);
+	
+	
+	/**
+	 * 게시글 사진 가져오기
+	 * 
+	 * @return
+	 */
+	public ArrayList<Share_imageVO> contentImages(int scon_no);
 
 }

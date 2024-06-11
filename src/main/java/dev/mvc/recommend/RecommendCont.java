@@ -31,14 +31,14 @@ public class RecommendCont {
 	}
 
 	/**
-	 * 추천글 목록
+	 * 추천 글 목록
 	 * 
-	 * @param request
+	 * @param session
 	 * @param model
 	 * @return
 	 */
 	@GetMapping("/list")
-	public String list(HttpServletRequest request, HttpSession session, Model model) {
+	public String list(HttpSession session, Model model) {
 
 		Integer acc_no = (Integer) session.getAttribute("acc_no");
 		System.out.println("recommend/list session ==> acc_no: " + acc_no);

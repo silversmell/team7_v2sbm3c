@@ -15,6 +15,8 @@
 		<a href="#">회원 탈퇴</a>
 		<span class='menu_divide'>│</span>
 		<a href='./list'>목록</a>
+		<span th:if="${session.acc_no == accountVO.acc_no}" class='menu_divide'>│</span>
+		<a th:if="${session.acc_no == accountVO.acc_no}" href='./mycontents'>내가 쓴 글</a>
 	</aside>
 
 	<div class='menu_line'></div>
