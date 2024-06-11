@@ -62,7 +62,7 @@ public class RankCont {
 		map.put("word", word);
 		map.put("now_page", now_page);
 
-		ArrayList<Share_contentsVO> list = this.rankingProc.ranking(map);
+		ArrayList<Share_contentsVO> list = this.rankingProc.ranking();
 		model.addAttribute("list", list);
 		model.addAttribute("word", word);
 

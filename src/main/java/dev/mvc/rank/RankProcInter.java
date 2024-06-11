@@ -12,6 +12,6 @@ public interface RankProcInter {
 	  * @param word
 	  * @return arrayList
 	  */
-	 public ArrayList ranking(HashMap<String,Object> map);
+	 public ArrayList ranking();
 
 }

@@ -3,9 +3,9 @@
 
 <mapper namespace="dev.mvc.rank.RankDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
 
-<select id="ranking" resultType="dev.mvc.share_contentsdto.Share_contentsVO" parameterType="HashMap">
-		SELECT scon_no, scon_title, scon_contents, scon_views, scon_comment,
-		scon_date,scon_priority, r
+<select id="ranking" resultType="dev.mvc.share_contentsdto.Share_contentsVO" >
+		SELECT scon_no, scon_title,
+		scon_priority, r
 		FROM (
 		SELECT scon_no, scon_title,
 		scon_contents, scon_views, scon_comment,
@@ -14,20 +14,8 @@
 		SELECT scon_no, scon_title,
 		scon_contents, scon_views, scon_comment,
 		scon_date,scon_priority
-		FROM
-		share_contents
-		<choose>
-			<when test="word != null or word != ''">
-				WHERE (UPPER(scon_title) LIKE '%' || UPPER(#{word})
-				|| '%'
-				OR UPPER(scon_contents) LIKE '%' || UPPER(#{word}) || '%'
-				OR
-				UPPER(word) LIKE '%' || UPPER(#{word}) || '%')
-			</when>
-			<otherwise>
-				<!-- 조건이 없으면 모든 레코드 선택 -->
-			</otherwise>
-		</choose>
+        FROM share_contents
+        where scon_priority >0
 		ORDER BY scon_priority DESC
 		)
 		)

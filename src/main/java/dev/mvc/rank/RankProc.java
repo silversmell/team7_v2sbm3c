@@ -21,8 +21,8 @@ public class RankProc implements RankProcInter {
 
 
 	@Override
-	public ArrayList<Share_contentsVO> ranking(HashMap<String,Object> map) {
-		ArrayList<Share_contentsVO> list = this.rankDAO.ranking(map);
+	public ArrayList<Share_contentsVO> ranking() {
+		ArrayList<Share_contentsVO> list = this.rankDAO.ranking();
 		return list;
 	}
 
