@@ -58,8 +58,7 @@
 					});
 					//페이징 처리
 					btn_add_tag.addEventListener('click',()=>{ //더보기 출력
-
-						//console.log(reply_data.length)
+						console.log("더보기 클릭함.");
 						if(reply_data.length>reply_now_page*5){
 							//console.log("들어옴")
 							let start = 0;
@@ -71,13 +70,14 @@
 								let msg = "";
 								let page_div = document.createElement('div');
 								
-						    	   fetch("/reply/list_by_contentsno_join?scon_no=[[${scontentsVO.scon_no}]]&acc_no=[[${session.acc_no}]]",{
+						    	   fetch("/reply/list_by_contentsno_join?scon_no=[[${scontentsVO.scon_no}]]",{
 						    		   "method":"get"
 						    	   })
 						    	   .then((response) => response.json())
 						    	   .then((data) => {
 						    		   reply_data=data['res'];
 												for(let i = start;i<end;i++){
+													console.log("들어옴");
 													if(i==reply_data.length){
 														break;
 													}
@@ -87,9 +87,6 @@
 					   	          	 msg += "<br>";
 					   	          	 msg += " "+row.scmt_date;
 					   	          	 
-						   	          msg += "<span>";
-
-							   	       msg += "</span>";
 
 					    	             if("[[${session.acc_no}]]" == row.acc_no){
 					    	                 msg += " <a href='javascript:reply_update("+row.scmt_no+")'>수정</a>";
@@ -395,7 +392,8 @@
     	<span th:text="${scontentsVO.scon_title}" style="font-size:2em;font-weight: bold;"></span>
     	<span style="font-size: 1em; margin-left:10px;" th:text="|조회수: ${scontentsVO.scon_views}|"></span>
     		<div style="margin-left: auto; margin-right:86px;">
-    			<span style="font-size: normal; margin-left:1px;" th:text="${scontentsVO.scon_date}"></span>
+    		작성자: <span style="font-size: normal; margin-left:1px;" th:text="${writer}"></span>
+    			등록시간: <span style="font-size: normal; margin-left:1px;" th:text="${scontentsVO.scon_date}"></span>
     			    		 <span th:if="${scontentsVO.mark =='N'}">
             <img src="/css/images/bookmark_off.png" id="bookmarkImage" class="icon" onclick="mark()" style="width:24px; height: 24px;">
         </span>
@@ -405,7 +403,7 @@
     		</div>
 
     </div>
-    <hr size="10;" style="height: 10px; ">
+    <hr size="10;" style="margin-top:1px;">
     <!-- 
      <div style="float:right; ">
         <span th:if="${scontentsVO.mark =='N'}">

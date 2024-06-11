@@ -423,4 +423,10 @@ public class Share_contentsProc implements Share_contentsProcInter {
 		return list;
 	}
 
+	@Override
+	public String writer(HashMap<String, Object> map) {
+		String writer = this.scontentsDAO.writer(map);
+		return writer;
+	}
+
 }

@@ -116,6 +116,8 @@ public class Share_contentsCont {
 		}else {
 			scontentsVO.setMark("N");
 		}
+		String writer = this.sconProc.writer(map);
+		model.addAttribute("writer",writer);
 		model.addAttribute("scontentsVO", scontentsVO);
 		model.addAttribute("member_no",scontentsVO.getacc_no());
 		int count = this.replyProc.comment_search(scon_no);
@@ -127,7 +129,7 @@ public class Share_contentsCont {
 
 		int cnt1 = this.replyProc.comment_search(scon_no);
 		model.addAttribute("cnt", cnt1);
-
+		
 		ArrayList<Share_commentVO> list = this.replyProc.read_comment(scon_no); // 댓글 등록가져옴
 		model.addAttribute("list", list);
 
@@ -143,7 +145,8 @@ public class Share_contentsCont {
 		ArrayList<Share_imageVO> share_imageVO = this.sconProc.read_image(scon_no);
 
 		model.addAttribute("share_imageVO", share_imageVO);
-	
+		
+		
 		return "scontents/read";
 		}
 		return "redirect:/account/login";

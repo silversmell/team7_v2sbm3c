@@ -67,7 +67,7 @@ FROM (
         WHERE s.acc_no=a.acc_no AND scon_no=#{scon_no}
         )
         )
-        where r&lt;=5
+        where r&lt;=500
 
   </select>
     <select id="read" parameterType="int" resultType="dev.mvc.reply.Share_commentVO">

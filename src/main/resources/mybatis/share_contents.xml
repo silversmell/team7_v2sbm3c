@@ -414,6 +414,13 @@
 		where scon_no=#{scon_no} AND acc_no=#{acc_no}
 		ORDER BY acc_no asc
 	</select>
+	
+	<!--  작성자  -->
+	<select id="writer" resultType="String" parameterType="HashMap">
+	SELECT account.acc_id
+	FROM account , share_contents
+	WHERE account.acc_no=share_contents.acc_no AND share_contents.scon_no=#{scon_no}
+	</select>
 
 </mapper>
 

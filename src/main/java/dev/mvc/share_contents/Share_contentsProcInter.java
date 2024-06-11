@@ -342,6 +342,13 @@ public interface Share_contentsProcInter {
     * @return
     */
    public ArrayList<BookmarkVO>mark_check(HashMap<String,Object>map);
+   
+   /**
+    * 작성자
+    * @param map
+    * @return
+    */
+   public String writer(HashMap<String,Object>map);
 
 	 
 
