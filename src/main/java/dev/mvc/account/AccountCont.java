@@ -17,11 +17,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 
 import dev.mvc.recommend.HashtagVO;
 import dev.mvc.recommend.RecommendVO;
@@ -311,7 +309,7 @@ public class AccountCont {
 		Cookie[] cookies = request.getCookies();
 		Cookie cookie = null;
 
-		String ck_id = ""; // acc_id 저장
+		String ck_acc_id = ""; // acc_id 저장
 		String ck_id_save = ""; // acc_id 저장 여부 확인
 
 		if (cookie != null) { // 쿠키 존재
@@ -319,15 +317,15 @@ public class AccountCont {
 				System.out.println("--> cookies[" + i + "]" + cookies[i]);
 				cookie = cookies[i]; // 쿠키 객체 추출
 
-				if (cookie.getName().equals("ck_id")) {
-					ck_id = cookie.getValue(); // id(email)
+				if (cookie.getName().equals("ck_acc_id")) {
+					ck_acc_id = cookie.getValue(); // id(email)
 				} else if (cookie.getName().equals("ck_id_save")) {
 					ck_id_save = cookie.getValue(); // Y, N
 				}
 			}
 		}
 
-		model.addAttribute("ck_id", ck_id);
+		model.addAttribute("ck_id", ck_acc_id);
 		model.addAttribute("ck_id_save", ck_id_save);
 		model.addAttribute("url",url);
 		return "account/login";
@@ -361,8 +359,29 @@ public class AccountCont {
 		System.out.println("---> login_proc cnt: " + cnt);
 
 		model.addAttribute("cnt", cnt);
+		
+		if (id_save.equals("Y")) { // Checkbox 체크, acc_id 저장
+			Cookie ck_acc_id = new Cookie("acc_id", acc_id);
+			ck_acc_id.setPath("/"); // root 폴더에 쿠키를 기록 -> 모든 경로에서 쿠키 접근 가능
+			ck_acc_id.setMaxAge(60 * 60 * 24 * 30); // 30 days, 초단위
+			response.addCookie(ck_acc_id); // acc_id 저장
+		} else { // N, Checkbox 해제, acc_id 미저장
+			Cookie ck_acc_id = new Cookie("ck_id", "");
+			ck_acc_id.setPath("/");
+			ck_acc_id.setMaxAge(0);
+			response.addCookie(ck_acc_id);
+		}
 
-		if (cnt == 1) {
+		/* Cookie - Checkbox 체크 확인 */
+		Cookie ck_id_save = new Cookie("ck_id_save", id_save);
+		ck_id_save.setPath("/");
+		ck_id_save.setMaxAge(60 * 60 * 24 * 30); // 30 days
+		response.addCookie(ck_id_save);
+		if(url.length()>0) {
+			return "redirect:"+url;
+		}
+
+		if (cnt == 1) {	// 로그인 성공
 			// id를 이용한 회원 정보 조회
 			AccountVO accountVO = this.accountProc.readById(acc_id);
 			session.setAttribute("acc_no", accountVO.getAcc_no());
@@ -389,29 +408,13 @@ public class AccountCont {
 			int log_cnt = this.accountProc.recordLog(accLogVO);
 			System.out.println("---> Record_log_cnt: " + log_cnt);
 
-			/* Cookie */
-			/* acc_id 관련 쿠키 저장 */
-			if (id_save.equals("Y")) { // Checkbox 체크, acc_id 저장
-				Cookie ck_id = new Cookie("ck_id", acc_id);
-				ck_id.setPath("/"); // root 폴더에 쿠키를 기록 -> 모든 경로에서 쿠키 접근 가능
-				ck_id.setMaxAge(60 * 60 * 24 * 30); // 30 days, 초단위
-				response.addCookie(ck_id); // acc_id 저장
-			} else { // N, Checkbox 해제, acc_id 미저장
-				Cookie ck_id = new Cookie("ck_id", "");
-				ck_id.setPath("/");
-				ck_id.setMaxAge(0);
-				response.addCookie(ck_id);
-			}
-
-			/* Checkbox 체크 확인(acc_id 저장 여부) */
-			Cookie ck_id_save = new Cookie("ck_id_save", id_save);
-			ck_id_save.setPath("/");
-			ck_id_save.setMaxAge(60 * 60 * 24 * 30); // 30 days
-			response.addCookie(ck_id_save);
-			if(url.length()>0) {
-				return "redirect:"+url;
-			}
-
+			/* Cookie - acc_id 관련 쿠키 저장 (RecommendCont 전달) */
+			Cookie ck_acc_id = new Cookie("acc_id", acc_id);
+			ck_acc_id.setPath("/"); // root 폴더에 쿠키를 기록 -> 모든 경로에서 쿠키 접근 가능
+			ck_acc_id.setMaxAge(60 * 60 * 24 * 30); // 30 days, 초단위
+			response.addCookie(ck_acc_id); // acc_id 저장
+			
+			
 			return "redirect:/";
 		}
 		else {
@@ -420,6 +423,15 @@ public class AccountCont {
 			return "account/msg";
 		}
 
+	}
+	
+	/* 회원 전체 로그 조회 */
+	@GetMapping(value = "/log_list")
+	public String log_list(Model model) {
+		ArrayList<AccLogVO> log_list = this.accountProc.logList();
+		model.addAttribute("log_list", log_list);
+
+		return "account/log_list";
 	}
 	
 	/**

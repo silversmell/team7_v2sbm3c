@@ -45,7 +45,22 @@ VALUES(ACC_LOG_SEQ.nextval, 1, '127.0.0.1', sysdate);
 
 
 -- 전체 로그 조회
+SELECT acc_log_no, acc_no, acc_log_ip, acc_log_date
+FROM acc_log
+WHERE ROWNUM<=100;
 
 
+-- 전체 로그 조회(회원 아이디)
+SELECT l.acc_log_no, a.acc_id, l.acc_log_ip, l.acc_log_date
+FROM acc_log l
+INNER JOIN account a ON a.acc_no = l.acc_no
+WHERE ROWNUM<=100;
 
+
+SELECT h.tag_name
+FROM recommend r
+INNER JOIN hashtag h ON h.tag_no = r.tag_no
+WHERE r.acc_no = 4;
+
+commit;
 

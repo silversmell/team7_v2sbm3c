@@ -27,7 +27,7 @@ import com.zaxxer.hikari.HikariDataSource;
 @MapperScan(basePackages= {"dev.mvc.reply"})// qna_contentsDAO interface를 찾는 위치
 @MapperScan(basePackages= {"dev.mvc.admin"})
 @MapperScan(basePackages= {"dev.mvc.rank"})
-
+@MapperScan(basePackages= {"dev.mvc.recommend"}) // recommendDAO interface를 찾는 위치
 
 public class DatabaseConfiguration {
     

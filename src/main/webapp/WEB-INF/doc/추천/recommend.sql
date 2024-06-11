@@ -61,8 +61,92 @@ WHERE r.acc_no = 9;
 
 --------------------------------------------------------------------------------
 
+
+-- 나의 추천글 목록
+SELECT DISTINCT sc.scon_no, sc.scon_title, sc.scon_contents, sc.scon_views, sc.mark, sc.scon_comment, sc.scon_date, sc.scon_priority
+FROM recommend r
+JOIN contents_tag ct ON r.tag_no = ct.tag_no
+JOIN share_contents sc ON ct.scon_no = sc.scon_no
+WHERE r.acc_no = 2
+ORDER BY sc.scon_no ASC;
+
+-- 나의 추천글 목록(페이징)
+SELECT sc.scon_no, sc.scon_title, sc.scon_contents, sc.scon_views, sc.mark, sc.scon_comment, sc.scon_date, sc.scon_priority, p
+FROM (
+    SELECT sc.scon_no, sc.scon_title, sc.scon_contents, sc.scon_views, sc.mark, sc.scon_comment, sc.scon_date, sc.scon_priority, ROWNUM AS p
+    FROM (
+        SELECT DISTINCT sc.scon_no, sc.scon_title, sc.scon_contents, sc.scon_views, sc.mark, sc.scon_comment, sc.scon_date, sc.scon_priority
+        FROM recommend r
+        JOIN contents_tag ct ON r.tag_no = ct.tag_no
+        JOIN share_contents sc ON ct.scon_no = sc.scon_no
+        WHERE r.acc_no = 2
+        ORDER BY sc.scon_no ASC
+    )
+) WHERE p >=1 AND p <= 5;
+
+
+        
+SELECT DISTINCT sc.scon_no, sc.scon_title, sc.scon_contents, sc.scon_views, sc.mark, sc.scon_comment, sc.scon_date, sc.scon_priority
+FROM recommend r
+JOIN contents_tag ct ON r.tag_no = ct.tag_no
+JOIN share_contents sc ON ct.scon_no = sc.scon_no
+JOIN account a ON r.acc_no = a.acc_no
+WHERE a.acc_id = 'user3'
+ORDER BY sc.scon_no ASC;
+
+
+-- 이미지를 포함하여 추천글 목록 가져오기
+SELECT sc.scon_no, sc.scon_title, sc.scon_contents, sc.scon_views, sc.mark, sc.scon_comment, sc.scon_date, sc.scon_priority,
+       si.file_no, si.file_origin_name, si.file_upload_name, si.file_thumb_name, si.file_size, si.file_date
+FROM recommend r
+JOIN contents_tag ct ON r.tag_no = ct.tag_no
+JOIN share_contents sc ON ct.scon_no = sc.scon_no
+LEFT JOIN share_image si ON sc.scon_no = si.scon_no
+WHERE r.acc_no = 3
+ORDER BY sc.scon_no ASC;
+
+-- 컨텐츠 이미지 가져오기
+SELECT file_no, scon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date
+FROM share_image
+WHERE scon_no = 2;
+
+SELECT file_no, scon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date
+FROM share_image
+WHERE scon_no = 2
+AND ROWNUM<=1
+ORDER BY file_no ASC;
+
+-- 선택된 해시태그 목록
+SELECT h.tag_no, h.tag_code, h.tag_name
+FROM recommend r
+JOIN hashtag h ON h.tag_no = r.tag_no
+JOIN account a ON a.acc_no = r.acc_no
+WHERE a.acc_id = 'user2';
+
+SELECT h.tag_no, h.tag_code, h.tag_name
+FROM recommend r
+JOIN hashtag h ON h.tag_no = r.tag_no
+JOIN account a ON a.acc_no = r.acc_no
+WHERE r.acc_no = 2;
+
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+--해당하는 태그의 게시글
+select *
+from contents_tag;
+
+
+--------------------------------------------------------------------------------
+
 -- 추천 정보 삭제
 DELETE FROM recommend WHERE acc_no = 4;
+
+DELETE FROM recommend;
 
 --------------------------------------------------------------------------------
 
@@ -70,6 +154,15 @@ SELECT * FROM recommend;
 
 commit;
 
+
+--------------------------------------------------------------------------------
+
+INSERT INTO share_contents(scon_no, scon_title, scon_contents,scon_bookmark,scon_views,scon_priority,scon_date,scon_comment, acc_no ,cate_no)
+VALUES(share_contents_SEQ.nextval,'추천글 테스트 1 제목','추천글 테스트 1 내용 ', 2, 0, 0,sysdate, 0, 3, 1);
+INSERT INTO share_contents(scon_no, scon_title, scon_contents,scon_bookmark,scon_views,scon_priority,scon_date,scon_comment, acc_no ,cate_no)
+VALUES(share_contents_SEQ.nextval,'추천글 테스트 2 제목','추천글 테스트 2 내용 ', 1, 0, 0,sysdate, 0, 2, 1);
+INSERT INTO share_contents(scon_no, scon_title, scon_contents,scon_bookmark,scon_views,scon_priority,scon_date,scon_comment, acc_no ,cate_no)
+VALUES(share_contents_SEQ.nextval,'추천글 테스트 3 제목','추천글 테스트 2 내용 ', 2, 0, 0,sysdate, 0, 1, 1);
 
 
 

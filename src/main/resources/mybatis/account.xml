@@ -90,7 +90,22 @@
 		VALUES(ACC_LOG_SEQ.nextval, #{acc_no}, #{acc_log_ip}, sysdate)
 	</insert>
 
-
+	<!-- 회원 로그 전체 조회(100건) -->
+	<!-- 
+	<select id="logList" resultType="">
+		SELECT l.acc_log_no, a.acc_id, l.acc_log_ip, l.acc_log_date
+		FROM acc_log l
+		INNER JOIN account a ON a.acc_no = l.acc_no
+		WHERE ROWNUM&lt;=100
+	</select>
+	-->
+	
+	<select id="logList" resultType="dev.mvc.account.AccLogVO">
+		SELECT acc_log_no, acc_no, acc_log_ip, acc_log_date
+		FROM acc_log
+		WHERE ROWNUM&lt;=100
+	</select>
+	
 	<!-- 선택된 해시태그 조회(회원 정보 조회) -->
 	<select id="selectedTags" resultType="String" parameterType="int">
 		SELECT LISTAGG(h.tag_name, ',') WITHIN GROUP (ORDER BY tag_code DESC) AS

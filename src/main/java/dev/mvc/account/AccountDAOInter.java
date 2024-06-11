@@ -93,6 +93,13 @@ public interface AccountDAOInter {
 	 * @return 추가된 레코드 갯수
 	 */
 	public int recordLog(AccLogVO AccLogVO);
+	
+	/**
+	 * 회원 로그 전체 조회(100건)
+	 * 
+	 * @return
+	 */
+	public ArrayList<AccLogVO> logList();
 
 	/**
 	 * 선택된 해시태그 조회(회원 정보 조회)

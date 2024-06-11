@@ -93,6 +93,13 @@ public interface AccountProcInter {
 	 * @return 추가된 레코드 갯수
 	 */
 	public int recordLog(AccLogVO AccLogVO);
+	
+	/**
+	 * 회원 로그 전체 조회(100건)
+	 * 
+	 * @return
+	 */
+	public ArrayList<AccLogVO> logList();
     
     /**
      * 로그인된 회원 계정인지 검사

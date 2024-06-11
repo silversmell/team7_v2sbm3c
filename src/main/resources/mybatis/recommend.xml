@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- SB가 자동으로 구현하여 연동하는 interface -->
+<mapper namespace="dev.mvc.recommend.RecommendDAOInter"> <!-- SB가 자동으로 구현하여 연동하는
+	interface -->
+
+	<!-- 해시태그 기반 추천글 목록 -->
+	<select id="list" resultType="dev.mvc.share_contentsdto.Share_contentsVO" parameterType="int">
+		SELECT DISTINCT sc.scon_no, sc.scon_title, sc.scon_contents, sc.scon_views, sc.mark, sc.scon_comment, sc.scon_date, sc.scon_priority
+		FROM recommend r
+		JOIN contents_tag ct ON r.tag_no = ct.tag_no
+		JOIN share_contents sc ON ct.scon_no = sc.scon_no
+		WHERE r.acc_no = #{acc_no}
+		ORDER BY sc.scon_no ASC
+	</select>
+
+	<!-- 게시글 사진 가져오기 -->
+	<select id="contentImages" resultType="dev.mvc.share_contentsdto.Share_imageVO" parameterType="int">
+		SELECT file_no, scon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date
+		FROM share_image
+		WHERE scon_no = #{scon_no}
+		ORDER BY file_no ASC
+	</select>
+	
+	<!-- 선택된 해시태그 목록 -->
+	<select id="selectedTags" resultType="dev.mvc.recommend.HashtagVO" parameterType="int">
+		SELECT h.tag_no, h.tag_code, h.tag_name
+		FROM recommend r
+		JOIN hashtag h ON h.tag_no = r.tag_no
+		JOIN account a ON a.acc_no = r.acc_no
+		WHERE r.acc_no = #{acc_no}
+	</select>
+
+</mapper>
