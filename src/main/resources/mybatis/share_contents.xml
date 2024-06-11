@@ -421,6 +421,12 @@
 	FROM account , share_contents
 	WHERE account.acc_no=share_contents.acc_no AND share_contents.scon_no=#{scon_no}
 	</select>
+	
+	<select id="bookmark_count" resultType="int" parameterType="int">
+	SELECT count(*)
+	FROM bookmark
+  WHERE scon_no=#{scon_no}
+	</select>
 
 </mapper>
 

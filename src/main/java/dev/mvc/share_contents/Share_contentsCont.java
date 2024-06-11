@@ -103,7 +103,8 @@ public class Share_contentsCont {
 		// 카테고리 가져오기
 		CategoryVO categoryVO = this.categoryProc.cate_read(cate_no); // 카테고리 읽어옴
 		model.addAttribute("categoryVO", categoryVO);
-
+		int count1 = this.sconProc.bookmark_count(scon_no);
+		model.addAttribute("count1",count1);
 		int cnt = this.sconProc.update_view(scon_no); // 조회수 업데이트
 
 		Share_contentsVO scontentsVO = this.sconProc.read(scon_no);

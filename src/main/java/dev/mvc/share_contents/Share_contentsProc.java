@@ -429,4 +429,10 @@ public class Share_contentsProc implements Share_contentsProcInter {
 		return writer;
 	}
 
+	@Override
+	public int bookmark_count(int scon_no) {
+		int cnt = this.scontentsDAO.bookmark_count(scon_no);
+		return cnt;
+	}
+
 }

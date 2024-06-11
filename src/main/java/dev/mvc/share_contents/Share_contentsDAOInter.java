@@ -332,6 +332,13 @@ public interface Share_contentsDAOInter {
     * @return
     */
    public String writer(HashMap<String,Object>map);
+   
+   /**
+    * 해당 게시글 북마크 개수
+    * @param scon_no
+    * @return
+    */
+   public int bookmark_count(int scon_no);
 
 
 }
