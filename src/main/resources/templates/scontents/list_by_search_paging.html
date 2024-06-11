@@ -128,8 +128,9 @@
     <td class='td_basic' style="vertical-align: middle; text-align: center; margin-bottom: 10px;">
         <div th:each="share_imageVO, status:${list_image}" style="margin-bottom: 15px; display: flex; justify-content: center;">
             <div class="horizontal-container" style="margin-bottom: 10px; display: flex; align-items: center;">
+            <div th:if="${session.acc_grade=='admin'}">
                 <input type="checkbox"  id="scon_no" th:id="'scon_no_' + ${share_imageVO.scon_no}" name="scon_no" th:value="${share_imageVO.scon_no}" style="margin-right: 5px;">
-
+						</div>
                 <div style="width: 180px; height: 100px; overflow: hidden;">
                     <div th:if="${share_imageVO.file_origin_name.endsWith('jpg') or share_imageVO.file_origin_name.endsWith('png') or share_imageVO.file_origin_name.endsWith('gif')}">
                         <img th:src="@{|/contents/storage/${share_imageVO.file_thumb_name}|}" style="width: 100%; height: 100%; object-fit: cover;">
@@ -168,11 +169,6 @@
         </div>
     </td>
      </tr>
-
-
-
-
-
 
         <!-- 리스트가 비어있을 때 -->
         <tr th:if="${list_image.size() == 0}">
