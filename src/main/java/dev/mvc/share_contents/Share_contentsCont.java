@@ -330,10 +330,9 @@ public class Share_contentsCont {
 
 	@GetMapping("/update_text/{member_no}") // 글 수정
 	public String update_text_form(Model model,@PathVariable("member_no") Integer acc_no, int scon_no, int cate_no,HttpSession session) {
-		if(acc_no==0) {
-			return "account/login";
-		}
-		if(this.accountProc.isMember(session) && (acc_no==session.getAttribute("acc_no"))) {
+
+		if(this.accountProc.isMember(session) && (acc_no==(int)session.getAttribute("acc_no"))) {
+			System.out.println("들어옴");
 		CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
 		model.addAttribute("categoryVO", categoryVO);
 
@@ -408,7 +407,7 @@ public class Share_contentsCont {
 		if(acc_no==0) {
 			return "account/login";
 		}
-		if(this.accountProc.isMember(session) && (acc_no==session.getAttribute("acc_no"))) {
+		if(this.accountProc.isMember(session) && (acc_no==(int)session.getAttribute("acc_no"))) {
 		Share_contentsVO scontentsVO = this.sconProc.read(scon_no);
 		model.addAttribute("scontentsVO", scontentsVO);
 
@@ -621,7 +620,7 @@ public class Share_contentsCont {
 		if(acc_no==0) {
 			return "account/login";
 		}
-		if(this.accountProc.isMember(session) && (session.getAttribute("acc_no")==acc_no)){
+		if(this.accountProc.isMember(session) && ((int)session.getAttribute("acc_no")==acc_no)){
 		CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
 		model.addAttribute("categoryVO", categoryVO);
 
