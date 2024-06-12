@@ -97,7 +97,6 @@
           if (reply_data.length > 5) {
             start = reply_now_page * 5;
             end = (reply_now_page * 5) + 5; // 시작 index + 페이지 당 레코드 수
-            this.qna_contentsProc.qna_search_count_comment(qcon_no);
             let msg = '';
             let page_div = document.createElement('div'); // 글내용
             for (let i = start; i < end; i++) { // 5 ~ 9, 10 탈출
