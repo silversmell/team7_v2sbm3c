@@ -732,6 +732,9 @@ public class Share_contentsCont {
 
 		model.addAttribute("tag_no", tag_no);
 		
+		ArrayList<HashtagVO> list_hashtag = this.sconProc.select_hashtag();
+		model.addAttribute("list_hashtag", list_hashtag);
+
 		HashMap<String,Object> map1 = new HashMap<String,Object>();
 		map1.put("now_page",now_page);
 	    int begin_of_page = ((int) map1.get("now_page") - 1) * Contents.RECORD_PER_PAGE;
