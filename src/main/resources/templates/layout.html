@@ -115,7 +115,7 @@
 									style="display: inline-block;">마이페이지</a>
 							</span>
 							<span th:if="${session.acc_no != null}">
-                <button onclick="location.href='/qcontents/member_img'">달리 AI(이미지 생성)</button>
+                <button type="button" th:attr="onclick=|location.href='http://192.168.12.159:9093/qcontents/member_img'|">달리 AI(이미지 생성)</button>
               </span>
 						</li>
 					</ul>
