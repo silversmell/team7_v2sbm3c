@@ -1,5 +1,5 @@
 <div th:fragment="list_search_fragment"> <!-- <div th:replace=... -->
-    <div style="text-align: right; clear: both;">
+    <div style="text-align: right; clear: both; margin-right:88px;">
     <form name="frm_search" method="get" action="/scontents/list_by_search">
       <input type="hidden" name="cate_no" th:value="${categoryVO.cate_no}"> <!-- cate_no 데이터 값 가져옴 -->
       <input type="text" name="word" id="word" th:value="${word}" >

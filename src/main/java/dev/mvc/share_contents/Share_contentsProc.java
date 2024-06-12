@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import dev.mvc.bookmark.BookmarkVO;
+import dev.mvc.bookmark.Share_markVO;
 import dev.mvc.recommend.HashtagVO;
 import dev.mvc.share_contents.Contents;
 import dev.mvc.share_contentsdto.Contents_tagVO;
@@ -423,8 +424,8 @@ public class Share_contentsProc implements Share_contentsProcInter {
 	}
 
 	@Override
-	public ArrayList<BookmarkVO> mark_check(HashMap<String,Object>map) {
-		ArrayList<BookmarkVO> list = this.scontentsDAO.mark_check(map);
+	public ArrayList<Share_markVO> mark_check(HashMap<String,Object>map) {
+		ArrayList<Share_markVO> list = this.scontentsDAO.mark_check(map);
 		return list;
 	}
 

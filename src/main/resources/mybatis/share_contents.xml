@@ -267,21 +267,19 @@
 		where scon_no=#{scon_no}
 	</update>
 
-
-
 	<insert id="bookmark_create" parameterType="HashMap">
 		INSERT INTO
-		bookmark(mark_no, acc_no, scon_no, qcon_no)
-		VALUES(BOOKMARK_SEQ.nextval, #{acc_no}, #{scon_no}, null)
+		share_mark(smark_no, acc_no, scon_no)
+		VALUES(share_mark_seq.nextval, #{acc_no}, #{scon_no})
 	</insert>
 
 	<delete id="bookmark_delete" parameterType="HashMap">
-		DELETE FROM bookmark
+		DELETE FROM share_mark
 		WHERE scon_no=#{scon_no} AND acc_no=#{acc_no}
 	</delete>
 
 	<delete id="bookmarall_delete" parameterType="int">
-		DELETE FROM bookmark
+		DELETE FROM share_mark
 		WHERE scon_no=#{scon_no}
 	</delete>
 
@@ -360,7 +358,7 @@
 	</delete>
 	
 		<delete id="sdelete_bookmark" parameterType="list">
-		DELETE FROM bookmark
+		DELETE FROM share_mark
 		WHERE scon_no IN
 		<foreach item="item" index="index" collection="list" open="("
 			separator="," close=")">
@@ -419,9 +417,9 @@
 		WHERE scon_no = #{scon_no} AND ROWNUM &lt;= 1
 	</select>
 	
-	<select id="mark_check" resultType="dev.mvc.bookmark.BookmarkVO" parameterType="HashMap">
+	<select id="mark_check" resultType="dev.mvc.bookmark.Share_markVO" parameterType="HashMap">
 		select acc_no,scon_no
-		from bookmark
+		from share_mark
 		where scon_no=#{scon_no} AND acc_no=#{acc_no}
 		ORDER BY acc_no asc
 	</select>
@@ -435,7 +433,7 @@
 	
 	<select id="bookmark_count" resultType="int" parameterType="int">
 	SELECT count(*)
-	FROM bookmark
+	FROM share_mark
   WHERE scon_no=#{scon_no}
 	</select>
 

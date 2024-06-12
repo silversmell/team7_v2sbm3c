@@ -59,7 +59,6 @@ public class RankCont {
 		ArrayList<HashtagVO> list_hashtag = this.sconProc.select_hashtag();
 		model.addAttribute("list_hashtag", list_hashtag);
 	
-
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("word", word);
 		map.put("now_page", now_page);

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import dev.mvc.bookmark.BookmarkVO;
+import dev.mvc.bookmark.Share_markVO;
 import dev.mvc.recommend.HashtagVO;
 import dev.mvc.share_contentsdto.Contents_tagVO;
 import dev.mvc.share_contentsdto.Contents_urlVO;
@@ -348,7 +349,7 @@ public interface Share_contentsProcInter {
     * @param scon_no
     * @return
     */
-   public ArrayList<BookmarkVO>mark_check(HashMap<String,Object>map);
+   public ArrayList<Share_markVO>mark_check(HashMap<String,Object>map);
    
    /**
     * 작성자

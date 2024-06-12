@@ -67,31 +67,7 @@ public class Share_contentsCont {
 		System.out.println(" ->Share_contentsCont created");
 	}
 
-//	@GetMapping("/list_all")
-//	public String list_all(Model model) { 
-//		// System.out.println("list_all 생성");
-//		ArrayList<Share_contentsVO> list = this.sconProc.list_all();
-//		model.addAttribute("list", list);
-//
-//		return "scontents/list_all";
-//	}
 
-//	@GetMapping("/read_acc_no") //회원 읽기
-//	@ResponseBody
-//	public String read_acc_no(@RequestParam("scon_no") int[] scon_no) {
-//		JSONObject json= new JSONObject();
-//		for(int i =0;i<scon_no.length;i++) {
-//			Share_contentsVO list = this.sconProc.read(scon_no[i]);
-//			String acc_no= "acc_no" +(i+1);
-//			json.put(acc_no, list.getacc_no());
-//			System.out.println("acc_no ->:"+list.getacc_no());
-//		}
-//		JSONObject jsr= new JSONObject();
-//		jsr.put("res", json);
-//		System.out.println("-> jsr.toString: " +jsr.toString());
-//		return jsr.toString();
-//		
-//	}
 	
 	@GetMapping("/read") //글 조회
 	public String read(Model model, int scon_no, int cate_no, HttpSession session,@RequestParam(name = "word", defaultValue = "") String word,RedirectAttributes ra,
@@ -167,7 +143,9 @@ public class Share_contentsCont {
 	@GetMapping("/up_priority/{scon_no}")
 	@ResponseBody
 	public String up_priority(@PathVariable("scon_no") Integer scon_no, int cate_no, RedirectAttributes ra,HttpSession session) {
+		
 		if(this.accountProc.isMember(session)) {
+			System.out.println("up_priority");
 		JSONObject obj = new JSONObject();
 		this.sconProc.up_priority(scon_no);
 		int cnt = this.sconProc.y_mark(scon_no);
@@ -330,9 +308,9 @@ public class Share_contentsCont {
 //			System.out.println("태그 삭제 성공");
 //		}
 		int bookmark = this.sconProc.sdelete_bookmark(sconNoList);
-//		if(bookmark>0) {
-//			System.out.println("북마크 삭제 성공");
-//		}
+		if(bookmark>0) {
+			System.out.println("북마크 삭제 성공");
+		}
 		int comment = this.replyProc.sdelete_comment(sconNoList);
 //		if(comment>0) {
 //			System.out.println("comment 삭제 성공");

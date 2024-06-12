@@ -95,7 +95,7 @@
 	<div class='menu_line'></div>
 <div style="display: flex; justify-content: space-between; ">
 <div style="display: flex; margin-left:78px;">
-    <div th:each="hashtag, status:${list_hashtag}" th:attr="onclick=|location.href='/scontents/rank_hashtag/${hashtag.tag_no}?cate_no=1'|" style="cursor: pointer; ">
+    <div th:each="hashtag, status:${list_hashtag}" th:attr="onclick=|location.href='/scontents/rank_hashtag/${hashtag.tag_no}?cate_no=4'|" style="cursor: pointer; ">
     <div class="read_hashtag">
     <div th:if="${hashtag.tag_no eq tag_no}">
         <span style="font-weight: bold;" th:text="${hashtag.tag_name}"></span>
