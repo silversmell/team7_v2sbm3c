@@ -1,5 +1,7 @@
 package dev.mvc.account;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -320,7 +322,7 @@ public class AccountCont {
 	 * @return
 	 */
 	@GetMapping(value = "/login")
-	public String login_form(Model model, HttpServletRequest request, AccLogVO accLogVO, String url) {
+	public String login_form(Model model, HttpServletRequest request, AccLogVO accLogVO, String url)  {
 
 		/* Cookie */
 		Cookie[] cookies = request.getCookies();
@@ -345,6 +347,7 @@ public class AccountCont {
 		model.addAttribute("ck_id", ck_acc_id);
 		model.addAttribute("ck_id_save", ck_id_save);
 		model.addAttribute("url", url);
+		
 		return "account/login";
 	}
 
@@ -358,7 +361,6 @@ public class AccountCont {
 	public String login_proc(HttpSession session, HttpServletRequest request, HttpServletResponse response, Model model,
 			AccLogVO accLogVO, String url, String acc_id, String acc_pw,
 			@RequestParam(value = "id_save", defaultValue = "") String id_save) {
-
 		String ip = request.getRemoteAddr(); // IP
 		System.out.println("---> 접속한 IP: " + ip);
 

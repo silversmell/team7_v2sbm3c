@@ -1,5 +1,8 @@
 package dev.mvc.share_contents;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -91,9 +94,9 @@ public class Share_contentsCont {
 //	}
 	
 	@GetMapping("/read") //글 조회
-	public String read(Model model, int scon_no, int cate_no, HttpSession session,@RequestParam(name = "word", defaultValue = "") String word,
+	public String read(Model model, int scon_no, int cate_no, HttpSession session,@RequestParam(name = "word", defaultValue = "") String word,RedirectAttributes ra,
 			 @RequestParam(name = "now_page", defaultValue = "1") int now_page) { // acc_no 필요(session)
-
+		
 		if(this.accountProc.isMember(session)) {
 		
 		model.addAttribute("word",word);
@@ -146,12 +149,19 @@ public class Share_contentsCont {
 		ArrayList<Share_imageVO> share_imageVO = this.sconProc.read_image(scon_no);
 
 		model.addAttribute("share_imageVO", share_imageVO);
-		
-		
+
 		return "scontents/read";
+		}else {
+			return "redirect:/account/login";
 		}
-		return "redirect:/account/login";
-	  }
+//		try {
+//			String url = "/scontents/list_by_search?cate_no=1";
+//		    return "redirect:/account/login?url="+ URLDecoder.decode(url, "UTF-8");
+//		} catch (UnsupportedEncodingException e) {
+//		    e.printStackTrace();
+//		    return "errorPage";
+//		}
+	}
 
 	
 	@GetMapping("/up_priority/{scon_no}")

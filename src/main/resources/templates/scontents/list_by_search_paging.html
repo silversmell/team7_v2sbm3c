@@ -73,6 +73,7 @@
     
   </script>
 	<div class='title_line'>
+	<span th:text="${categoryVO.cate_name}" class="title_line_text"></span >
 		<span th:if="${word != ''}" th:text="|> ${word} (${search_count} 건)|"
 			class="title_line_text"></span>
 
