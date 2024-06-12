@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 
 import dev.mvc.recommend.HashtagVO;
 import dev.mvc.recommend.RecommendVO;
+import dev.mvc.share_contentsdto.Share_contentsVO;
+import dev.mvc.share_contentsdto.Share_imageVO;
 import dev.mvc.tool.Security;
 import jakarta.servlet.http.HttpSession;
 
@@ -176,6 +178,18 @@ public class AccountProc implements AccountProcInter {
 		return cnt;
 	}
 
+	@Override
+	public ArrayList<Share_contentsVO> myContents(int acc_no) {
+		ArrayList<Share_contentsVO> list = this.accountDAO.myContents(acc_no);
+		return list;
+	}
+
+	@Override
+	public ArrayList<Share_imageVO> contentImages(int scon_no) {
+		ArrayList<Share_imageVO> images = this.accountDAO.contentImages(scon_no);
+		return images;
+	}
+	
 
 	
 }

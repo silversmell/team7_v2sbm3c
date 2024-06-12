@@ -16,13 +16,11 @@
 	<div id="code" th:attr="data-code=${code}" style="display: none;"></div>
 
 	<div class='title_line'>
-		<span th:text="| 추천글 (${count} 건)|" class="title_line_text"></span>
+		<span th:text="| 내가 쓴 글 (${count} 건)|" class="title_line_text"></span>
 	</div>
 
 	<aside class="aside_right">
 		<a href="javascript:location.reload();">새로고침</a>
-		<span class='menu_divide'>│</span>
-		<a href="/scontents/rank?cate_no=4">랭킹글</a>
 	</aside>
 
 	<div th:replace="~{recommend/list_component::list_fragment}"></div>
@@ -30,27 +28,23 @@
 	<div class='menu_line'></div>
 	<div style="display: flex; justify-content: space-between; ">
 		<div style="display: flex; margin-left:78px;">
-			<div th:each="hashtag, status:${hashtags}"
-				th:attr="onclick=|location.href='/scontents/read_hashtag/${hashtag.tag_no}?cate_no=1'|"
-				style="cursor: pointer; ">
-				<div class="read_hashtag">
-					<span style="font-weight: bold;" th:text="${hashtag.tag_name}"></span>
-				</div>
-			</div>
+
 		</div>
 
 	</div>
 	<div style="display:flex; justify-content: center;">
-		<table class="table table-striped" style='width: 90%;  justify-content:center;'>
+		<table class="table table-striped" style='width: 90%; justify-content:center;'>
 			<colgroup>
 				<col style='width: 20%;' />
-				<col style='width: 80%;' />
+				<col style='width: 70%;' />
+				<col style='width: 10%;' />
 			</colgroup>
 
 			<thead>
 				<tr>
-					<th class="th_bs"></th>
+					<th class="th_bs"> </th>
 					<th class="th_bs">내용</th>
+					<th class="th_bs"> </th>
 				</tr>
 			</thead>
 
@@ -72,7 +66,7 @@
 							</div>
 						</div>
 					</td>
-
+					
 					<td class='td_basic' style="vertical-align: middle; text-align: center;">
 						<div style="margin-bottom: 20px; margin-top:10px;">
 							<div style="cursor: pointer; margin-left: 5px; display: flex; justify-content: center;">
@@ -102,6 +96,12 @@
 							</div>
 						</div>
 					</td>
+					
+					<td class='td_basic' style="vertical-align: middle; text-align: center; margin-bottom: 10px;">
+						<a th:href="@{|/account/updatemc?scon_no=${scontentsVO.scon_no}&cate_no=1|}"><img src='/account/images/update.png' title='수정' class="icon"></a>
+						<a th:href="@{|/scontents/delete/${acc_no}?scon_no=${scontentsVO.scon_no}&cate_no=1|}"><img src='/account/images/delete.png' title='삭제' class="icon"></a>
+					</td>
+
 				</tr>
 
 				<tr th:if="${count == 0}">

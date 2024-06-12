@@ -163,7 +163,23 @@
 	</delete>
 
 	<!-- 회원 탈퇴(사용자, 마이페이지) -->
-
+	
+	
+	<!-- 내가 쓴 게시글 목록 -->
+	<select id="myContents" resultType="dev.mvc.share_contentsdto.Share_contentsVO" parameterType="int">
+		SELECT scon_no, scon_title, scon_contents, scon_date
+		FROM share_contents
+		WHERE acc_no = #{acc_no}
+		ORDER BY scon_date ASC
+	</select>
+	
+	<!-- 게시글 사진 가져오기 -->
+	<select id="contentImages" resultType="dev.mvc.share_contentsdto.Share_imageVO" parameterType="int">
+		SELECT file_no, scon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date
+		FROM share_image
+		WHERE scon_no = #{scon_no}
+		ORDER BY file_no ASC
+	</select>
 
 </mapper>
 
