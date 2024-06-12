@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import dev.mvc.qna_mark.Qna_markVO;
+
 public interface Qna_contentsDAOInter {
 
   /**
@@ -214,7 +216,7 @@ public interface Qna_contentsDAOInter {
    * @param map
    * @return
    */
-  public ArrayList<Qna_contentsVO> is_bookmarked(HashMap<String, Object> map);
+  public ArrayList<Qna_markVO> is_bookmarked(HashMap<String, Object> map);
   
   /**
    * 질문글 북마크 등록

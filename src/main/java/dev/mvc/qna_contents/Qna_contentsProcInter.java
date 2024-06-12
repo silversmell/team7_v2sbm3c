@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import dev.mvc.qna_mark.Qna_markVO;
+
 
 public interface Qna_contentsProcInter {
   
@@ -214,7 +216,7 @@ public interface Qna_contentsProcInter {
    * @param map
    * @return
    */
-  public ArrayList<Qna_contentsVO> is_bookmarked(HashMap<String, Object> map);
+  public ArrayList<Qna_markVO> is_bookmarked(HashMap<String, Object> map);
   
   /**
    * 질문글 북마크 등록

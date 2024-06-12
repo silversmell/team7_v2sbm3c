@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import dev.mvc.qna_mark.Qna_markVO;
 import dev.mvc.tool.Security;
 import dev.mvc.tool.Tool;
 
@@ -349,8 +350,8 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
   }
 
   @Override
-  public ArrayList<Qna_contentsVO> is_bookmarked(HashMap<String, Object> map) {
-    ArrayList<Qna_contentsVO> list = this.qna_contentsDAO.is_bookmarked(map);
+  public ArrayList<Qna_markVO> is_bookmarked(HashMap<String, Object> map) {
+    ArrayList<Qna_markVO> list = this.qna_contentsDAO.is_bookmarked(map);
     
     return list;
   }

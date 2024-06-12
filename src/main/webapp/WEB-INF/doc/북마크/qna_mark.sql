@@ -45,6 +45,10 @@ DELETE FROM qna_mark
 WHERE qcon_no =1 AND acc_no=3;
 
 
+SELECT acc_no, qcon_no
+FROM qna_mark
+WHERE qcon_no=1 AND acc_no=3;
+
 SELECT count(*)
 FROM qna_mark
 WHERE qcon_no=1
