@@ -109,10 +109,10 @@
 									style="display: inline-block;"></a>
 							</span>
 							<span th:if="${session.acc_no != null}">
+                <a class="nav-link" href="/account/logout" th:text="@{|${session.acc_id} 로그아웃|}"
+                  style="display: inline-block;"></a>
 								<a class="nav-link" th:href="@{|/account/read?acc_no=${session.acc_no}|}"
 									style="display: inline-block;">마이페이지</a>
-								<a class="nav-link" href="/account/logout" th:text="@{|${session.acc_id} 로그아웃|}"
-									style="display: inline-block;"></a>
 							</span>
 							<span th:if="${session.acc_no != null}">
                 <button onclick="location.href='/qcontents/member_img'">달리 AI(이미지 생성)</button>
