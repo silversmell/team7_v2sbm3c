@@ -358,6 +358,15 @@
 			#{item}
 		</foreach>
 	</delete>
+	
+		<delete id="sdelete_bookmark" parameterType="list">
+		DELETE FROM bookmark
+		WHERE scon_no IN
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
 
 
 	<!-- scon_no에 따른 태그 삭제 -->

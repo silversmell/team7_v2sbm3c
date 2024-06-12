@@ -321,10 +321,26 @@ public class Share_contentsCont {
 		if(this.accountProc.isMemberAdmin(session)) {
 		List<Integer> sconNoList = (List<Integer>) scon_no.get("scon_no");
 
-		this.sconProc.sdelete_image(sconNoList);
-		this.sconProc.sdelete_tag(sconNoList);
-		this.replyProc.sdelete_comment(sconNoList);
-		this.sconProc.sdelete_url(sconNoList);
+		int image =this.sconProc.sdelete_image(sconNoList);
+		if(image>0) {
+			System.out.println("이미지 삭제 성공");
+		}
+		int tag = this.sconProc.sdelete_tag(sconNoList);
+		if(tag>0) {
+			System.out.println("태그 삭제 성공");
+		}
+		int bookmark = this.sconProc.sdelete_bookmark(sconNoList);
+		if(bookmark>0) {
+			System.out.println("북마크 삭제 성공");
+		}
+		int comment = this.replyProc.sdelete_comment(sconNoList);
+		if(comment>0) {
+			System.out.println("comment 삭제 성공");
+		}
+		int url =this.sconProc.sdelete_url(sconNoList);
+		if(url>0) {
+			System.out.println("url 삭제 성공");
+		}
 		cnt = this.sconProc.delete_sconno(sconNoList);
 		for(int i =0;i<sconNoList.size();i++) {
 			this.categoryProc.cnt_minus((int)scon_no.get("cate_no"));

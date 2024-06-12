@@ -374,6 +374,11 @@ public class Share_contentsProc implements Share_contentsProcInter {
 		int cnt = this.scontentsDAO.sdelete_image(scon_no);
 		return cnt;
 	}
+	@Override
+	public int sdelete_bookmark(List<Integer> scon_no) {
+		int cnt = this.scontentsDAO.sdelete_bookmark(scon_no);
+		return cnt;
+	}
 
 	@Override
 	public int sdelete_url(List<Integer> scon_no) {
@@ -434,5 +439,7 @@ public class Share_contentsProc implements Share_contentsProcInter {
 		int cnt = this.scontentsDAO.bookmark_count(scon_no);
 		return cnt;
 	}
+
+
 
 }

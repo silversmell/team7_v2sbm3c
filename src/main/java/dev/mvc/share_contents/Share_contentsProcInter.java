@@ -296,6 +296,13 @@ public interface Share_contentsProcInter {
    public int sdelete_image(List<Integer> scon_no);
    
    /** 
+    * scon_no에 따른 북마크 여러장 삭제
+    * @param scon_no
+    * @return int
+    */
+   public int sdelete_bookmark(List<Integer> scon_no);
+   
+   /** 
     * scon_no에 따른 url 삭제
     * @param scon_no
     * @return int
