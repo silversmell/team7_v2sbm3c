@@ -1,6 +1,7 @@
 package dev.mvc.qna_contents;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -71,4 +72,10 @@ public class Qna_contentsVO {
   
   /** 질문 게시글 북마크 */
   private String qcon_bookmark="N";
+  
+  
+  private String prompt="";
+  
+  private String result = "";
+  
 }
