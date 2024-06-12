@@ -117,10 +117,6 @@
 							<span th:if="${session.acc_no != null}">
                 <button onclick="location.href='/qcontents/member_img'">달리 AI(이미지 생성)</button>
               </span>
-              <span th:if="${session.acc_no == null}">
-                <a class="nav-link" href="/account/login" th:text="@{|로그인|}" style="display: inline-block; margin-right: 5px;"></a>
-                <a class="nav-link" href="/account/create" th:text="@{|회원 가입|}" style="display: inline-block;"></a>
-              </span>
 						</li>
 					</ul>
 				</div>
