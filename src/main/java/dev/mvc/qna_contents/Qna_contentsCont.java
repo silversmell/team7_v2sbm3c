@@ -1,12 +1,24 @@
 package dev.mvc.qna_contents;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.UUID;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,8 +28,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.http.MediaType;
 
 import dev.mvc.account.AccountProc;
 import dev.mvc.account.AccountVO;
@@ -50,6 +64,7 @@ public class Qna_contentsCont {
   @Autowired
   @Qualifier("dev.mvc.admin.AdminProc")
   private AdminProc adminProc;
+
   
 //  public Qna_contentsCont() {
 //    System.out.println("-> Qna_contentsCont created.");
@@ -70,7 +85,7 @@ public class Qna_contentsCont {
 
     return url; // /forward, /templates/...
   }
-  
+
   /**
    * 전체 목록, 관리자만 사용 가능
    * @param model
@@ -573,8 +588,6 @@ public class Qna_contentsCont {
       ra.addAttribute("now_page", now_page);
       
       return "redirect:/qcontents/qna_read";
-    
-
   }
   
   /**
@@ -704,7 +717,7 @@ public class Qna_contentsCont {
    */
   @GetMapping(value="/qna_read_comment", produces ="application/json")
   @ResponseBody
-  public String qna_read_comment(int qcmt_no, int qcon_no) {
+  public String qna_read_comment(int qcmt_no) {
     Qna_commentVO qna_commentVO = this.qna_contentsProc.qna_read_comment(qcmt_no);
     
     JSONObject row = new JSONObject();
@@ -716,9 +729,6 @@ public class Qna_contentsCont {
     
     JSONObject obj = new JSONObject();
     obj.put("res", row);
-    
-    int commentCount = this.qna_contentsProc.qna_search_count_comment(qcon_no);
-    obj.put("commentCount", commentCount);
     
     return obj.toString();
   }
@@ -740,8 +750,6 @@ public class Qna_contentsCont {
     if (acc_no == qna_commentVO.getAcc_no()) { // 회원 자신이 쓴 댓글만 수정 가능
       cnt = this.qna_contentsProc.qna_update_comment(qna_commentVO);
     }
-    
-    System.out.println("-> qcmt_no: " + qna_commentVO.getQcmt_no());
     
     JSONObject json = new JSONObject();
     json.put("res", cnt);  // 1: 성공, 0: 실패
@@ -767,33 +775,35 @@ public class Qna_contentsCont {
     
     JSONObject json = new JSONObject();
     json.put("res", cnt);  // 1: 성공, 0: 실패
-
     return json.toString();
   }
   
+//  @PostMapping(value="/qcon_bookmark")
+//  @ResponseBody
+//  public String bookmark_add(HttpSession session, 
+//                                      @RequestBody Qna_commentVO qna_commentVO, 
+//                                      HashMap<String, Object> map) {
+//    int acc_no= (int)session.getAttribute("acc_no");
+//    
+//    int cnt = 0;
+//    if (acc_no == qna_commentV)
+//  }
+
+
   /**
-   * 질문글 북마크 추가 처리
+   * 이미지 생성 AI
+   * http://localhost:9093/qcontents/member_img
    * @param session
-   * @param qna_commentVO
    * @return
    */
-  @PostMapping(value="/bookmark_add")
-  @ResponseBody
-  public String bookmark_add(HttpSession session, @RequestBody Qna_contentsVO qna_contentsVO) {
-    int acc_no = (int)session.getAttribute("acc_no");
+  @GetMapping(value="/member_img")
+  // @ResponseBody: post 메서드에서만 사용.
+  public String member_img(HttpSession session) {
     
-    HashMap<String, Object> map = new HashMap<String, Object>();
-    map.put("qcon_no", qna_contentsVO.getQcon_no());
-    map.put("acc_no", acc_no);
-    int cnt = this.qna_contentsProc.bookmark_add(map);
-    
-    JSONObject json = new JSONObject();
-    json.put("res", cnt);  // 1: 성공, 0: 실패
-
-    return json.toString();
+    return "qcontents/member_img";
   }
   
-  
+
     
 }
 

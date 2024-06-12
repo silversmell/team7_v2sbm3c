@@ -25,14 +25,15 @@ public class WebMvcConfiguration implements WebMvcConfigurer{
         // JSP 인식되는 경로: http://localhost:9091/attachfile/storage";
         // registry.addResourceHandler("/contents/storage/**").addResourceLocations("file:///" +  Tool.getOSPath() + "/attachfile/storage/");
       
-        // JSP 인식되는 경로: http://localhost:9093/contents/storage;
+        // 인식되는 경로: http://localhost:9093/contents/storage;
         registry.addResourceHandler("/contents/storage/**").addResourceLocations("file:///" +  Contents.getUploadDir());
           
-        // JSP 인식되는 경로: http://localhost:9093/contents/storage";
-        registry.addResourceHandler("/contents/storage/**").addResourceLocations("file:///" +  PicUpload.getUploadDir());
+        // 인식되는 경로: http://localhost:9093/contents/storage";
+        registry.addResourceHandler("/scontents/storage/**").addResourceLocations("file:///" +  PicUpload.getUploadDir());
         
-        // JSP 인식되는 경로: http://localhost:9093/qcontents/storage";
+        // 인식되는 가상경로: http://localhost:9093/qcontents/storage"; 
         registry.addResourceHandler("/qcontents/storage/**").addResourceLocations("file:///" +  Qcontents.getUploadDir());
+        registry.addResourceHandler("/openai/member/storage/**").addResourceLocations("file:///" +  Qcontents.getUploadDirOpenAI());
     }
  
 }
