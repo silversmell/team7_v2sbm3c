@@ -276,7 +276,7 @@
   </select>
   
   <!-- 특정 질문글 북마크하였는지 확인 -->
-  <select id="is_bookmarked" resultType="dev.mvc.qna_contents.Qna_contentsVO" parameterType="HashMap">
+  <select id="is_bookmarked" resultType="dev.mvc.qna_mark.Qna_markVO" parameterType="HashMap">
     SELECT count(*)
     FROM qna_mark
     WHERE qcon_no=#{qcon_no} AND acc_no=#{acc_no}
