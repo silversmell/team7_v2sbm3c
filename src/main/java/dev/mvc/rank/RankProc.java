@@ -41,4 +41,11 @@ public class RankProc implements RankProcInter {
 	}
 
 
+	@Override
+	public ArrayList ranking_tag_list(int tag_no) {
+		ArrayList<Share_contentsVO> list = this.rankDAO.ranking_tag_list(tag_no);
+		return null;
+	}
+
+
 }

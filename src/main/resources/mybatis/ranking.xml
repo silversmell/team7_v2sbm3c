@@ -58,4 +58,25 @@ FROM (
 )
 where r&lt;=10
 </select>
+
+<select id="ranking_tag_list" resultType="dev.mvc.share_contentsdto.Share_contentsVO" parameterType="int">
+SELECT scon_no, scon_title, scon_contents, scon_views, scon_comment,
+       scon_date, scon_priority, tag_no, r
+FROM (
+    SELECT sc.scon_no, sc.scon_title, sc.scon_contents, sc.scon_views, sc.scon_comment,
+           sc.scon_date, sc.scon_priority, ct.tag_no,ht.tag_name, ROWNUM as r
+    FROM (
+        SELECT scon_no, scon_title, scon_contents, scon_views, scon_comment,
+               scon_date, scon_priority
+        FROM share_contents
+        WHERE scon_priority > 0
+        ORDER BY scon_priority DESC
+    ) sc
+    INNER JOIN contents_tag ct ON sc.scon_no = ct.scon_no
+    right outer join hashtag ht on ht.tag_no=ct.tag_no
+    where ht.tag_no=#{tag_no}
+)
+WHERE r &lt;= 10
+</select>
+
 </mapper>

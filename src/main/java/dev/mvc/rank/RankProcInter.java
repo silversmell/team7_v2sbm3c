@@ -26,5 +26,12 @@ public interface RankProcInter {
 	  * @return
 	  */
 	 public int ranking_tag_count(int tag_no);
+	 
+	 /**
+	  * 랭킹에 따른 해시태그 분류
+	  * @param tag_no
+	  * @return
+	  */
+	 public ArrayList ranking_tag_list(int tag_no);
 
 }

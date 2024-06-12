@@ -90,12 +90,15 @@ public class RankCont {
 		return "scontents/ranking";
 
 	}
-	
-	@GetMapping("/read_ranking_hashtag/{tag_no}")
-	public String read_ranking(@PathVariable("tag_no") Integer tag_no,int cate_no,Model model,
+
+	@GetMapping("/rank_hashtag/{tag_no}")
+	public String rank_hashtag(@PathVariable("tag_no") Integer tag_no,int cate_no,Model model,
 			@RequestParam(name = "now_page", defaultValue = "1") int now_page,HttpSession session,@RequestParam(name = "word", defaultValue = "") String word) {
 		ArrayList<Share_contentsVO> list= this.rankingProc.ranking_tag(tag_no);
 		model.addAttribute("list",list);
+		
+		ArrayList<HashtagVO> list_hashtag = this.sconProc.select_hashtag();
+		model.addAttribute("list_hashtag", list_hashtag);
 		
 		HashtagVO hash = this.sconProc.read_hashtag_name(tag_no); //tag_no로 hashtag_name 가져오기
 		model.addAttribute("hashtag", hash);
@@ -106,7 +109,6 @@ public class RankCont {
 		CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
 		model.addAttribute("categoryVO", categoryVO);
 
-		
 		ArrayList<Share_imageVO> list_image = new ArrayList<>();
 		for(Share_contentsVO list1:list) {
 			list_image.addAll(this.sconProc.distinct_image(list1.getScon_no()));

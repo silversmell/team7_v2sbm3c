@@ -34,19 +34,41 @@
      checkboxes.forEach((checkboxes) =>{
        sconnos.push(checkboxes.value);
      });
-     
-
-			for(let i = 0;i<sconnos.length;i++){
-				console.log(sconnos[i]);
-			}
+     let scon_no_tag = document.getElementById("scon_no");
+     let acc_no_tag = document.getElementById("acc_no");
+     let querystring = 'scon_no=';
+     if(sconnos.length == 1) {
+         querystring += sconnos[0];
+     }
+     if(sconnos.length>1){
+     for(let i = 0; i < sconnos.length; i++) {
+         if(i==sconnos.length-1){
+        	 querystring+='scon_no='+sconnos[i];
+        	 break;
+         }
+         querystring='';
+         querystring += 'scon_no='+sconnos[i] + '&';
+     }
+     }
+	let url_read = "/scontents/read_acc_no?"+querystring;
+    fetch(url_read,{
+    	"method:":"get"
+    })
+    .then((response)=>response.json())
+    .then((data)=>{
+    	rdata=data['res'];
+    	for(let i = 0;i<rdata.length;i++){
+    		console.log(rdata[i]['acc_no']);
+    	}
+        let url = "./select_delete?"+querystring;
+        console.log(url);
         
         let confirmation = confirm("삭제하시면 복구할 수 없습니다. 정말 삭제하시겠습니까?");
         if(confirmation){
-        fetch('/scontents/select_delete',{
+        fetch(url,{
           method:'POST',
           "headers":{"Content-Type":"application/json"},
-        	body: JSON.stringify({"scon_no": sconnos,"cate_no":1})
-        
+        	body: JSON.stringify({"acc_no": data['res']['acc_no']})
         })
         .then(response => response.json())
         .then(rdata =>{
@@ -66,7 +88,7 @@
           console.error('Error.' ,error);
         })
       }
-
+    });
     
     		
   }
@@ -74,10 +96,9 @@
   </script>
 	<div class='title_line'>
 	<span th:text="${categoryVO.cate_name}" class="title_line_text"></span >
-	<!--  
-		<span th:if="${word != ''}" th:text="|> ${word} (${search_count} 건)|"
+		<span th:if="${word != '' and word!= null}" th:text="|> ${word} (${search_count} 건)|"
 			class="title_line_text"></span>
--->
+
 		<span th:if="${hashtag != null and hashtag.tag_name != null}" th:text="|> ${hashtag.tag_name} (${count} 건)|" class="title_line_text"></span>
 	</div>
 
@@ -95,23 +116,16 @@
 	<div class='menu_line'></div>
 <div style="display: flex; justify-content: space-between; ">
 <div style="display: flex; margin-left:78px;">
-    <div th:each="hashtag, status:${list_hashtag}" th:attr="onclick=|location.href='/scontents/rank_hashtag/${hashtag.tag_no}?cate_no=1'|" style="cursor: pointer; ">
+    <div th:each="hashtag, status:${list_hashtag}" th:attr="onclick=|location.href='/scontents/read_ranking_hashtag/${hashtag.tag_no}?cate_no=1'|" style="cursor: pointer; ">
     <div class="read_hashtag">
-    <div th:if="${hashtag.tag_no eq tag_no}">
         <span style="font-weight: bold;" th:text="${hashtag.tag_name}"></span>
-      </div>
-      <div th:unless="${hashtag.tag_no eq tag_no}">
-    		<span style="font-weight: normal;" th:text="${hashtag.tag_name}"></span>
-			</div>
-     
         </div>
     </div>
     </div>
-    
-		<div th:if="${session.acc_grade=='admin'}" style="margin-right:88px;">  
-		      <button type="button" onclick="select_delete()" class="button_2"  style="margin-right:3px;">삭제</button>
-		      <button type="button" onclick="whole_delete()" class="button_2">전체선택</button>
-     </div> 
+         <div th:if="${session.acc_grade=='admin'}" style="margin-right:88px;">  
+      <button type="button" onclick="select_delete()" class="button_2"  style="margin-right:3px;">삭제</button>
+      <button type="button" onclick="whole_delete()" class="button_2">전체선택</button>
+       </div> 
 </div>
     <div style="display:flex; justify-content: center;">
 	<table class="table table-striped" style='width: 90%;  justify-content:center;' >
@@ -136,9 +150,9 @@
     <td class='td_basic' style="vertical-align: middle; text-align: center; margin-bottom: 10px;">
         <div th:each="share_imageVO, status:${list_image}" style="margin-bottom: 15px; display: flex; justify-content: center;">
             <div class="horizontal-container" style="margin-bottom: 10px; display: flex; align-items: center;">
-            <div th:if="${session.acc_grade=='admin'}">
+             <div th:if="${session.acc_grade=='admin'}" >
                 <input type="checkbox"  id="scon_no" th:id="'scon_no_' + ${share_imageVO.scon_no}" name="scon_no" th:value="${share_imageVO.scon_no}" style="margin-right: 5px;">
-						</div>
+                </div>
                 <div style="width: 180px; height: 100px; overflow: hidden;">
                     <div th:if="${share_imageVO.file_origin_name.endsWith('jpg') or share_imageVO.file_origin_name.endsWith('png') or share_imageVO.file_origin_name.endsWith('gif')}">
                         <img th:src="@{|/contents/storage/${share_imageVO.file_thumb_name}|}" style="width: 100%; height: 100%; object-fit: cover;">
@@ -150,7 +164,6 @@
             </div>
         </div>
     </td>
-   
 
     <td class='td_basic' style="vertical-align: middle; text-align: center;">
     <div style=  "margin-bottom: 20px; margin-top:10px;">
@@ -162,9 +175,7 @@
                             <br>제목:<span th:text="${scontentsVO.scon_title}" style="font-weight: bold;"></span><br>
                             <span th:if="${scontentsVO.scon_contents.length() > 160 }" th:text="|${scontentsVO.scon_contents.substring(0, 100)}...|"></span>
                             <span th:if="${scontentsVO.scon_contents.length() <= 160 }" th:text="|${scontentsVO.scon_contents}|"></span>
-
 														<span id='acc_no' style="display:none;" value=""></span>
-
                             <br>
                             <div style="margin-left: auto; text-align: right; margin-right: 10px;">
                                 조회수: <span th:text="${scontentsVO.scon_views}"></span>
@@ -176,7 +187,11 @@
             </div>
         </div>
     </td>
-     </tr>
+</tr>
+
+
+
+
 
         <!-- 리스트가 비어있을 때 -->
         <tr th:if="${list_image.size() == 0}">
