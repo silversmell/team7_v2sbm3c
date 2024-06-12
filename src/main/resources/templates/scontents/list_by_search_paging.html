@@ -74,9 +74,10 @@
   </script>
 	<div class='title_line'>
 	<span th:text="${categoryVO.cate_name}" class="title_line_text"></span >
+	<!--  
 		<span th:if="${word != ''}" th:text="|> ${word} (${search_count} 건)|"
 			class="title_line_text"></span>
-
+-->
 		<span th:if="${hashtag != null and hashtag.tag_name != null}" th:text="|> ${hashtag.tag_name} (${count} 건)|" class="title_line_text"></span>
 	</div>
 

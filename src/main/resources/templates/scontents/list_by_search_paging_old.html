@@ -98,9 +98,9 @@
 	<div class='title_line'>
 		<span th:if="${word != ''}" th:text="|> ${word} (${search_count} 건)|"
 			class="title_line_text"></span>
-		<span th:if="${hashtag != null and hashtag.tag_name != null}" th:text="|> ${hashtag.tag_name} (${count} 건)|" class="title_line_text"></span>
+		<span  th:text="|> ${hashtag.tag_name} (${count} 건)|" class="title_line_text"></span>
 	</div>
-
+<span th:if="${hashtag != null and hashtag.tag_name != null}" th:text="|> ${hashtag.tag_name} (${count} 건)|" class="title_line_text"></span>
 	<aside class="aside_right">
 		<a th:href="@{|/scontents/create?cate_no=${categoryVO.cate_no}|}">등록</a> <span class="menu_devide">│</span> <a
 			href="javascript:location.reload();">새로고침</a> <span

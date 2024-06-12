@@ -391,8 +391,10 @@
 		SELECT tag_name,r
 		FROM(
 		SELECT hashtag.tag_name,rownum as r
-		FROM contents_tag,hashtag
-		WHERE hashtag.tag_no=contents_tag.tag_no AND contents_tag.tag_no=#{tag_no})
+		FROM hashtag left outer join contents_tag
+		on hashtag.tag_no=contents_tag.tag_no
+		where hashtag.tag_no=#{tag_no}
+		)
 		WHERE R=1
 	</select>
 

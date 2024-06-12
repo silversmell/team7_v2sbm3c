@@ -322,25 +322,25 @@ public class Share_contentsCont {
 		List<Integer> sconNoList = (List<Integer>) scon_no.get("scon_no");
 
 		int image =this.sconProc.sdelete_image(sconNoList);
-		if(image>0) {
-			System.out.println("이미지 삭제 성공");
-		}
+//		if(image>0) {
+//			System.out.println("이미지 삭제 성공");
+//		}
 		int tag = this.sconProc.sdelete_tag(sconNoList);
-		if(tag>0) {
-			System.out.println("태그 삭제 성공");
-		}
+//		if(tag>0) {
+//			System.out.println("태그 삭제 성공");
+//		}
 		int bookmark = this.sconProc.sdelete_bookmark(sconNoList);
-		if(bookmark>0) {
-			System.out.println("북마크 삭제 성공");
-		}
+//		if(bookmark>0) {
+//			System.out.println("북마크 삭제 성공");
+//		}
 		int comment = this.replyProc.sdelete_comment(sconNoList);
-		if(comment>0) {
-			System.out.println("comment 삭제 성공");
-		}
+//		if(comment>0) {
+//			System.out.println("comment 삭제 성공");
+//		}
 		int url =this.sconProc.sdelete_url(sconNoList);
-		if(url>0) {
-			System.out.println("url 삭제 성공");
-		}
+//		if(url>0) {
+//			System.out.println("url 삭제 성공");
+//		}
 		cnt = this.sconProc.delete_sconno(sconNoList);
 		for(int i =0;i<sconNoList.size();i++) {
 			this.categoryProc.cnt_minus((int)scon_no.get("cate_no"));
@@ -795,7 +795,7 @@ public class Share_contentsCont {
 //		 for(int i = 0;i<hashtag_VO.size();i++) {
 //			 System.out.println("-> tag_name:"+ hashtag_VO.get(i).getTag_name());
 //		 }
-
+		System.out.println(hash.getTag_name());
 		model.addAttribute("hashtag", hash);
 
 		int count = this.sconProc.tag_count(tag_no);
