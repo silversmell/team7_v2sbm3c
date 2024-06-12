@@ -5,7 +5,8 @@
 
 <select id="ranking" resultType="dev.mvc.share_contentsdto.Share_contentsVO" >
 		SELECT scon_no, scon_title,
-		scon_priority, r
+		scon_contents, scon_views, scon_comment,
+		scon_date,scon_priority, r
 		FROM (
 		SELECT scon_no, scon_title,
 		scon_contents, scon_views, scon_comment,
@@ -20,5 +21,41 @@
 		)
 		)
 		WHERE r&lt;=10
+</select>
+<!-- 랭킹에 따른 해시태그 찾기 -->
+<select id="ranking_tag" resultType="dev.mvc.share_contentsdto.Share_contentsVO" parameterType="int">
+SELECT scon_no, scon_title, scon_contents, scon_views, scon_comment,
+       scon_date, scon_priority, tag_no, r
+FROM (
+    SELECT sc.scon_no, sc.scon_title, sc.scon_contents, sc.scon_views, sc.scon_comment,
+           sc.scon_date, sc.scon_priority, ct.tag_no, ROWNUM as r
+    FROM (
+        SELECT scon_no, scon_title, scon_contents, scon_views, scon_comment,
+               scon_date, scon_priority
+        FROM share_contents
+        WHERE scon_priority > 0
+        ORDER BY scon_priority DESC
+    ) sc
+    INNER JOIN contents_tag ct ON sc.scon_no = ct.scon_no
+    where ct.tag_no=#{tag_no}
+)
+WHERE r &lt;= 10
+</select>
+<select id="ranking_tag_count" resultType="int" parameterType="int">
+SELECT count(*)
+FROM (
+    SELECT sc.scon_no,sc.scon_title, sc.scon_contents, sc.scon_views, sc.scon_comment,
+           sc.scon_date, sc.scon_priority, ct.tag_no,ROWNUM as r
+    FROM(
+        SELECT scon_no,scon_title, scon_contents, scon_views, scon_comment,
+               scon_date,scon_priority
+       FROM share_contents
+       WHERE scon_priority>0
+       ORDER BY scon_priority DESC
+       )sc 
+       INNER JOIN contents_tag ct ON sc.scon_no = ct.scon_no
+       where ct.tag_no=#{tag_no}
+)
+where r&lt;=10
 </select>
 </mapper>

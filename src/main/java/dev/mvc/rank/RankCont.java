@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -57,6 +58,7 @@ public class RankCont {
 
 		ArrayList<HashtagVO> list_hashtag = this.sconProc.select_hashtag();
 		model.addAttribute("list_hashtag", list_hashtag);
+	
 
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("word", word);
@@ -87,6 +89,44 @@ public class RankCont {
 
 		return "scontents/ranking";
 
+	}
+	
+	@GetMapping("/read_ranking_hashtag/{tag_no}")
+	public String read_ranking(@PathVariable("tag_no") Integer tag_no,int cate_no,Model model,
+			@RequestParam(name = "now_page", defaultValue = "1") int now_page,HttpSession session,@RequestParam(name = "word", defaultValue = "") String word) {
+		ArrayList<Share_contentsVO> list= this.rankingProc.ranking_tag(tag_no);
+		model.addAttribute("list",list);
+		
+		HashtagVO hash = this.sconProc.read_hashtag_name(tag_no); //tag_no로 hashtag_name 가져오기
+		model.addAttribute("hashtag", hash);
+		
+		int tag_count=this.rankingProc.ranking_tag_count(tag_no);
+		model.addAttribute("count",tag_count);
+		
+		CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
+		model.addAttribute("categoryVO", categoryVO);
+
+		
+		ArrayList<Share_imageVO> list_image = new ArrayList<>();
+		for(Share_contentsVO list1:list) {
+			list_image.addAll(this.sconProc.distinct_image(list1.getScon_no()));
+		}
+		model.addAttribute("list_image",list_image);
+		
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("word", word);
+		map.put("now_page", now_page);
+		
+		int search_count = this.sconProc.list_by_cateno_search_count(map);
+		String paging = this.sconProc.pagingBox(now_page, word, "/scontents/list_by_search", 8,
+				Contents.RECORD_PER_PAGE, cate_no, Contents.PAGE_PER_BLOCK);
+
+		model.addAttribute("paging", paging);
+		model.addAttribute("now_page", now_page);
+
+		model.addAttribute("search_count", 8);
+		return "scontents/ranking";
+		
 	}
 }
 	

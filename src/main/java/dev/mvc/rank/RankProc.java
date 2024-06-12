@@ -27,4 +27,18 @@ public class RankProc implements RankProcInter {
 	}
 
 
+	@Override
+	public ArrayList ranking_tag(int tag_no) {
+		ArrayList<Share_contentsVO> list = this.rankDAO.ranking_tag(tag_no);
+		return list;
+	}
+
+
+	@Override
+	public int ranking_tag_count(int tag_no) {
+		int cnt = this.rankDAO.ranking_tag_count(tag_no);
+		return cnt;
+	}
+
+
 }
