@@ -203,31 +203,42 @@ public interface Qna_contentsDAOInter {
   public int qna_search_count_comment(int qcon_no);
    
   /**
-   * 질문글 북마크 확인
-   * @param acc_no
+   * 특정 질문글 북마크 수
    * @param qcon_no
    * @return
    */
-  public int is_bookmarked(HashMap<String, Object> map);
+  public int bookmark_count(int qcon_no);
   
   /**
-   * 질문글 북마크 추가
-   * @param acc_no
-   * @param qcon_no
+   * 특정 질문글 북마크하였는지 확인
+   * @param map
    * @return
    */
-  public int bookmark_add(HashMap<String, Object> map);
+  public ArrayList<Qna_contentsVO> is_bookmarked(HashMap<String, Object> map);
   
   /**
-   * 질문글 북마크 취소
-   * @param acc_no
-   * @param qcon_no
+   * 질문글 북마크 등록
+   * @param map
    * @return
    */
-  public int bookmark_cancel(HashMap<String, Object> map);
+  public int bookmark_create(HashMap<String, Object> map);
   
   /**
-   * 질문글 북마크 공개
+   * 특정 질문글 북마크 삭제
+   * @param map
+   * @return
+   */
+  public int bookmark_delete(HashMap<String, Object> map);
+  
+  /**
+   * 특정 질문글 북마크 전체 삭제
+   * @param map
+   * @return
+   */
+  public int all_bookmark_delete(int qcon_no);
+  
+  /**
+   * 특정 질문글 북마크 공개 모드
    * @param qcon_no
    * @param acc_no
    * @return
@@ -235,7 +246,7 @@ public interface Qna_contentsDAOInter {
   public int bookmark_y(int qcon_no, int acc_no);
   
   /**
-   * 질문글 북마크 비공개
+   * 질문글 북마크 비공개 모드
    * @param qcon_no
    * @param acc_no
    * @return

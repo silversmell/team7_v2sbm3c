@@ -61,6 +61,9 @@ public class Qna_contentsVO {
   /** 질문 게시글 댓글 수 */
   private Integer qcon_comment;
   
+  /** 질문 게시글 북마크 */
+  private String qcon_bookmark="N";
+  
   /** 질문 게시글 등록일 */
   private String qcon_date = "";
   
@@ -70,12 +73,5 @@ public class Qna_contentsVO {
   /** 비밀번호 */
   private String qcon_passwd="";
   
-  /** 질문 게시글 북마크 */
-  private String qcon_bookmark="N";
-  
-  
-  private String prompt="";
-  
-  private String result = "";
   
 }

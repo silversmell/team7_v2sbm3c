@@ -27,7 +27,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ch.qos.logback.core.recovery.ResilientSyslogOutputStream;
 import dev.mvc.account.AccountProcInter;
 import dev.mvc.account.AccountVO;
-import dev.mvc.bookmark.BookmarkVO;
 import dev.mvc.category.CategoryProcInter;
 import dev.mvc.category.CategoryVO;
 import dev.mvc.recommend.HashtagVO;
