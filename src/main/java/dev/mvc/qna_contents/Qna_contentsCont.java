@@ -39,6 +39,7 @@ import dev.mvc.admin.AdminProc;
 import dev.mvc.category.CategoryProcInter;
 import dev.mvc.category.CategoryVO;
 import dev.mvc.category.CategoryVOMenu;
+import dev.mvc.qna_mark.Qna_markVO;
 import dev.mvc.tool.Tool;
 import dev.mvc.tool.Upload;
 import jakarta.servlet.http.HttpServletRequest;
@@ -353,12 +354,7 @@ public class Qna_contentsCont {
           map.put("qcon_no", qna_contentsVO.getQcon_no());
           map.put("acc_no", acc_no);
           
-          int qcon_bookcnt = this.qna_contentsProc.is_bookmarked(map);
-          if(qcon_bookcnt > 0) {
-              qna_contentsVO.setQcon_bookmark("Y");
-          } else {
-              qna_contentsVO.setQcon_bookmark("N");
-          }
+
       }
       
       return "qcontents/qna_read";
@@ -778,18 +774,6 @@ public class Qna_contentsCont {
     return json.toString();
   }
   
-//  @PostMapping(value="/qcon_bookmark")
-//  @ResponseBody
-//  public String bookmark_add(HttpSession session, 
-//                                      @RequestBody Qna_commentVO qna_commentVO, 
-//                                      HashMap<String, Object> map) {
-//    int acc_no= (int)session.getAttribute("acc_no");
-//    
-//    int cnt = 0;
-//    if (acc_no == qna_commentV)
-//  }
-
-
   /**
    * 이미지 생성 AI
    * http://localhost:9093/qcontents/member_img
@@ -803,6 +787,55 @@ public class Qna_contentsCont {
     return "qcontents/member_img";
   }
   
+  /**
+   * 질문글 북마크 추가
+   * @param map
+   * @param ra
+   * @return
+   */
+  @PostMapping(value="/bookmark_create")
+  @ResponseBody
+  public String bookmark_create(@RequestBody HashMap<String, Object> map,
+                                          RedirectAttributes ra) {
+      int cnt = qna_contentsProc.bookmark_create(map);
+      ra.addAttribute("cnt", cnt);
+      map.put("cnt", cnt);
+      
+      return "redirect:/qcontents/qna_read";
+  }
+
+  /**
+   * 질문글 북마크 삭제
+   * @param map
+   * @param ra
+   * @return
+   */
+  @PostMapping(value="/bookmark_delete")
+  @ResponseBody
+  public String bookmark_delete(@RequestBody HashMap<String, Object> map,
+                                          RedirectAttributes ra) {
+      int cnt = qna_contentsProc.bookmark_delete(map);
+      
+      ra.addAttribute("cnt", cnt);
+      map.put("cnt", cnt);
+      
+      return "redirect:/qcontents/qna_read";
+  }
+
+  /**
+   * 질문글 북마크 체크했는지
+   * @param map
+   * @param ra
+   * @return
+   */
+  @PostMapping(value="/is_bookmarked")
+  @ResponseBody
+  public boolean is_bookmarked(@RequestBody HashMap<String, Object> map,
+                                      RedirectAttributes ra) {
+    ArrayList<Qna_markVO> list = qna_contentsProc.is_bookmarked(map);
+    
+    return (list != null && !list.isEmpty());
+  }
 
     
 }

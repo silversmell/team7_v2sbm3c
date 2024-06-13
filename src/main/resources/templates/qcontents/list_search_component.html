@@ -1,6 +1,6 @@
 <div th:fragment="list_search_fragment"> <!-- <div th:replace=... -->
     <div style="text-align: right; clear: both;">
-    <form name="frm_search" method="get" action="/qcontents/qna_create">
+    <form name="frm_search" method="get" action="/qcontents/qna_list_all">
     <input type="hidden" name="cate_no" th:value="${categoryVO.cate_no}"> <!-- cate_no 값 가져오기 -->
       
       <input type="text" name="word" id="word" th:value="${word}" >

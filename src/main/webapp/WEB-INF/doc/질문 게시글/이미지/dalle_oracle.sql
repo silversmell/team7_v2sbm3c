@@ -14,7 +14,7 @@ CREATE TABLE dalle(
 );
 
 COMMENT ON TABLE  dalle is '이미지생성AI';
-COMMENT ON COLUMN dalle.dalle_no is '채팅 번호';
+COMMENT ON COLUMN dalle.dalle_no is '달리 번호';
 COMMENT ON COLUMN dalle.acc_no is '회원 번호';
 COMMENT ON COLUMN dalle.dalle_origin is 'AI이미지원본';
 COMMENT ON COLUMN dalle.dalle_thumb is 'AI이미지썸네일';

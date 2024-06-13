@@ -7,7 +7,6 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import dev.mvc.bookmark.BookmarkVO;
 import dev.mvc.bookmark.Share_markVO;
 import dev.mvc.recommend.HashtagVO;
 import dev.mvc.share_contents.Contents;

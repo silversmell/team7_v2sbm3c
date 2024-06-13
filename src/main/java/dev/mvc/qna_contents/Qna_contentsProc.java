@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import dev.mvc.qna_mark.Qna_markVO;
 import dev.mvc.tool.Security;
 import dev.mvc.tool.Tool;
 
@@ -340,40 +341,56 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
     
     return cnt;
   }
-  
- @Override
- public int is_bookmarked(HashMap<String, Object> map) {
-   int cnt =  this.qna_contentsDAO.is_bookmarked(map);
-   
-   return cnt;
- }
 
- @Override
- public int bookmark_add(HashMap<String, Object> map) {
-   int cnt =  this.qna_contentsDAO.bookmark_add(map);
-   
-   return cnt;
- }
- 
- @Override
- public int bookmark_cancel(HashMap<String, Object> map) {
-   int cnt =  this.qna_contentsDAO.bookmark_cancel(map);
-   
-   return cnt;
- }
- 
- @Override
- public int bookmark_y(int qcon_no, int acc_no) {
-   int cnt = this.qna_contentsDAO.bookmark_y(qcon_no, acc_no);
-   
-   return cnt;
- }
- 
- @Override
- public int bookmark_n(int qcon_no, int acc_no) {
-   int cnt = this.qna_contentsDAO.bookmark_n(qcon_no, acc_no);
-   
-   return cnt;
- }
+  @Override
+  public int bookmark_count(int qcon_no) {
+    int cnt = this.qna_contentsDAO.bookmark_count(qcon_no);
+    
+    return cnt;
+  }
+
+  @Override
+  public ArrayList<Qna_markVO> is_bookmarked(HashMap<String, Object> map) {
+    ArrayList<Qna_markVO> list = this.qna_contentsDAO.is_bookmarked(map);
+    
+    return list;
+  }
+
+  @Override
+  public int bookmark_create(HashMap<String, Object> map) {
+    int cnt = this.qna_contentsDAO.bookmark_create(map);
+    
+    return cnt;
+  }
+
+  @Override
+  public int bookmark_delete(HashMap<String, Object> map) {
+    int cnt = this.qna_contentsDAO.bookmark_delete(map);
+    
+    return cnt;
+  }
+
+  @Override
+  public int all_bookmark_delete(int qcon_no) {
+    int cnt = this.qna_contentsDAO.all_bookmark_delete(qcon_no);
+    
+    return cnt;
+  }
+
+  @Override
+  public int bookmark_y(int qcon_no, int acc_no) {
+    int cnt = this.qna_contentsDAO.bookmark_y(qcon_no, acc_no);
+    
+    return cnt;
+  }
+
+  @Override
+  public int bookmark_n(int qcon_no, int acc_no) {
+    int cnt = this.qna_contentsDAO.bookmark_n(qcon_no, acc_no);
+    
+    return cnt;
+  }
+  
+
   
 }
