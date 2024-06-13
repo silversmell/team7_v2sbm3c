@@ -54,7 +54,7 @@ rollback;
 commit;
 
 -- 전체 목록
-SELECT qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_comment, qcon_date
+SELECT qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_bookcnt, qcon_comment, qcon_date, qcon_passwd
 FROM qna_contents
 ORDER BY qcon_no asc;
 

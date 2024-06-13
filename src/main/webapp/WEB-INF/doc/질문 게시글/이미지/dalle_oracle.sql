@@ -30,6 +30,7 @@ CREATE SEQUENCE dalle_seq
   MAXVALUE 99999999   -- 최대값: 99999999 --> NUMBER(8) 대응
   CACHE 2             -- 2번은 메모리에서만 계산
   NOCYCLE;            -- 다시 1부터 생성되는 것을 방지
+commit;
 
 INSERT INTO dalle(dalle_no, acc_no, prompt, dalle_origin, dalle_thumb, dalle_size, ddate)
 VALUES(dalle_seq.nextval, 3, '3D 이미지로 이쁜 컴퓨터 책상을 보여줘.', '달리.jpg', '달리_t.jgp', 30956, sysdate);

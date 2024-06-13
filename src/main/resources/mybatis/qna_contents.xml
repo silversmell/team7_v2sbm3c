@@ -5,7 +5,7 @@
 
   <!-- 전체 목록 -->
   <select id="qna_list_all" resultType="dev.mvc.qna_contents.Qna_contentsVO">
-    SELECT qcon_no, qcon_name, qcon_contents, qcon_views, qcon_comment, qcon_date, qcon_bookcnt, qcon_bookmark
+    SELECT qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_bookcnt, qcon_comment, qcon_date, qcon_passwd
     FROM qna_contents
     ORDER BY qcon_no ASC
   </select>
@@ -17,8 +17,8 @@
       SELECT qna_contents_seq.nextval FROM dual
     </selectKey>
     
-    INSERT INTO QNA_CONTENTS(qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookcnt, qcon_bookmark, qcon_comment, qcon_date, qcon_passwd)
-    VALUES(#{qcon_no}, #{cate_no}, #{acc_no}, #{qcon_name}, #{qcon_contents}, 0, 0, 'N', 0, sysdate, #{qcon_passwd})
+    INSERT INTO QNA_CONTENTS(qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_bookcnt, qcon_date, qcon_passwd)
+    VALUES(#{qcon_no}, #{cate_no}, #{acc_no}, #{qcon_name}, #{qcon_contents}, 0, 'N', 0, sysdate, #{qcon_passwd})
   </insert>
   
   <!-- 첨부 파일 등록 -->
@@ -29,9 +29,9 @@
   
   <!-- 특정 글에 따른 목록 -->
   <select id="list_by_qcon_no" resultType="dev.mvc.qna_contents.Qna_contentsVO">
-    SELECT qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookcnt, qcon_bookmark, qcon_comment, qcon_date, qcon_passwd
+    SELECT qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_bookcnt, qcon_comment, qcon_date, qcon_passwd
     FROM qna_contents
-    where qcon_no=#{qcon_no}
+    WHERE qcon_no=#{qcon_no}
   </select>
   
   <!-- 전체 파일 목록 -->
@@ -43,7 +43,7 @@
   
   <!-- 일반적인 조회 -->
   <select id="qna_read" resultType="dev.mvc.qna_contents.Qna_contentsVO" parameterType="int">
-    SELECT qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookcnt, qcon_bookmark, qcon_comment, qcon_date, qcon_passwd
+    SELECT qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_bookcnt, qcon_comment, qcon_date, qcon_passwd
     FROM qna_contents
     WHERE qcon_no= #{qcon_no}
   </select> 
@@ -57,7 +57,7 @@
 
   <!-- 카테고리별 검색 목록 -->
   <select id="list_by_qna_search" resultType="dev.mvc.qna_contents.Qna_contentsVO" parameterType="HashMap">
-    SELECT qcon_no, acc_no, cate_no, qcon_name, qcon_contents, qcon_views, qcon_bookcnt, qcon_bookmark, qcon_comment, qcon_date, word
+    SELECT qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_bookcnt, qcon_comment, qcon_date, qcon_passwd, word
     FROM qna_contents
     <choose>
       <when test="word == null or word == ''"> <!-- 검색하지 않는 경우 -->
@@ -90,11 +90,11 @@
 
   <!-- 카테고리별 검색 + 페이징 목록 -->
   <select id="list_by_qna_search_paging" resultType="dev.mvc.qna_contents.Qna_contentsVO" parameterType="HashMap">
-    SELECT qcon_no, acc_no, cate_no, qcon_name, qcon_contents, qcon_views, qcon_bookcnt, qcon_bookmark, qcon_comment, qcon_date, r
+    SELECT qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_bookcnt, qcon_comment, qcon_date, qcon_passwd, r
     FROM (
-              SELECT qcon_no, acc_no, cate_no, qcon_name, qcon_contents, qcon_views, qcon_bookcnt, qcon_bookmark, qcon_comment, qcon_date, rownum as r
+              SELECT qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_bookcnt, qcon_comment, qcon_date, qcon_passwd, rownum as r
               FROM (
-                        SELECT qcon_no, acc_no, cate_no, qcon_name, qcon_contents, qcon_views, qcon_bookcnt, qcon_bookmark, qcon_comment, qcon_date
+                        SELECT qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_bookcnt, qcon_comment, qcon_date, qcon_passwd
                         FROM qna_contents
                         <choose>
                           <when test="word == null or word == ''"> <!-- 검색하지 않는 경우 -->
