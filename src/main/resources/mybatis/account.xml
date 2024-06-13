@@ -38,10 +38,10 @@
 	<insert id="create" parameterType="dev.mvc.account.AccountVO">
 		<selectKey keyProperty="acc_no" resultType="int" order="AFTER">
 			SELECT ACCOUNT_SEQ.currval AS acc_no FROM dual
-		</selectKey> INSERT
-		INTO ACCOUNT(acc_no, acc_id, acc_pw, acc_name, acc_date, acc_grade)
-		VALUES(ACCOUNT_SEQ.nextval, #{acc_id}, #{acc_pw}, #{acc_name}, sysdate,
-		15) </insert>
+		</selectKey>
+		INSERT INTO ACCOUNT(acc_no, acc_id, acc_pw, acc_name, acc_date, acc_grade)
+		VALUES(ACCOUNT_SEQ.nextval, #{acc_id}, #{acc_pw}, #{acc_name}, sysdate, 15)
+	</insert>
 
 	<!-- 추천 데이터(해시태그) 저장 -->
 	<insert id="insertRecommend" parameterType="dev.mvc.recommend.RecommendVO">
@@ -86,14 +86,14 @@
 
 	<!-- 회원 로그 기록 -->
 	<insert id="recordLog" parameterType="dev.mvc.account.AccLogVO">
-		INSERT INTO ACC_LOG(acc_log_no, acc_no, acc_log_ip, acc_log_date)
-		VALUES(ACC_LOG_SEQ.nextval, #{acc_no}, #{acc_log_ip}, sysdate)
+		INSERT INTO ACC_LOG(acc_log_no, acc_no, acc_log_ip, acc_log_time)
+		VALUES(ACC_LOG_SEQ.nextval, #{acc_no}, #{acc_log_ip}, TO_CHAR(sysdate, 'YYYY/MM/DD HH24:MI:SS'))
 	</insert>
 
 	<!-- 회원 로그 전체 조회(100건) -->
 	<!-- 
 	<select id="logList" resultType="">
-		SELECT l.acc_log_no, a.acc_id, l.acc_log_ip, l.acc_log_date
+		SELECT l.acc_log_no, a.acc_id, l.acc_log_ip, l.acc_log_time
 		FROM acc_log l
 		INNER JOIN account a ON a.acc_no = l.acc_no
 		WHERE ROWNUM&lt;=100
@@ -101,7 +101,7 @@
 	-->
 	
 	<select id="logList" resultType="dev.mvc.account.AccLogVO">
-		SELECT acc_log_no, acc_no, acc_log_ip, acc_log_date
+		SELECT acc_log_no, acc_no, acc_log_ip, acc_log_time
 		FROM acc_log
 		WHERE ROWNUM&lt;=100
 	</select>

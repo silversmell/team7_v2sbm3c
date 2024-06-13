@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport"
+		content="user-scalable=yes, initial-scale=1.0, minimum-scale=1.0, maximum-scale=10.0, width=device-width" />
+
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+
+	<script type="text/JavaScript" src="http://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="/fotorama/fotorama.js"></script>
+	<link href="/css/style.css" rel="Stylesheet" type="text/css"> <!-- /static 기준 -->
+	<link rel="shortcut icon" href="/images/star.png" />
+	<link href="/fotorama/fotorama.css" rel="stylesheet">
+
+	<script>
+
+	</script>
+
+	<style>
+		/* 헤더 스타일 */
+		.header {
+			background-color: rgb(0, 0, 160);
+			color: white;
+			padding: 10px;
+			text-align: center;
+		}
+
+		.navbar-brand img {
+			max-height: 40px;
+		}
+
+		.navbar-toggler {
+			color: white;
+		}
+
+		/* 바텀 메뉴 스타일 */
+		.bottom_menu {
+			padding: 0px;
+			text-align: center;
+		}
+	</style>
+
+</head>
+
+<body>
+	<header class="header">
+		<div class="container">
+			<nav class="navbar navbar-expand-lg">
+				<a class="navbar-brand" href="/admin">
+					데스크 테리어 관리자용
+				</a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+					data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
+					aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon">▼</span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarNavDropdown" th:if="${session.adm_no != null}">
+					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							    전체 목록 조회
+							</a>
+							
+							<ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+								<li class="nav-item"><a class="nav-link" href="/category/cate_list_search">카테고리 전체
+										목록</a></li>
+								<li class="nav-item"><a class="nav-link" href="#">전체 글 목록</a></li>
+								<li class="nav-item"><a class="nav-link" href="/scontents/list_by_search?cate_no=1">공유글
+										전체 목록</a></li>
+								<li class="nav-item"><a class="nav-link" href="/qcontents/qna_list_all?cate_no=2">질문글 전체
+										목록</a></li>
+							</ul>
+						</li>
+
+
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+								data-bs-toggle="dropdown" aria-expanded="false">
+								회원 조회
+							</a>
+							<ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+								<li class="nav-item"><a class="nav-link" href="account/list">회원 목록</a></li>
+								<li class="nav-item"><a class="nav-link" href="account/log_list">회원 로그 기록</a></li>
+							</ul>
+						</li>
+
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+								data-bs-toggle="dropdown" aria-expanded="false">
+								관리자 조회
+							</a>
+							<ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+								<li class="nav-item"><a class="nav-link" href="admin/list">관리자 목록</a></li>
+								<li class="nav-item"><a class="nav-link" href="admin/log_list">관리자 로그 기록</a></li>
+							</ul>
+						</li>
+
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+								data-bs-toggle="dropdown" aria-expanded="false">
+								게시판 목록
+							</a>
+							<ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+								<li class="nav-item">
+									<a class="nav-link" href="/scontents/list_by_search?cate_no=1" th:text="공유게시판"></a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" th:href="@{|/qcontents/qna_list_all?cate_no=2|}" th:text="질문게시판"></a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" href="#" th:text="팁게시판"></a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" href="/scontents/rank?cate_no=4" th:text="랭킹게시판"></a>
+								</li>
+							</ul>
+						</li>
+
+
+					</ul>
+
+
+					<ul class="navbar-nav ms-auto">
+						<li class="nav-item" style="float: right;">
+							<span th:if="${session.adm_no == null}">
+								<a class="nav-link" href="/admin/login" th:text="@{|로그인|}"
+									style="display: inline-block; margin-right: 5px;"></a>
+								<a class="nav-link" href="/admin/create" th:text="@{|회원 가입|}"
+									style="display: inline-block;"></a>
+							</span>
+							<span th:if="${session.adm_no != null}">
+								<a class="nav-link" th:href="@{|/admin/read?adm_no=${session.adm_no}|}"
+									style="display: inline-block;">마이페이지</a>
+								<a class="nav-link" href="/admin/logout" th:text="@{|${session.adm_id} 로그아웃|}"
+									style="display: inline-block;"></a>
+							</span>
+						</li>
+					</ul>
+				</div>
+			</nav>
+		</div>
+	</header>
+
+	<div class='container_main'>
+
+		<!-- <div th:replace="~{navbar::navbarFragment}"></div> --> <!-- navbar.html navbarFragment import -->
+
+		<div class='content_body'>
+
+		</div>
+
+		<th:block layout:fragment="content"></th:block> <!-- 각 파일의 내용 출력 -->
+		<br><br>
+	</div> <!-- content_body 종료 -->
+
+	<div class='bottom_menu'>
+		<hr>
+		Copyright K Digital, 국가기간 전략
+	</div>
+
+	</div> <!-- container_main 종료 -->
+
+</body>
+
+</html>

@@ -30,14 +30,14 @@
 			<th class='th_bs'>로그 번호</th>
 			<th class='th_bs'>회원 번호</th>
 			<th class='th_bs'>접속 아이피</th>
-			<th class='th_bs'>접속일</th>
+			<th class='th_bs'>접속 시간</th>
 		</tr>
 
 		<tr th:each="accLogVO, status:${log_list}">
 			<td class='td_left'><a th:href="@{|./read?acc_no=${accLogVO.acc_no}|}" th:text="${accLogVO.acc_log_no}"></a></td>
 			<td class='td_left'><a th:href="@{|./read?acc_no=${accLogVO.acc_no}|}" th:text="${accLogVO.acc_no}"></a></td>
 			<td class='td_left'><a th:href="@{|./read?acc_no=${accLogVO.acc_no}|}" th:text="${accLogVO.acc_log_ip}"></a></td>
-			<td class='td_basic' th:text="${accLogVO.acc_log_date.substring(0, 10)}"></td>
+			<td class='td_basic' th:text="${accLogVO.acc_log_time}"></td>
 
 		</tr>
 

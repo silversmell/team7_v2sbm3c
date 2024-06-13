@@ -5,75 +5,65 @@ import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import dev.mvc.account.AccountVO;
 import dev.mvc.tool.Security;
-import jakarta.servlet.http.HttpSession;
 
 @Component("dev.mvc.admin.AdminProc")
 public class AdminProc implements AdminProcInter {
-  
-  @Autowired
-  private AdminDAOInter adminDAO;
-  
-  @Autowired
-  Security security;
-  
-  public AdminProc() {
-    System.out.println("-> AdimProc created.");
-  }
+	@Autowired
+	private AdminDAOInter adminDAO;
 
-  @Override
-  public int adm_create(AdminVO adminVO) {
-    int cnt = this.adminDAO.adm_create(adminVO);
-    
-    return cnt;
-  }
-  
-  @Override
-  public AdminVO adm_read(int acc_no) {
-    AdminVO adminVO = this.adminDAO.adm_read(acc_no);
-    
-    return adminVO;
-  }
-  
-  @Override
-  public boolean isShareAdmin(HttpSession session) {
-    boolean sw = false; // 로그인 여부를 나타내는 변수
-    String acc_grade = (String) session.getAttribute("acc_grade");
-    
-    // 로그인 상태를 확인하여 sw 변수에 저장
-    if (acc_grade != null && acc_grade.equals("1")) {
-      sw = true; // 로그인 상태
-    }
-    
-    return sw; // 로그인 상태 반환
-  }
-  
-  @Override
-  public boolean isQuestionAdmin(HttpSession session) {
-    boolean sw = false; // 로그인 여부를 나타내는 변수
-    String acc_grade = (String) session.getAttribute("acc_grade");
-    Integer acc_no = (Integer)session.getAttribute("acc_no");
-    
-    // 로그인 상태를 확인하여 sw 변수에 저장
-    if (acc_grade != null && acc_no == 2) {
-      sw = true; // 로그인 상태
-    }
-    
-    return sw; // 로그인 상태 반환
-  }
+	@Autowired
+	Security security;
 
-  @Override
-  public boolean isMyPageAdmin(HttpSession session) {
-    boolean sw = false; // 로그인 여부를 나타내는 변수
-    String acc_grade = (String) session.getAttribute("acc_grade");
-    
-    // 로그인 상태를 확인하여 sw 변수에 저장
-    if (acc_grade != null && acc_grade.equals("3")) {
-      sw = true; // 로그인 상태
-    }
-    
-    return sw; // 로그인 상태 반환
-  }
+	public AdminProc() {
+		System.out.println("-> AdminProc created.");
+	}
 
-  
+	@Override
+	public int checkID(String adm_id) {
+		int cnt = this.adminDAO.checkID(adm_id);
+		return cnt;
+	}
+
+	@Override
+	public int checkName(String adm_name) {
+		int cnt = this.adminDAO.checkName(adm_name);
+		return cnt;
+	}
+
+	@Override
+	public int checkEmail(String adm_email) {
+		int cnt = this.adminDAO.checkEmail(adm_email);
+		return cnt;
+	}
+	
+	@Override
+	public int create(AdminVO adminVO) {
+		/* 비밀번호 암호화 */
+		adminVO.setAdm_pw(new Security().aesEncode(adminVO.getAdm_pw())); // 단축형
+
+		int cnt = this.adminDAO.create(adminVO);
+		return cnt;
+	}
+	
+	@Override
+	public AdminVO readById(String adm_id) {
+		AdminVO adminVO = this.adminDAO.readById(adm_id);
+		return adminVO;
+	}
+
+	@Override
+	public int login(HashMap<String, Object> map) {
+		int cnt = this.adminDAO.login(map);
+		return cnt;
+	}
+
+	@Override
+	public int recordLog(AdmLogVO admLogVO) {
+		int cnt = this.adminDAO.recordLog(admLogVO);
+		return cnt;
+	}
+
+
 }

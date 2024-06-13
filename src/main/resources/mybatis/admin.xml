@@ -4,19 +4,54 @@
 <mapper namespace="dev.mvc.admin.AdminDAOInter"> <!-- SB가 자동으로 구현하여 연동하는
   interface -->
 
-  <!-- 삽입,  CATEGORY 테이블과 ACCOUNT 테이블에서 가져온 데이터로 대체 -->
-  <insert id="adm_create"  parameterType="dev.mvc.admin.AdminVO">
-    INSERT INTO ADMIN (ADM_NO, CATE_NO, ACC_NO)
-    VALUES (ADMIN_SEQ.nextval, #{cate_no}, #{acc_no})
-  </insert>
-  
-  <!-- 조회 -->
-  <select id="adm_read" parameterType="dev.mvc.admin.AdminVO">
-    SELECT ADM_NO, CATE_NO, ACC_NO
-    FROM admin
-    WHERE acc_no = #{acc_no}
-  </select>
+	<!-- 아이디 중복 검사 -->
+	<select id="checkID" resultType="int" parameterType="String">
+		SELECT COUNT(adm_id) AS cnt
+		FROM admin
+		WHERE adm_id=#{adm_id}
+	</select>
 
+	<!-- 이름 중복 검사 -->
+	<select id="checkName" resultType="int" parameterType="String">
+		SELECT COUNT(adm_name) AS cnt
+		FROM admin
+		WHERE adm_name=#{adm_name}
+	</select>
+
+	<!-- 이메일 중복 검사 -->
+	<select id="checkEmail" resultType="int" parameterType="String">
+		SELECT COUNT(adm_email) AS cnt
+		FROM admin
+		WHERE adm_email=#{adm_email}
+	</select>
+
+	<!-- 관리자 생성(회원 가입) -->
+	<insert id="create" parameterType="dev.mvc.admin.AdminVO">
+		INSERT INTO ADMIN(adm_no, cate_no, adm_id, adm_pw, adm_name, adm_email,
+		adm_tel, adm_date)
+		VALUES(ADMIN_SEQ.nextval, #{cate_no}, #{adm_id}, #{adm_pw}, #{adm_name},
+		#{adm_email}, #{adm_tel}, sysdate)
+	</insert>
+	
+	<!-- 아이디로 관리자 정보 조회(로그인, 비밀번호 찾기) -->
+	<select id="readById" resultType="dev.mvc.admin.AdminVO" parameterType="String">
+		SELECT adm_no, cate_no, adm_id, adm_pw, adm_name, adm_email, adm_tel, adm_date, adm_grade
+		FROM admin
+		WHERE adm_id = #{adm_id}
+	</select>
+	
+	<!-- 로그인 -->
+	<select id="login" resultType="int" parameterType="HashMap">
+		SELECT COUNT(adm_no) as cnt
+		FROM admin
+		WHERE adm_id=#{adm_id} AND adm_pw=#{adm_pw}
+	</select>
+
+	<!-- 관리자 로그 기록 -->
+	<insert id="recordLog" parameterType="dev.mvc.admin.AdmLogVO">
+		INSERT INTO ADMIN_LOG(adm_log_no, adm_no, adm_log_ip, adm_log_time)
+		VALUES(ADMIN_LOG_SEQ.nextval, #{adm_no}, #{adm_log_ip}, TO_CHAR(sysdate, 'YYYY/MM/DD HH24:MI:SS'))
+	</insert>
 
 </mapper>
 

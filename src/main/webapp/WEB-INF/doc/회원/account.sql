@@ -153,7 +153,11 @@ WHERE acc_id='user2' AND acc_pw='1234';
 
 --------------------------------------------------------------------------------
 
-
+-- 내가 쓴 게시글
+SELECT scon_no, scon_title, scon_contents, scon_date
+FROM share_contents
+WHERE acc_no = 1
+ORDER BY scon_date ASC;
 
 --------------------------------------------------------------------------------
 

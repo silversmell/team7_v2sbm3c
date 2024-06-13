@@ -16,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -436,7 +435,12 @@ public class AccountCont {
 
 	}
 
-	/* 회원 전체 로그 조회 */
+	/**
+	 * 회원 전체 로그 조회
+	 * 
+	 * @param model
+	 * @return
+	 */
 	@GetMapping(value = "/log_list")
 	public String log_list(Model model) {
 		ArrayList<AccLogVO> log_list = this.accountProc.logList();
@@ -789,7 +793,7 @@ public class AccountCont {
 	}
 
 	/**
-	 * 내가 쓴 게시글 - 수정(GET)
+	 * 내가 쓴 게시글 - 수정 폼
 	 * 
 	 * @param session
 	 * @param model
@@ -840,11 +844,16 @@ public class AccountCont {
 	}
 
 	/**
+	 * 내가 쓴 게시글 - 수정 처리
 	 * 
-	 * 
-	 * 
-	 * 
-	 * 
+	 * @param ra
+	 * @param model
+	 * @param fnamesMF
+	 * @param scontentsVO
+	 * @param scon_no
+	 * @param cate_no
+	 * @param url_link
+	 * @return
 	 */
 
 	@PostMapping("/updatemc")
@@ -905,12 +914,10 @@ public class AccountCont {
 
 
 		// 게시글 수
-		int cnt = this.scontentsProc.update_text(scontentsVO);
+		this.scontentsProc.update_text(scontentsVO);
 
 		HashMap<String, Object> map = new HashMap<>();
-
 		ArrayList<Contents_urlVO> arr = this.scontentsProc.url_read(scon_no);
-
 		String[] list = url_link.split(",");
 
 		System.out.println("---> url_link 사이즈(개수): " + list.length);
