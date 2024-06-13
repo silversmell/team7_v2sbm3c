@@ -405,16 +405,6 @@
         </span>
         <span style="font-size: normal; margin-left:1px;" th:text="${count1}"></span>
     		</div>
-    <!-- 
-     <div style="float:right; ">
-        <span th:if="${scontentsVO.mark =='N'}">
-            <img src="/css/images/bookmark_off.png" id="bookmarkImage" class="icon" onclick="mark()" style="width:24px; height: 24px;">
-        </span>
-        <span th:unless="${scontentsVO.mark =='N'}">
-            <img src="/css/images/bookmark_on.png" id="bookmarkImage" class="icon" onclick="mark()" style="width:24px; height: 24px;">
-        </span>
-    </div> -->
-
 
       <div class="fotorama" data-autoplay="5000" data-nav="thumbs" data-ratio="800/520" style='display: flex; justify-content: center; align-items: center; width: 100%;'>
         <img th:src="@{|/contents/storage/${share_imageVO.file_thumb_name}|}"  th:each="share_imageVO, status: ${share_imageVO}"
@@ -484,7 +474,28 @@
 			          <button id='btn_add' style='width: 100%;'>더보기 ▽</button>
 			      </div>  
 			  </div>
-    
+			  
+			  <br>
+			  <br>
+			  관련된 글<hr>
+<div style="display: flex; flex-wrap: wrap; gap: 15px;">
+    <div th:each="share_imageVO, status:${tag_share_imageVO}" style="display: flex; align-items: center;">
+        <div class="horizontal-container" th:attr="onclick=|location.href='/scontents/read?cate_no=1&scon_no=${share_imageVO.scon_no}'|" style="cursor: pointer; display: flex; align-items: center;">
+            <div th:if="${share_imageVO.scon_no}!=${scontentsVO.scon_no}" style="width: 180px; height: 100px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                <div th:if="${share_imageVO.file_origin_name.endsWith('jpg') or share_imageVO.file_origin_name.endsWith('png') or share_imageVO.file_origin_name.endsWith('gif')}" style="width: 100%; height: 100%;">
+                    <img th:src="@{|/contents/storage/${share_imageVO.file_thumb_name}|}" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div th:if="${((share_imageVO.file_origin_name.endsWith('jpg') or share_imageVO.file_origin_name.endsWith('png') or share_imageVO.file_origin_name.endsWith('gif')) == false) and (share_imageVO.file_size > 0)}" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+                    <span th:text="${share_imageVO.file_origin_name}"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
 
 </div>
     </div>

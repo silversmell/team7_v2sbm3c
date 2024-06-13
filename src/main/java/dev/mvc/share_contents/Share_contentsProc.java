@@ -441,6 +441,12 @@ public class Share_contentsProc implements Share_contentsProcInter {
 		return cnt;
 	}
 
+	@Override
+	public ArrayList<Share_imageVO> related_image(int tag_no) {
+		ArrayList<Share_imageVO> list = this.scontentsDAO.related_image(tag_no);
+		return list;
+	}
+
 
 
 }

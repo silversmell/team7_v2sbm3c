@@ -104,7 +104,6 @@ public class Share_contentsCont {
 		model.addAttribute("count",count);
 		ArrayList<HashtagVO> list1 = this.sconProc.sconno_hashtag(scon_no);
 		
-
 		model.addAttribute("list2", list1);
 
 		int cnt1 = this.replyProc.comment_search(scon_no);
@@ -116,7 +115,6 @@ public class Share_contentsCont {
 		ArrayList<Contents_urlVO> url_list = this.sconProc.only_url(scon_no);
 
 		for (int i = 0; i < url_list.size(); i++) {
-
 			if (url_list.get(i).getUrl_link().equals(" ")) {
 				url_list.get(i).setUrl_link("1");
 			}
@@ -125,7 +123,13 @@ public class Share_contentsCont {
 		ArrayList<Share_imageVO> share_imageVO = this.sconProc.read_image(scon_no);
 
 		model.addAttribute("share_imageVO", share_imageVO);
-
+		ArrayList<HashtagVO> list_tag_no = this.sconProc.sconno_hashtag(scon_no);
+		System.out.println(scon_no+"에 대한 tag_np"+list_tag_no.get(0).getTag_name());
+		ArrayList<Share_imageVO> tag_share_imageVO = this.sconProc.related_image(list_tag_no.get(0).getTag_no());
+//		for(int i = 0;i<tag_share_imageVO.size();i++) {
+//			System.out.println(tag_share_imageVO.get(i).getFile_thumb_name());
+//		}
+		model.addAttribute("tag_share_imageVO",tag_share_imageVO);
 		return "scontents/read";
 		}else {
 			return "redirect:/account/login";

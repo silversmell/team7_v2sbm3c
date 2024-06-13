@@ -364,6 +364,13 @@ public interface Share_contentsProcInter {
     * @return
     */
    public int bookmark_count(int scon_no);
+   
+   /**
+    * 연관된 게시글
+    * @param tag_no
+    * @return
+    */
+   public ArrayList<Share_imageVO>related_image(int tag_no);
 
 
 	 
