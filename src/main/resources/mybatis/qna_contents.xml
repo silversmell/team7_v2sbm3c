@@ -314,5 +314,12 @@
     WHERE acc_no=#{acc_no} AND qcon_no=#{qcon_no} 
   </update>
   
+  <!--  작성자  -->
+  <select id="user_name" resultType="String" parameterType="HashMap">
+    SELECT a.acc_id
+    FROM account a, qna_contents q 
+    WHERE a.acc_no=q.acc_no AND q.qcon_no=#{qcon_no}
+  </select>
+  
 </mapper>
 

@@ -389,6 +389,13 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
     
     return cnt;
   }
+
+  @Override
+  public String user_name(HashMap<String, Object> map) {
+    String user_name = this.qna_contentsDAO.user_name(map);
+    
+    return user_name;
+  }
   
 
   

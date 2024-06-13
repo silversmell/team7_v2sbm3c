@@ -290,19 +290,16 @@
           console.error("Error:", error);
         });
     }
-
-  
+    
+    
   </script>
 </head>
 
+
 <div layout:fragment="content">
-  <div class='title_line' style="border-color: rgb(0, 0, 128);">
+  <div class='title_line'>
     <span th:text="${qna_contentsVO.qcon_name}" class="title_line_text"></span> > 글 조회
   </div>
-  
-  <aside class="aside_left">
-    <span style="font-size: 1em;" th:text="${qna_contentsVO.qcon_date}"></span>
-  </aside>
   
   <aside class="aside_right">
     <a th:href="@{|/qcontents/qna_create?cate_no=2|}">등록</a>
@@ -313,7 +310,7 @@
     <span class='menu_divide'>│</span>
     <a th:href="@{|/qcontents/qna_delete?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}&cate_no=2|}">삭제</a> 
     <span class='menu_divide'>│</span>
-    <a th:href="@{|/qcontents/qna_list_all?cate_no=2&now_page=${now_page}|}">목록</a>   
+    <a th:href="@{|/qcontents/qna_list_all?cate_no=2&now_page=${now_page}|}">돌아가기</a>   
     <span class='menu_divide'>│</span>
     <a href="javascript:location.reload();">새로고침</a>
   </aside>
@@ -329,64 +326,100 @@
         <ul>
           <li class="li_none">
             <div style="width: 100%; word-break: break-all;">
-              <span style="font-size: 1.5em; font-weight: bold;" th:text="${qna_contentsVO.qcon_name}"></span>
-              <span style="font-size: 1em;" th:text="|조회수: ${qna_contentsVO.qcon_views}|"></span>
-              <span style="font-size: 1em;" th:text="|댓글수: ${comment_cnt}|"></span>
-              
-              <span th:if="${qna_contentsVO.qcon_bookmark == 'N'}">
-                <img src="/css/images/bookmark_off.png" id="bookmark_img" class="icon" alt="북마크" onclick="bookmarked()"
-                  style="width:24px; height: 24px;">
-              </span>
-              <span th:unless="${qna_contentsVO.qcon_bookmark == 'N'}">
-                <img src="/css/images/bookmark_on.png" id="bookmark_img" class="icon" alt="북마크" onclick="bookmarked()"
-                  style="width:24px; height: 24px;">
-               </span>
-              <br><br>
-              
-              <div class="fotorama" data-autoplay="5000" data-nav="thumbs" data-ratio="800/520" style="margin: 0px auto; width: 100%;">
+              <div style='margin: 0px auto; width: 80%;'>
+              <br>
+                 <div style="display:flex; align-items: center; flex-direction:row; justify-content: space-between;">
+                   <div style="float:left;">
+                    <span th:text="${qna_contentsVO.qcon_name}" style="font-size:2em;font-weight: bold;"></span>
+                    작성자: <span style="font-size: normal; " th:text="${user_name}"></span>
+                    작성일: <span style="font-size: normal;" th:text="${qna_contentsVO.qcon_date}"></span>
+                   </div>
+                    
+                    <div style="float:right;">
+                      <span style="font-size: 1em;" th:text="|조회수: ${qna_contentsVO.qcon_views}|"></span>
+                      <!-- 북마크 영역 -->
+                      <span th:if="${qna_contentsVO.qcon_bookmark == 'N'}">
+                        <img src="/css/images/bookmark_off.png" id="bookmark_img" class="icon" alt="북마크" onclick="bookmarked()"
+                          style="width:24px; height: 24px;">
+                      </span>
+                      <span th:unless="${qna_contentsVO.qcon_bookmark == 'N'}">
+                        <img src="/css/images/bookmark_on.png" id="bookmark_img" class="icon" alt="북마크" onclick="bookmarked()"
+                          style="width:24px; height: 24px;">
+                      </span>
+                      <span style="font-size: normal; margin-left:3px;" th:text="${mark_cnt}"></span>
+                    </div>
+                 </div>
+              </div>
+              <hr size="8;" style="margin-top:1px; margin-bottom:1px;">
+             
+               <div style="margin-left: auto; margin-right:86px;">
+                
+
+               </div>
+             
+              <div class="fotorama" data-autoplay="5000" data-nav="thumbs" data-ratio="800/520" style='display: flex; justify-content: center; align-items: center; width: 100%;'>
                 <img th:src="@{|/qcontents/storage/${image.file_upload_name}|}" th:each="image : ${qna_imageVO}"
                   th:if="${image.file_origin_name.endsWith('jpg') or image.file_origin_name.endsWith('png') or image.file_origin_name.endsWith('gif')}">
               </div>
+              <br>
               
-  
-              <div style="white-space: pre-wrap;"><span th:text="${qna_contentsVO.qcon_contents}"></span></div>
-            </div>
-          </li>
-          
-          <li class="li_none" th:each="image : ${qna_imageVO}" th:if="${image.file_size > 0}">
-            <div>
-              첨부 파일: <a th:href="@{|/download?dir=/contents/storage&filename=${image.file_upload_name}&downname=${image.file_origin_name}|}" th:text="|${image.file_origin_name}|"></a>
-            </div>
-          </li>
-          
-          <li class="li_none">
-          <!-- ------------------------------ 댓글 영역 시작 ------------------------------ -->
-            <div style='width: 100%; margin: 0px auto; clear: both;'>
-                <form name='frm_reply' id='frm_reply'> 
+              <div th:if="${qna_imageVO != null and qna_imageVO.size() > 0}"
+                style='display: flex; justify-content: center; align-items: center; width: 55%; margin-top: 10px;'>
+                <span style="font-size: 1.5em; font-weight: normal;" th:text="${qna_contentsVO.qcon_contents}"></span><br>
+                <div style="white-space: pre-wrap;"></div>
+              </div>
+              
+              <div th:if="${qna_imageVO == null or qna_imageVO.size() == 0}"
+                style='display: flex; justify-content: left; align-items: center; width: 50%;'>
+                <span style="font-size: 1.5em; font-weight: normal;" th:text="${qna_contentsVO.qcon_contents}"></span><br>
+                <div style="white-space: pre-wrap;"></div>
+              </div>
+              
+              
+              <li th:if="${qna_imageVO != null and qna_imageVO.size() > 0}" class="li_none"
+                style="text-align:center; margin-top:30px;">
+                파일 다운로드 ▼
+                <div th:each="image : ${qna_imageVO}"><br/>
+                  첨부 파일: <a
+                    th:href="@{|/download?dir=/contents/storage&filename=${image.file_upload_name}&downname=${image.file_origin_name}|}"
+                    th:text="|${image.file_origin_name}|"></a>
+                </div>
+              </li>
+              <li th:if="${qna_imageVO == null or qna_imageVO.size() == 0}" class="li_none"
+                style="text-align:center; margin-top:30px;">
+                
+              </li>
+              <br><br>
+              
+              <div style='width: 80%; margin: 0px auto; clear:both; text-align:center;'>
+                <div style="float:left;">댓글 수 <span style="font-size: normal; margin-left:3px;" th:text="${comment_cnt}"></span></div><br>
+                <hr>
+                <form name='frm_reply' id='frm_reply'> 
                     <input type='hidden' name='acc_no' id='acc_no' value=''>
                     <input type='hidden' name='qcmt_no' id='qcmt_no' value=''>
           
                     <textarea name='qcmt_contents' id='qcmt_contents' class="form-control" style='width: 100%; height: 60px;' 
                                    placeholder="댓글 작성, 로그인해야 등록 할 수 있습니다." autofocus='autofocus'></textarea>
                    <div style='text-align: center;'> 
-                     <button type='button' id='btn_create'>&nbsp;&nbsp;등&nbsp;&nbsp;록&nbsp;&nbsp;</button>
-                     <button type='button' id='btn_save' style='display: none;'>&nbsp;&nbsp;저&nbsp;&nbsp;장&nbsp;&nbsp;</button>
-                     <button type='button' id='btn_delete' style='display: none;'>&nbsp;&nbsp;삭&nbsp;&nbsp;제&nbsp;&nbsp;</button>
-                     <button type='button' id='btn_cancel' style='display: none;'>&nbsp;&nbsp;취&nbsp;&nbsp;소&nbsp;&nbsp;</button>
+                     <button type='button' id='btn_create'>&nbsp;등&nbsp;&nbsp;록&nbsp;</button>
+                     <button type='button' id='btn_save' style='display: none;'>&nbsp;저&nbsp;&nbsp;장&nbsp;</button>
+                     <button type='button' id='btn_delete' style='display: none;'>&nbsp;삭&nbsp;&nbsp;제&nbsp;</button>
+                     <button type='button' id='btn_cancel' style='display: none;'>&nbsp;취&nbsp;&nbsp;소&nbsp;</button>
                    </div>               
                 </form>
-                <div id='reply_list' data-replypage='1'>  <!-- 목록 -->
+
+                <div id='reply_list_btn' style='border: none'>
+                  <button type='button' id='btn_add' style='width: 100%;'>더보기 ▽</button>
+                </div>
+                <div id='reply_list' data-replypage='1'>  <!-- 목록 -->
                   등록된 댓글이 없습니다.
                 </div>
-                <div id='reply_list_btn' style='border: none'>
-                    <button type='button' id='btn_add' style='width: 100%;'>더보기 ▽</button>
-                </div>  
-              
-            </div>
-            <!-- ------------------------------ 댓글 영역 종료 ------------------------------  -->
-          </li>   
-             
+              </div>
+            </div>
+          </li>
+          
         </ul>
+        <br>
       </fieldset>
     </form>
 

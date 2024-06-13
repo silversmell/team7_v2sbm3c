@@ -253,4 +253,11 @@ public interface Qna_contentsDAOInter {
    */
   public int bookmark_n(HashMap<String, Object> map);
   
+  /**
+   * 작성자
+   * @param map
+   * @return
+   */
+  public String user_name(HashMap<String, Object> map);
+  
 }
