@@ -253,19 +253,20 @@
       let acc_no = '[[${session.acc_no}]]';
       if (acc_no == '') {
         alert('로그인이 필요합니다.');
+        
         location.href = "/account/login?url=/qcontents/qna_read?qcon_no=[[${qna_contentsVO.qcon_no}]]%26word=[[${word}]]%26now_page=[[${now_page}]]";
         return;
       }
 
       let url;
       let bookmark_img_tag = document.getElementById("bookmark_img").src;
-
+      console.log(acc_no)
       if (bookmark_img_tag.endsWith("bookmark_off.png")) {
-        url = '/qcontents/bookmark_create/' + qcon_no + '?cate_no=' + cate_no;
+        url = '/qcontents/bookmark_create/' + qcon_no + '?cate_no=' + cate_no+ "&acc_no=" +'[[${session.acc_no}]]';
+        console.log(url)
       } else {
-        url = '/qcontents/bookmark_delete/' + qcon_no + '?cate_no=' + cate_no;
+        url = '/qcontents/bookmark_delete/' + qcon_no + '?cate_no=' + cate_no+"&acc_no=" +'[[${session.acc_no}]]';
       }
-
       fetch(url, {
         method: "GET",
         headers: {

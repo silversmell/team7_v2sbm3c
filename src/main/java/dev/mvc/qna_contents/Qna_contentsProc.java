@@ -377,15 +377,15 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
   }
 
   @Override
-  public int bookmark_y(int qcon_no, int acc_no) {
-    int cnt = this.qna_contentsDAO.bookmark_y(qcon_no, acc_no);
+  public int bookmark_y(HashMap<String, Object> map) {
+    int cnt = this.qna_contentsDAO.bookmark_y(map);
     
     return cnt;
   }
 
   @Override
-  public int bookmark_n(int qcon_no, int acc_no) {
-    int cnt = this.qna_contentsDAO.bookmark_n(qcon_no, acc_no);
+  public int bookmark_n(HashMap<String, Object> map) {
+    int cnt = this.qna_contentsDAO.bookmark_n(map);
     
     return cnt;
   }

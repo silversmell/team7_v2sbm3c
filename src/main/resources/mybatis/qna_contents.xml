@@ -301,14 +301,14 @@
   </delete>
   
   <!-- 질문글 북마크 공개 -->
-  <update id="bookmark_y" parameterType="int">
+  <update id="bookmark_y" parameterType="HashMap">
     UPDATE qna_contents
     SET qcon_bookmark='Y'
     WHERE acc_no=#{acc_no} AND qcon_no=#{qcon_no} 
   </update>
 
   <!-- 질문글 북마크 비공개 -->
-  <update id="bookmark_n" parameterType="int">
+  <update id="bookmark_n" parameterType="HashMap">
     UPDATE qna_contents
     SET qcon_bookmark='N'
     WHERE acc_no=#{acc_no} AND qcon_no=#{qcon_no} 

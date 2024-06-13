@@ -243,7 +243,7 @@ public interface Qna_contentsProcInter {
    * @param acc_no
    * @return
    */
-  public int bookmark_y(int qcon_no, int acc_no);
+  public int bookmark_y(HashMap<String, Object> map);
   
   /**
    * 질문글 북마크 비공개 모드
@@ -251,6 +251,6 @@ public interface Qna_contentsProcInter {
    * @param acc_no
    * @return
    */
-  public int bookmark_n(int qcon_no, int acc_no);
+  public int bookmark_n(HashMap<String, Object> map);
   
 }

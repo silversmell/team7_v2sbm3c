@@ -805,16 +805,17 @@ public class Qna_contentsCont {
   @ResponseBody
   public String bookmark_create(HttpSession session, 
                                           RedirectAttributes ra,
-                                          @PathVariable("qcon_no") Integer qcon_no) {
-    
+                                          @PathVariable("qcon_no") Integer qcon_no,int acc_no,int cate_no) {
+
     JSONObject obj = new JSONObject();
-    
+
     if (this.accountProc.isMember(session)) {
-      Integer acc_no = (Integer) session.getAttribute("acc_no");
+      //Integer acc_no = (Integer) session.getAttribute("acc_no");
 
       HashMap<String, Object> map = new HashMap<>();
       map.put("qcon_no", qcon_no);
       map.put("acc_no", acc_no);
+
       
       List<Qna_markVO> list = qna_contentsProc.is_bookmarked(map);
       obj.put("res", list);
@@ -823,8 +824,10 @@ public class Qna_contentsCont {
 
       System.out.println("북마크 등록 성공");
       // System.out.println("=> qcon_no: " + qcon_no);
-      this.qna_contentsProc.bookmark_y(qcon_no, acc_no); // 북마크 공개
-
+      int cnt1 = this.qna_contentsProc.bookmark_y(map); // 북마크 공개
+      if(cnt1>0) {
+    	  System.out.println("북마크 공개 성공");
+      }
       obj.put("cnt", cnt);
     } else {
       ra.addAttribute("url", "/account/login_cookie_need"); // /templates/account/login_cookie_need.html
@@ -847,25 +850,28 @@ public class Qna_contentsCont {
   public String bookmark_delete(HttpSession session,
                                           RedirectAttributes ra,
                                           Qna_contentsVO qna_contentsVO,
-                                          @PathVariable("qcon_no") Integer qcon_no) {
-    
+                                          @PathVariable("qcon_no") Integer qcon_no,int acc_no,int cate_no) {
+    System.out.println("북마크 등록 들어옴");
     JSONObject obj = new JSONObject();
     
     if (this.accountProc.isMember(session)) {
-      Integer acc_no = (Integer) session.getAttribute("acc_no");
+      //Integer acc_no = (Integer) session.getAttribute("acc_no");
 
       HashMap<String, Object> map = new HashMap<>();
       map.put("qcon_no", qcon_no);
       map.put("acc_no", acc_no);
       
+      System.out.println(qcon_no);
+      System.out.println(acc_no);
+      
       List<Qna_markVO> list = qna_contentsProc.is_bookmarked(map);
       obj.put("res", list);
       
       int cnt = this.qna_contentsProc.bookmark_delete(map);
-
+      
       System.out.println("북마크 등록 성공");
-      // System.out.println("=> qcon_no: " + qcon_no);
-      this.qna_contentsProc.bookmark_y(qcon_no, acc_no); // 북마크 공개
+
+      this.qna_contentsProc.bookmark_y(map);// 북마크 공개
 
       obj.put("cnt", cnt);
     } else {
