@@ -1,7 +1,5 @@
 package dev.mvc.account;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -321,7 +319,7 @@ public class AccountCont {
 	 * @return
 	 */
 	@GetMapping(value = "/login")
-	public String login_form(Model model, HttpServletRequest request, AccLogVO accLogVO, String url)  {
+	public String login_form(Model model, HttpServletRequest request, AccLogVO accLogVO, String url) {
 
 		/* Cookie */
 		Cookie[] cookies = request.getCookies();
@@ -346,7 +344,7 @@ public class AccountCont {
 		model.addAttribute("ck_id", ck_acc_id);
 		model.addAttribute("ck_id_save", ck_id_save);
 		model.addAttribute("url", url);
-		
+
 		return "account/login";
 	}
 
@@ -443,9 +441,20 @@ public class AccountCont {
 	 */
 	@GetMapping(value = "/log_list")
 	public String log_list(Model model) {
-		ArrayList<AccLogVO> log_list = this.accountProc.logList();
-		model.addAttribute("log_list", log_list);
-
+		ArrayList<Map<String, Object>> logs = this.accountProc.logList();
+		
+		/*
+		for (Map<String, Object> log : logs) {
+			AccountVO account = (AccountVO) log.get("account");
+			AccLogVO accLog = (AccLogVO) log.get("accLog");
+			
+	        System.out.println("Account acc_id: " + account.getAcc_id());
+	        System.out.println("Log acc_log_ip: " + accLog.getAcc_log_ip());
+		}
+		*/
+		
+		model.addAttribute("logs", logs);
+		
 		return "account/log_list";
 	}
 
@@ -902,16 +911,15 @@ public class AccountCont {
 					share_imageVO.setFile_origin_name(file_origin_name);
 					share_imageVO.setFile_thumb_name(file_thumb_name);
 					share_imageVO.setFile_upload_name(file_upload_name);
-					share_imageVO.setFile_size((int)file_size);
+					share_imageVO.setFile_size((int) file_size);
 
 					int image_cnt = this.scontentsProc.attach_create(share_imageVO);
 					System.out.println("---> attach_create image_cnt: " + image_cnt);
 				}
-				
+
 			}
 
 		}
-
 
 		// 게시글 수
 		this.scontentsProc.update_text(scontentsVO);

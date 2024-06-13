@@ -3,6 +3,7 @@ package dev.mvc.account;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import dev.mvc.recommend.HashtagVO;
 import dev.mvc.recommend.RecommendVO;
@@ -97,11 +98,11 @@ public interface AccountDAOInter {
 	public int recordLog(AccLogVO AccLogVO);
 	
 	/**
-	 * 회원 로그 전체 조회(100건)
+	 * 회원 로그 전체 조회
 	 * 
 	 * @return
 	 */
-	public ArrayList<AccLogVO> logList();
+	public ArrayList<Map<String, Object>> logList();
 
 	/**
 	 * 선택된 해시태그 조회(회원 정보 조회)

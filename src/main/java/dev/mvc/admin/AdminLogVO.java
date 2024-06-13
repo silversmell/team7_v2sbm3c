@@ -16,7 +16,7 @@ CREATE TABLE ADMIN_LOG(
 */
 
 @Getter @Setter
-public class AdmLogVO {
+public class AdminLogVO {
 
 	/** 관리자 로그 번호 */
 	private int adm_log_no;

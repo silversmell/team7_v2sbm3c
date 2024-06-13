@@ -54,6 +54,17 @@ FROM acc_log l
 INNER JOIN account a ON a.acc_no = l.acc_no
 WHERE ROWNUM<=100;
 
+SELECT l.acc_log_no, a.acc_no, a.acc_id, l.acc_log_ip, l.acc_log_time
+FROM acc_log l
+INNER JOIN account a ON a.acc_no = l.acc_no
+ORDER BY l.acc_log_no;
+
+SELECT l.acc_log_no, a.acc_no, a.acc_id, l.acc_log_ip, l.acc_log_time
+FROM acc_log l
+INNER JOIN account a ON a.acc_no = l.acc_no
+ORDER BY l.acc_log_time;
+
+commit;
 
 SELECT h.tag_name
 FROM recommend r

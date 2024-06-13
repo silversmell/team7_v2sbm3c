@@ -54,4 +54,10 @@ FROM admin_log l
 INNER JOIN admin a ON a.adm_no = l.adm_no
 WHERE ROWNUM<=100;
 
+SELECT l.adm_log_no, a.adm_no, a.adm_id, l.adm_log_ip, l.adm_log_time
+FROM admin_log l
+INNER JOIN admin a ON a.adm_no = l.adm_no
+ORDER BY l.adm_log_time;
+
+
 commit;

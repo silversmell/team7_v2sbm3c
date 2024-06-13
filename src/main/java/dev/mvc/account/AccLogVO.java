@@ -26,4 +26,5 @@ public class AccLogVO {
 	private String acc_log_ip = "";
 	/** 접속 시간 */
 	private String acc_log_time = "";
+	
 }

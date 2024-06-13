@@ -32,14 +32,16 @@
 		VALUES(ADMIN_SEQ.nextval, #{cate_no}, #{adm_id}, #{adm_pw}, #{adm_name},
 		#{adm_email}, #{adm_tel}, sysdate)
 	</insert>
-	
+
 	<!-- 아이디로 관리자 정보 조회(로그인, 비밀번호 찾기) -->
-	<select id="readById" resultType="dev.mvc.admin.AdminVO" parameterType="String">
-		SELECT adm_no, cate_no, adm_id, adm_pw, adm_name, adm_email, adm_tel, adm_date, adm_grade
+	<select id="readById" resultType="dev.mvc.admin.AdminVO"
+		parameterType="String">
+		SELECT adm_no, cate_no, adm_id, adm_pw, adm_name, adm_email, adm_tel,
+		adm_date, adm_grade
 		FROM admin
 		WHERE adm_id = #{adm_id}
 	</select>
-	
+
 	<!-- 로그인 -->
 	<select id="login" resultType="int" parameterType="HashMap">
 		SELECT COUNT(adm_no) as cnt
@@ -48,10 +50,31 @@
 	</select>
 
 	<!-- 관리자 로그 기록 -->
-	<insert id="recordLog" parameterType="dev.mvc.admin.AdmLogVO">
-		INSERT INTO ADMIN_LOG(adm_log_no, adm_no, adm_log_ip, adm_log_time)
+	<insert id="recordLog" parameterType="dev.mvc.admin.AdminLogVO">
+		INSERT INTO admin_log(adm_log_no, adm_no, adm_log_ip, adm_log_time)
 		VALUES(ADMIN_LOG_SEQ.nextval, #{adm_no}, #{adm_log_ip}, TO_CHAR(sysdate, 'YYYY/MM/DD HH24:MI:SS'))
 	</insert>
+
+	<!-- 관리자 로그 전체 조회 -->
+	<select id="logList" resultMap="logListResultMap">
+		SELECT l.adm_log_no, a.adm_no, a.adm_id, l.adm_log_ip, l.adm_log_time
+		FROM admin_log l
+		INNER JOIN admin a ON a.adm_no = l.adm_no
+		ORDER BY l.adm_log_time
+	</select>
+
+	<resultMap id="logListResultMap" type="map">
+		<association property="admin" javaType="dev.mvc.admin.AdminVO">
+			<id column="adm_no" property="adm_no" />
+			<result column="adm_id" property="adm_id" />
+		</association>
+		<association property="adminLog" javaType="dev.mvc.admin.AdminLogVO">
+			<id column="adm_log_no" property="adm_log_no" />
+			<result column="adm_no" property="adm_no" />
+			<result column="adm_log_ip" property="adm_log_ip" />
+			<result column="adm_log_time" property="adm_log_time" />
+		</association>
+	</resultMap>
 
 </mapper>
 

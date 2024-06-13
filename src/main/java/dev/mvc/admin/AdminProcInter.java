@@ -1,6 +1,8 @@
 package dev.mvc.admin;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public interface AdminProcInter {
 
@@ -54,9 +56,16 @@ public interface AdminProcInter {
 	/**
 	 * 관리자 로그 기록
 	 * 
-	 * @param AdmLogVO
+	 * @param AdminLogVO
 	 * @return 추가된 레코드 갯수
 	 */
-	public int recordLog(AdmLogVO admLogVO);
+	public int recordLog(AdminLogVO adminLogVO);
+	
+	/**
+	 * 관리자 로그 전체 조회
+	 * 
+	 * @return
+	 */
+	public ArrayList<Map<String, Object>> logList();
 
 }
