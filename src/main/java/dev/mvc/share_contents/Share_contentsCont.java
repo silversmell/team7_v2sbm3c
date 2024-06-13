@@ -129,6 +129,8 @@ public class Share_contentsCont {
 //			System.out.println(tag_share_imageVO.get(i).getFile_thumb_name());
 //		}
 		model.addAttribute("tag_share_imageVO",tag_share_imageVO);
+		int related_count = this.sconProc.related_image_count();
+		model.addAttribute("related_count",related_count);
 		return "scontents/read";
 		}else {
 			return "redirect:/account/login";

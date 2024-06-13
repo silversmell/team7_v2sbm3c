@@ -370,6 +370,13 @@ public interface Share_contentsProcInter {
     * @return
     */
    public ArrayList<Share_imageVO>related_image(int tag_no);
+   
+   /** 
+    * 관련 게시글 갯수
+    * @return
+    */
+   public int related_image_count();
+   
 
 
 	 

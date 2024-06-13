@@ -446,6 +446,12 @@ public class Share_contentsProc implements Share_contentsProcInter {
 		return list;
 	}
 
+	@Override
+	public int related_image_count() {
+		int cnt = this.scontentsDAO.related_image_count();
+		return cnt;
+	}
+
 
 
 }

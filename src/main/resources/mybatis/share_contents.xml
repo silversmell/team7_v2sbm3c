@@ -436,20 +436,40 @@
 	FROM share_mark
   WHERE scon_no=#{scon_no}
 	</select>
-	
-	<select id="related_image" resultType="dev.mvc.share_contentsdto.Share_imageVO" parameterType="int">
-	SELECT scon_no, file_origin_name,file_upload_name,file_thumb_name, r
-FROM (
-    SELECT sc.scon_no, image.file_origin_name, ct.tag_no,image.file_thumb_name,image.file_upload_name,
-           ROW_NUMBER() OVER (PARTITION BY sc.scon_no ORDER BY sc.scon_no desc) as r
-    FROM share_image image 
-    INNER JOIN share_contents sc ON image.scon_no = sc.scon_no 
-    INNER JOIN contents_tag ct ON ct.scon_no = sc.scon_no
-    where ct.tag_no =#{tag_no}
-    )
-	where r=1
-	ORDER BY r ASC
-	
+
+	<select id="related_image"
+		resultType="dev.mvc.share_contentsdto.Share_imageVO"
+		parameterType="int">
+		SELECT scon_no, file_origin_name,file_upload_name,file_thumb_name, r
+		FROM (
+		SELECT sc.scon_no, image.file_origin_name,
+		ct.tag_no,image.file_thumb_name,image.file_upload_name,
+		ROW_NUMBER() OVER (PARTITION BY sc.scon_no ORDER BY sc.scon_no desc) as r
+		FROM share_image image
+		INNER JOIN share_contents sc ON image.scon_no = sc.scon_no
+		INNER JOIN contents_tag ct ON ct.scon_no = sc.scon_no
+		where ct.tag_no =#{tag_no}
+		)
+		where r=1
+		ORDER BY r ASC
+
+	</select>
+	<select id="related_image_count" resultType="int">
+		SELECT COUNT(*)
+		FROM(
+		SELECT scon_no,file_origin_name,file_upload_name,file_thumb_name, r
+		FROM (
+		SELECT sc.scon_no, image.file_origin_name,
+		ct.tag_no,image.file_thumb_name,image.file_upload_name,
+		ROW_NUMBER() OVER (PARTITION BY sc.scon_no ORDER BY sc.scon_no desc) as r
+		FROM share_image image
+		INNER JOIN share_contents sc ON image.scon_no = sc.scon_no
+		INNER JOIN contents_tag ct ON ct.scon_no = sc.scon_no
+		where ct.tag_no =1
+		)
+		where r = 1
+		ORDER BY r ASC
+		)
 	</select>
 
 </mapper>
