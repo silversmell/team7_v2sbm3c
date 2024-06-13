@@ -8,7 +8,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import dev.mvc.qna_mark.Qna_markVO;
 import dev.mvc.tool.Security;
 import dev.mvc.tool.Tool;
 

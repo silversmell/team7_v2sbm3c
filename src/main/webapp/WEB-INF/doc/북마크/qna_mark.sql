@@ -6,8 +6,8 @@ DROP TABLE QNA_MARK;
 
 CREATE TABLE QNA_MARK(
         QMARK_NO                      NUMBER(10) NOT NULL PRIMARY KEY,
-        ACC_NO                        NUMBER(10) NULL ,
-        QCON_NO                       NUMBER(10) NULL ,
+        ACC_NO                        NUMBER(10), -- FK
+        QCON_NO                       NUMBER(10), -- FK
     FOREIGN KEY (ACC_NO) REFERENCES ACCOUNT (ACC_NO),
     FOREIGN KEY (QCON_NO) REFERENCES QNA_CONTENTS (QCON_NO)
 );
@@ -26,31 +26,33 @@ DROP SEQUENCE QNA_MARK_SEQ;
    MAXVALUE 9999999999 
    CACHE 2              
    NOCYCLE;          
-   
+commit;   
    
 -- 전체 데이터 조회
 SELECT qmark_no, acc_no, qcon_no
 FROM qna_mark;
 
 COMMIT;
-
-
-INSERT INTO qna_mark(qmark_no, acc_no, qcon_no)
-VALUES(qna_mark_seq.nextval, 2, 1);
+rollback;
 
 INSERT INTO qna_mark(qmark_no, acc_no, qcon_no)
-VALUES(qna_mark_seq.nextval, 3, 1);
+VALUES(qna_mark_seq.nextval, 3, 3);
+
+INSERT INTO qna_mark(qmark_no, acc_no, qcon_no)
+VALUES(qna_mark_seq.nextval, 2, 3);
 
 DELETE FROM qna_mark 
-WHERE qcon_no =1 AND acc_no=3;
+WHERE qcon_no =3 AND acc_no=3;
 
+DELETE FROM qna_mark 
+WHERE qcon_no =3;
 
 SELECT acc_no, qcon_no
 FROM qna_mark
-WHERE qcon_no=1 AND acc_no=3;
+WHERE qcon_no=3 AND acc_no=3;
 
 SELECT count(*)
 FROM qna_mark
-WHERE qcon_no=1
+WHERE qcon_no=3;
 
    

@@ -24,66 +24,7 @@
       let btn_delete_tag = document.getElementById("btn_delete"); // 삭제 처리
       let btn_cancel_tag = document.getElementById("btn_cancel"); // 수정/삭제 취소
       
-      let bookmark_img_tag = document.getElementById("bookmark_img"); // 북마크 이미지
-
       
-      if (bookmark_img_tag) {
-        bookmark_img_tag.addEventListener('click', () => {
-          let qcon_no = "[[${qna_contentsVO.qcon_no}]]";
-          let acc_no = "[[${session.acc_no}]]"; // 사용자 ID
-
-          if (acc_no == '') {
-            alert('로그인해야 북마크를 추가할 수 있습니다.');
-            location.href = `/account/login?url=/qcontents/qna_read?qcon_no=${qcon_no}&word=[[${word}]]&now_page=[[${now_page}]]`;
-          } else {
-            // 현재 북마크 상태 확인
-            fetch("/qcontents/is_bookmarked", {
-              method: "post",
-              headers: {"Content-Type": "application/json"},
-              body: JSON.stringify({"qcon_no": qcon_no, "acc_no": acc_no})
-            })
-              .then((response) => response.json())
-              .then((data) => {
-                if (data.bookmarked) {
-                  // 북마크가 등록된 상태라면 삭제
-                  fetch("/qcontents/bookmark_delete", {
-                    method: "post",
-                    headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify({"qcon_no": qcon_no, "acc_no": acc_no})
-                  })
-                    .then((response) => response.json())
-                    .then((data) => {
-                      if (data.res == 1) {
-                        alert('북마크가 삭제되었습니다.');
-                        bookmark_img_tag.src = '/css/images/bookmark_off.png';
-                      } else {
-                        alert('북마크 삭제에 실패했습니다.');
-                      }
-                    });
-                } else {
-                  // 북마크가 등록되지 않은 상태라면 추가
-                  fetch("/qcontents/bookmark_create", {
-                    method: "post",
-                    headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify({"qcon_no": qcon_no, "acc_no": acc_no})
-                  })
-                    .then((response) => response.json())
-                    .then((data) => {
-                      if (data.res == 1) {
-                        alert('북마크가 추가되었습니다.');
-                        bookmark_img_tag.src = '/css/images/bookmark_on.png';
-                      } else {
-                        alert('북마크 추가에 실패했습니다.');
-                      }
-                    });
-                }
-              });
-          }
-        });
-      }
-        
-      
-
       // 댓글 입력
       qcmt_contents_tag.addEventListener('click', () => {
         let acc_id = '[[${session.acc_id}]]'; //  javascript -> Thymeleaf -> session
@@ -301,9 +242,54 @@
         btn_save.style.display = 'none';
         btn_cancel.style.display = 'none';
       }
-
     }
     
+    function bookmarked() {
+      console.log("북마크 클릭함.");
+
+      let qcon_no = document.getElementById("qcon_no").value;
+      let cate_no = 2;
+
+      let acc_no = '[[${session.acc_no}]]';
+      if (acc_no == '') {
+        alert('로그인이 필요합니다.');
+        location.href = "/account/login?url=/qcontents/qna_read?qcon_no=[[${qna_contentsVO.qcon_no}]]%26word=[[${word}]]%26now_page=[[${now_page}]]";
+        return;
+      }
+
+      let url;
+      let bookmark_img_tag = document.getElementById("bookmark_img").src;
+
+      if (bookmark_img_tag.endsWith("bookmark_off.png")) {
+        url = '/qcontents/bookmark_create/' + qcon_no + '?cate_no=' + cate_no;
+      } else {
+        url = '/qcontents/bookmark_delete/' + qcon_no + '?cate_no=' + cate_no;
+      }
+
+      fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+        .then(response => response.json())
+        .then(data => {
+          
+          if (data.cnt > 0) {
+            if (bookmark_img_tag.endsWith("bookmark_off.png")) {
+              document.getElementById("bookmark_img").src = "/css/images/bookmark_on.png";
+              alert("북마크를 등록하였습니다.");
+            } else {
+              document.getElementById("bookmark_img").src = "/css/images/bookmark_off.png";
+              alert("북마크를 삭제하였습니다.");
+            }
+          }
+        })
+        .catch(error => {
+          console.error("Error:", error);
+        });
+    }
+
   
   </script>
 </head>
@@ -347,14 +333,15 @@
               <span style="font-size: 1em;" th:text="|댓글수: ${comment_cnt}|"></span>
               
               <span th:if="${qna_contentsVO.qcon_bookmark == 'N'}">
-                <img src="/css/images/bookmark_off.png" id="bookmark_img" type="button" class="icon"
-                  style="width:24px; height:24px;">
+                <img src="/css/images/bookmark_off.png" id="bookmark_img" class="icon" alt="북마크" onclick="bookmarked()"
+                  style="width:24px; height: 24px;">
               </span>
-              <span th:if="${qna_contentsVO.qcon_bookmark != 'N'}">
-                <img src="/css/images/bookmark_on.png" id="bookmark_img" type="button" class="icon"
-                  style="width:24px; height:24px;">
-              </span><br><br>
-            
+              <span th:unless="${qna_contentsVO.qcon_bookmark == 'N'}">
+                <img src="/css/images/bookmark_on.png" id="bookmark_img" class="icon" alt="북마크" onclick="bookmarked()"
+                  style="width:24px; height: 24px;">
+               </span>
+              <br><br>
+              
               <div class="fotorama" data-autoplay="5000" data-nav="thumbs" data-ratio="800/520" style="margin: 0px auto; width: 100%;">
                 <img th:src="@{|/qcontents/storage/${image.file_upload_name}|}" th:each="image : ${qna_imageVO}"
                   th:if="${image.file_origin_name.endsWith('jpg') or image.file_origin_name.endsWith('png') or image.file_origin_name.endsWith('gif')}">

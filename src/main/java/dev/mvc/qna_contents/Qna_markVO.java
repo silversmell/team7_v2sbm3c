@@ -1,4 +1,4 @@
-package dev.mvc.qna_mark;
+package dev.mvc.qna_contents;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -14,9 +14,9 @@ import lombok.Setter;
 @Getter @Setter
 public class Qna_markVO {
   /** 북마크 번호 */
-  private int qmark_no;
+  private Integer qmark_no;
   /** 회원 번호 */
-  private int acc_no;
+  private Integer acc_no;
   /** 질문게시글 번호 */
-  private int qcon_no;
+  private Integer qcon_no;
 }

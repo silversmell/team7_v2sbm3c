@@ -162,9 +162,11 @@ WHERE qcon_no = 2;
 -- 질문글 북마크 공개
 update qna_contents
 set qcon_bookmark='Y'
-where qcon_no=1;
+where qcon_no=3;
 
 -- 질문글 북마크 비공개
 update qna_contents
 set qcon_bookmark='N'
-where qcon_no=1;
+where qcon_no=3;
+
+select * from qna_contents;

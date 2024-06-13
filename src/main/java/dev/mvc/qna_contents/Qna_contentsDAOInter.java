@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import dev.mvc.qna_mark.Qna_markVO;
-
 public interface Qna_contentsDAOInter {
 
   /**

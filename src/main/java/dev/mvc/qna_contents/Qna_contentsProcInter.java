@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import dev.mvc.qna_mark.Qna_markVO;
-
 
 public interface Qna_contentsProcInter {
   
