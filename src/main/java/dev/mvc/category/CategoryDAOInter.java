@@ -120,4 +120,11 @@ public interface CategoryDAOInter {
     * @return
     */
    public int cnt_minus(int cate_no);
+   
+   /**
+    * 카테고리 번호와 일치하는 카테고리명
+    * @param cate_no
+    * @return
+    */
+   public String cate_name(int cate_no);
 }

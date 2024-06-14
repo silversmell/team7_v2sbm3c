@@ -753,5 +753,29 @@ tr:nth-child(even) {
 	gap: 10px;
 }
   
-
+ /* 더보기 버튼 스타일 */
+  #reply_list_btn {
+    margin-bottom: 10px;
+  }
+  
+  #btn_add {
+    width: 100%;
+    padding: 10px;
+    background-color: transparent; /* 배경색 없음 */
+    color: rgb(128, 128, 128); /* 링크 색상 */
+    border: none;
+    border-bottom: 1px solid rgb(192, 192, 192); /* 밑줄 스타일 */
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+  }
+  
+  #btn_add:hover {
+    border-bottom-color: rgb(128, 128, 128); /* 호버 시 밑줄 색상 변경 */
+  }
+  .reply-item {
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
   
