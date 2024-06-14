@@ -294,7 +294,7 @@
        function recomment_read_form(scmt_no,acc_no){
     	   let areaId = "recomment_area_" + scmt_no;
     	    let area = document.getElementById(areaId);
-    	   
+    	   area.innerHTML="";
  				let count_cnt="";
     	   fetch("/recomment/read?scmt_no=" + scmt_no,{
     		   "method":"GET",
@@ -325,11 +325,11 @@
 	             msg += "</div>";
 	             msg += "</div>";
     		   }
+    		   area.innerHTML = msg;
+    		   area.style.display = 'block';
     		   //document.getElementById("reply_list").innerHTML += msg;
-    		   document.getElementById("re_comment_read").innerHTML = msg;
-    		   let a = document.getElementById("recomment_area_" + scmt_no);
-    		   a.innerHTML += "<div>"+msg+"</div>";
-    		   document.getElementById("recomment_area_"+scmt_no).style.display='block';
+    		   //document.getElementById("re_comment_read").innerHTML = msg;
+
     		   
     		   recomment_create_form(scmt_no,acc_no)
     	   });
