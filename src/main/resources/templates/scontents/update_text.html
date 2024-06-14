@@ -2,6 +2,29 @@
 
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
 <div layout:fragment="content">
+
+<script>
+function send(){
+	    var urlInput = document.getElementById("url");
+	    var url = urlInput.value.trim();
+		let content = document.getElementById("content");
+	  let title_tag = document.getElementById("title");
+	  if(title_tag.value==' '){
+		  alert("제목을 입력해주세요");
+		  return false;
+	  }
+	  if(content.value==''){
+		  alert("내용을 입력해주세요");
+		  return false
+	  }
+    if (url.value === "") {
+        alert("URL을 입력해주세요.");
+        return false;
+    }
+	 
+	  document.getElementById('frm').submit(); 
+	}
+	</script>
   <div class='title_line'>
      <span th:text="${scontentsVO.scon_title}" class="title_line_text"></span > 
     > 글 수정
@@ -23,17 +46,17 @@
     
     <div>
        <label>제목</label>
-       <input type='text' name='scon_title' th:value='${scontentsVO.scon_title}' required="required" 
+       <input type='text' name='scon_title' th:value='${scontentsVO.scon_title}' required="required"  id="title"
                  autofocus="autofocus" class="form-control" style='width: 100%;'>
     </div>
     <div>
        <label>내용</label>
-       <textarea name='scon_contents'  required="required" class="form-control" rows="12" style='width: 100%;' 
+       <textarea name='scon_contents'  required="required" class="form-control" rows="12" style='width: 100%;'  id="content"
                       th:text='${scontentsVO.scon_contents}'></textarea>
     </div>
 
        <label th:if="${url_list0!= null}"label>url1</label>
-       <input type='url' name='url_link' th:if="${url_list0 != null}" th:value="${url_list0}" 
+       <input type='url' name='url_link' th:if="${url_list0 != null}" th:value="${url_list0}" id="url"  required="required"
                  autofocus="autofocus" class="form-control" style='width: 100%;'/>
        <label th:if="${url_list1 != null}">url2</label>
        <input type='url' name='url_link'  th:if="${url_list1 != null}"  th:value="${url_list1}" 
@@ -49,15 +72,8 @@
        autofocus="autofocus" class="form-control" style='width: 100%;'>
 
 
-    <!--
-    <div>
-       <label>패스워드</label>
-       <input type='password' name='passwd' th:value='1234' required="required" 
-                 class="form-control" style='width: 50%;'>
-    </div>
-     -->
     <div class="content_body_bottom">
-      <button type="submit" class="btn btn-secondary btn-sm">저장</button>
+      <button type="submit" class="btn btn-secondary btn-sm" onclick ="send();">저장</button>
       <button type="button" th:attr="onclick=|location.href='./ist_all?scon_no=${scon_no}'|" class="btn btn-secondary btn-sm">목록</button>
     </div>
  

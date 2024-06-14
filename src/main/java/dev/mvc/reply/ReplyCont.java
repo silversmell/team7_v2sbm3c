@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import dev.mvc.account.AccountProcInter;
+import dev.mvc.re_comment.Re_commentProcInter;
 import jakarta.servlet.http.HttpSession;
 
 
@@ -31,6 +32,10 @@ public class ReplyCont {
   @Autowired
   @Qualifier("dev.mvc.reply.ReplyProc")
   private ReplyProcInter replyProc;
+  
+  @Autowired
+  @Qualifier("dev.mvc.re_comment.Re_commentProc")
+  private Re_commentProcInter re_commentProc;
   
   //댓글 등록은 부모글 조회에서 진행하므로 구현 안함.
   
@@ -89,7 +94,6 @@ public class ReplyCont {
 	  row.put("acc_no", share_commentVO.getacc_no());
 	  row.put("scmt_comment", share_commentVO.getScmt_comment());
 	  row.put("scmt_date",share_commentVO.getScmt_no());
-	  
 	  JSONObject json = new JSONObject();
 	  json.put("res",row);
 	  
@@ -125,11 +129,15 @@ public class ReplyCont {
 	  if((int)session.getAttribute("acc_no")==share_commentVO.getacc_no()) {
 		 System.out.println("acc_no가 같음");
 		  JSONObject json = new JSONObject();
-		  System.out.println("scmt_no의 번호: " +share_commentVO.getScmt_no() );
+		  System.out.println("scmt_no의 번호: " +share_commentVO.getScmt_no());
+		 int cnt1 = this.re_commentProc.scmtno_delete(share_commentVO.getScmt_no());
+		 if(cnt1>0) {
+			 System.out.println("대댓글 삭제 성공");
+		 }
 		  int cnt = this.replyProc.delete_scmtno(share_commentVO.getScmt_no());
-//		  if(cnt>0) {
-//			  System.out.println("삭제 성공");
-//		  }
+		  if(cnt>0) {
+			  System.out.println("삭제 성공");
+		  }
 //		  int cnt1 =this.replyProc.like_delete(share_commentVO.getScmt_no());
 //		  if(cnt1>0) {
 //			  System.out.println("좋아요 삭제 성공");

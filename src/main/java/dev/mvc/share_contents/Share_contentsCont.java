@@ -29,6 +29,7 @@ import dev.mvc.account.AccountProcInter;
 import dev.mvc.account.AccountVO;
 import dev.mvc.category.CategoryProcInter;
 import dev.mvc.category.CategoryVO;
+import dev.mvc.re_comment.Re_commentProcInter;
 import dev.mvc.recommend.HashtagVO;
 import dev.mvc.share_contents.Contents;
 import dev.mvc.share_contentsdto.Contents_tagVO;
@@ -44,6 +45,10 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/scontents") // http://localhost:9093/scontents/list_by_search?cate_no=1
 @Controller
 public class Share_contentsCont {
+	
+	  @Autowired
+	  @Qualifier("dev.mvc.re_comment.Re_commentProc")
+	  private Re_commentProcInter re_commentProc;
 	
 	@Autowired
 	@Qualifier("dev.mvc.account.AccountProc")
@@ -90,7 +95,6 @@ public class Share_contentsCont {
 		map.put("acc_no", (int)session.getAttribute("acc_no"));
 		map.put("scon_no", scon_no);
 		if(this.sconProc.mark_check(map).size()>0) { //회원에 따라 마크 다르게 보이게 하기
-			System.out.println("");
 			scontentsVO.setMark("Y");
 		}else {
 			scontentsVO.setMark("N");
@@ -150,7 +154,7 @@ public class Share_contentsCont {
 	public String up_priority(@PathVariable("scon_no") Integer scon_no, int cate_no, RedirectAttributes ra,HttpSession session) {
 		
 		if(this.accountProc.isMember(session)) {
-			System.out.println("up_priority");
+			//System.out.println("up_priority");
 		JSONObject obj = new JSONObject();
 		this.sconProc.up_priority(scon_no);
 		int cnt = this.sconProc.y_mark(scon_no);
@@ -303,7 +307,11 @@ public class Share_contentsCont {
 		int cnt = 0;
 		if(this.accountProc.isMemberAdmin(session)) {
 		List<Integer> sconNoList = (List<Integer>) scon_no.get("scon_no");
-
+		
+		int re_comment = this.re_commentProc.sconno_delete(sconNoList);
+		if(re_comment>0) {
+			System.out.println("대댓글 삭제 성공");
+		}
 		int image =this.sconProc.sdelete_image(sconNoList);
 //		if(image>0) {
 //			System.out.println("이미지 삭제 성공");
