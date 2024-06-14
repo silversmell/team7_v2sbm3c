@@ -367,50 +367,50 @@
             <div style="width: 100%; word-break: break-all;">
               <div style='margin: 0px auto; width: 80%;'>
               <br>
-                 <div style="display:flex; align-items: center; flex-direction:row; justify-content: space-between;">
-                   <div style="float:left;">
-                    <span th:text="${qna_contentsVO.qcon_name}" style="font-size:2em;font-weight: bold;"></span>
-                    작성자: <span style="font-size: normal; " th:text="${user_name}"></span>
+                 <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px;">
+                  
+                  <div style="flex: 1; text-align: left;">
+                    <span style="font-size: 1em;" th:text="|조회수 ${qna_contentsVO.qcon_views}|"></span>
+                    <!-- 북마크 영역 -->
+                    북마크 <span style="font-size: normal; margin-left: 3px;" th:text="${mark_cnt}"></span>
+                    <span th:if="${qna_contentsVO.qcon_bookmark == 'N'}">
+                      <img src="/css/images/bookmark_off.png" id="bookmark_img" class="icon" alt="북마크" onclick="bookmarked()"
+                        style="width: 24px; height: 24px;">
+                    </span>
+                    <span th:unless="${qna_contentsVO.qcon_bookmark == 'N'}">
+                      <img src="/css/images/bookmark_on.png" id="bookmark_img" class="icon" alt="북마크" onclick="bookmarked()"
+                        style="width: 24px; height: 24px;">
+                    </span>
+                  </div>
+                  
+                  <div style="flex: 2; text-align: center;">
+                    <span th:text="${qna_contentsVO.qcon_name}" style="font-size: 2em; font-weight: bold;"></span>
+                  </div>
+                  
+                  <div style="flex: 1; text-align: right;">
+                    작성자: <span style="font-size: normal;" th:text="${user_name}"></span>
                     작성일: <span style="font-size: normal;" th:text="${qna_contentsVO.qcon_date}"></span>
-                   </div>
-                    
-                    <div style="float:right;">
-                      <span style="font-size: 1em;" th:text="|조회수 ${qna_contentsVO.qcon_views}|"></span>
-                      <!-- 북마크 영역 -->
-                      북마크 <span style="font-size: normal; margin-left:3px;" th:text="${mark_cnt}"></span>
-                      <span th:if="${qna_contentsVO.qcon_bookmark == 'N'}">
-                        <img src="/css/images/bookmark_off.png" id="bookmark_img" class="icon" alt="북마크" onclick="bookmarked()"
-                          style="width:24px; height: 24px;">
-                      </span>
-                      <span th:unless="${qna_contentsVO.qcon_bookmark == 'N'}">
-                        <img src="/css/images/bookmark_on.png" id="bookmark_img" class="icon" alt="북마크" onclick="bookmarked()"
-                          style="width:24px; height: 24px;">
-                      </span>
-                    </div>
-                 </div>
-              </div>
-              <hr size="8;" style="margin-top:1px; margin-bottom:1px;">
-             
-               <div style="margin-left: auto; margin-right:86px;">
-                
+                  </div>
+                </div>
 
-               </div>
+               <hr size="9" style="margin-top: 0px; margin-bottom:1px;">
+              </div>
              
-              <div class="fotorama" data-autoplay="5000" data-nav="thumbs" data-ratio="800/520" style='display: flex; justify-content: center; align-items: center; width: 100%;'>
+              <div class="fotorama" data-autoplay="5000" data-nav="thumbs" data-ratio="800/520" style='display: flex; justify-content: center; align-items: center; width: 100%; margin-top: 30px;'>
                 <img th:src="@{|/qcontents/storage/${image.file_upload_name}|}" th:each="image : ${qna_imageVO}"
                   th:if="${image.file_origin_name.endsWith('jpg') or image.file_origin_name.endsWith('png') or image.file_origin_name.endsWith('gif')}">
               </div>
               <br>
               
               <div th:if="${qna_imageVO != null and qna_imageVO.size() > 0}"
-                style='display: flex; justify-content: center; align-items: center; width: 55%; margin-top: 10px;'>
-                <span style="font-size: 1.5em; font-weight: normal;" th:text="${qna_contentsVO.qcon_contents}"></span><br>
+                style='margin: 0px auto; width: 80%;'>
+                <span style="font-size: 1.5em; font-weight: normal; text-align: left;" th:text="${qna_contentsVO.qcon_contents}"></span><br>
                 <div style="white-space: pre-wrap;"></div>
               </div>
               
               <div th:if="${qna_imageVO == null or qna_imageVO.size() == 0}"
-                style='display: flex; justify-content: left; align-items: center; width: 50%;'>
-                <span style="font-size: 1.5em; font-weight: normal;" th:text="${qna_contentsVO.qcon_contents}"></span><br>
+                style='margin: 0px auto; width: 80%;'>
+                <span style="font-size: 1.5em; font-weight: normal; text-align: left;" th:text="${qna_contentsVO.qcon_contents}"></span><br>
                 <div style="white-space: pre-wrap;"></div>
               </div>
               
