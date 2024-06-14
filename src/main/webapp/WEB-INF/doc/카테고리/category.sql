@@ -69,7 +69,7 @@ commit;
 rollback;
 -- 삭제 처리
 DELETE FROM category
-WHERE cate_no = 1;
+WHERE cate_no = 5;
 
 
 -- 전체 조회

@@ -38,10 +38,10 @@
 	<insert id="create" parameterType="dev.mvc.account.AccountVO">
 		<selectKey keyProperty="acc_no" resultType="int" order="AFTER">
 			SELECT ACCOUNT_SEQ.currval AS acc_no FROM dual
-		</selectKey>
-		INSERT INTO ACCOUNT(acc_no, acc_id, acc_pw, acc_name, acc_date, acc_grade)
-		VALUES(ACCOUNT_SEQ.nextval, #{acc_id}, #{acc_pw}, #{acc_name}, sysdate, 15)
-	</insert>
+		</selectKey> INSERT
+		INTO ACCOUNT(acc_no, acc_id, acc_pw, acc_name, acc_date, acc_grade)
+		VALUES(ACCOUNT_SEQ.nextval, #{acc_id}, #{acc_pw}, #{acc_name}, sysdate,
+		15) </insert>
 
 	<!-- 추천 데이터(해시태그) 저장 -->
 	<insert id="insertRecommend" parameterType="dev.mvc.recommend.RecommendVO">
@@ -87,24 +87,30 @@
 	<!-- 회원 로그 기록 -->
 	<insert id="recordLog" parameterType="dev.mvc.account.AccLogVO">
 		INSERT INTO ACC_LOG(acc_log_no, acc_no, acc_log_ip, acc_log_time)
-		VALUES(ACC_LOG_SEQ.nextval, #{acc_no}, #{acc_log_ip}, TO_CHAR(sysdate, 'YYYY/MM/DD HH24:MI:SS'))
+		VALUES(ACC_LOG_SEQ.nextval, #{acc_no}, #{acc_log_ip}, TO_CHAR(sysdate,
+		'YYYY/MM/DD HH24:MI:SS'))
 	</insert>
 
-	<!-- 회원 로그 전체 조회(100건) -->
-	<!-- 
-	<select id="logList" resultType="">
-		SELECT l.acc_log_no, a.acc_id, l.acc_log_ip, l.acc_log_time
+	<!-- 회원 로그 전체 조회 -->
+	<select id="logList" resultMap="logListResultMap">
+		SELECT l.acc_log_no, a.acc_no, a.acc_id, l.acc_log_ip, l.acc_log_time
 		FROM acc_log l
 		INNER JOIN account a ON a.acc_no = l.acc_no
-		WHERE ROWNUM&lt;=100
+		ORDER BY l.acc_log_time
 	</select>
-	-->
 	
-	<select id="logList" resultType="dev.mvc.account.AccLogVO">
-		SELECT acc_log_no, acc_no, acc_log_ip, acc_log_time
-		FROM acc_log
-		WHERE ROWNUM&lt;=100
-	</select>
+	<resultMap id="logListResultMap" type="map">
+		<association property="account" javaType="dev.mvc.account.AccountVO">
+			<id column="acc_no" property="acc_no" />
+			<result column="acc_id" property="acc_id" />
+		</association>
+		<association property="accLog" javaType="dev.mvc.account.AccLogVO">
+			<id column="acc_log_no" property="acc_log_no" />
+			<result column="acc_no" property="acc_no" />
+			<result column="acc_log_ip" property="acc_log_ip" />
+			<result column="acc_log_time" property="acc_log_time" />
+		</association>
+	</resultMap>
 	
 	<!-- 선택된 해시태그 조회(회원 정보 조회) -->
 	<select id="selectedTags" resultType="String" parameterType="int">
@@ -163,19 +169,23 @@
 	</delete>
 
 	<!-- 회원 탈퇴(사용자, 마이페이지) -->
-	
-	
+
+
 	<!-- 내가 쓴 게시글 목록 -->
-	<select id="myContents" resultType="dev.mvc.share_contentsdto.Share_contentsVO" parameterType="int">
+	<select id="myContents"
+		resultType="dev.mvc.share_contentsdto.Share_contentsVO"
+		parameterType="int">
 		SELECT scon_no, scon_title, scon_contents, scon_date
 		FROM share_contents
 		WHERE acc_no = #{acc_no}
 		ORDER BY scon_date ASC
 	</select>
-	
+
 	<!-- 게시글 사진 가져오기 -->
-	<select id="contentImages" resultType="dev.mvc.share_contentsdto.Share_imageVO" parameterType="int">
-		SELECT file_no, scon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date
+	<select id="contentImages"
+		resultType="dev.mvc.share_contentsdto.Share_imageVO" parameterType="int">
+		SELECT file_no, scon_no, file_origin_name, file_upload_name,
+		file_thumb_name, file_size, file_date
 		FROM share_image
 		WHERE scon_no = #{scon_no}
 		ORDER BY file_no ASC

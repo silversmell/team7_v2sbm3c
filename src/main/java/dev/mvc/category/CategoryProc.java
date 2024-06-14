@@ -189,6 +189,13 @@ public class CategoryProc implements CategoryProcInter {
     return cnt;
   }
   
+  @Override
+  public String cate_name(int cate_no) {
+    String cate_name = this.categoryDAO.cate_name(cate_no);
+    
+    return cate_name;
+  }
+  
 
   
   /** 

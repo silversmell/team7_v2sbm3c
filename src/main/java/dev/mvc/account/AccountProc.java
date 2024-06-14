@@ -3,6 +3,7 @@ package dev.mvc.account;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -98,8 +99,8 @@ public class AccountProc implements AccountProcInter {
 	}
 	
 	@Override
-	public ArrayList<AccLogVO> logList() {
-		ArrayList<AccLogVO> list = this.accountDAO.logList();
+	public ArrayList<Map<String, Object>> logList() {
+		ArrayList<Map<String, Object>> list = this.accountDAO.logList();
 		return list;
 	}
 	
@@ -189,7 +190,5 @@ public class AccountProc implements AccountProcInter {
 		ArrayList<Share_imageVO> images = this.accountDAO.contentImages(scon_no);
 		return images;
 	}
-	
 
-	
 }

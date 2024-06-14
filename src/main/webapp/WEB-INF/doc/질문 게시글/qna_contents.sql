@@ -65,7 +65,7 @@ WHERE qcon_no=2;
 
 -- 해당 컨텐츠 삭제
 DELETE FROM qna_contents
-WHERE qcon_no=1;
+WHERE qcon_no=5;
 
 -- 해당 카테고리 글 수정
 UPDATE qna_contents

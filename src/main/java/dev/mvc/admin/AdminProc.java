@@ -1,11 +1,12 @@
 package dev.mvc.admin;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import dev.mvc.account.AccountVO;
 import dev.mvc.tool.Security;
 
 @Component("dev.mvc.admin.AdminProc")
@@ -37,7 +38,7 @@ public class AdminProc implements AdminProcInter {
 		int cnt = this.adminDAO.checkEmail(adm_email);
 		return cnt;
 	}
-	
+
 	@Override
 	public int create(AdminVO adminVO) {
 		/* 비밀번호 암호화 */
@@ -46,7 +47,7 @@ public class AdminProc implements AdminProcInter {
 		int cnt = this.adminDAO.create(adminVO);
 		return cnt;
 	}
-	
+
 	@Override
 	public AdminVO readById(String adm_id) {
 		AdminVO adminVO = this.adminDAO.readById(adm_id);
@@ -60,10 +61,15 @@ public class AdminProc implements AdminProcInter {
 	}
 
 	@Override
-	public int recordLog(AdmLogVO admLogVO) {
-		int cnt = this.adminDAO.recordLog(admLogVO);
+	public int recordLog(AdminLogVO adminLogVO) {
+		int cnt = this.adminDAO.recordLog(adminLogVO);
 		return cnt;
 	}
 
+	@Override
+	public ArrayList<Map<String, Object>> logList() {
+		 ArrayList<Map<String, Object>> list = this.adminDAO.logList();
+		return list;
+	}
 
 }

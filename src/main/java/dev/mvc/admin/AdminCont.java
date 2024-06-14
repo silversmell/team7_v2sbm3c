@@ -1,5 +1,6 @@
 package dev.mvc.admin;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -279,7 +280,7 @@ public class AdminCont {
 	 * @return
 	 */
 	@GetMapping(value = "/login")
-	public String login_form(Model model, HttpServletRequest request, AdmLogVO admLogVO, String url)  {
+	public String login_form(Model model, HttpServletRequest request, AdminLogVO adminLogVO, String url)  {
 
 		/* Cookie */
 		Cookie[] cookies = request.getCookies();
@@ -317,7 +318,7 @@ public class AdminCont {
 	 */
 	@PostMapping(value = "/login")
 	public String login_proc(HttpSession session, HttpServletRequest request, HttpServletResponse response, Model model,
-			AdmLogVO admLogVO, String url, String adm_id, String adm_pw,
+			AdminLogVO adminLogVO, String url, String adm_id, String adm_pw,
 			@RequestParam(value = "id_save", defaultValue = "") String id_save) {
 		String ip = request.getRemoteAddr(); // IP
 		System.out.println("---> 접속한 IP: " + ip);
@@ -372,9 +373,9 @@ public class AdminCont {
 			}
 
 			/* 관리자 로그 저장 */
-			admLogVO.setAdm_no(adminVO.getAdm_no());
-			admLogVO.setAdm_log_ip(ip);
-			int log_cnt = this.adminProc.recordLog(admLogVO);
+			adminLogVO.setAdm_no(adminVO.getAdm_no());
+			adminLogVO.setAdm_log_ip(ip);
+			int log_cnt = this.adminProc.recordLog(adminLogVO);
 			System.out.println("---> admin Record_log_cnt: " + log_cnt);
 
 			/* Cookie - adm_id 관련 쿠키 저장 */
@@ -390,6 +391,31 @@ public class AdminCont {
 			return "admin/msg";
 		}
 
+	}
+	
+	/**
+	 * 관리자 전체 로그 조회
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@GetMapping(value = "/log_list")
+	public String log_list(Model model) {
+		ArrayList<Map<String, Object>> logs = this.adminProc.logList();
+		
+		/*
+		for (Map<String, Object> log : logs) {
+			AdminVO admin = (AdminVO) log.get("admin");
+			AdminLogVO adminLog = (AdminLogVO) log.get("adminLog");
+			
+	        System.out.println("Admin adm_id: " + admin.getAdm_id());
+	        System.out.println("Log adm_log_ip: " + adminLog.getAdm_log_ip());
+		}
+		*/
+		
+		model.addAttribute("logs", logs);
+		
+		return "admin/log_list";
 	}
 
 	/**

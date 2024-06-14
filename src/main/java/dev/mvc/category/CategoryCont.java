@@ -57,10 +57,6 @@ public class CategoryCont {
                                       @RequestParam(name="cate_no", defaultValue = "0") int cate_no,
                                       @RequestParam(name="now_page", defaultValue="1") int now_page) {
     
-//      // 카테고리 가져오기
-//      CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
-//      model.addAttribute("categoryVO", categoryVO);
-    
     
       word = Tool.checkNull(word).trim();
       System.out.println("--> word: " + word);
@@ -435,6 +431,25 @@ public class CategoryCont {
     
     return "redirect:/category/cate_list_search?word=" + Tool.encode(word); // /templates/category/cate_list_search
   }
+  
+  /**
+   * 카테고리명
+   * @param model
+   * @param cate_no
+   * @return
+   */
+  @GetMapping(value="/cate_name")
+  public String cate_name(Model model, 
+                          @PathVariable("cate_no") Integer cate_no) {
+    
+    String cate_name = this.categoryProc.cate_name(cate_no); // 카테고리 번호로부터 카테고리 이름 조회
+    
+    model.addAttribute("cate_name", cate_name); // 모델에 cate_name 추가
+    model.addAttribute("categoryVO", new CategoryVO()); // categoryVO 객체 생성하여 모델에 추가 (빈 객체일 경우)
+
+    return "category/cate_delete"; // 카테고리 이름을 출력할 Thymeleaf 템플릿 경로
+  }
+
 
 
 }

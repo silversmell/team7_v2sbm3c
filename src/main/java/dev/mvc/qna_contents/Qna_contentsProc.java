@@ -305,6 +305,13 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
     
     return list;
   }
+  
+  @Override
+  public List<Qna_Acc_commentVO> asc_list_by_qcmt_no_join_500(int qcon_no) {
+    List<Qna_Acc_commentVO> list = this.qna_contentsDAO.asc_list_by_qcmt_no_join_500(qcon_no);
+    
+    return list;
+  }
 
   @Override
   public Qna_commentVO qna_read_comment(int qcmt_no) {
@@ -388,6 +395,13 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
     int cnt = this.qna_contentsDAO.bookmark_n(map);
     
     return cnt;
+  }
+
+  @Override
+  public String user_name(HashMap<String, Object> map) {
+    String user_name = this.qna_contentsDAO.user_name(map);
+    
+    return user_name;
   }
   
 

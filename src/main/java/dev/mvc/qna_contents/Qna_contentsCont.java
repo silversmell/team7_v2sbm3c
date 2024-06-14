@@ -310,59 +310,66 @@ public class Qna_contentsCont {
                               @RequestParam(name = "qcon_no") int qcon_no,
                               @RequestParam(name = "now_page") int now_page) {
 
-    // 세션에서 사용자 정보 가져오기
-    Integer acc_no = (Integer) session.getAttribute("acc_no");
+    if (this.accountProc.isMember(session)) {
+   // 세션에서 사용자 정보 가져오기
+      Integer acc_no = (Integer) session.getAttribute("acc_no");
 
-    // 계정 번호 출력
-    // System.out.println("-> acc_no: " + acc_no);
+      // 계정 번호 출력
+      // System.out.println("-> acc_no: " + acc_no);
 
-    // 카테고리 가져오기
-    CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
-    model.addAttribute("categoryVO", categoryVO);
+      // 카테고리 가져오기
+      CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
+      model.addAttribute("categoryVO", categoryVO);
 
-    // 질문 내용 가져오기
-    Qna_contentsVO qna_contentsVO = this.qna_contentsProc.qna_read(qcon_no);
-    model.addAttribute("qna_contentsVO", qna_contentsVO);
+      // 질문 내용 가져오기
+      Qna_contentsVO qna_contentsVO = this.qna_contentsProc.qna_read(qcon_no);
+      model.addAttribute("qna_contentsVO", qna_contentsVO);
 
-    // 질문 이미지 가져오기
-    ArrayList<Qna_imageVO> qna_imageVO = this.qna_contentsProc.qna_read_image(qcon_no);
-    model.addAttribute("qna_imageVO", qna_imageVO);
-
-    // 북마크 관련 코드 (로그인된 경우에만 실행)
-    if (acc_no != null) {
+      // 질문 이미지 가져오기
+      ArrayList<Qna_imageVO> qna_imageVO = this.qna_contentsProc.qna_read_image(qcon_no);
+      model.addAttribute("qna_imageVO", qna_imageVO);
+      
+      // 댓글 수 가져오기
+      int comment_cnt = this.qna_contentsProc.qna_search_count_comment(qcon_no);
+      model.addAttribute("comment_cnt", comment_cnt);
+      
+      // 북마크 수 가져오기 (로그인 여부와 상관없이)
       int mark_cnt = this.qna_contentsProc.bookmark_count(qcon_no);
       model.addAttribute("mark_cnt", mark_cnt);
 
+      // 북마크 관련 코드 (로그인된 경우에만 실행)
       HashMap<String, Object> map = new HashMap<String, Object>();
       map.put("qcon_no", qcon_no);
       map.put("acc_no", acc_no);
 
       // 질문글 북마크 되어있는지 확인
       if (this.qna_contentsProc.is_bookmarked(map).size() > 0) { // 북마크 된 경우
-        System.out.println("-> 북마크 공개 모드");
+        // System.out.println("-> 북마크 공개 모드");
         qna_contentsVO.setQcon_bookmark("Y");
       } else { // 북마크 안된 경우
-        System.out.println("-> 북마크 비공개 모드");
+        // System.out.println("-> 북마크 비공개 모드");
         qna_contentsVO.setQcon_bookmark("N");
       }
+      
+      // 질문글 작성자
+      String user_name = this.qna_contentsProc.user_name(map);
       
       // 조회수 업데이트
       this.qna_contentsProc.qna_update_view(qcon_no);
 
-      // 댓글 수 가져오기
-      int comment_cnt = this.qna_contentsProc.qna_search_count_comment(qcon_no);
-      model.addAttribute("comment_cnt", comment_cnt);
+      // 모델에 필요한 정보 추가
+      model.addAttribute("acc_id", session.getAttribute("acc_id"));
+      model.addAttribute("acc_no", acc_no);
+      model.addAttribute("cate_no", cate_no);
+      model.addAttribute("qcon_no", qcon_no);
+      model.addAttribute("now_page", now_page);
+      model.addAttribute("user_name", user_name);
 
+      return "qcontents/qna_read";
+    } else {
+      return "redirect:/account/login";
     }
-
-    // 모델에 필요한 정보 추가
-    model.addAttribute("acc_id", session.getAttribute("acc_id"));
-    model.addAttribute("acc_no", acc_no);
-    model.addAttribute("cate_no", cate_no);
-    model.addAttribute("qcon_no", qcon_no);
-    model.addAttribute("now_page", now_page);
-
-    return "qcontents/qna_read";
+    
   }
 
   
@@ -654,16 +661,16 @@ public class Qna_contentsCont {
 	  if(cnt_image>0) {
 		  System.out.println("이미지 삭제 성공");
 	  }
-
+	  
+    int cnt_comments = this.qna_contentsProc.all_qna_delete_comment(qcon_no);
+    if (cnt_comments > 0) {
+      System.out.println("댓글 삭제 성공");
+    }
+	  
 	  int cnt_contents = this.qna_contentsProc.qna_delete(qcon_no); //글삭제
 	  if(cnt_contents>0) {
 		  System.out.println("글 삭제 성공");
 		  this.categoryProc.cnt_minus(qna_contentsVO.getCate_no()); // 관련 글 수 감소
-	  }
-	  
-	  int cnt_comments = this.qna_contentsProc.all_qna_delete_comment(qcon_no);
-	  if(cnt_comments>0) {
-	    System.out.println("댓글 삭제 성공");
 	  }
 	  
 	  ra.addAttribute("cate_no",cate_no);
@@ -698,7 +705,7 @@ public class Qna_contentsCont {
   }
   
   /**
-   * 질문글 댓글 목록
+   * 질문글 댓글 목록 최신순
    * @param qconno
    * @return
    */
@@ -706,6 +713,22 @@ public class Qna_contentsCont {
   @ResponseBody
   public String list_by_qcmt_no_join(int qcon_no) {
     List<Qna_Acc_commentVO> list = qna_contentsProc.list_by_qcmt_no_join_500(qcon_no);
+    
+    JSONObject obj = new JSONObject();
+    obj.put("res", list);
+
+    return obj.toString();
+  }
+  
+  /**
+   * 질문글 댓글 목록 작성순
+   * @param qconno
+   * @return
+   */
+  @GetMapping(value="/asc_list_by_qcmt_no_join")
+  @ResponseBody
+  public String asc_list_by_qcmt_no_join(int qcon_no) {
+    List<Qna_Acc_commentVO> list = qna_contentsProc.asc_list_by_qcmt_no_join_500(qcon_no);
     
     JSONObject obj = new JSONObject();
     obj.put("res", list);

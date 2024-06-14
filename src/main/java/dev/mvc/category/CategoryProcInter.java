@@ -124,7 +124,12 @@ public interface CategoryProcInter {
     */
    public int cnt_minus(int cate_no);
   
-  
+   /**
+    * 카테고리 번호와 일치하는 카테고리명
+    * @param cate_no
+    * @return
+    */
+   public String cate_name(int cate_no);
   
   /** 
    * SPAN태그를 이용한 박스 모델의 지원, 1 페이지부터 시작 

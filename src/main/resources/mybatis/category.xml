@@ -131,7 +131,12 @@
     SET cate_cnt = cate_cnt - 1
     WHERE cate_no = #{cate_no}
   </update>
-    
-
-                
+  
+  <!-- 카테고리 번호와 일치하는 카테고리명 -->
+  <select id="cate_name" resultType="string" parameterType="int">
+    SELECT cate_name
+    FROM category
+    WHERE cate_no = #{cate_no}
+  </select>
+  
 </mapper>

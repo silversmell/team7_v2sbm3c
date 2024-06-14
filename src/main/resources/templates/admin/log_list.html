@@ -26,18 +26,18 @@
 
 		<tr>
 			<th class='th_bs'>로그 번호</th>
-			<th class='th_bs'>회원 번호</th>
-			<th class='th_bs'>회원 아이디</th>
+			<th class='th_bs'>관리자 번호</th>
+			<th class='th_bs'>관리자 아이디</th>
 			<th class='th_bs'>접속 아이피</th>
 			<th class='th_bs'>접속 시간</th>
 		</tr>
 		
 		<tr th:each="log : ${logs}">
-		    <td class='td_left' th:text="${log.accLog.acc_log_no}"></td>
-		    <td class='td_left' th:text="${log.account.acc_no}"></td>
-			<td class='td_left'><a th:href="@{|./read?acc_no=${log.account.acc_no}|}" th:text="${log.account.acc_id}"></a></td>
-		    <td class='td_left' th:text="${log.accLog.acc_log_ip}"></td>
-		    <td class='td_basic' th:text="${log.accLog.acc_log_time}"></td>
+		    <td class='td_left' th:text="${log.adminLog.adm_log_no}"></td>
+		    <td class='td_left' th:text="${log.admin.adm_no}"></td>
+			<td class='td_left'><a th:href="@{|#|}" th:text="${log.admin.adm_id}"></a></td>
+		    <td class='td_left' th:text="${log.adminLog.adm_log_ip}"></td>
+		    <td class='td_basic' th:text="${log.adminLog.adm_log_time}"></td>
 		</tr>
 
 	</table>

@@ -16,6 +16,7 @@
       let btn_create_tag = document.getElementById('btn_create'); // 등록
       let btn_add_tag = document.getElementById('btn_add'); // 더보기
       let reply_list_tag = document.getElementById('reply_list'); // 목록 출력 panel
+      let no_comments_msg_tag = document.getElementById('no_comments_msg'); // 등록된 댓글이 없는 경우 메시지
 
       let btn_save_tag = document.getElementById("btn_save"); // 수정 저장
       let qcmt_no_tag = document.getElementById("qcmt_no"); // 수정할 레코드 번호
@@ -29,7 +30,7 @@
       qcmt_contents_tag.addEventListener('click', () => {
         let acc_id = '[[${session.acc_id}]]'; //  javascript -> Thymeleaf -> session
         if (acc_id == '') {
-          alert('로그인해야 댓글을 입력 할 수 있습니다.');
+          alert('로그인해야 댓글을 작성할 수 있습니다.');
           location.href = "/account/login?url=/qcontents/qna_read?qcon_no=[[${qna_contentsVO.qcon_no}]]%26word=[[${word}]]%26now_page=[[${now_page}]]";
         } else {
           // alert('로그인 됨');
@@ -37,22 +38,32 @@
         }
       });
 
+      // 초기 페이지 로드 시 댓글 데이터가 없으면 메시지를 표시
+      if (!reply_data || reply_data.length === 0) {
+        no_comments_msg_tag.style.display = 'block';
+      }
+      
+      // 댓글 등록 이벤트 리스너
       btn_create_tag.addEventListener('click', () => {
         let qcmt_contents = qcmt_contents_tag.value.trim();
 
         if (qcmt_contents.length == 0) {
-          alert('내용이 없습니다. 내용을 입력해주세요.');
+          alert('댓글을 입력하세요.');
         } else {
           fetch("/qcontents/qna_create_comment", {
-            "method": "post",
-            "headers": {"Content-Type": "application/json"},
+            method: "post",
+            headers: {"Content-Type": "application/json"},
             body: JSON.stringify({"qcon_no": "[[${qna_contentsVO.qcon_no}]]", "qcmt_contents": qcmt_contents})
           })
-            .then((response) => response.json())
-            .then((data) => {
-              list_by_qcmt_no_join(); // 목록 출력
-              qcmt_contents_tag.value = '';
-              qcmt_contents_tag.focus();
+            .then(response => response.json())
+            .then(data => {
+              let sortOption = document.getElementById('latestLink').style.textDecoration === 'underline' ? 'latest' : 'asc';
+              if (sortOption === 'latest') {
+                list_by_qcmt_no_join(); // 최신순으로 댓글 목록 갱신
+              } else {
+                asc_list_by_qcmt_no_join(); // 작성순으로 댓글 목록 갱신
+              }
+              qcmt_contents_tag.value = ''; // 댓글 입력 필드 초기화
             });
         }
       });
@@ -125,48 +136,75 @@
         }
       });
 
+      underline('latest'); // 댓글 출력 밑줄 초기화
       list_by_qcmt_no_join(); // 목록 출력
     }
-    
 
-    // 목록 출력
+    // 최신순 목록 출력
     // 5건 미만이면 5회 미만 순환, 5건 이상 5회 순환
-    function list_by_qcmt_no_join() { // 목록 출력
-      let cnt = 0; // 출력 순환 횟수  
-
+    function list_by_qcmt_no_join() {
       fetch("/qcontents/list_by_qcmt_no_join?qcon_no=[[${qna_contentsVO.qcon_no}]]", {
         "method": "get"
       })
         .then((response) => response.json())
         .then((data) => {
           reply_data = data['res'];
-
-          if (reply_data.length > 5) {
-            cnt = 5;
-          } else {
-            cnt = reply_data.length;
-          }
-
-          let msg = '';
-          for (let i = 0; i < cnt; i++) {
-            // let row = data['res'][i];
-            let row = reply_data[i];
-            msg += "<div id='" + row.qcmt_no + "' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px;'>";
-            msg += "<span style='font-weight: bold;'>" + row.acc_id + "</span>";
-            msg += "  " + row.qcmt_date;
-
-            if ('[[${session.acc_no}]]' == row.acc_no) { // 글쓴이 일치여부 확인, 본인의 글만 삭제 가능함 ★
-              msg += " <a href='javascript:qna_update_comment(" + row.qcmt_no + ")'><img src='/reply/images/update.png' style='width: 16px;'></a>";
-              msg += " <a href='javascript:qna_delete_comment(" + row.qcmt_no + ")'><img src='/reply/images/delete.png' style='width: 16px;'></a>";
-            }
-            msg += "  " + "<br>";
-            msg += row.qcmt_contents;
-            msg += "</div>";
-          }
-
-          document.getElementById("reply_list").innerHTML = msg;
+          renderComments();
         });
     }
+
+    // 작성순 목록 출력
+    // 5건 미만이면 5회 미만 순환, 5건 이상 5회 순환
+    function asc_list_by_qcmt_no_join() {
+      fetch("/qcontents/asc_list_by_qcmt_no_join?qcon_no=[[${qna_contentsVO.qcon_no}]]", {
+        "method": "get"
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          reply_data = data['res'];
+          renderComments();
+        });
+    }
+
+    // 댓글 목록 출력 함수
+    function renderComments() {
+      let msg = '';
+      let cnt = Math.min(reply_data.length, reply_now_page * 5);
+
+      for (let i = 0; i < cnt; i++) {
+        let row = reply_data[i];
+        msg += "<div id='" + row.qcmt_no + "' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px;'>";
+        msg += "<span style='font-weight: bold;'>" + row.acc_id + "</span>";
+        msg += "  " + row.qcmt_date;
+
+        if ('[[${session.acc_no}]]' == row.acc_no) {
+          msg += " <a href='javascript:qna_update_comment(" + row.qcmt_no + ")'><img src='/reply/images/update.png' style='width: 16px;'></a>";
+          msg += " <a href='javascript:qna_delete_comment(" + row.qcmt_no + ")'><img src='/reply/images/delete.png' style='width: 16px;'></a>";
+        }
+        msg += "  " + "<br>";
+        msg += row.qcmt_contents;
+        msg += "</div>";
+      }
+
+      document.getElementById("reply_list").innerHTML = msg;
+    }
+
+   // 최신순/작성순 클릭에 따라 밑줄 토글 함수
+  function underline(option) {
+    let latestLink = document.getElementById('latestLink');
+    let oldestLink = document.getElementById('oldestLink');
+
+    latestLink.style.textDecoration = 'none';
+    oldestLink.style.textDecoration = 'none';
+
+    if (option === 'latest') {
+      latestLink.style.textDecoration = 'underline';
+      list_by_qcmt_no_join(); // 최신순으로 댓글 목록 갱신
+    } else if (option === 'oldest') {
+      oldestLink.style.textDecoration = 'underline';
+      asc_list_by_qcmt_no_join(); // 작성순으로 댓글 목록 갱신
+    }
+  }
 
     // 수정 폼 
     function qna_update_comment(qcmt_no) {
@@ -244,8 +282,9 @@
       }
     }
     
+    // 북마크
     function bookmarked() {
-      console.log("북마크 클릭함.");
+      // console.log("북마크 클릭함.");
 
       let qcon_no = document.getElementById("qcon_no").value;
       let cate_no = 2;
@@ -279,10 +318,10 @@
           if (data.cnt > 0) {
             if (bookmark_img_tag.endsWith("bookmark_off.png")) {
               document.getElementById("bookmark_img").src = "/css/images/bookmark_on.png";
-              alert("북마크를 등록하였습니다.");
+              alert("북마크 추가되었습니다.");
             } else {
               document.getElementById("bookmark_img").src = "/css/images/bookmark_off.png";
-              alert("북마크를 삭제하였습니다.");
+              alert("북마크 취소하였습니다.");
             }
           }
         })
@@ -290,19 +329,16 @@
           console.error("Error:", error);
         });
     }
-
-  
+    
+    
   </script>
 </head>
 
+
 <div layout:fragment="content">
-  <div class='title_line' style="border-color: rgb(0, 0, 128);">
+  <div class='title_line'>
     <span th:text="${qna_contentsVO.qcon_name}" class="title_line_text"></span> > 글 조회
   </div>
-  
-  <aside class="aside_left">
-    <span style="font-size: 1em;" th:text="${qna_contentsVO.qcon_date}"></span>
-  </aside>
   
   <aside class="aside_right">
     <a th:href="@{|/qcontents/qna_create?cate_no=2|}">등록</a>
@@ -313,7 +349,7 @@
     <span class='menu_divide'>│</span>
     <a th:href="@{|/qcontents/qna_delete?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}&cate_no=2|}">삭제</a> 
     <span class='menu_divide'>│</span>
-    <a th:href="@{|/qcontents/qna_list_all?cate_no=2&now_page=${now_page}|}">목록</a>   
+    <a th:href="@{|/qcontents/qna_list_all?cate_no=2&now_page=${now_page}|}">돌아가기</a>   
     <span class='menu_divide'>│</span>
     <a href="javascript:location.reload();">새로고침</a>
   </aside>
@@ -329,64 +365,109 @@
         <ul>
           <li class="li_none">
             <div style="width: 100%; word-break: break-all;">
-              <span style="font-size: 1.5em; font-weight: bold;" th:text="${qna_contentsVO.qcon_name}"></span>
-              <span style="font-size: 1em;" th:text="|조회수: ${qna_contentsVO.qcon_views}|"></span>
-              <span style="font-size: 1em;" th:text="|댓글수: ${comment_cnt}|"></span>
-              
-              <span th:if="${qna_contentsVO.qcon_bookmark == 'N'}">
-                <img src="/css/images/bookmark_off.png" id="bookmark_img" class="icon" alt="북마크" onclick="bookmarked()"
-                  style="width:24px; height: 24px;">
-              </span>
-              <span th:unless="${qna_contentsVO.qcon_bookmark == 'N'}">
-                <img src="/css/images/bookmark_on.png" id="bookmark_img" class="icon" alt="북마크" onclick="bookmarked()"
-                  style="width:24px; height: 24px;">
-               </span>
-              <br><br>
-              
-              <div class="fotorama" data-autoplay="5000" data-nav="thumbs" data-ratio="800/520" style="margin: 0px auto; width: 100%;">
+              <div style='margin: 0px auto; width: 80%;'>
+              <br>
+                 <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px;">
+                  
+                  <div style="flex: 1; text-align: left;">
+                    <span style="font-size: 1em;" th:text="|조회수 ${qna_contentsVO.qcon_views}|"></span>
+                    <!-- 북마크 영역 -->
+                    북마크 <span style="font-size: normal; margin-left: 3px;" th:text="${mark_cnt}"></span>
+                    <span th:if="${qna_contentsVO.qcon_bookmark == 'N'}">
+                      <img src="/css/images/bookmark_off.png" id="bookmark_img" class="icon" alt="북마크" onclick="bookmarked()"
+                        style="width: 24px; height: 24px;">
+                    </span>
+                    <span th:unless="${qna_contentsVO.qcon_bookmark == 'N'}">
+                      <img src="/css/images/bookmark_on.png" id="bookmark_img" class="icon" alt="북마크" onclick="bookmarked()"
+                        style="width: 24px; height: 24px;">
+                    </span>
+                  </div>
+                  
+                  <div style="flex: 2; text-align: center;">
+                    <span th:text="${qna_contentsVO.qcon_name}" style="font-size: 2em; font-weight: bold;"></span>
+                  </div>
+                  
+                  <div style="flex: 1; text-align: right;">
+                    작성자: <span style="font-size: normal;" th:text="${user_name}"></span>
+                    작성일: <span style="font-size: normal;" th:text="${qna_contentsVO.qcon_date}"></span>
+                  </div>
+                </div>
+
+               <hr size="9" style="margin-top: 0px; margin-bottom:1px;">
+              </div>
+             
+              <div class="fotorama" data-autoplay="5000" data-nav="thumbs" data-ratio="800/520" style='display: flex; justify-content: center; align-items: center; width: 100%; margin-top: 30px;'>
                 <img th:src="@{|/qcontents/storage/${image.file_upload_name}|}" th:each="image : ${qna_imageVO}"
                   th:if="${image.file_origin_name.endsWith('jpg') or image.file_origin_name.endsWith('png') or image.file_origin_name.endsWith('gif')}">
               </div>
+              <br>
               
-  
-              <div style="white-space: pre-wrap;"><span th:text="${qna_contentsVO.qcon_contents}"></span></div>
-            </div>
-          </li>
-          
-          <li class="li_none" th:each="image : ${qna_imageVO}" th:if="${image.file_size > 0}">
-            <div>
-              첨부 파일: <a th:href="@{|/download?dir=/contents/storage&filename=${image.file_upload_name}&downname=${image.file_origin_name}|}" th:text="|${image.file_origin_name}|"></a>
-            </div>
-          </li>
-          
-          <li class="li_none">
-          <!-- ------------------------------ 댓글 영역 시작 ------------------------------ -->
-            <div style='width: 100%; margin: 0px auto; clear: both;'>
-                <form name='frm_reply' id='frm_reply'> 
+              <div th:if="${qna_imageVO != null and qna_imageVO.size() > 0}"
+                style='margin: 0px auto; width: 80%;'>
+                <span style="font-size: 1.5em; font-weight: normal; text-align: left;" th:text="${qna_contentsVO.qcon_contents}"></span><br>
+                <div style="white-space: pre-wrap;"></div>
+              </div>
+              
+              <div th:if="${qna_imageVO == null or qna_imageVO.size() == 0}"
+                style='margin: 0px auto; width: 80%;'>
+                <span style="font-size: 1.5em; font-weight: normal; text-align: left;" th:text="${qna_contentsVO.qcon_contents}"></span><br>
+                <div style="white-space: pre-wrap;"></div>
+              </div>
+              
+              
+              <li th:if="${qna_imageVO != null and qna_imageVO.size() > 0}" class="li_none"
+                style="text-align:center; margin-top:30px;">
+                파일 다운로드 ▼
+                <div th:each="image : ${qna_imageVO}"><br/>
+                  첨부 파일: <a
+                    th:href="@{|/download?dir=/contents/storage&filename=${image.file_upload_name}&downname=${image.file_origin_name}|}"
+                    th:text="|${image.file_origin_name}|"></a>
+                </div>
+              </li>
+              <li th:if="${qna_imageVO == null or qna_imageVO.size() == 0}" class="li_none"
+                style="text-align:center; margin-top:30px;">
+                
+              </li>
+              <br><br>
+              
+              <div style='width: 80%; margin: 0px auto; clear:both; text-align:center;'>
+                <div style="float:left;">
+                  댓글 <span style="font-size: normal; margin-left:3px;" th:text="${comment_cnt}"></span>
+                  &nbsp;<a href="#" id="latestLink" onclick="list_by_qcmt_no_join(); underline('latest')")>최신순</a>
+                  &nbsp;<a href="#" id="oldestLink" onclick="asc_list_by_qcmt_no_join(); underline('oldest')">작성순</a>
+                </div><br>
+                <hr>
+                <form name='frm_reply' id='frm_reply'> 
                     <input type='hidden' name='acc_no' id='acc_no' value=''>
                     <input type='hidden' name='qcmt_no' id='qcmt_no' value=''>
-          
-                    <textarea name='qcmt_contents' id='qcmt_contents' class="form-control" style='width: 100%; height: 60px;' 
-                                   placeholder="댓글 작성, 로그인해야 등록 할 수 있습니다." autofocus='autofocus'></textarea>
+            
+                    <textarea name="qcmt_contents" id="qcmt_contents" class="form-control" style="width: 100%; height: 60px;"
+                      th:attr="placeholder=${loggedIn} ? '댓글 입력해주세요.' : '로그인해야 댓글을 작성할 수 있습니다.'" autofocus="autofocus"></textarea>
+
                    <div style='text-align: center;'> 
-                     <button type='button' id='btn_create'>&nbsp;&nbsp;등&nbsp;&nbsp;록&nbsp;&nbsp;</button>
-                     <button type='button' id='btn_save' style='display: none;'>&nbsp;&nbsp;저&nbsp;&nbsp;장&nbsp;&nbsp;</button>
-                     <button type='button' id='btn_delete' style='display: none;'>&nbsp;&nbsp;삭&nbsp;&nbsp;제&nbsp;&nbsp;</button>
-                     <button type='button' id='btn_cancel' style='display: none;'>&nbsp;&nbsp;취&nbsp;&nbsp;소&nbsp;&nbsp;</button>
+                     <button type='button' id='btn_create'>&nbsp;등&nbsp;&nbsp;록&nbsp;</button>
+                     <button type='button' id='btn_save' style='display: none;'>&nbsp;저&nbsp;&nbsp;장&nbsp;</button>
+                     <button type='button' id='btn_delete' style='display: none;'>&nbsp;삭&nbsp;&nbsp;제&nbsp;</button>
+                     <button type='button' id='btn_cancel' style='display: none;'>&nbsp;취&nbsp;&nbsp;소&nbsp;</button>
                    </div>               
                 </form>
-                <div id='reply_list' data-replypage='1'>  <!-- 목록 -->
-                  등록된 댓글이 없습니다.
+
+
+                <div id='reply_list' data-replypage='1'>  <!-- 목록 -->
+                  <!-- 등록된 댓글이 없는 경우 -->
+                  <div id="no_comments_msg" style="display: none; color: #777; text-align: center; margin-top: 10px;">
+                    등록된 댓글이 없습니다.
+                  </div>
                 </div>
-                <div id='reply_list_btn' style='border: none'>
-                    <button type='button' id='btn_add' style='width: 100%;'>더보기 ▽</button>
-                </div>  
-              
-            </div>
-            <!-- ------------------------------ 댓글 영역 종료 ------------------------------  -->
-          </li>   
-             
+                <div id='reply_list_btn' style='border: none'>
+                  <button type='button' id='btn_add' style='width: 100%;'>더보기 ▽</button>
+                </div>
+              </div>
+            </div>
+          </li>
+          
         </ul>
+        <br>
       </fieldset>
     </form>
 
