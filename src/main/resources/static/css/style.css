@@ -91,21 +91,6 @@
     margin: 10px auto;
 }
 
-/* 배경 색 */
-div {
-  
-}
-/* 테이블 스타일 */
-table {
-    width: 100%;
-    border-collapse: collapse; /* 경계선이 겹치지 않도록 설정 */
-    margin: 10px auto;
-}
-
-/* 테이블 경계선 */
-table, th, td {
-    border: 1px solid rgb(0, 0, 0); /* 경계선 색상 */
-}
 
 
   /* 화면 내용 하단 메뉴 우측 배치 */
@@ -244,7 +229,7 @@ table, th, td {
   }
 
   .title_line_text {
-  	font-size: 20px;
+  	font-size: 28px;
   }
 
   .title_link:link {
@@ -778,4 +763,101 @@ tr:nth-child(even) {
     border: 1px solid #ddd;
     border-radius: 5px;
   }
+  
+.aside_right {
+    text-align: right;
+    margin-bottom: 20px;
+}
+
+.aside_right a {
+    text-decoration: none;
+    color: rgb(64, 0, 64);
+    margin: 0 5px;
+}
+
+.title_line {
+  text-align: center;
+  font-size: 2em;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.aside_right {
+  text-align: right;
+  margin-bottom: 20px;
+}
+
+.aside_right a {
+  text-decoration: none;
+  color: #007bff;
+  margin: 0 5px;
+}
+
+.menu_line {
+  border-top: 1px solid #ddd;
+  margin: 20px 0;
+}
+
+.table-centered {
+  width: 90%;
+  margin: 0 auto;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 15px;
+  border: 1px solid #ddd;
+}
+
+.table th {
+  background-color: #f1f1f1;
+}
+
+.td_basic {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.content-wrapper {
+  margin-bottom: 20px;
+  margin-top: 10px;
+}
+
+.content-title {
+  font-weight: bold;
+}
+
+.content-stats {
+  text-align: right;
+  margin-right: 10px;
+}
+
+.no-data {
+  text-align: center;
+}
+
+.col-20 {
+  width: 20%;
+}
+
+.col-80 {
+  width: 80%;
+}
+
+.thumbnail {
+  width: 120px;
+  height: 90px;
+}
+
+.thumbnail-placeholder {
+  width: 120px;
+  height: 90px;
+  background-color: #f0f0f0;
+}
+
+
+
+  
+  
   

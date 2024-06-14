@@ -237,64 +237,71 @@ public class Qna_contentsCont {
    * @param now_page
    * @return
    */
-  @GetMapping(value="/qna_list_all")
-  public String list_by_qna_search_paging(Model model, HttpSession session, int cate_no, 
-                                                    @RequestParam(name="word", defaultValue = "") String word,
-                                                    @RequestParam(name="now_page", defaultValue = "1") int now_page) {
-    
+  @GetMapping(value = "/qna_list_all")
+  public String list_by_qna_search_paging(Model model, HttpSession session, int cate_no,
+                                                    @RequestParam(name = "word", defaultValue = "") String word,
+                                                    @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
+
     // 카테고리 가져오기
     CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
     model.addAttribute("categoryVO", categoryVO);
-    
+
     word = Tool.checkNull(word).trim();
-    
+
     HashMap<String, Object> map = new HashMap<>();
     map.put("cate_no", cate_no);
     map.put("word", word);
     map.put("now_page", now_page);
-    
+
     ArrayList<Qna_contentsVO> list = this.qna_contentsProc.list_by_qna_search_paging(map);
     model.addAttribute("list", list);
-    
-    ArrayList<Qna_imageVO> qna_imageVO = this.qna_contentsProc.qna_list_all_image();
-    // 각 질문글에 대한 이미지 중 첫 번째 이미지만 선택
-    ArrayList<Qna_imageVO> filterImage = new ArrayList<>();
+
+    // 이미지 리스트 가져오기
+    ArrayList<Qna_imageVO> allImages = this.qna_contentsProc.qna_list_all_image();
+
+    // 각 질문글에 대한 첫 번째 이미지를 매핑
+    HashMap<Integer, Qna_imageVO> imageMap = new HashMap<>();
+    for (Qna_imageVO image : allImages) {
+      if (!imageMap.containsKey(image.getQcon_no())) {
+        imageMap.put(image.getQcon_no(), image);
+      }
+    }
+
+    // 필터링된 이미지 리스트
+    ArrayList<Qna_imageVO> filteredImages = new ArrayList<>();
     for (Qna_contentsVO qnaContents : list) {
-        int qconNo = qnaContents.getQcon_no();
-        for (Qna_imageVO image : qna_imageVO) {
-            if (image.getQcon_no() == qconNo) {
-                filterImage.add(image);
-                break; // 하나의 이미지만 추가하기 위해 반복문 탈출
-            }
-        }
-    }   
-    model.addAttribute("qna_imageVO", filterImage);
-    
+      if (imageMap.containsKey(qnaContents.getQcon_no())) {
+        filteredImages.add(imageMap.get(qnaContents.getQcon_no()));
+      } else {
+        filteredImages.add(null); // 이미지가 없는 경우
+      }
+    }
+
+    model.addAttribute("qna_imageVO", filteredImages);
     model.addAttribute("word", word);
-    
+
     // 페이징
     int search_count = this.qna_contentsProc.list_by_qna_search_count(map);
-    String paging = this.qna_contentsProc.pagingBox(cate_no, now_page, word, "/qcontents/qna_list_all", 
-        search_count, Qcontents.RECORD_PER_PAGE, Qcontents.PAGE_PER_BLOCK);
+    String paging = this.qna_contentsProc.pagingBox(cate_no, now_page, word, "/qcontents/qna_list_all", search_count,
+        Qcontents.RECORD_PER_PAGE, Qcontents.PAGE_PER_BLOCK);
     model.addAttribute("paging", paging);
     model.addAttribute("now_page", now_page);
     model.addAttribute("search_count", search_count);
-    model.addAttribute("cate_no", cate_no);
-    model.addAttribute("qna_imageVO", qna_imageVO);
-    
+
     // 일련 변호 생성: 레코드 갯수 - ((현재 페이지수 -1) * 페이지당 레코드 수)
     int no = search_count - ((now_page - 1) * Qcontents.RECORD_PER_PAGE);
     model.addAttribute("no", no);
-    
+
     // 댓글 수 조회 및 저장
     for (Qna_contentsVO qna_contentsVO : list) {
-        int qcon_no = qna_contentsVO.getQcon_no();
-        int comment_cnt = this.qna_contentsProc.qna_search_count_comment(qcon_no);
-        qna_contentsVO.setQcon_comment(comment_cnt);
+      int qcon_no = qna_contentsVO.getQcon_no();
+      int comment_cnt = this.qna_contentsProc.qna_search_count_comment(qcon_no);
+      qna_contentsVO.setQcon_comment(comment_cnt);
     }
     
     return "qcontents/list_by_qna_search_paging"; // /templates/qcontents/list_by_qna_search_paging.html
   }
+
   
   /**
    * 질문글 조회
