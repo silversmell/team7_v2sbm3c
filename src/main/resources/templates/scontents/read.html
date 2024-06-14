@@ -175,8 +175,9 @@
     	             msg += " " + "<br>";
     	             msg += row.scmt_comment;
     	             msg += "</div>";
-
+    	             msg += "<div id='recomment_area_" + row.scmt_no + "' style='display: none; margin-left: 20px;'></div>";
     		   }
+    		   
 
     		   document.getElementById("reply_list").innerHTML = msg;
     	   });
@@ -291,6 +292,9 @@
  			///////대댓글
        ///대댓글 목록
        function recomment_read_form(scmt_no,acc_no){
+    	   let areaId = "recomment_area_" + scmt_no;
+    	    let area = document.getElementById(areaId);
+    	   
  				let count_cnt="";
     	   fetch("/recomment/read?scmt_no=" + scmt_no,{
     		   "method":"GET",
@@ -321,8 +325,12 @@
 	             msg += "</div>";
 	             msg += "</div>";
     		   }
-    		   document.getElementById("re_comment_read").innerHTML = msg;
     		   //document.getElementById("reply_list").innerHTML += msg;
+    		   document.getElementById("re_comment_read").innerHTML = msg;
+    		   let a = document.getElementById("recomment_area_" + scmt_no);
+    		   a.innerHTML += "<div>"+msg+"</div>";
+    		   document.getElementById("recomment_area_"+scmt_no).style.display='block';
+    		   
     		   recomment_create_form(scmt_no,acc_no)
     	   });
     	   //console.log(scmt_no);
@@ -424,11 +432,11 @@
     		   console.log(data['acc_id']);
     		   //msg += "<input type='text' value='" + data['acc_id'] + "'></input>";
     		   if (typeof data['acc_id'] !== 'undefined') {
-    			   msg += "<input type='text' value='" + data['acc_id'] + "'></input>";
+    			   msg += "<div value='" + data['acc_id'] + "'>"+data['acc_id']+"</div>"
     			   msg += "<textarea name='recomment_comment' class='form-control' id='recomment_comment' style='width: 100%; height: 60px;' autofocus='autofocus'></textarea>";
     			} else {
-    				msg += "<input type='text' value='" + data['acc_id'] + "'></input>";
-    				msg += "<textarea name='recomment_comment' class='form-control' id='recomment_comment' style='width: 100%; height: 60px;' autofocus='autofocus'></textarea>";
+    				msg += "<div value='" + data['acc_id'] + "'>"+data['acc_id']+"</div>"
+    					msg += "<textarea name='recomment_comment' class='form-control' id='recomment_comment' style='width: 100%; height: 60px;' autofocus='autofocus' ></textarea>";
     				return false;
     			}
     	   	//msg += "<textarea name='recomment_comment' class='form-control' id='recomment_comment' style='width: 100%; height: 60px;' autofocus='autofocus'>@" +data['acc_id'] + "</textarea>";
@@ -454,13 +462,13 @@
 				    			"method":"post",
 				    			"headers": {"Content-Type": "application/json"},
 				    			body:JSON.stringify({"scon_no":"[[${scontentsVO.scon_no}]]",
-				    																	"re_comment":content, 
+				    																	"re_comment":"@" +data['acc_id']+" "+content, 
 				    																	"scmt_no":scmt_no, 
 				    																	"acc_no": '[[${session.acc_no}]]'})
 				    		})
 				    		.then((response) => response.json())
 				    		.then((data)=>{
-				    			//comment_tag.value="";
+				    			comment_tag.value="";
 				    			//console.log(data['cnt']);
 				    			recomment_read_form(scmt_no); //대댓글 읽어오기
 				    		})
