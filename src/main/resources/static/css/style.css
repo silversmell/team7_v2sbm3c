@@ -746,12 +746,12 @@ tr:nth-child(even) {
   border-radius: 1px;
 	
 }
-	.horizontal-container{
-		display: flex;
-		flex-direction: row; /* 수평 방향으로 요소 배치 */
-		align-items:center;
-		gap: 10px;
-	}
+.horizontal-container{
+	display: flex;
+	flex-direction: row; /* 수평 방향으로 요소 배치 */
+	align-items:center;
+	gap: 10px;
+}
   
-  
+
   
