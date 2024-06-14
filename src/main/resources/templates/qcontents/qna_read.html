@@ -127,9 +127,8 @@
 
       list_by_qcmt_no_join(); // 목록 출력
     }
-    
 
-    // 목록 출력
+    // 최신순 목록 출력
     // 5건 미만이면 5회 미만 순환, 5건 이상 5회 순환
     function list_by_qcmt_no_join() { // 목록 출력
       let cnt = 0; // 출력 순환 횟수  
@@ -167,6 +166,36 @@
           document.getElementById("reply_list").innerHTML = msg;
         });
     }
+    
+    // 작성순 목록 호출
+    // 5건 미만이면 5회 미만 순환, 5건 이상 5회 순환
+    function asc_list_by_qcmt_no_join() {
+      let qcon_no = document.getElementById('qcon_no').value;
+
+      fetch("/qcontents/asc_list_by_qcmt_no_join?qcon_no=" + qcon_no, {
+        "method": "get"
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          let msg = '';
+          for (let i = 0; i < data['res'].length; i++) {
+            let row = data['res'][i];
+            msg += "<div id='" + row.qcmt_no + "' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px;'>";
+            msg += "<span style='font-weight: bold;'>" + row.acc_id + "</span>";
+            msg += "  " + row.qcmt_date;
+
+            if ('[[${session.acc_no}]]' == row.acc_no) {
+              msg += " <a href='javascript:qna_update_comment(" + row.qcmt_no + ")'><img src='/reply/images/update.png' style='width: 16px;'></a>";
+              msg += " <a href='javascript:qna_delete_comment(" + row.qcmt_no + ")'><img src='/reply/images/delete.png' style='width: 16px;'></a>";
+            }
+            msg += "  " + "<br>";
+            msg += row.qcmt_contents;
+            msg += "</div>";
+          }
+
+          document.getElementById("reply_list").innerHTML = msg;
+        });
+      }
 
     // 수정 폼 
     function qna_update_comment(qcmt_no) {
@@ -244,6 +273,7 @@
       }
     }
     
+    // 북마크
     function bookmarked() {
       console.log("북마크 클릭함.");
 
@@ -336,8 +366,9 @@
                    </div>
                     
                     <div style="float:right;">
-                      <span style="font-size: 1em;" th:text="|조회수: ${qna_contentsVO.qcon_views}|"></span>
+                      <span style="font-size: 1em;" th:text="|조회수 ${qna_contentsVO.qcon_views}|"></span>
                       <!-- 북마크 영역 -->
+                      북마크 <span style="font-size: normal; margin-left:3px;" th:text="${mark_cnt}"></span>
                       <span th:if="${qna_contentsVO.qcon_bookmark == 'N'}">
                         <img src="/css/images/bookmark_off.png" id="bookmark_img" class="icon" alt="북마크" onclick="bookmarked()"
                           style="width:24px; height: 24px;">
@@ -346,7 +377,6 @@
                         <img src="/css/images/bookmark_on.png" id="bookmark_img" class="icon" alt="북마크" onclick="bookmarked()"
                           style="width:24px; height: 24px;">
                       </span>
-                      <span style="font-size: normal; margin-left:3px;" th:text="${mark_cnt}"></span>
                     </div>
                  </div>
               </div>
@@ -392,14 +422,18 @@
               <br><br>
               
               <div style='width: 80%; margin: 0px auto; clear:both; text-align:center;'>
-                <div style="float:left;">댓글 수 <span style="font-size: normal; margin-left:3px;" th:text="${comment_cnt}"></span></div><br>
+                <div style="float:left;">
+                  댓글 <span style="font-size: normal; margin-left:3px;" th:text="${comment_cnt}"></span>
+                  <a href="#" onclick="list_by_qcmt_no_join()">최신순</a>
+                  <a href="#" onclick="asc_list_by_qcmt_no_join()">작성순</a>
+                </div><br>
                 <hr>
                 <form name='frm_reply' id='frm_reply'> 
                     <input type='hidden' name='acc_no' id='acc_no' value=''>
                     <input type='hidden' name='qcmt_no' id='qcmt_no' value=''>
           
                     <textarea name='qcmt_contents' id='qcmt_contents' class="form-control" style='width: 100%; height: 60px;' 
-                                   placeholder="댓글 작성, 로그인해야 등록 할 수 있습니다." autofocus='autofocus'></textarea>
+                                   placeholder="로그인해야 댓글을 작성할 수 있습니다." autofocus='autofocus'></textarea>
                    <div style='text-align: center;'> 
                      <button type='button' id='btn_create'>&nbsp;등&nbsp;&nbsp;록&nbsp;</button>
                      <button type='button' id='btn_save' style='display: none;'>&nbsp;저&nbsp;&nbsp;장&nbsp;</button>

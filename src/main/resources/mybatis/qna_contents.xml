@@ -222,6 +222,22 @@
     WHERE r &lt;= 500
   </select>
   
+  <!-- 최신 댓글 500건 -->
+  <select id="asc_list_by_qcmt_no_join_500"  resultType="dev.mvc.qna_contents.Qna_Acc_commentVO" parameterType="int">
+    SELECT acc_id, qcmt_no, qcon_no, acc_no, qcmt_contents, qcmt_date, r
+    FROM (
+          SELECT acc_id, qcmt_no, qcon_no, acc_no, qcmt_contents, qcmt_date, rownum as r
+          FROM (
+                SELECT  a.acc_id, 
+                         q.qcmt_no, q.qcon_no, q.acc_no, q.qcmt_contents, q.qcmt_date
+                FROM account a, qna_comment q      
+                WHERE (a.acc_no = q.acc_no) AND q.qcon_no=#{qcon_no}
+                ORDER BY q.qcmt_no ASC
+          )
+    )
+    WHERE r &lt;= 500
+  </select>
+  
   <!-- 특정 글에 따른 댓글 -->
   <select id="qna_read_comment" resultType="dev.mvc.qna_contents.Qna_commentVO" parameterType="int">
     SELECT qcmt_no, qcon_no, acc_no, qcmt_contents, qcmt_date

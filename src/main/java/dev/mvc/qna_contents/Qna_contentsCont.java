@@ -370,7 +370,6 @@ public class Qna_contentsCont {
       return "redirect:/account/login";
     }
     
-    
   }
 
   
@@ -706,7 +705,7 @@ public class Qna_contentsCont {
   }
   
   /**
-   * 질문글 댓글 목록
+   * 질문글 댓글 목록 최신순
    * @param qconno
    * @return
    */
@@ -714,6 +713,22 @@ public class Qna_contentsCont {
   @ResponseBody
   public String list_by_qcmt_no_join(int qcon_no) {
     List<Qna_Acc_commentVO> list = qna_contentsProc.list_by_qcmt_no_join_500(qcon_no);
+    
+    JSONObject obj = new JSONObject();
+    obj.put("res", list);
+
+    return obj.toString();
+  }
+  
+  /**
+   * 질문글 댓글 목록 작성순
+   * @param qconno
+   * @return
+   */
+  @GetMapping(value="/asc_list_by_qcmt_no_join")
+  @ResponseBody
+  public String asc_list_by_qcmt_no_join(int qcon_no) {
+    List<Qna_Acc_commentVO> list = qna_contentsProc.asc_list_by_qcmt_no_join_500(qcon_no);
     
     JSONObject obj = new JSONObject();
     obj.put("res", list);

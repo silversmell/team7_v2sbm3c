@@ -305,6 +305,13 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
     
     return list;
   }
+  
+  @Override
+  public List<Qna_Acc_commentVO> asc_list_by_qcmt_no_join_500(int qcon_no) {
+    List<Qna_Acc_commentVO> list = this.qna_contentsDAO.asc_list_by_qcmt_no_join_500(qcon_no);
+    
+    return list;
+  }
 
   @Override
   public Qna_commentVO qna_read_comment(int qcmt_no) {
