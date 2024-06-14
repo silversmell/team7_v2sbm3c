@@ -228,9 +228,7 @@
   	font-size: 20px;
   }
 
-  .title_line_text {
-  	font-size: 28px;
-  }
+
 
   .title_link:link {
   	/* 방문전 상태 */
@@ -775,13 +773,6 @@ tr:nth-child(even) {
     margin: 0 5px;
 }
 
-.title_line {
-  text-align: center;
-  font-size: 2em;
-  font-weight: bold;
-  margin-bottom: 20px;
-}
-
 .aside_right {
   text-align: right;
   margin-bottom: 20px;
@@ -846,14 +837,14 @@ tr:nth-child(even) {
 }
 
 .thumbnail {
-  width: 120px;
-  height: 90px;
+  width: 100%;
+  height: 80%;
 }
 
 .thumbnail-placeholder {
   width: 120px;
   height: 90px;
-  background-color: #f0f0f0;
+  background-color: transparent;
 }
 
 
