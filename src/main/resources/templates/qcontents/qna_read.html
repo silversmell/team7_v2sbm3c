@@ -310,9 +310,6 @@
       }
       fetch(url, {
         method: "GET",
-        headers: {
-          "Content-Type": "application/json"
-        }
       })
         .then(response => response.json())
         .then(data => {
@@ -320,10 +317,10 @@
           if (data.cnt > 0) {
             if (bookmark_img_tag.endsWith("bookmark_off.png")) {
               document.getElementById("bookmark_img").src = "/css/images/bookmark_on.png";
-              alert("북마크 추가되었습니다.");
+              alert("북마크 성공하셨어요!");
             } else {
               document.getElementById("bookmark_img").src = "/css/images/bookmark_off.png";
-              alert("북마크 취소하였습니다.");
+              alert("북마크 취소하셨어요!");
             }
           }
         })
@@ -331,7 +328,6 @@
           console.error("Error:", error);
         });
     }
-    
     
   </script>
 </head>
