@@ -403,6 +403,34 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
     
     return user_name;
   }
+
+  @Override
+  public int delete_qconno(List<Integer> qcon_no) {
+    int cnt = this.qna_contentsDAO.delete_qconno(qcon_no);
+    
+    return cnt;
+  }
+
+  @Override
+  public int delete_qconno_image(List<Integer> qcon_no) {
+    int cnt = this.qna_contentsDAO.delete_qconno_image(qcon_no);
+    
+    return cnt;
+  }
+
+  @Override
+  public int delete_qconno_bookmark(List<Integer> qcon_no) {
+    int cnt = this.qna_contentsDAO.delete_qconno_bookmark(qcon_no);
+    
+    return cnt;
+  }
+
+  @Override
+  public int delete_qconno_comment(List<Integer> qcon_no) {
+    int cnt = this.qna_contentsDAO.delete_qconno_comment(qcon_no);
+    
+    return cnt;
+  }
   
 
   

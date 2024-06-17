@@ -267,4 +267,32 @@ public interface Qna_contentsDAOInter {
    */
   public String user_name(HashMap<String, Object> map);
   
+  /**
+   * qcon_no에 따른 선택 삭제
+   * @param qcon_no
+   * @return
+   */
+  public int delete_qconno(List<Integer> qcon_no);
+  
+  /**
+   * qcon_no에 따른 선택 이미지 삭제
+   * @param qcon_no
+   * @return
+   */
+  public int delete_qconno_image(List<Integer> qcon_no);
+  
+  /**
+   * qcon_no에 따른 선택 북마크 삭제
+   * @param qcon_no
+   * @return
+   */
+  public int delete_qconno_bookmark(List<Integer> qcon_no);
+   
+  /**
+   * qcon_no에 따른 선택 댓글 삭제
+   * @param qcon_no
+   * @return
+   */
+  public int delete_qconno_comment(List<Integer> qcon_no);
+  
 }

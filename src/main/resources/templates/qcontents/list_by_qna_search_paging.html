@@ -4,64 +4,60 @@
  <link rel="stylesheet" href="styles.css">
  
 <script>
-  function whole_delete(){
+  function whole_delete() {
     let checkboxes = document.querySelectorAll('Input[name="qcon_no"]');
     let allchecked = true;
-    
-    checkboxes.forEach(checkbox =>{
-      if(!checkbox.checked){
+
+    checkboxes.forEach(checkbox => {
+      if (!checkbox.checked) {
         allchecked = false;
         return;
       }
     });
-    
-    checkboxes.forEach(checkbox =>{
+
+    checkboxes.forEach(checkbox => {
       checkbox.checked = !allchecked;
     });
   }
+
+
+  function select_delete() {
+    let checkboxes = document.querySelectorAll('input[name="qcon_no"]:checked');
+    let qcon_nos = [];
+    checkboxes.forEach((checkbox) => {
+      qcon_nos.push(parseInt(checkbox.value));  // 값은 문자열이므로 숫자로 변환
+    });
   
-    function select_delete(){
-     let checkboxes = document.querySelectorAll('input[name="qcon_no"]:checked');
-     let qcon_nonos=[];
-     checkboxes.forEach((checkboxes) =>{
-       qcon_nonos.push(checkboxes.value);
-     });
-     
-
-      for(let i = 0;i<qcon_nonos.length;i++){
-        console.log(qcon_nonos[i]);
-      }
-        
-        let confirmation = confirm("삭제하시면 복구할 수 없습니다. 정말 삭제하시겠습니까?");
-        if(confirmation){
-        fetch('/qcontents/select_delete',{
-          method:'POST',
-          "headers":{"Content-Type":"application/json"},
-          body: JSON.stringify({"qcon_nonos": qcon_nonos,"cate_no":1})
-        
-        })
-        .then(response => response.json())
-        .then(rdata =>{
-         if(rdata.cnt==0){
-           alert("관리자 권한이 필요합니다.");
-           return;
-         }
-          if(rdata.cnt>0){
-            console.log('삭제성공');
-            window.location.reload();
+    for (let i = 0; i < qcon_nos.length; i++) {
+      console.log(qcon_nos[i]);
+    }
+  
+    let confirmation = confirm("삭제하시면 복구할 수 없습니다. 정말 삭제하시겠습니까?");
+    if (confirmation) {
+      fetch('/qcontents/qna_select_delete', {
+        method: 'POST',
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({"qcon_nos": qcon_nos, "cate_no": 2})
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.cnt == 0) {
+          alert("관리자 권한이 필요합니다.");
+          return;
         }
-          else { 
+        if (data.cnt > 0) {
+          console.log('삭제 성공');
+          window.location.reload();
+        } else {
           console.log('삭제 실패');
-          }
-       })
-        .catch(error => {
-          console.error('Error.' ,error);
-        })
-      }
-
-    
-        
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    }
   }
+
     
   </script>
 </head>

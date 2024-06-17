@@ -330,12 +330,48 @@
     WHERE acc_no=#{acc_no} AND qcon_no=#{qcon_no} 
   </update>
   
-  <!--  작성자  -->
+  <!-- 작성자 -->
   <select id="user_name" resultType="String" parameterType="HashMap">
     SELECT a.acc_id
     FROM account a, qna_contents q 
     WHERE a.acc_no=q.acc_no AND q.qcon_no=#{qcon_no}
   </select>
   
+  <!-- qcon_no에 따른 선택 삭제 -->
+  <delete id="delete_qconno" parameterType="list">
+    DELETE FROM qna_contents
+    WHERE qcon_no IN
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
+
+  <!-- qcon_no에 따른 이미지 삭제 -->
+  <delete id="delete_qconno_image" parameterType="list">
+    DELETE FROM qna_image
+    WHERE qcon_no IN
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
+
+  <!-- qcon_no에 따른 북마크 삭제 -->
+  <delete id="delete_qconno_bookmark" parameterType="list">
+    DELETE FROM qna_mark
+    WHERE qcon_no IN
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
+  
+  <!-- qcon_no에 따른 댓글 삭제 -->
+  <delete id="delete_qconno_comment" parameterType="list">
+    DELETE FROM qna_comment
+    WHERE qcon_no IN
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
+
 </mapper>
 
