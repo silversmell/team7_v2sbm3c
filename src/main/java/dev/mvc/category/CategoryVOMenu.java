@@ -1,5 +1,7 @@
 package dev.mvc.category;
 
+import java.util.ArrayList;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,5 +18,4 @@ public class CategoryVOMenu {
 
   /** 카테고리명 */
   private String cate_name;
-  
 }
