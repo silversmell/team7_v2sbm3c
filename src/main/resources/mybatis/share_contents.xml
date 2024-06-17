@@ -471,6 +471,14 @@
 		ORDER BY r ASC
 		)
 	</select>
+	
+	<select id = "read_img" resultType="dev.mvc.account.AccountVO" parameterType="int">
+		SELECT ac.acc_img,ac.acc_saved_img,ac.acc_thumb_img,acc_img_size,ac.acc_no,ac.acc_id,sc.scon_title
+		FROM share_contents sc INNER JOIN account ac
+		ON ac.acc_no = sc.acc_no
+		WHERE sc.scon_no=#{scon_no}
+		ORDER BY sc.scon_no desc
+	</select>
 
 </mapper>
 

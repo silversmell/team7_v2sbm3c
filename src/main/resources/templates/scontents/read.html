@@ -603,6 +603,9 @@
         </div>
         
         <div style="flex: 2; text-align: right;">
+                <img th:src="@{|/contents/storage/${img_acc.acc_thumb_img}|}"  style="width: 30px; height: 32px; border-radius: 50%;"
+                th:if="${img_acc.acc_saved_img.endsWith('jpg') or img_acc.acc_saved_img.endsWith('png') or img_acc.acc_saved_img.endsWith('gif')}">
+        
     		작성자: <span style="font-size: normal; " th:text="${writer}"></span>
     			작성일: <span style="font-size: normal;" th:text="${scontentsVO.scon_date}"></span>
 			</div>
@@ -614,7 +617,7 @@
         <img th:src="@{|/contents/storage/${share_imageVO.file_thumb_name}|}"  th:each="share_imageVO, status: ${share_imageVO}"
                 th:if="${share_imageVO.file_origin_name.endsWith('jpg') or share_imageVO.file_origin_name.endsWith('png') or share_imageVO.file_origin_name.endsWith('gif')}">
                 </div>
-    <br>
+    		<br>
     
 		<div class ="horizontal-container">
    		<tr th:each="item, status : ${list2}">

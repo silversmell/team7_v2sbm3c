@@ -99,6 +99,7 @@ public class Share_contentsCont {
 		}else {
 			scontentsVO.setMark("N");
 		}
+		
 		String writer = this.sconProc.writer(map);
 		model.addAttribute("writer",writer);
 		model.addAttribute("scontentsVO", scontentsVO);
@@ -123,6 +124,9 @@ public class Share_contentsCont {
 			}
 			model.addAttribute("url_list" + i, url_list.get(i).getUrl_link());
 		}
+		AccountVO img_acc = this.sconProc.read_img(scon_no);
+		model.addAttribute("img_acc",img_acc);
+		
 		ArrayList<Share_imageVO> share_imageVO = this.sconProc.read_image(scon_no);
 
 		model.addAttribute("share_imageVO", share_imageVO);
@@ -827,6 +831,7 @@ public class Share_contentsCont {
 		// cate_no를 가져오기 위한 카테고리 가져오기
 		CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
 		model.addAttribute("categoryVO", categoryVO);
+		
 
 		// System.out.println("-> categoryVO.cate_no :" +categoryVO.getCate_no());
 

@@ -7,6 +7,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import dev.mvc.account.AccountVO;
 import dev.mvc.bookmark.Share_markVO;
 import dev.mvc.recommend.HashtagVO;
 import dev.mvc.share_contents.Contents;
@@ -450,6 +451,12 @@ public class Share_contentsProc implements Share_contentsProcInter {
 	public int related_image_count() {
 		int cnt = this.scontentsDAO.related_image_count();
 		return cnt;
+	}
+
+	@Override
+	public AccountVO read_img(int scon_no) {
+		AccountVO accountVO = this.scontentsDAO.read_img(scon_no);
+		return accountVO;
 	}
 
 

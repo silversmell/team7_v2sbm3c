@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import dev.mvc.account.AccountVO;
 import dev.mvc.bookmark.Share_markVO;
 import dev.mvc.recommend.HashtagVO;
 import dev.mvc.share_contentsdto.Contents_tagVO;
@@ -376,6 +377,12 @@ public interface Share_contentsProcInter {
     * @return
     */
    public int related_image_count();
+   
+   /**
+    * 회원 이미지
+    * @return
+    */
+   public AccountVO read_img(int scon_no);
    
 
 
