@@ -17,14 +17,14 @@ public interface Re_commentDAOInter {
 	 * 대댓글 전체 조회
 	 * @return
 	 */
-	public ArrayList<Re_commentVO> read();
+	public ArrayList<Share_recommentVO> read();
 	
 	/**
 	 * 해당 게시글, 해당 댓글 조회
 	 * @param map
 	 * @return
 	 */
-	public ArrayList<Re_commentVO> read_recomment(HashMap<String,Object>map);
+	public ArrayList<Share_recommentVO> read_recomment(HashMap<String,Object>map);
 	
 	/**
 	 * scmt_no에 따른 대댓글 삭제
@@ -52,13 +52,13 @@ public interface Re_commentDAOInter {
 	 * @param recomment_no
 	 * @return
 	 */
-	public Re_commentVO read_comment(int recomment_no);
+	public Share_recommentVO read_comment(int srecmt_no);
 	
 	/**
 	 * 대댓글 삭제
 	 * @param recomment_no
 	 * @return
 	 */
-	public int delete(int recomment_no);
+	public int delete(int srecmt_no);
 
 }

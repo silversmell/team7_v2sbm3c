@@ -4,9 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class Re_commentVO {
+public class Share_recommentVO {
 	//대댓글 번호
-	private int recomment_no;
+	private int srecmt_no ;
 	
 	// 해당 댓글 번호
 	private int scmt_no;
@@ -14,16 +14,17 @@ public class Re_commentVO {
 	//해당 게시글 번호
 	private int scon_no;
 	
-	//대댓글 내용
-	private String re_comment;
-	
-	//대댓글 날짜
-	private String re_comment_date;
-	
 	//회원 번호
 	private int acc_no;
 	
 	//회원 아이디
 	private String acc_id;
+	
+	//대댓글 내용
+	private String srecmt_contents;
+	
+	//대댓글 날짜
+	private String srecmt_date;
+	
 
 }

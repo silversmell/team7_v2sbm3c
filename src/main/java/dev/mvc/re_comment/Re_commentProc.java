@@ -25,14 +25,14 @@ public class Re_commentProc implements Re_commentProcInter {
 	}
 
 	@Override
-	public ArrayList<Re_commentVO> read() {
-		ArrayList<Re_commentVO> list = this.re_commentDAO.read();
+	public ArrayList<Share_recommentVO> read() {
+		ArrayList<Share_recommentVO> list = this.re_commentDAO.read();
 		return list;
 	}
 
 	@Override
-	public ArrayList<Re_commentVO> read_recomment(HashMap<String, Object> map) {
-		ArrayList<Re_commentVO> list = this.re_commentDAO.read_recomment(map);
+	public ArrayList<Share_recommentVO> read_recomment(HashMap<String, Object> map) {
+		ArrayList<Share_recommentVO> list = this.re_commentDAO.read_recomment(map);
 		return list;
 	}
 
@@ -55,14 +55,14 @@ public class Re_commentProc implements Re_commentProcInter {
 	}
 
 	@Override
-	public Re_commentVO read_comment(int recomment_no) {
-		Re_commentVO re_commentVO = this.re_commentDAO.read_comment(recomment_no);
+	public Share_recommentVO read_comment(int srecmt_no) {
+		Share_recommentVO re_commentVO = this.re_commentDAO.read_comment(srecmt_no);
 		return re_commentVO;
 	}
 
 	@Override
-	public int delete(int recomment_no) {
-		int cnt = this.re_commentDAO.delete(recomment_no);
+	public int delete(int srecmt_no) {
+		int cnt = this.re_commentDAO.delete(srecmt_no);
 		return cnt;
 	}
 

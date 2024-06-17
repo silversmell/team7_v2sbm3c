@@ -5,30 +5,29 @@
 
 <!--  대댓글 작성 -->
 	<insert id="create" parameterType="HashMap">
-		INSERT INTO re_comment(recomment_no,scmt_no,scon_no,re_comment,acc_no,re_comment_date)
-		VALUES(re_comment_seq.nextval,#{scmt_no},#{scon_no},#{re_comment},#{acc_no},sysdate)
+		INSERT INTO share_recomment(srecmt_no,scmt_no,scon_no,srecmt_contents,acc_no,srecmt_date)
+		VALUES(share_recomment_seq.nextval,#{scmt_no},#{scon_no},#{srecmt_contents},#{acc_no},sysdate)
 	</insert>
-	
 	<!-- 모든 댓글 읽기 -->
-	<select id ="read" resultType="dev.mvc.re_comment.Re_commentVO">
-		SELECT recomment_no,scmt_no,scon_no,re_comment,acc_no,re_comment_date
-		FROM re_comment
+	<select id ="read" resultType="dev.mvc.re_comment.Share_recommentVO">
+		SELECT srecmt_no,scmt_no,scon_no,srecmt_contents,acc_no,srecmt_date
+		FROM share_recomment
 	</select>
 	
 	<!-- 해당 댓글에 대한 게시글 보기 -->
-	<select id ="read_recomment"  resultType="dev.mvc.re_comment.Re_commentVO" parameterType="HashMap">
-		SELECT rc.recomment_no,rc.scmt_no,rc.scon_no,rc.re_comment,ac.acc_no,rc.re_comment_date,ac.acc_id
-		FROM re_comment rc, account ac
+	<select id ="read_recomment"  resultType="dev.mvc.re_comment.Share_recommentVO" parameterType="HashMap">
+		SELECT rc.srecmt_no,rc.scmt_no,rc.scon_no,rc.srecmt_contents,ac.acc_no,rc.srecmt_date,ac.acc_id
+		FROM share_recomment rc, account ac
 		where rc.acc_no = ac.acc_no AND rc.scmt_no = #{scmt_no}
 	</select>
 	
 	<delete id = "scmtno_delete" parameterType="int">
-		delete from re_comment
+		delete from share_recomment
 		where scmt_no = #{scmt_no}
 	</delete>
 	
     <delete id="sconno_delete" parameterType="list">
-        delete from re_comment
+        delete from share_recomment
         where scon_no in
         <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
             #{item}
@@ -36,22 +35,21 @@
     </delete>
     
     <update id="update" parameterType="HashMap">
-	    update re_comment 
-			set re_comment = #{re_comment}
-			where recomment_no=#{recomment_no}
+	    update share_recomment
+			set srecmt_contents =#{srecmt_contents}
+			where srecmt_no=#{srecmt_no}
     </update>
     
-    <select id ="read_comment" parameterType="int" resultType="dev.mvc.re_comment.Re_commentVO" >
-    select recomment_no,scmt_no,scon_no,re_comment,re_comment_date
-		from re_comment
-		where recomment_no=#{recomment_no}
+    <select id ="read_comment" parameterType="int" resultType="dev.mvc.re_comment.Share_recommentVO" >
+    select srecmt_no,scmt_no,scon_no,srecmt_contents,srecmt_date
+		from share_recomment
+		where srecmt_no=#{srecmt_no}
     </select>
-    
-    <delete id="delete" parameterType="int">
-	    delete from re_comment
-			where recomment_no = #{recomment_no}
-    </delete>
-
+   
+   <delete id="delete" parameterType="int">
+    delete from share_recomment
+		where srecmt_no = #{srecmt_no}
+   </delete>
 
 </mapper>
 

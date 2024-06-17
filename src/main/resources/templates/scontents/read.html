@@ -309,19 +309,19 @@
     		   for(let i = 0;i<cnt;i++){
     			   let row = recomment_data[i];
     			   	msg +="<div style='margin-left:20px;'>"
-   	           msg += "<div id='"+row.recomment_no+"' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px;'>";
+   	           msg += "<div id='"+row.srecmt_no+"' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px;'>";
  	             msg += "<span style='font-weight: bold;'>" + row.acc_id + "</span><br>";
- 	          	 msg += " "+row.re_comment_date;
+ 	          	 msg += " "+row.srecmt_date;
  	          	 console.log('row.acc_id:'+row.acc_id);
 	             if("[[${session.acc_no}]]" == row.acc_no){
-	                 msg += " <a href='javascript:recomment_update("+row.recomment_no+")'>수정</a>";
+	                 msg += " <a href='javascript:recomment_update("+row.srecmt_no+")'>수정</a>";
 	                 msg +="<span class='menu_divide'>│</span>"
-	                 msg += "  <a href='javascript:recomment_delete("+row.recomment_no+")'>삭제</a>";
+	                 msg += "  <a href='javascript:recomment_delete("+row.srecmt_no+")'>삭제</a>";
 	             }
 	             msg +="<span class='menu_divide' >│</span>";
 	             msg += "  <a href='javascript:recomment_create_form(" + row.scmt_no + ", \"" + row.acc_no + "\", \"" + row.acc_id + "\")'>답글</a>";
 	             msg += " " + "<br>";
-	             msg += row.re_comment;
+	             msg += row.srecmt_contents;
 	             msg += "</div>";
 	             msg += "</div>";
     		   }
@@ -338,11 +338,11 @@
        }
        
        //대댓글 삭제
-       function recomment_delete(recomment_no){
+       function recomment_delete(srecmt_no){
     	   fetch("/recomment/delete",{
     		   "method":"POST",
     		   "headers": {"Content-Type": "application/json"},
-    		   body: JSON.stringify({"recomment_no": recomment_no, "acc_no": '[[${session.acc_no}]]'})
+    		   body: JSON.stringify({"srecmt_no": srecmt_no, "acc_no": '[[${session.acc_no}]]'})
     	   })
     	   .then((response) => response.json())
     	   .then((data)=>{
@@ -356,20 +356,20 @@
        }
        
        //대댓글 수정
-       function recomment_update(recomment_no){
-    	   console.log(recomment_no);
+       function recomment_update(srecmt_no){
+    	   console.log(srecmt_no);
     	   console.log("대댓글 수정 클릭");
     	   //recomment_tag.focus();
     	   let scmt_no="";
     	   
     	 	 let recomment_tag = document.getElementById("recomment_comment");
-    	   fetch("/recomment/read_comment?recomment_no=" + recomment_no,{
+    	   fetch("/recomment/read_comment?srecmt_no=" + srecmt_no,{
     		   "method":"GET",
     		   "headers": {"Content-Type": "application/json"},
     	   })
     	   .then((response) => response.json())
     	   .then((data) =>{
-    		   recomment_tag.value = data['res']['re_comment']
+    		   recomment_tag.value = data['res']['srecmt_contents']
     		   scmt_no = data['res']['scmt_no'];
     		   recomment_tag.focus();
     		   visible('update');
@@ -384,7 +384,7 @@
 		    		fetch("/recomment/update",{
 		    			"method":"post",
 		    			"headers": {"Content-Type": "application/json"},
-		    			body:JSON.stringify({"recomment_no":recomment_no,"re_comment":content,"acc_no": '[[${session.acc_no}]]'})
+		    			body:JSON.stringify({"srecmt_no":srecmt_no,"srecmt_contents":content,"acc_no": '[[${session.acc_no}]]'})
 		    		})
 		    		.then((response)=>response.json())
 		    		.then((data)=>{
@@ -462,7 +462,7 @@
 				    			"method":"post",
 				    			"headers": {"Content-Type": "application/json"},
 				    			body:JSON.stringify({"scon_no":"[[${scontentsVO.scon_no}]]",
-				    																	"re_comment":"@" +data['acc_id']+" "+content, 
+				    																	"srecmt_contents":"@" +data['acc_id']+" "+content, 
 				    																	"scmt_no":scmt_no, 
 				    																	"acc_no": '[[${session.acc_no}]]'})
 				    		})

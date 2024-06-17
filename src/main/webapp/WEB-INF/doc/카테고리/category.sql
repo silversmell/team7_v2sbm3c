@@ -38,6 +38,8 @@ VALUES(category_seq.nextval, '공유 게시글', 1, 1, 'Y');
 INSERT INTO category(cate_no, cate_name, cate_cnt, cate_seqno, cate_visible)
 VALUES(category_seq.nextval, '질문 게시글', 1, 2, 'Y');
 
+INSERT INTO category(cate_no, cate_name, cate_cnt, cate_seqno, cate_visible)
+VALUES(4, '랭킹 게시글', 0, 0, 'Y');
 
 -- List, 목록
 SELECT cate_no, cate_name, cate_cnt, cate_seqno, cate_visible
@@ -69,7 +71,7 @@ commit;
 rollback;
 -- 삭제 처리
 DELETE FROM category
-WHERE cate_no = 5;
+WHERE cate_no = 1;
 
 
 -- 전체 조회

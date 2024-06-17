@@ -35,14 +35,14 @@ public class Re_commentCont {
 	
 	@PostMapping("/create")
 	@ResponseBody
-	public String create(@RequestBody Re_commentVO re_commentVO) {
+	public String create(@RequestBody Share_recommentVO re_commentVO) {
 		System.out.println("들어옴");
 		HashMap<String,Object> map = new HashMap<>();
-		System.out.println("-> re_comment :" + re_commentVO.getRe_comment());
+		System.out.println("-> re_comment :" + re_commentVO.getSrecmt_contents());
 		System.out.println("-> scon_no :" + re_commentVO.getScon_no());
 		System.out.println("->scmt_no :" + re_commentVO.getScmt_no());
 		System.out.println("-> acc_no :" + re_commentVO.getAcc_no());
-		map.put("re_comment",re_commentVO.getRe_comment());
+		map.put("srecmt_contents",re_commentVO.getSrecmt_contents());
 		map.put("scon_no",re_commentVO.getScon_no());
 		map.put("scmt_no", re_commentVO.getScmt_no());
 		map.put("acc_no",re_commentVO.getAcc_no());
@@ -58,12 +58,12 @@ public class Re_commentCont {
 	public String read(int scmt_no) {
 		HashMap<String,Object> map = new HashMap<>();
 		map.put("scmt_no", scmt_no);
-		ArrayList<Re_commentVO> list = this.re_commentProc.read_recomment(map);
+		ArrayList<Share_recommentVO> list = this.re_commentProc.read_recomment(map);
 		if(list.size()>0) {
 			System.out.println("조회 성공");
 		}
 		for(int i = 0;i<list.size();i++) {
-			System.out.println("->대댓글 :" + list.get(i).getRe_comment());
+			System.out.println("->대댓글 :" + list.get(i).getSrecmt_contents());
 			System.out.println("->acc_no:" + list.get(i).getAcc_no());
 			System.out.println("->add_id:" + list.get(i).getAcc_id());
 		}
@@ -85,23 +85,23 @@ public class Re_commentCont {
 	//recomment_no,scmt_no,scon_no,re_comment,re_comment_date
 	@GetMapping("/read_comment")
 	@ResponseBody
-	public String read_comment(int recomment_no) {
-		System.out.println("->recomment_no:" + recomment_no);
-		Re_commentVO re_comment = this.re_commentProc.read_comment(recomment_no);
+	public String read_comment(int srecmt_no) {
+		System.out.println("->recomment_no:" + srecmt_no);
+		Share_recommentVO re_comment = this.re_commentProc.read_comment(srecmt_no);
 		
 		JSONObject row = new JSONObject();
 		
-//		System.out.println(re_comment.getRecomment_no());
-//		System.out.println(re_comment.getScmt_no());
-//		System.out.println(re_comment.getScon_no());
-//		System.out.println(re_comment.getRe_comment());
-//		System.out.println(re_comment.getRe_comment_date());
-//		
-		row.put("recomment_no",re_comment.getRecomment_no());
+		System.out.println(re_comment.getSrecmt_contents());
+		System.out.println(re_comment.getScmt_no());
+		System.out.println(re_comment.getScon_no());
+		System.out.println(re_comment.getSrecmt_no());
+		System.out.println(re_comment.getSrecmt_date());
+		
+		row.put("recomment_no",re_comment.getSrecmt_no());
 		row.put("scmt_no",re_comment.getScmt_no());
 		row.put("scon_no", re_comment.getScon_no());
-		row.put("re_comment", re_comment.getRe_comment());
-		row.put("re_comment_date", re_comment.getRe_comment_date());
+		row.put("srecmt_contents", re_comment.getSrecmt_contents());
+		row.put("re_comment_date", re_comment.getSrecmt_date());
 		
 		  JSONObject json = new JSONObject();
 		  json.put("res",row);
@@ -112,18 +112,18 @@ public class Re_commentCont {
 	
 	@PostMapping("/update")
 	@ResponseBody
-	public String update(@RequestBody Re_commentVO re_commentVO,HttpSession session) {
-		System.out.println("->수정시 회원번호:"+re_commentVO.getRe_comment());
+	public String update(@RequestBody Share_recommentVO re_commentVO,HttpSession session) {
+		System.out.println("->수정시 회원번호:"+re_commentVO.getSrecmt_contents());
 		if(re_commentVO.getAcc_no()==(int)session.getAttribute("acc_no")){
 			System.out.println("회원이 같음");
 			
-			System.out.println("->수정시 re_comment:"+re_commentVO.getRe_comment());
-			System.out.println("->수정시 re_commentno"+re_commentVO.getRecomment_no());
+			System.out.println("->수정시 re_comment:"+re_commentVO.getSrecmt_no());
+			System.out.println("->수정시 re_commentno"+re_commentVO.getSrecmt_no());
 			
 			  JSONObject json = new JSONObject();
 			  HashMap<String,Object> map = new HashMap<>();
-			  map.put("recomment_no",re_commentVO.getRecomment_no());
-			  map.put("re_comment",re_commentVO.getRe_comment());
+			  map.put("srecmt_no",re_commentVO.getSrecmt_no());
+			  map.put("srecmt_contents",re_commentVO.getSrecmt_contents());
 			  int cnt = this.re_commentProc.update(map);
 			  if(cnt>0) {
 				  System.out.println("업데이트 성공");
@@ -139,16 +139,16 @@ public class Re_commentCont {
 	}
 	@PostMapping("/delete")
 	@ResponseBody
-	public String delete(@RequestBody Re_commentVO re_commentVO,HttpSession session) {
+	public String delete(@RequestBody Share_recommentVO re_commentVO,HttpSession session) {
 		if((int)session.getAttribute("acc_no") == re_commentVO.getAcc_no()) {
 			System.out.println(" 삭제시 acc_no가 같음");
 			JSONObject json = new JSONObject();
-			System.out.println("->삭제시 recomment_no:" + re_commentVO.getRecomment_no());
+			System.out.println("->삭제시 recomment_no:" + re_commentVO.getSrecmt_no());
 			
-			Re_commentVO recomment = this.re_commentProc.read_comment(re_commentVO.getRecomment_no());
+			Share_recommentVO recomment = this.re_commentProc.read_comment(re_commentVO.getSrecmt_no());
 			json.put("scmt_no", recomment.getScmt_no());
 
-			int cnt = this.re_commentProc.delete(re_commentVO.getRecomment_no());
+			int cnt = this.re_commentProc.delete(re_commentVO.getSrecmt_no());
 			if(cnt>0) {
 				System.out.println("대댓글 삭제 성공");
 			}
