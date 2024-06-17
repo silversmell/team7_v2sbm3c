@@ -420,7 +420,7 @@
        }
        ///대댓글 등록
        function recomment_create_form(scmt_no,acc_no,acc_id){ 
-    	   console.log("acc_no->" + acc_no);
+    	   //console.log("acc_no->" + acc_no);
 				
     	   fetch("/recomment/read_account?acc_no=" + acc_no,{
     		   "method":"get",
@@ -585,22 +585,30 @@
 
     <br>
     <div style="display:flex; align-items: center; flex-direction:row; justify-content: space-between;" > 
-    	<span th:text="${scontentsVO.scon_title}" style="font-size:2em;font-weight: bold;"></span>
-    	<span style="font-size: 1em; margin-left:10px;" th:text="|조회수: ${scontentsVO.scon_views}|"></span>
-
-    </div>
-    <hr size="10;" style="margin-top:1px; margin-bottom:1px;">
-        		<div style="margin-left: auto; margin-right:86px;">
-    		작성자: <span style="font-size: normal; " th:text="${writer}"></span>
-    			등록시간: <span style="font-size: normal;" th:text="${scontentsVO.scon_date}"></span>
-    			    		 <span th:if="${scontentsVO.mark =='N'}">
+       <!-- <div style="margin-left: auto; margin-right:86px;">  -->
+       <div style="flex:1; text-align: left;">
+       <span style="font-size: 1em; margin-left:10px;" th:text="|조회수: ${scontentsVO.scon_views}|"></span>
+        북마크<span th:if="${scontentsVO.mark =='N'}">
             <img src="/css/images/bookmark_off.png" id="bookmarkImage" class="icon" onclick="mark()" style="width:24px; height: 24px;">
         </span>
         <span  th:unless="${scontentsVO.mark =='N'}">
             <img src="/css/images/bookmark_on.png" id="bookmarkImage" class="icon" onclick="mark()" style="width:24px; height: 24px;">
         </span>
-        <span style="font-size: normal; margin-left:1px;" th:text="${count1}"></span>
-    		</div>
+     <span style="font-size: normal; margin-left:1px;" th:text="${count1}">
+        </span>
+        
+        </div>
+        <div style="flex: 2; text-align: center;">
+        <span th:text="${scontentsVO.scon_title}" style="font-size:2em;font-weight: bold;"></span>
+        </div>
+        
+        <div style="flex: 2; text-align: right;">
+    		작성자: <span style="font-size: normal; " th:text="${writer}"></span>
+    			작성일: <span style="font-size: normal;" th:text="${scontentsVO.scon_date}"></span>
+			</div>
+			</div>
+
+     <hr size="10;" style="margin-top:1px; margin-bottom:1px;"> 
 
       <div class="fotorama" data-autoplay="5000" data-nav="thumbs" data-ratio="800/520" style='display: flex; justify-content: center; align-items: center; width: 100%;'>
         <img th:src="@{|/contents/storage/${share_imageVO.file_thumb_name}|}"  th:each="share_imageVO, status: ${share_imageVO}"

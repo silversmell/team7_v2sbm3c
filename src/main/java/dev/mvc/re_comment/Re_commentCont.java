@@ -71,9 +71,12 @@ public class Re_commentCont {
 		json.put("res",list);
 		return json.toString();
 	}
+	
 	@GetMapping("/read_account")
 	@ResponseBody
 	public String read_account(int acc_no) {
+		System.out.println("read_account 들어옴");
+		System.out.println(acc_no);
 		JSONObject json = new JSONObject();	
 		AccountVO account=this.accountProc.read(acc_no);
 		json.put("acc_id", account.getAcc_id());
