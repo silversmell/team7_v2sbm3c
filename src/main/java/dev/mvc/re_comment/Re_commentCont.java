@@ -36,12 +36,12 @@ public class Re_commentCont {
 	@PostMapping("/create")
 	@ResponseBody
 	public String create(@RequestBody Share_recommentVO re_commentVO) {
-		System.out.println("들어옴");
+		//System.out.println("들어옴");
 		HashMap<String,Object> map = new HashMap<>();
-		System.out.println("-> re_comment :" + re_commentVO.getSrecmt_contents());
-		System.out.println("-> scon_no :" + re_commentVO.getScon_no());
-		System.out.println("->scmt_no :" + re_commentVO.getScmt_no());
-		System.out.println("-> acc_no :" + re_commentVO.getAcc_no());
+//		System.out.println("-> re_comment :" + re_commentVO.getSrecmt_contents());
+//		System.out.println("-> scon_no :" + re_commentVO.getScon_no());
+//		System.out.println("->scmt_no :" + re_commentVO.getScmt_no());
+//		System.out.println("-> acc_no :" + re_commentVO.getAcc_no());
 		map.put("srecmt_contents",re_commentVO.getSrecmt_contents());
 		map.put("scon_no",re_commentVO.getScon_no());
 		map.put("scmt_no", re_commentVO.getScmt_no());
@@ -63,9 +63,9 @@ public class Re_commentCont {
 			System.out.println("조회 성공");
 		}
 		for(int i = 0;i<list.size();i++) {
-			System.out.println("->대댓글 :" + list.get(i).getSrecmt_contents());
-			System.out.println("->acc_no:" + list.get(i).getAcc_no());
-			System.out.println("->add_id:" + list.get(i).getAcc_id());
+//			System.out.println("->대댓글 :" + list.get(i).getSrecmt_contents());
+//			System.out.println("->acc_no:" + list.get(i).getAcc_no());
+//			System.out.println("->add_id:" + list.get(i).getAcc_id());
 		}
 		JSONObject json = new JSONObject();	
 		json.put("res",list);
@@ -94,11 +94,11 @@ public class Re_commentCont {
 		
 		JSONObject row = new JSONObject();
 		
-		System.out.println(re_comment.getSrecmt_contents());
-		System.out.println(re_comment.getScmt_no());
-		System.out.println(re_comment.getScon_no());
-		System.out.println(re_comment.getSrecmt_no());
-		System.out.println(re_comment.getSrecmt_date());
+//		System.out.println(re_comment.getSrecmt_contents());
+//		System.out.println(re_comment.getScmt_no());
+//		System.out.println(re_comment.getScon_no());
+//		System.out.println(re_comment.getSrecmt_no());
+//		System.out.println(re_comment.getSrecmt_date());
 		
 		row.put("recomment_no",re_comment.getSrecmt_no());
 		row.put("scmt_no",re_comment.getScmt_no());
@@ -119,9 +119,9 @@ public class Re_commentCont {
 		if(re_commentVO.getAcc_no()==(int)session.getAttribute("acc_no")){
 			System.out.println("회원이 같음");
 			
-			System.out.println("->수정시 re_comment:"+re_commentVO.getSrecmt_no());
-			System.out.println("->수정시 re_commentno"+re_commentVO.getSrecmt_no());
-			
+//			System.out.println("->수정시 re_comment:"+re_commentVO.getSrecmt_no());
+//			System.out.println("->수정시 re_commentno"+re_commentVO.getSrecmt_no());
+
 			  JSONObject json = new JSONObject();
 			  HashMap<String,Object> map = new HashMap<>();
 			  map.put("srecmt_no",re_commentVO.getSrecmt_no());
