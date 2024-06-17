@@ -431,6 +431,54 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
     
     return cnt;
   }
+
+  @Override
+  public int delete_qconno_recomment(List<Integer> qcon_no) {
+    // TODO Auto-generated method stub
+    return 0;
+  }
+
+  @Override
+  public int qna_create_recomment(HashMap<String, Object> map) {
+    // TODO Auto-generated method stub
+    return 0;
+  }
+
+  @Override
+  public ArrayList<Qna_recommentVO> qna_read_recomment_all() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public ArrayList<Qna_recommentVO> qna_read_recomment(HashMap<String, Object> map) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public int delete_qcmtno_recomment(int qcmt_no) {
+    // TODO Auto-generated method stub
+    return 0;
+  }
+
+  @Override
+  public int qna_update_recomment(HashMap<String, Object> map) {
+    // TODO Auto-generated method stub
+    return 0;
+  }
+
+  @Override
+  public Qna_recommentVO read_recomment(int qcmt_no) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public int delete_recomment(int qrecmt_no) {
+    // TODO Auto-generated method stub
+    return 0;
+  }
   
 
   

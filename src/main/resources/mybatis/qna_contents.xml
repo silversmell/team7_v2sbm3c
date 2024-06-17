@@ -337,6 +337,51 @@
     WHERE a.acc_no=q.acc_no AND q.qcon_no=#{qcon_no}
   </select>
   
+  <!--  대댓글 작성 -->
+  <insert id="qna_create_recomment" parameterType="HashMap">
+    INSERT INTO qna_recomment(qrecmt_no, qcmt_no, qcon_no, qrecmt_contents, acc_no, qrecmt_date)
+    VALUES(qna_recomment_seq.nextval, #{qcmt_no}, #{qcon_no}, #{qrecmt_contents}, #{acc_no}, sysdate)
+  </insert>
+  
+  <!-- 모든 대댓글 읽기 -->
+  <select id ="qna_read_recomment_all" resultType="dev.mvc.qna_contents.Qna_recommentVO">
+    SELECT qrecmt_no, qcmt_no, qcon_no, qrecmt_contents, acc_no, qrecmt_date
+    FROM qna_recomment
+  </select>
+  
+  <!-- 해당 대댓글에 대한 질문글 보기 -->
+  <select id ="qna_read_recomment"  resultType="dev.mvc.qna_contents.Qna_recommentVO" parameterType="HashMap">
+    SELECT qc.qrecmt_no, qc.qcmt_no, qc.qcon_no, qc.qrecmt_contents, ac.acc_no, qc.qrecmt_date, ac.acc_id
+    FROM qna_recomment qc, account ac
+    where qc.acc_no = ac.acc_no AND qc.qcmt_no = #{qcmt_no}
+  </select>
+  
+  <!-- 대댓글 삭제 -->
+  <delete id="delete_qcmtno_recomment" parameterType="int">
+    delete from qna_recomment
+    where qcmtno = #{qcmtno}
+  </delete>
+
+  <!-- 특정 대댓글 수정 -->
+  <update id="qna_update_recomment" parameterType="HashMap">
+    update qna_recomment
+    set qrecmt_contents =#{qrecmt_contents}
+    where qrecmt_no=#{qrecmt_no}
+  </update>
+
+  <!-- 대댓글 읽기 -->
+  <select id="read_recomment" parameterType="int" resultType="dev.mvc.qna_contents.Qna_recommentVO">
+    select qrecmt_no, qcmt_no, qcon_no, qrecmt_contents, acc_no, qrecmt_date
+    from qna_recomment
+    where qrecmt_no=#{qrecmt_no}
+  </select>
+
+  <!-- 특정 질문글 전체 대댓글 삭제 -->
+  <delete id="delete_recomment" parameterType="int">
+    delete from qna_recomment
+    where qrecmt_no = #{qrecmt_no}
+  </delete>
+  
   <!-- qcon_no에 따른 선택 삭제 -->
   <delete id="delete_qconno" parameterType="list">
     DELETE FROM qna_contents
@@ -372,6 +417,16 @@
       #{item}
     </foreach>
   </delete>
+  
+  <!-- qcon_no에 따른 선택 대댓글 삭제 -->
+  <delete id="delete_qconno_recomment" parameterType="list">
+    delete from qna_recomment
+      where qcon_no in
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+        #{item}
+    </foreach>
+  </delete>
+  
 
 </mapper>
 

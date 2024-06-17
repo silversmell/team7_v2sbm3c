@@ -295,4 +295,59 @@ public interface Qna_contentsProcInter {
    */
   public int delete_qconno_comment(List<Integer> qcon_no);
   
+  /**
+   * qcon_no에 따른 선택 대댓글 삭제
+   * @param qcon_no
+   * @return
+   */
+  public int delete_qconno_recomment(List<Integer> qcon_no);
+  
+  /**
+   * 질문글 대댓글 작성
+   * @param map
+   * @return
+   */
+  public int qna_create_recomment(HashMap<String, Object> map);
+  
+  /**
+   * 질문글 대댓글 전체 조회
+   * @return
+   */
+  public ArrayList<Qna_recommentVO> qna_read_recomment_all();
+  
+  /**
+   * 해당 대댓글에 대한 질문글 보기
+   * @param map
+   * @return
+   */
+  public ArrayList<Qna_recommentVO> qna_read_recomment(HashMap<String, Object> map);
+  
+  /**
+   * 질문글 특정 대댓글 삭제
+   * @param qcmt_no
+   * @return
+   */
+  public int delete_qcmtno_recomment(int qcmt_no);
+  
+  /**
+   * 질문글 특정 대댓글 수정
+   * @param map
+   * @return
+   */
+  public int qna_update_recomment(HashMap<String, Object> map);
+  
+  /**
+   * 질문글 특정 대댓글 조회
+   * @param qcmt_no
+   * @return
+   */
+  public Qna_recommentVO read_recomment(int qcmt_no);
+  
+  /**
+   * 질문글 특정 대댓글 삭제
+   * @param qrecmt_no
+   * @return
+   */
+  public int delete_recomment(int qrecmt_no);
+  
 }

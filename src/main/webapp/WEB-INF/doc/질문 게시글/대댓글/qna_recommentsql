@@ -1,0 +1,69 @@
+DROP TABLE QNA_RECOMMENT CASCADE CONSTRAINTS; 
+ 
+CREATE TABLE QNA_RECOMMENT(
+    QRECMT_NO                     		NUMBER(10)		 NOT NULL PRIMARY KEY,
+    QCMT_NO                       		NUMBER(10)		 NULL ,
+    QCON_NO                       		NUMBER(10)		 NULL ,
+    ACC_NO                        		NUMBER(10)		 NULL ,
+    QRECMT_CONTENTS               		VARCHAR2(300)		 NOT NULL,
+    QRECMT_DATE                   		DATE		 NOT NULL,
+    FOREIGN KEY (ACC_NO) REFERENCES ACCOUNT (ACC_NO),
+    FOREIGN KEY (QCON_NO) REFERENCES QNA_CONTENTS (QCON_NO),
+    FOREIGN KEY (QCMT_NO) REFERENCES QNA_COMMENT (QCMT_NO)
+);
+
+COMMENT ON TABLE QNA_RECOMMENT is '질문대댓글';
+COMMENT ON COLUMN QNA_RECOMMENT.QRECMT_NO is '질문대댓글번호';
+COMMENT ON COLUMN QNA_RECOMMENT.QCMT_NO is '댓글번호';
+COMMENT ON COLUMN QNA_RECOMMENT.QCON_NO is '질문게시글번호';
+COMMENT ON COLUMN QNA_RECOMMENT.ACC_NO is '회원번호';
+COMMENT ON COLUMN QNA_RECOMMENT.QRECMT_CONTENTS is '내용';
+COMMENT ON COLUMN QNA_RECOMMENT.QRECMT_DATE is '등록일';
+
+DROP SEQUENCE qna_recomment_seq;
+
+CREATE SEQUENCE qna_recomment_seq
+  START WITH 1                -- 시작 번호
+  INCREMENT BY 1            -- 증가값
+  MAXVALUE 9999999999  -- 최대값: 9999999999 --> NUMBER(10) 대응
+  CACHE 2                        -- 2번은 메모리에서만 계산
+  NOCYCLE;                      -- 다시 1부터 생성되는 것을 방지
+  
+COMMIT;
+
+-- 전체 조회
+select * from qna_recomment;
+
+-- 대댓글 작성
+    INSERT INTO qna_recomment(qrecmt_no, qcmt_no, qcon_no, qrecmt_contents, acc_no, qrecmt_date)
+VALUES(qna_recomment_seq.nextval, 2, 20, '오호', 3, sysdate);
+  
+-- 모든 대댓글 읽기
+SELECT qrecmt_no, qcmt_no, qcon_no, qrecmt_contents, acc_no, qrecmt_date
+FROM qna_recomment;
+
+  
+-- 해당 대댓글에 대한 질문글 보기
+SELECT qc.qrecmt_no, qc.qcmt_no, qc.qcon_no, qc.qrecmt_contents, ac.acc_no, qc.qrecmt_date, ac.acc_id
+FROM qna_recomment qc, account ac
+where qc.acc_no = ac.acc_no AND qc.qcmt_no = 2;
+
+-- 대댓글 삭제
+delete from qna_recomment
+where qcmt_no = 2;
+
+-- 특정 대댓글 수정
+update qna_recomment
+set qrecmt_contents = '오호'
+where qrecmt_no = 1;
+
+-- 대댓글 읽기
+select qrecmt_no, qcmt_no, qcon_no, qrecmt_contents, acc_no, qrecmt_date
+from qna_recomment
+where qrecmt_no= 1;
+
+
+-- 특정 질문글 전체 대댓글 삭제
+delete from qna_recomment
+where qrecmt_no = 1;
+
