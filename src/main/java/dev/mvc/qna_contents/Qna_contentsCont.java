@@ -911,6 +911,49 @@ public class Qna_contentsCont {
     return obj.toString();
   }
   
+  /**
+   * 질문글 체크박스 처리
+   * @param map
+   * @param session
+   * @return
+   */
+  @PostMapping(value = "/qna_select_delete")
+  @ResponseBody
+  public String select_delete(@RequestBody Map<String, Object> map, HttpSession session) {
+    JSONObject obj = new JSONObject();
+    int cnt = 0;
+    if (this.accountProc.isMemberAdmin(session)) {
+      List<Integer> qconNoList = (List<Integer>) map.get("qcon_nos");
+      int cate_no = (int) map.get("cate_no");
+
+      // 댓글 삭제
+      int comment = this.qna_contentsProc.delete_qconno_comment(qconNoList);
+
+      // 이미지 삭제
+      int image = this.qna_contentsProc.delete_qconno_image(qconNoList);
+
+      // 북마크 삭제
+      int bookmark = this.qna_contentsProc.delete_qconno_bookmark(qconNoList);
+      if (bookmark > 0) {
+        System.out.println("북마크 삭제 성공");
+      }
+
+      // 선택 삭제
+      cnt = this.qna_contentsProc.delete_qconno(qconNoList);
+      for (int i = 0; i < qconNoList.size(); i++) {
+        this.categoryProc.cnt_minus(cate_no);
+      }
+
+      obj.put("cnt", cnt);
+    } else {
+      obj.put("cnt", cnt);
+    }
+
+    return obj.toString();
+  }
+
+
+  
   
     
 }
