@@ -574,10 +574,16 @@ body {
 
 /* 헤더 스타일 */
 .header {
-    background-color: rgb(234, 234, 234); /* 네비게이션 바 배경색 변경 */
-    color: rgb(255, 255, 255); /* 로고 텍스트 색상 변경 */
-    padding: 10px 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+      background-color: rgb(255, 255, 255);
+      color: white;
+      padding: 10px;
+      }
+      
+.footer {
+    background-color: #343a40;
+    color: #ffffff;
+    text-align: center;
+    padding: 20px 0;
 }
 
 /* 네비게이션 바 스타일 */

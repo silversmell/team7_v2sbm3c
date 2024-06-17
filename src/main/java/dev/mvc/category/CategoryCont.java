@@ -57,7 +57,6 @@ public class CategoryCont {
                                       @RequestParam(name="cate_no", defaultValue = "0") int cate_no,
                                       @RequestParam(name="now_page", defaultValue="1") int now_page) {
     
-    
       word = Tool.checkNull(word).trim();
       System.out.println("--> word: " + word);
       
@@ -92,47 +91,37 @@ public class CategoryCont {
    */
   @PostMapping(value="/cate_create")
   public String cate_create(Model model, @Valid CategoryVO categoryVO, BindingResult bindingResult,
-                                  @RequestParam(name="word", defaultValue = "") String word,
-                                  @RequestParam(name="now_page", defaultValue = "1") int now_page) {
-    
-    
-    if (bindingResult.hasErrors()) {
+                            @RequestParam(name="word", defaultValue = "") String word,
+                            @RequestParam(name="now_page", defaultValue = "1") int now_page) {
       
-      // 페이징 목록
-      ArrayList<CategoryVO> list = this.categoryProc.cate_list_search_paging(word, now_page, this.record_per_page);
-      model.addAttribute("list", list);
+      if (bindingResult.hasErrors()) {
+          // 유효성 검사 실패 시 처리
+          ArrayList<CategoryVO> list = this.categoryProc.cate_list_search_paging(word, now_page, this.record_per_page);
+          int search_count = this.categoryProc.cate_list_search_count(word);
+          
+          // 페이징 및 기타 데이터 모델에 추가
+          String paging = this.categoryProc.pagingBox(now_page, word, "/category/cate_list_search", search_count, this.record_per_page, this.page_per_block);
+          model.addAttribute("list", list);
+          model.addAttribute("paging", paging);
+          model.addAttribute("now_page", now_page);
+          model.addAttribute("word", word);
+          model.addAttribute("no", search_count - ((now_page - 1) * this.record_per_page));
+          
+          return "category/cate_list_search"; // 오류 페이지로 이동
+      }
       
-      // 페이징 버튼 목록
-      int search_count = this.categoryProc.cate_list_search_count(word);
+      // 유효성 검사 통과 시 DB에 데이터 등록
+      int cnt = this.categoryProc.cate_create(categoryVO);
+      model.addAttribute("cnt", cnt);
       
-      // 일련번호 생성: 레코드 갯수 - ((현재 페이지 수 - 1) * 페이지당 레코드 수)
-      int no = search_count - ((now_page -1) * this.record_per_page);
-      model.addAttribute("no", no);
-      
-      String paging = this.categoryProc.pagingBox(now_page, 
-                                                              word,
-                                                              "category/cate_list_search", 
-                                                              search_count, 
-                                                              this.record_per_page, 
-                                                              this.page_per_block);
-      
-      model.addAttribute("paging", paging);
-      model.addAttribute("now_page", now_page);
-      
-      return "category/cate_list_search"; // /templates/category/cate_list_search.html
-    }
-    
-    int cnt = this.categoryProc.cate_create(categoryVO);
-    System.out.println("-> cnt: " + cnt);
-    model.addAttribute("cnt", cnt);
-    
-    if (cnt == 1) { // 등록 성공
-      return "redirect:/category/cate_list_search"; // /category/cate_list_search.html
-    } else { // 등록 실패
-      model.addAttribute("code", "cate_create_fail");
-      return "category/msg"; // /templates/category/msg.html
-    }  
+      if (cnt == 1) { // 등록 성공 시 목록 페이지로 리다이렉트
+          return "redirect:/category/cate_list_search?word=" + Tool.encode(word) + "&now_page=" + now_page;
+      } else { // 등록 실패 시 오류 메시지 페이지로 이동
+          model.addAttribute("code", "cate_create_fail");
+          return "category/msg";
+      }  
   }
+
   
   /**
    * 카테고리 조회 + 카테고리 목록 폼
@@ -247,6 +236,7 @@ public class CategoryCont {
                                     @RequestParam(name="now_page", defaultValue = "1") int now_page) {
     
     if (bindingResult.hasErrors()) {
+      
       // 페이징 목록
       ArrayList<CategoryVO> list = this.categoryProc.cate_list_search_paging(word, now_page, this.record_per_page);
       model.addAttribute("list", list);
@@ -293,7 +283,14 @@ public class CategoryCont {
                                    @PathVariable("cate_no") Integer cate_no,
                                    @RequestParam(name="word", defaultValue = "") String word,
                                    @RequestParam(name="now_page", defaultValue = "1") int now_page) {
-
+    
+    CategoryVO categoryVO = this.categoryProc.cate_read(cate_no); // 카테고리 정보 읽기
+    if (categoryVO == null) {
+      // 카테고리가 존재하지 않는 경우 처리
+      // 예를 들어, 존재하지 않는 카테고리 처리 로직 추가
+      return "redirect:/category/cate_list_search"; // 예시: 목록 페이지로 리다이렉트
+    }
+    
     // 페이징 목록
     ArrayList<CategoryVO> list = this.categoryProc.cate_list_search_paging(word, now_page, this.record_per_page);
     model.addAttribute("list", list);
@@ -312,6 +309,7 @@ public class CategoryCont {
     model.addAttribute("now_page", now_page);
     
     model.addAttribute("word", word);
+    model.addAttribute("categoryVO", categoryVO); // 카테고리 정보 모델에 추가
     
     // 일련번호 생성: 레코드 갯수 - ((현재 페이지 수 - 1) * 페이지당 레코드 수)
     int no = search_count - ((now_page -1) * this.record_per_page);
@@ -330,14 +328,14 @@ public class CategoryCont {
    */
   @PostMapping(value="/cate_delete")
   public String cate_delete(Model model,
-                                  Integer cate_no,
+                                  @RequestParam("cate_no") Integer cate_no,
                                   @RequestParam(name="word", defaultValue = "") String word,
                                   @RequestParam(name="now_page", defaultValue = "1") int now_page) {
     
-    int cnt = this.categoryProc.cate_delete(now_page);
+    int cnt = this.categoryProc.cate_delete(cate_no);
     model.addAttribute("cnt", cnt);
     
- // ----------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------------
     // 마지막 페이지에서 모든 레코드가 삭제되면 페이지수를 1 감소 시켜야함.
     int search_cnt = this.categoryProc.cate_list_search_count(word);
     if (search_cnt % this.record_per_page == 0) {
@@ -432,24 +430,6 @@ public class CategoryCont {
     return "redirect:/category/cate_list_search?word=" + Tool.encode(word); // /templates/category/cate_list_search
   }
   
-  /**
-   * 카테고리명
-   * @param model
-   * @param cate_no
-   * @return
-   */
-  @GetMapping(value="/cate_name")
-  public String cate_name(Model model, 
-                          @PathVariable("cate_no") Integer cate_no) {
-    
-    String cate_name = this.categoryProc.cate_name(cate_no); // 카테고리 번호로부터 카테고리 이름 조회
-    
-    model.addAttribute("cate_name", cate_name); // 모델에 cate_name 추가
-    model.addAttribute("categoryVO", new CategoryVO()); // categoryVO 객체 생성하여 모델에 추가 (빈 객체일 경우)
-
-    return "category/cate_delete"; // 카테고리 이름을 출력할 Thymeleaf 템플릿 경로
-  }
-
 
 
 }
