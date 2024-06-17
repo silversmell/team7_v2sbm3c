@@ -159,7 +159,7 @@
 		   			 let row = reply_data[i];
 
  	             msg += "<div id='"+row.scmt_no+"' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px;'>";
- 	             msg += "<span style='font-weight: bold;'>" + row.acc_id + "</span>";
+ 	             msg += "<span style='font-weight: bold;'>" + row.acc_id + "</span><br>";
  	          	 msg += " "+row.scmt_date;
 
 	   	          	 
@@ -649,7 +649,7 @@
 </div>
 			<br><br>
 			 
-			  <div style='width: 80%; margin: 0px auto; clear:both;'>
+			  <div style='width: 80%; margin: 0px auto; clear:both; text-align:center;'>
 			 <div style="float:left;">댓글수: <span th:text="${count}"></span></div><br>
 			     <hr>  
 			      <form name='frm_reply' id='frm_reply'> 
@@ -676,10 +676,9 @@
 			     <div id='re_comment_list' data-replypage='1'>  
 			      </div>
 
-            <div id='reply_list_btn' style='border: none'>
-                <button id='btn_add' style='width: 100%;'>더보기 ▽</button>
-            </div>  
-			 
+			      <div id='reply_list_btn' style='border:none;'>
+			          <button id='btn_add' style='width: 100%;'>더보기 ▽</button>
+			      </div>  
 			  </div>
 			  <br>
 			  <br>

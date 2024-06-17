@@ -110,7 +110,6 @@ public class Re_commentCont {
 		  json.put("res",row);
 		  
 		  return json.toString();
-		
 	}
 	
 	@PostMapping("/update")
