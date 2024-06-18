@@ -354,13 +354,13 @@
     select qc.qrecmt_no, qc.qcmt_no, qc.qcon_no, qc.qrecmt_contents, ac.acc_no, qc.qrecmt_date, ac.acc_id
     from qna_recomment qc, account ac
     where qc.acc_no = ac.acc_no AND qc.qcmt_no = #{qcmt_no}
-    ORDER BY qrecmt_no desc
+    ORDER BY qrecmt_no asc
   </select>
   
   <!-- 대댓글 삭제 -->
   <delete id="delete_qcmtno_recomment" parameterType="int">
     delete from qna_recomment
-    where qcmtno = #{qcmtno}
+    where qcmt_no = #{qcmt_no}
   </delete>
 
   <!-- 특정 대댓글 수정 -->
@@ -378,9 +378,15 @@
   </select>
 
   <!-- 특정 질문글 전체 대댓글 삭제 -->
-  <delete id="delete_recomment" parameterType="int">
+  <delete id="qna_delete_recomment" parameterType="int">
     delete from qna_recomment
     where qrecmt_no = #{qrecmt_no}
+  </delete>
+  
+  <!-- 특정 질문글 대댓글 전체 삭제 -->
+  <delete id="all_qna_delete_recomment" parameterType="int">
+    DELETE FROM qna_recomment 
+    WHERE qcon_no = #{qcon_no}
   </delete>
   
   <!-- qcon_no에 따른 선택 삭제 -->

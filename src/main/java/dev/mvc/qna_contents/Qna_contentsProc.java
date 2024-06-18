@@ -482,12 +482,17 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
   }
 
   @Override
-  public int delete_recomment(int qrecmt_no) {
-    int cnt = this.qna_contentsDAO.delete_recomment(qrecmt_no);
+  public int qna_delete_recomment(int qrecmt_no) {
+    int cnt = this.qna_contentsDAO.qna_delete_recomment(qrecmt_no);
     
     return cnt;
   }
   
-
+  @Override
+  public int all_qna_delete_recomment(int qcon_no) {
+    int cnt = this.qna_contentsDAO.all_qna_delete_recomment(qcon_no);
+    
+    return cnt;
+  }
   
 }

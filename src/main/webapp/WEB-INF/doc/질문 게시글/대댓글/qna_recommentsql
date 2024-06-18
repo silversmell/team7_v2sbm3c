@@ -35,7 +35,7 @@ COMMIT;
 select * from qna_recomment;
 
 -- 대댓글 작성
-    INSERT INTO qna_recomment(qrecmt_no, qcmt_no, qcon_no, qrecmt_contents, acc_no, qrecmt_date)
+INSERT INTO qna_recomment(qrecmt_no, qcmt_no, qcon_no, qrecmt_contents, acc_no, qrecmt_date)
 VALUES(qna_recomment_seq.nextval, 2, 20, '오호', 3, sysdate);
   
 -- 모든 대댓글 읽기
@@ -50,7 +50,7 @@ where qc.acc_no = ac.acc_no AND qc.qcmt_no = 2;
 
 -- 대댓글 삭제
 delete from qna_recomment
-where qcmt_no = 2;
+where qcmt_no = 9;
 
 -- 특정 대댓글 수정
 update qna_recomment

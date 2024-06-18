@@ -669,11 +669,16 @@ public class Qna_contentsCont {
 		  System.out.println("이미지 삭제 성공");
 	  }
 	  
+    int cnt_recomments = this.qna_contentsProc.all_qna_delete_recomment(qcon_no);
+    if (cnt_recomments > 0) {
+      System.out.println("대댓글 삭제 성공");
+    }
+	  
     int cnt_comments = this.qna_contentsProc.all_qna_delete_comment(qcon_no);
     if (cnt_comments > 0) {
       System.out.println("댓글 삭제 성공");
     }
-	  
+    
 	  int cnt_contents = this.qna_contentsProc.qna_delete(qcon_no); //글삭제
 	  if(cnt_contents>0) {
 		  System.out.println("글 삭제 성공");
@@ -801,13 +806,20 @@ public class Qna_contentsCont {
   public String qna_delete_comment(HttpSession session, @RequestBody Qna_commentVO qna_commentVO) {
     int acc_no = (int)session.getAttribute("acc_no");
     
-    int cnt = 0;
     if (acc_no == qna_commentVO.getAcc_no()) { // 회원 자신이 쓴 댓글만 삭제 가능
-      cnt = this.qna_contentsProc.qna_delete_comment(qna_commentVO.getQcmt_no());
+      JSONObject json = new JSONObject();
+      
+      int comment = this.qna_contentsProc.delete_qcmtno_recomment(qna_commentVO.getQcmt_no()); // 전체 대댓글 삭제
+      int cnt = this.qna_contentsProc.qna_delete_comment(qna_commentVO.getQcmt_no());
+      
+      json.put("res", cnt);
+      
+      return json.toString();
     }
     
     JSONObject json = new JSONObject();
-    json.put("res", cnt);  // 1: 성공, 0: 실패
+    json.put("res", 0);  // 1: 성공, 0: 실패
+    
     return json.toString();
   }
   
@@ -1062,27 +1074,52 @@ public class Qna_contentsCont {
   @ResponseBody
   public String qna_update_recomment(@RequestBody Qna_recommentVO qna_recommentVO, HttpSession session) {
     System.out.println("대댓글 수정 회원번호: " + qna_recommentVO.getAcc_no());
-    
+
     if (qna_recommentVO.getAcc_no() == (int)session.getAttribute("acc_no")) {
       System.out.println("대댓글 작성한 회원과 동일합니다.");
-      
+
       HashMap<String,Object> map = new HashMap<>();
       map.put("qrecmt_no", qna_recommentVO.getQrecmt_no());
       map.put("qrecmt_contents", qna_recommentVO.getQrecmt_contents());
       int cnt = this.qna_contentsProc.qna_update_recomment(map);
-      
+
       JSONObject obj = new JSONObject();
       obj.put("res", cnt);
-      
+
       return obj.toString();
     } else {
       JSONObject obj = new JSONObject();
       obj.put("res", 0);
-      
+
       return obj.toString();
     }
   }
   
+  /**
+   * 대댓글 삭제 처리
+   * @param qna_recommentVO
+   * @param session
+   * @return
+   */
+  @PostMapping(value="qna_delete_recomment")
+  @ResponseBody
+  public String qna_delete_recomment(@RequestBody Qna_recommentVO qna_recommentVO, HttpSession session) {
+      JSONObject obj = new JSONObject();
+      if (qna_recommentVO.getAcc_no() == (int)session.getAttribute("acc_no")) {
+          System.out.println("대댓글 작성한 회원과 동일합니다.");
+          
+          Qna_recommentVO vo = this.qna_contentsProc.read_recomment(qna_recommentVO.getQrecmt_no());
+          obj.put("qcmt_no", vo.getQcmt_no());
+          // System.out.println("-> qcmt_no: " + vo.getQcmt_no());
+          
+          int cnt = this.qna_contentsProc.qna_delete_recomment(qna_recommentVO.getQrecmt_no());
+          obj.put("res", cnt);
+      } else {
+          obj.put("res", 0);
+      }
+      
+      return obj.toString();
+  }
   
 }
 

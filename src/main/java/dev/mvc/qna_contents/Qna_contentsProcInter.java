@@ -348,6 +348,13 @@ public interface Qna_contentsProcInter {
    * @param qrecmt_no
    * @return
    */
-  public int delete_recomment(int qrecmt_no);
+  public int qna_delete_recomment(int qrecmt_no);
+  
+  /**
+   * 질문글 전체 대댓글 삭제
+   * @param qcmt_no
+   * @return
+   */
+  public int all_qna_delete_recomment(int qcon_no);
   
 }
