@@ -35,5 +35,7 @@ public class Qna_recommentVO {
   
   /** 질문글 대댓글 생성일 */
   private String qrecmt_date;
-  
+
+  /** 회원 아이디 */
+  private String acc_id;
 }

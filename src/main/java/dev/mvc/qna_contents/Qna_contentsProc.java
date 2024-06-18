@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import dev.mvc.re_comment.Share_recommentVO;
 import dev.mvc.tool.Security;
 import dev.mvc.tool.Tool;
 
@@ -434,50 +435,57 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
 
   @Override
   public int delete_qconno_recomment(List<Integer> qcon_no) {
-    // TODO Auto-generated method stub
-    return 0;
+    int cnt = this.qna_contentsDAO.delete_qconno_recomment(qcon_no);
+    
+    return cnt;
   }
 
   @Override
   public int qna_create_recomment(HashMap<String, Object> map) {
-    // TODO Auto-generated method stub
-    return 0;
+    int cnt = this.qna_contentsDAO.qna_create_recomment(map);
+    return cnt;
   }
 
   @Override
   public ArrayList<Qna_recommentVO> qna_read_recomment_all() {
-    // TODO Auto-generated method stub
-    return null;
+    ArrayList<Qna_recommentVO> list = this.qna_contentsDAO.qna_read_recomment_all();
+    
+    return list;
   }
 
   @Override
   public ArrayList<Qna_recommentVO> qna_read_recomment(HashMap<String, Object> map) {
-    // TODO Auto-generated method stub
-    return null;
+    ArrayList<Qna_recommentVO> list = this.qna_contentsDAO.qna_read_recomment(map);
+    
+    return list;
   }
 
   @Override
   public int delete_qcmtno_recomment(int qcmt_no) {
-    // TODO Auto-generated method stub
-    return 0;
+    int cnt = this.qna_contentsDAO.delete_qcmtno_recomment(qcmt_no);
+    
+    return cnt;
   }
 
   @Override
   public int qna_update_recomment(HashMap<String, Object> map) {
-    // TODO Auto-generated method stub
-    return 0;
+    int cnt = this.qna_contentsDAO.qna_update_recomment(map);
+    
+    return cnt;
   }
 
   @Override
   public Qna_recommentVO read_recomment(int qcmt_no) {
-    // TODO Auto-generated method stub
-    return null;
+    Qna_recommentVO qna_recommentVO = this.qna_contentsDAO.read_recomment(qcmt_no);
+    
+    return qna_recommentVO;
   }
 
   @Override
   public int delete_recomment(int qrecmt_no) {
-    // TODO Auto-generated method stub
-    return 0;
+    int cnt = this.qna_contentsDAO.delete_recomment(qrecmt_no);
+    
+    return cnt;
   }
   
 
