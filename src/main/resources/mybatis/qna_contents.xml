@@ -106,7 +106,7 @@
                                                                       OR UPPER(word) LIKE '%' || UPPER(#{word}) || '%')
                           </otherwise>
                         </choose>
-                        ORDER BY qcon_no DESC
+                        ORDER BY qcon_no ASC
                )
     )
     WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>
@@ -351,9 +351,10 @@
   
   <!-- 해당 대댓글에 대한 질문글 보기 -->
   <select id ="qna_read_recomment"  resultType="dev.mvc.qna_contents.Qna_recommentVO" parameterType="HashMap">
-    SELECT qc.qrecmt_no, qc.qcmt_no, qc.qcon_no, qc.qrecmt_contents, ac.acc_no, qc.qrecmt_date, ac.acc_id
-    FROM qna_recomment qc, account ac
+    select qc.qrecmt_no, qc.qcmt_no, qc.qcon_no, qc.qrecmt_contents, ac.acc_no, qc.qrecmt_date, ac.acc_id
+    from qna_recomment qc, account ac
     where qc.acc_no = ac.acc_no AND qc.qcmt_no = #{qcmt_no}
+    ORDER BY qrecmt_no desc
   </select>
   
   <!-- 대댓글 삭제 -->

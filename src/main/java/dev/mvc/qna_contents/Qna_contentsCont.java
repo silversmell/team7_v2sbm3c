@@ -318,7 +318,7 @@ public class Qna_contentsCont {
                               @RequestParam(name = "now_page") int now_page) {
 
     if (this.accountProc.isMember(session)) {
-   // 세션에서 사용자 정보 가져오기
+      // 세션에서 사용자 정보 가져오기
       Integer acc_no = (Integer) session.getAttribute("acc_no");
 
       // 계정 번호 출력
@@ -926,6 +926,11 @@ public class Qna_contentsCont {
       List<Integer> qconNoList = (List<Integer>) map.get("qcon_nos");
       int cate_no = (int) map.get("cate_no");
 
+      int recomment = this.qna_contentsProc.delete_qconno_recomment(qconNoList);
+      if(recomment > 0) {
+        System.out.println("대댓글 삭제 성공");
+      }
+      
       // 댓글 삭제
       int comment = this.qna_contentsProc.delete_qconno_comment(qconNoList);
 
@@ -951,11 +956,103 @@ public class Qna_contentsCont {
 
     return obj.toString();
   }
-
-
   
-  
+  /**
+   * 대댓글 작성 처리
+   * @param qna_recommentVO
+   * @return
+   */
+  @PostMapping(value="/qna_create_recomment")
+  @ResponseBody
+  public String qna_create_recomment(@RequestBody Qna_recommentVO qna_recommentVO) {
     
+    HashMap<String, Object> map = new HashMap<>();
+    map.put("qrecmt_contents", qna_recommentVO.getQrecmt_contents());
+    map.put("qcon_no", qna_recommentVO.getQcon_no());
+    map.put("qcmt_no", qna_recommentVO.getQcmt_no());
+    map.put("acc_no", qna_recommentVO.getAcc_no());
+    
+    int cnt = this.qna_contentsProc.qna_create_recomment(map);
+    
+    JSONObject obj = new JSONObject();
+    obj.put("cnt", cnt);
+    
+    return obj.toString();
+  }
+  
+   /**
+    * 회원 대댓글 조회
+    * @param qcmt_no
+    * @return
+    */
+  @GetMapping(value="/qna_read_recomment")
+  @ResponseBody
+  public String qna_read_recomment(int qcmt_no) {
+    HashMap<String, Object> map = new HashMap<>();
+    map.put("qcmt_no", qcmt_no);
+    
+    ArrayList<Qna_recommentVO> list = this.qna_contentsProc.qna_read_recomment(map);
+    
+    if(list.size() > 0) {
+      System.out.println("대댓글 조회 성공");
+    }
+    for(Qna_recommentVO vo : list) {
+      System.out.println("-> 대댓글 :" + vo.getQrecmt_contents());
+      System.out.println("-> acc_no:" + vo.getAcc_no());
+      System.out.println("-> acc_id:" + vo.getAcc_id());
+    }
+    
+    JSONObject obj = new JSONObject();
+    obj.put("res", list);
+    
+    return obj.toString();
+  }
+  
+  /**
+   * 로그인 시 acc_id
+   * @param acc_no
+   * @return
+   */
+  @GetMapping(value="/account_read")
+  @ResponseBody
+  public String account_read(int acc_no) {
+    System.out.println("-> acc_no: " + acc_no);
+    
+    AccountVO accountVO = this.accountProc.read(acc_no);
+    
+    JSONObject obj = new JSONObject();
+    obj.put("acc_id", accountVO.getAcc_id());
+    System.out.println("-> acc_id: " + accountVO.getAcc_id());
+    
+    return obj.toString();
+  }
+  
+  /**
+   * 대댓글 조회
+   * @param qrecmt_no
+   * @return
+   */
+  @GetMapping(value="/read_recomment")
+  @ResponseBody
+  public String read_recomment(int qrecmt_no) {
+    System.out.println("-> qrecmt_no: " + qrecmt_no);
+    
+    Qna_recommentVO qna_recoomentVO = this.qna_contentsProc.read_recomment(qrecmt_no);
+    
+    JSONObject row = new JSONObject();
+    row.put("qrecomt_no", qna_recoomentVO.getQrecmt_no());
+    row.put("qcmt_no", qna_recoomentVO.getQcmt_no());
+    row.put("qcon_no", qna_recoomentVO.getQcon_no());
+    row.put("qrecmt_contents", qna_recoomentVO.getQrecmt_contents());
+    row.put("qrecmt_date", qna_recoomentVO.getQrecmt_date());
+    
+    JSONObject obj = new JSONObject();
+    obj.put("res", row);
+    
+    return obj.toString();
+  }
+  
+  
 }
 
 

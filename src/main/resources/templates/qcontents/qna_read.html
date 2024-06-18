@@ -151,7 +151,7 @@
         .then((response) => response.json())
         .then((data) => {
           reply_data = data['res'];
-          renderComments();
+          render_comments();
         });
     }
 
@@ -164,12 +164,12 @@
         .then((response) => response.json())
         .then((data) => {
           reply_data = data['res'];
-          renderComments();
+          render_comments();
         });
     }
 
     // 댓글 목록 출력 함수
-    function renderComments() {
+    function render_comments() {
       let msg = '';
       let cnt = Math.min(reply_data.length, reply_now_page * 5);
 
@@ -180,12 +180,18 @@
         msg += "  " + row.qcmt_date;
 
         if ('[[${session.acc_no}]]' == row.acc_no) {
-          msg += " <a href='javascript:qna_update_comment(" + row.qcmt_no + ")'><img src='/reply/images/update.png' style='width: 16px;'></a>";
-          msg += " <a href='javascript:qna_delete_comment(" + row.qcmt_no + ")'><img src='/reply/images/delete.png' style='width: 16px;'></a>";
+          msg += " <a href='javascript:qna_update_comment(" + row.qcmt_no + ")'>수정</a>"; // 이미지 추가하고 싶으면, <img src='/reply/images/update.png' style='width: 16px;'>
+          msg +="<span class='menu_divide' >│</span>"
+          msg += " <a href='javascript:qna_delete_comment(" + row.qcmt_no + ")'>삭제</a>";
+          msg +="<span class='menu_divide' >│</span>"
         }
+        msg+= "  <a href='javascript:qna_read_recomment("+ row.qcmt_no + ", \"" + row.acc_no + "\")'>답글</a>";
+        
         msg += "  " + "<br>";
         msg += row.qcmt_contents;
         msg += "</div>";
+        
+        msg += "<div id='recomment_id" + row.qcmt_no + "'style='display: none; margin-left: 20px;'></div>";
       }
 
       document.getElementById("reply_list").innerHTML = msg;
@@ -267,7 +273,7 @@
         });
     }
 
-    // 버튼 출력
+    // 댓글 버튼 출력
     function btn_visible(sw) {
       let btn_create = document.getElementById("btn_create");
       let btn_save = document.getElementById("btn_save");
@@ -329,6 +335,143 @@
         });
     }
     
+    // 대댓글 목록
+    function qna_read_recomment(qcmt_no, acc_no) {
+      let area_id = "recomment_id" + qcmt_no;
+      let area = document.getElementById(area_id);
+      area.innerHTML="";
+      
+      fetch("/qcontents/qna_read_recomment?qcmt_no=" + qcmt_no, {
+        "method": "GET",
+        "headers": {"Content-Type": "application/json"},
+      })
+     .then((response)=>response.json())
+     .then((data)=> {
+       recomment_data=data['res'];
+       let cnt = recomment_data.length;
+       console.log(cnt);
+       
+       let msg = "";
+       
+       for (let i=0; i<cnt; i++) {
+         let row = recomment_data[i];
+         
+         msg +="<div style='margin-left:20px;'>"
+         msg += "<div id='" + row.qrecmt_no + "' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px;'>";
+         msg += "<span style='font-weight: bold;'>" + row.acc_id + "</span><br>";
+         msg += " " + row.qrecmt_date;
+         console.log('row.acc_id:' + row.acc_id);
+         
+        if("[[${session.acc_no}]]" == row.acc_no) {
+          msg += " <a href='javascript:recomment_update("+row.qrecmt_no+")'>수정</a>";
+          msg +="<span class='menu_divide'>│</span>"
+          msg += "  <a href='javascript:recomment_delete("+row.qrecmt_no+")'>삭제</a>";
+          msg += "<span class='menu_divide' >│</span>";
+        }
+         msg += " <a href='javascript:qna_create_recomment(" + row.qcmt_no + ", \"" + row.acc_no + "\", \"" + row.acc_id + "\")'>답글</a>";
+         msg += " <br>";
+         msg += row.qrecmt_contents;
+         msg += "</div>";
+         msg += "</div>";
+       }
+       area.innerHTML = msg;
+       area.style.display = 'block';
+       qna_create_recomment(qcmt_no, acc_no);
+     })
+     .catch((error) => {
+       console.error('Error:'  + error);
+     });
+       
+    }
+    
+    // 대댓글 등록
+    function qna_create_recomment(qcmt_no, acc_no, acc_id) {
+      
+      fetch("/qcontents/account_read?acc_no=" + acc_no, {
+         "method":"get",
+         "headers": {"Content-Type": "application/json"},
+      })
+      .then((response) => response.json())
+      .then((data)=> {
+        let msg = ""
+        // onsole.log(data['acc_id']);
+        
+        if (typeof data['acc_id'] !== 'undefined') {
+          msg += "<div value='" + data['acc_id'] + "'>" + data['acc_id'] + "</div>"
+          msg += "<textarea name='recomment_comment' class='form-control' id='recomment_comment' style='width: 100%; height: 60px;' autofocus='autofocus'></textarea>";
+        } else {
+          msg += "<div value='" + data['acc_id'] + "'>" + data['acc_id'] + "</div>"
+          msg += "<textarea name='recomment_comment' class='form-control' id='recomment_comment' style='width: 100%; height: 60px;' autofocus='autofocus'></textarea>";
+          return;
+        }
+        
+        msg+= "<div style='text-align: center;'>"; 
+        msg+= "<br>";
+        msg+= "<button type='button' id='recomment_create'>&nbsp;등&nbsp;&nbsp;록&nbsp;</button>"
+        msg+= "<button type='button' id='recomment_save' style='display: none;'>&nbsp;저&nbsp;&nbsp;장&nbsp;</button>"
+        msg+= "<button type='button' id='recomment_delete' style='display: none;'>&nbsp;삭&nbsp;&nbsp;제&nbsp;</button>"
+        msg+= "<button type='button' id='recomment_cancel' style='display: none;'>&nbsp;취&nbsp;&nbsp;소&nbsp;</button>"
+        msg+= "</div>"
+        
+        document.getElementById("recomment_list").innerHTML = msg;
+        
+        let comment_tag = document.getElementById("recomment_comment");
+        let recomment_tag = document.getElementById("recomment_create");
+        
+        recomment_tag.addEventListener('click', () => {
+          let content = comment_tag.value.trim();
+          console.log(content);
+          console.log('[[${session.acc_no}]]');
+          if(content.length == 0){
+            alert("내용이 없습니다. 내용을 입력해주세요.");
+            
+            return;
+          } else {
+            fetch("/qcontents/qna_create_recomment", {
+                "method":"post",
+                "headers": {"Content-Type": "application/json"},
+                body:JSON.stringify({"qcon_no":"[[${qna_contentsVO.qcon_no}]]",
+                                          "qrecmt_contents": "@" + data['acc_id'] + " " + content, 
+                                          "qcmt_no": qcmt_no, 
+                                          "acc_no": '[[${session.acc_no}]]'
+                })
+            })
+            .then((response) => response.json())
+            .then((data) => {
+              comment_tag.value = "";
+              qna_create_recomment(qcmt_no); //대댓글 읽어오기
+            })
+            .catch((error) => {
+              console.error('Error:', error);
+            });
+          }
+        });
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+      
+      
+      
+    // 댓글 버튼 출력
+    function recomment_visible(sw) {
+      let btn_create = document.getElementById("recomment_create");
+      let btn_save = document.getElementById("recomment_save");
+      let btn_cancel = document.getElementById("recomment_delete");
+
+      if (sw == 'update') {
+        btn_create.style.display = 'none'; // hidden
+        btn_save.style.display = ''; // show
+        btn_cancel.style.display = '';
+      } else if (sw == 'default') {
+        btn_create.style.display = '';
+        btn_save.style.display = 'none';
+        btn_cancel.style.display = 'none';
+      }
+    }
+      
+    }
+    
   </script>
 </head>
 
@@ -358,6 +501,7 @@
       <input type="hidden" name="cate_no" th:value="${categoryVO.cate_no}">
       <input type="hidden" name="qcon_no" id="qcon_no" th:value="${qna_contentsVO.qcon_no}">
       <input type="hidden" name="now_page" th:value="${now_page}">
+      <input type="hidden" id="acc_id" name="acc_id" th:value="${session.acc_id}">
       
       <fieldset class="fieldset_basic">
         <ul>
@@ -457,6 +601,10 @@
                     등록된 댓글이 없습니다.
                   </div>
                 </div>
+          
+                <div id="recomment_read" data-replypage='1'></div>
+                <div id="recomment_list" data-replypage='1'></div>
+                
                 <div id='reply_list_btn' style='border: none'>
                   <button type='button' id='btn_add' style='width: 100%;'>더보기 ▽</button>
                 </div>
