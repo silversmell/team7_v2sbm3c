@@ -1052,6 +1052,37 @@ public class Qna_contentsCont {
     return obj.toString();
   }
   
+  /**
+   * 대댓글 수정 처리
+   * @param qna_recommentVO
+   * @param session
+   * @return
+   */
+  @PostMapping(value="/qna_update_recomment")
+  @ResponseBody
+  public String qna_update_recomment(@RequestBody Qna_recommentVO qna_recommentVO, HttpSession session) {
+    System.out.println("대댓글 수정 회원번호: " + qna_recommentVO.getAcc_no());
+    
+    if (qna_recommentVO.getAcc_no() == (int)session.getAttribute("acc_no")) {
+      System.out.println("대댓글 작성한 회원과 동일합니다.");
+      
+      HashMap<String,Object> map = new HashMap<>();
+      map.put("qrecmt_no", qna_recommentVO.getQrecmt_no());
+      map.put("qrecmt_contents", qna_recommentVO.getQrecmt_contents());
+      int cnt = this.qna_contentsProc.qna_update_recomment(map);
+      
+      JSONObject obj = new JSONObject();
+      obj.put("res", cnt);
+      
+      return obj.toString();
+    } else {
+      JSONObject obj = new JSONObject();
+      obj.put("res", 0);
+      
+      return obj.toString();
+    }
+  }
+  
   
 }
 

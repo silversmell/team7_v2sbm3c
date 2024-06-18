@@ -431,7 +431,7 @@
                 "method":"post",
                 "headers": {"Content-Type": "application/json"},
                 body:JSON.stringify({"qcon_no":"[[${qna_contentsVO.qcon_no}]]",
-                                          "qrecmt_contents": "@" + data['acc_id'] + " " + content, 
+                                          "qrecmt_contents": "<span style='color: blue; text-decoration: underline;'>@" + data['acc_id'] + "</span> " + content, 
                                           "qcmt_no": qcmt_no, 
                                           "acc_no": '[[${session.acc_no}]]'
                 })
@@ -451,24 +451,66 @@
         console.error('Error:', error);
       });
       
-      
-      
-    // 댓글 버튼 출력
-    function recomment_visible(sw) {
-      let btn_create = document.getElementById("recomment_create");
-      let btn_save = document.getElementById("recomment_save");
-      let btn_cancel = document.getElementById("recomment_delete");
-
-      if (sw == 'update') {
-        btn_create.style.display = 'none'; // hidden
-        btn_save.style.display = ''; // show
-        btn_cancel.style.display = '';
-      } else if (sw == 'default') {
-        btn_create.style.display = '';
-        btn_save.style.display = 'none';
-        btn_cancel.style.display = 'none';
+      // 대댓글 수정
+      function qna_update_recomment(qrecmt_no) {
+       console.log(qrecmt_no);
+       
+       let qcmt_no = ""
+       let recomment_tag = document.getElementById("recomment_create");
+       fetch("/qcontents/read_recomment?qrecmt_no=" + qrecmt_no, {
+         "method":"GET",
+         "headers": {"Content-Type": "application/json"},
+       })
+       .then((response) => response.json())
+       .then((data) => {
+         recomment_tag.addEventListener('click', () => {
+           console.log("대댓글 수정 클릭");
+           let content = recomment_tag.value.trim();
+           
+           if (content.length == 0) {
+             alert('내용이 없습니다. 내용을 입력해주세요.');
+           } else {
+             fetch("/qcontents/qna_update_recomment", {
+              "method":"post",
+              "headers": {"Content-Type": "application/json"},
+              body:JSON.stringify({"qrecmt_no": qrecmt_no, "qrecmt_contents": content, "acc_no": '[[${session.acc_no}]]'})
+             })
+            .then((response)=>response.json())
+            .then((data)=> {
+              if (data['res'] == 0) {
+                alert("댓글 수정에 실패하였습니다. 다시 시도해주세요.")
+              } else {
+                console.log("대댓글 수정 완료")
+                qna_read_recomment(qcmt_no); //대댓글 읽어오기
+                recomment_tag.value = "";
+                recomment_tag.focus();
+                recomment_visible('default');
+              }
+            });
+           }
+         });
+       });
+       
       }
-    }
+      
+      
+      
+      // 댓글 버튼 출력
+      function recomment_visible(sw) {
+        let btn_create = document.getElementById("recomment_create");
+        let btn_save = document.getElementById("recomment_save");
+        let btn_cancel = document.getElementById("recomment_delete");
+
+        if (sw == 'update') {
+          btn_create.style.display = 'none'; // hidden
+          btn_save.style.display = ''; // show
+          btn_cancel.style.display = '';
+        } else if (sw == 'default') {
+          btn_create.style.display = '';
+          btn_save.style.display = 'none';
+          btn_cancel.style.display = 'none';
+        }
+      }
       
     }
     
