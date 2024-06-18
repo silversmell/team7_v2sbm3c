@@ -439,7 +439,7 @@
             .then((response) => response.json())
             .then((data) => {
               comment_tag.value = "";
-              qna_create_recomment(qcmt_no); //대댓글 읽어오기
+              qna_read_recomment(qcmt_no); //대댓글 읽어오기
             })
             .catch((error) => {
               console.error('Error:', error);
