@@ -123,14 +123,14 @@
             <div style="width: 100%; height: 100%; margin-bottom: 23px;">
               <div style="display: flex; align-items: center; width: 100%; height: 100%;">
                 <div style="margin-bottom: 13px; width: 100%; height: 100%;">
-                  제목 : <span th:text="|${qna_contentsVO.qcon_name}|" style="font-weight: bold;"></span><br><br>
+                  제목 : <span th:text="|${qna_contentsVO.qcon_name}|" style="font-weight: bold;"></span>
+                  | <span th:text="| ${qna_contentsVO.qcon_date.substring(0, 10)}|"></span><br><br>
                   
                   <span th:if="${qna_contentsVO.qcon_contents.length() > 160}" th:text="|${qna_contentsVO.qcon_contents.substring(0, 160)}...|"></span>
                   <span th:if="${qna_contentsVO.qcon_contents.length() <= 160}" th:text="|${qna_contentsVO.qcon_contents}|"></span>
                   
                   <span id='acc_no' style="display:none;" value=""></span><br>
                   <div style="position: absolute; bottom: 0px auto; right: 0; margin-right: 20px; text-align: right; margin-top: 10px;">
-                    작성일: <span th:text="|&nbsp;${qna_contentsVO.qcon_date.substring(0, 10)}|"></span><br>
                     <span style="font-size: 1em;" th:text="|조회수 ${qna_contentsVO.qcon_views}|"></span>
                     <span style="font-size: 1em;" th:text="|댓글수 ${qna_contentsVO.qcon_comment}|"></span>
                   </div>
