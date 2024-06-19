@@ -495,4 +495,12 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
     return cnt;
   }
   
+  @Override
+  public int  qna_search_count_recomment(int qcmt_no) {
+    int cnt = this.qna_contentsDAO.qna_search_count_recomment(qcmt_no);
+    
+    return cnt;
+  }
+
+  
 }
