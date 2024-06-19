@@ -106,7 +106,7 @@
                                                                       OR UPPER(word) LIKE '%' || UPPER(#{word}) || '%')
                           </otherwise>
                         </choose>
-                        ORDER BY qcon_no ASC
+                        ORDER BY qcon_no DESC
                )
     )
     WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>
