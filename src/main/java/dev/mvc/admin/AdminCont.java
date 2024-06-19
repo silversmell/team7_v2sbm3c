@@ -51,25 +51,25 @@ public class AdminCont {
 	 * @param model
 	 * @return
 	 */
-//	@GetMapping(value = "") // http://localhost:9093/admin
-//	public String admin_main(Model model) {
-//
-//		return "admin/index";
-//
-//	}
 	@GetMapping(value = "") // http://localhost:9093/admin
-	public String admin_main(HttpSession session, Model model) {
+	public String admin_main(Model model) {
 
-		Integer adm_no = (Integer) session.getAttribute("adm_no");
-		System.out.println("admin_main session ==> adm_no: " + adm_no);
+		return "index_admin";
 
-		if (adm_no == null) {
-			return "admin/login";
-		} else {
-			return "admin/index";
-		}
-		
 	}
+//	@GetMapping(value = "") // http://localhost:9093/admin
+//	public String admin_main(HttpSession session, Model model) {
+//
+//		Integer adm_no = (Integer) session.getAttribute("adm_no");
+//		System.out.println("admin_main session ==> adm_no: " + adm_no);
+//
+//		if (adm_no == null) {
+//			return "admin/login";
+//		} else {
+//			return "admin/index";
+//		}
+//		
+//	}
 
 	/**
 	 * 아이디 중복 확인
@@ -320,6 +320,8 @@ public class AdminCont {
 	public String login_proc(HttpSession session, HttpServletRequest request, HttpServletResponse response, Model model,
 			AdminLogVO adminLogVO, String url, String adm_id, String adm_pw,
 			@RequestParam(value = "id_save", defaultValue = "") String id_save) {
+		session.removeAttribute("acc_no");
+		
 		String ip = request.getRemoteAddr(); // IP
 		System.out.println("---> 접속한 IP: " + ip);
 

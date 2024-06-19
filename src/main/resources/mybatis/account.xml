@@ -45,8 +45,8 @@
 
 	<!-- 추천 데이터(해시태그) 저장 -->
 	<insert id="insertRecommend" parameterType="dev.mvc.recommend.RecommendVO">
-		INSERT INTO RECOMMEND(recom_no, acc_no, tag_no)
-		VALUES(RECOMMEND_SEQ.nextval, #{acc_no}, #{tag_no})
+		INSERT INTO RECOMMEND(recom_no, acc_no, tag_no, recom_seq, recom_date)
+		VALUES(RECOMMEND_SEQ.nextval, #{acc_no}, #{tag_no}, 0, sysdate)
 	</insert>
 
 	<!-- 회원 목록(관리자) -->

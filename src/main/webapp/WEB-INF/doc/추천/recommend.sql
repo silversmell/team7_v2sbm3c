@@ -6,9 +6,11 @@ DROP TABLE RECOMMEND CASCADE CONSTRAINTS; -- 자식 무시하고 삭제 가능
 DROP TABLE RECOMMEND;
 
 CREATE TABLE RECOMMEND(
-		RECOM_NO NUMERIC(10) NOT NULL PRIMARY KEY,
-		ACC_NO NUMERIC(10),
-		TAG_NO NUMERIC(10),
+		RECOM_NO NUMBER(10) NOT NULL PRIMARY KEY,
+		ACC_NO NUMBER(10)   NOT NULL,
+		TAG_NO NUMBER(10)   NOT NULL,
+        RECOM_SEQ NUMBER(1) NOT NULL,
+        RECOM_DATE DATE     NOT NULL,
   FOREIGN KEY (ACC_NO) REFERENCES ACCOUNT (ACC_NO),
   FOREIGN KEY (TAG_NO) REFERENCES HASHTAG (TAG_NO)
 );
@@ -17,7 +19,7 @@ COMMENT ON TABLE RECOMMEND is '추천';
 COMMENT ON COLUMN RECOMMEND.RECOM_NO is '추천번호';
 COMMENT ON COLUMN RECOMMEND.ACC_NO is '회원번호';
 COMMENT ON COLUMN RECOMMEND.TAG_NO is '해시태그 번호';
-
+COMMENT ON COLUMN RECOMMEND.RECOM_SEQ is '우선순위';
 
 DROP SEQUENCE RECOMMEND_SEQ;
 
@@ -30,10 +32,19 @@ DROP SEQUENCE RECOMMEND_SEQ;
 
 --------------------------------------------------------------------------------
 
-
 -- 회원가입 시 선택한 해시태그 정보 저장 
-INSERT INTO RECOMMEND(recom_no, acc_no, tag_no)
-VALUES(RECOMMEND_SEQ.nextval, 2, 3);
+INSERT INTO RECOMMEND(recom_no, acc_no, tag_no, recom_seq, recom_date)
+VALUES(RECOMMEND_SEQ.nextval, 2, 3, 1, sysdate);
+
+select recom_no, acc_no, tag_no, recom_seq, recom_date 
+from RECOMMEND 
+order by acc_no, recom_seq;
+
+commit;
+
+select tag_no, tag_name from hashtag order by tag_no;
+select * from recommend;
+
 
 
 --------------------------------------------------------------------------------
