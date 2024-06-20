@@ -604,11 +604,13 @@
         </div>
         
         <div style="flex: 2; text-align: right;">
-                <img th:src="@{|/contents/storage/${img_acc.acc_thumb_img}|}"  style="width: 30px; height: 32px; border-radius: 50%;"
-                th:if="${img_acc.acc_saved_img.endsWith('jpg') or img_acc.acc_saved_img.endsWith('png') or img_acc.acc_saved_img.endsWith('gif')}">
-        
-    		작성자: <span style="font-size: normal; " th:text="${writer}"></span>
-    			작성일: <span style="font-size: normal;" th:text="${scontentsVO.scon_date}"></span>
+   <img th:src="@{|/contents/storage/${img_acc.acc_thumb_img}|}" style="width: 30px; height: 32px; border-radius: 50%;"
+         th:if="${img_acc.acc_saved_img.endsWith('jpg') or img_acc.acc_saved_img.endsWith('png') or img_acc.acc_saved_img.endsWith('gif')}">
+    <img src="/scontents/images/profile.png" style="width: 30px; height: 32px; border-radius: 50%;"
+         th:unless="${img_acc.acc_saved_img.endsWith('jpg') or img_acc.acc_saved_img.endsWith('png') or img_acc.acc_saved_img.endsWith('gif')}">
+
+    작성자: <span style="font-size: normal;" th:text="${writer}"></span>
+    작성일: <span style="font-size: normal;" th:text="${scontentsVO.scon_date}"></span>
 			</div>
 			</div>
 
