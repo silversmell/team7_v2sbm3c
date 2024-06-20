@@ -105,7 +105,7 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
 
   @Override
   public String pagingBox(int cate_no, int now_page, String word, String list_file, int search_count, int record_per_page, int page_per_block) {
- // 전체 페이지 수: (double)1/10 -> 0.1 -> 1 페이지, (double)12/10 -> 1.2 페이지 -> 2 페이지
+    // 전체 페이지 수: (double)1/10 -> 0.1 -> 1 페이지, (double)12/10 -> 1.2 페이지 -> 2 페이지
     int total_page = (int) (Math.ceil((double) search_count / record_per_page));
     // 전체 그룹 수: (double)1/10 -> 0.1 -> 1 그룹, (double)12/10 -> 1.2 그룹-> 2 그룹
     int total_grp = (int) (Math.ceil((double) total_page / page_per_block));
@@ -184,7 +184,7 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
     // 현재 페이지 25일경우 -> 현재 3그룹: (3 * 10) + 1 = 4그룹의 시작페이지 31
     _now_page = (now_grp * Qcontents.PAGE_PER_BLOCK) + 1; // 최대 페이지수 + 1
     if (now_grp < total_grp) {
-      str.append("<span class='span_box_1'><A href='" + list_file +  "?word=" + word + "&now_page=" + _now_page
+      str.append("<span class='span_box_1'><A href='" + list_file + "?cate_no=" + cate_no +  "&word=" + word + "&now_page=" + _now_page
           + "'>다음</A></span>");
     }
     str.append("</DIV>");
