@@ -9,8 +9,7 @@ CREATE TABLE ACC_LOG(
 		ACC_LOG_NO                    		NUMBER(10)		 NOT NULL		 PRIMARY KEY,
 		ACC_NO                        		NUMBER(10)		 NULL ,
 		ACC_LOG_IP                    		VARCHAR2(15)		 NOT NULL,
-		ACC_LOG_TIME                  		VARCHAR2(30)		 NOT NULL,
-        WORD                                VARCHAR2(20)    NULL,
+		ACC_LOG_TIME                  		TIMESTAMP		 NOT NULL,
   FOREIGN KEY (ACC_NO) REFERENCES ACCOUNT (ACC_NO)
 );
 
@@ -19,7 +18,6 @@ COMMENT ON COLUMN ACC_LOG.ACC_LOG_NO is '회원로그번호';
 COMMENT ON COLUMN ACC_LOG.ACC_NO is '회원번호';
 COMMENT ON COLUMN ACC_LOG.ACC_LOG_IP is '접속아이피';
 COMMENT ON COLUMN ACC_LOG.ACC_LOG_TIME is '접속시간';
-COMMENT ON COLUMN ACC_LOG.WORD is '검색어';
 
 DROP SEQUENCE ACC_LOG_SEQ;
 
@@ -50,11 +48,11 @@ INSERT INTO ACC_LOG(acc_log_no, acc_no, acc_log_ip, acc_log_time)
 VALUES(ACC_LOG_SEQ.nextval, 2, '127.0.0.1', '2024-06-12');
 
 INSERT INTO ACC_LOG(acc_log_no, acc_no, acc_log_ip, acc_log_time)
-VALUES(ACC_LOG_SEQ.nextval, 1, '127.0.0.1', TO_CHAR(sysdate, 'YYYY/MM/DD HH24:MI:SS'));
+VALUES(ACC_LOG_SEQ.nextval, 1, '127.0.0.1', CURRENT_TIMESTAMP);
 INSERT INTO ACC_LOG(acc_log_no, acc_no, acc_log_ip, acc_log_time)
-VALUES(ACC_LOG_SEQ.nextval, 2, '127.168.23.1', TO_CHAR(sysdate, 'YYYY/MM/DD HH24:MI:SS'));
+VALUES(ACC_LOG_SEQ.nextval, 2, '127.168.23.1', CURRENT_TIMESTAMP);
 INSERT INTO ACC_LOG(acc_log_no, acc_no, acc_log_ip, acc_log_time)
-VALUES(ACC_LOG_SEQ.nextval, 1, '127.0.0.1', TO_CHAR(sysdate, 'YYYY/MM/DD HH24:MI:SS'));
+VALUES(ACC_LOG_SEQ.nextval, 1, '127.0.0.1', CURRENT_TIMESTAMP);
 
 commit;
 
@@ -107,21 +105,19 @@ INNER JOIN account a ON a.acc_no = l.acc_no
 WHERE a.acc_id LIKE '%user2%'
 ORDER BY l.acc_log_time;
 
--- 회원 아이디 검색 (mybatis)
+-- 회원 아이디 검색
 SELECT l.acc_log_no, a.acc_no, a.acc_id, l.acc_log_ip, l.acc_log_time
 FROM acc_log l
 INNER JOIN account a ON a.acc_no = l.acc_no
 WHERE LOWER(a.acc_id) LIKE '%' || LOWER('UsEr2') || '%'
 ORDER BY l.acc_log_time;
 
--- 회원 아이피 검색(mybatis)
+-- 회원 아이피 검색
 SELECT l.acc_log_no, a.acc_no, a.acc_id, l.acc_log_ip, l.acc_log_time
 FROM acc_log l
 INNER JOIN account a ON a.acc_no = l.acc_no
 WHERE l.acc_log_ip LIKE '127.168.23.1'
 ORDER BY l.acc_log_time;
-
-
 
 -- 기간 검색
 SELECT l.acc_log_no, a.acc_no, a.acc_id, l.acc_log_ip, l.acc_log_time
@@ -130,14 +126,13 @@ INNER JOIN account a ON a.acc_no = l.acc_no
 WHERE l.acc_log_time BETWEEN '2024-06-01' AND '2024-06-30'
 ORDER BY l.acc_log_time;
 
--- 특정 회원의 기간 검색
+-- 로그 검색 (통합, mybatis)
 SELECT l.acc_log_no, a.acc_no, a.acc_id, l.acc_log_ip, l.acc_log_time
-FROM acc_log l
-INNER JOIN account a ON a.acc_no = l.acc_no
-WHERE a.acc_id LIKE '%user2%' AND l.acc_log_time 
-BETWEEN '2024-06-01' AND '2024-06-31'
+FROM acc_log l INNER JOIN account a ON a.acc_no = l.acc_no
+WHERE LOWER(a.acc_id) LIKE '%' || LOWER('uSeR2') || '%'
+AND l.acc_log_ip LIKE '%' || '127.0.0.1' || '%'
+AND l.acc_log_time BETWEEN '2024-06-01' AND '2024-06-05'
 ORDER BY l.acc_log_time;
-
 
 --------------------------------------------------------------------------------
 

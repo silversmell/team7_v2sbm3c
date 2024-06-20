@@ -1,5 +1,7 @@
 package dev.mvc.account;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -10,6 +12,7 @@ import java.util.Random;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -434,7 +437,7 @@ public class AccountCont {
 	}
 
 //	/**
-//	 * 회원 전체 로그 조회
+//	 * 전체 회원 로그 목록
 //	 * 
 //	 * @param model
 //	 * @return
@@ -453,36 +456,36 @@ public class AccountCont {
 //
 //		model.addAttribute("logs", logs);
 //
-//		return "account/log_list";
+//		//return "account/log_list";
+//		return "account/log_list_by_search";
 //	}
 
 	/**
 	 * 회원 로그 목록
 	 * 
-	 * 검색 키워드
+	 * 로그 검색
 	 * 1) 회원 아이디
 	 * 2) 아이피
+	 * 3) 기간
 	 * 
 	 * @param session
 	 * @param model
 	 * @param word_id
+	 * @param word_ip
+	 * @param start_date
+	 * @param end_date
 	 * @return
 	 */
-
 	@GetMapping(value = "/log_list")
 	public String logListBySearch(HttpSession session, Model model,
 			@RequestParam(name = "word_id", defaultValue = "") String word_id,
-			@RequestParam(name = "word_ip", defaultValue = "") String word_ip) {
+			@RequestParam(name = "word_ip", defaultValue = "") String word_ip,
+	        @RequestParam(name = "start_date", defaultValue = "") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start_date,
+	        @RequestParam(name = "end_date", defaultValue = "") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end_date) {
 
-		System.out.println("\n********* 검색됨 ***********");
-		System.out.println("아이디 파라미터 word_id: " + word_id);
-		System.out.println("아이피 파라미터 word_ip: " + word_ip);
-		System.out.println("\n********* 검색됨 ***********");
+	    word_id = Tool.checkNull(word_id).trim();
+	    word_ip = Tool.checkNull(word_ip).trim();
 
-		word_id = Tool.checkNull(word_id).trim();
-		word_ip = Tool.checkNull(word_ip).trim();
-
-		// 검색 조건 맵에 추가
 		Map<String, String> words = new HashMap<>();
 		if (!word_id.isEmpty()) {
 			words.put("word_id", word_id);
@@ -490,20 +493,18 @@ public class AccountCont {
 		if (!word_ip.isEmpty()) {
 			words.put("word_ip", word_ip);
 		}
+	    if (start_date != null && end_date != null) {
+	    	words.put("start_date", start_date.toString());
+	    	words.put("end_date", end_date.toString());
+	    }
 
 		ArrayList<Map<String, Object>> logs = this.accountProc.searchLogs(words);
 
-		for (Map<String, Object> log : logs) {
-			AccountVO account = (AccountVO) log.get("account");
-			AccLogVO accLog = (AccLogVO) log.get("accLog");
-
-			System.out.println("Account acc_id: " + account.getAcc_id());
-			System.out.println("Log acc_log_ip: " + accLog.getAcc_log_ip());
-		}
-
-		model.addAttribute("word_id", word_id);
-		model.addAttribute("word_ip", word_ip);
-		model.addAttribute("logs", logs);
+	    model.addAttribute("word_id", word_id);
+	    model.addAttribute("word_ip", word_ip);
+	    model.addAttribute("start_date", start_date);
+	    model.addAttribute("end_date", end_date);
+	    model.addAttribute("logs", logs);
 
 		return "account/log_list_by_search";
 	}

@@ -2,9 +2,8 @@
 
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
 <div layout:fragment="content">
-	
-	<div class="title_line" th:if="${word} == null or ${word} == ''" th:text="@{|회원 로그|}"></div>
-	<div class="title_line" th:if="${word} != null and ${word} != ''" th:text="@{|회원 로그(${word})|}"></div>
+
+	<div class="title_line">회원 로그</div>
 
 	<aside class="aside_right">
 		<a href="javascript:location.reload();">새로고침</a>
@@ -14,16 +13,16 @@
 		<a href='./list'>목록</a>
 	</aside>
 
-	<!-- /contents/list_search_component.html 파일의 list_search_fragment import -->
+	<!-- /account/list_search_component.html 파일의 list_search_fragment import -->
 	<div th:replace="~{account/list_search_component::list_search_fragment}"></div>
 
 	<div class='menu_line'></div>
 
 	<table class="table table-striped" style='width: 60%;'>
 		<colgroup>
-			<col style='width: 8%;' />
-			<col style='width: 8%;' />
 			<col style='width: 10%;' />
+			<col style='width: 10%;' />
+			<col style='width: 30%;' />
 			<col style='width: 20%;' />
 			<col style='width: 35%;' />
 		</colgroup>
@@ -37,12 +36,12 @@
 		</tr>
 
 		<tr th:each="log : ${logs}">
-			<td class='td_left' th:text="${log.accLog.acc_log_no}"></td>
-			<td class='td_left' th:text="${log.account.acc_no}"></td>
-			<td class='td_left'><a th:href="@{|./read?acc_no=${log.account.acc_no}|}"
+			<td class='td_basic' th:text="${log.accLog.acc_log_no}"></td>
+			<td class='td_basic' th:text="${log.account.acc_no}"></td>
+			<td class='td_basic'><a th:href="@{|./read?acc_no=${log.account.acc_no}|}"
 					th:text="${log.account.acc_id}"></a></td>
-			<td class='td_left' th:text="${log.accLog.acc_log_ip}"></td>
-			<td class='td_basic' th:text="${log.accLog.acc_log_time}"></td>
+			<td class='td_basic' th:text="${log.accLog.acc_log_ip}"></td>
+			<td class='td_basic' th:text="${log.accLog.acc_log_time.substring(0, 19)}"></td>
 		</tr>
 
 	</table>
