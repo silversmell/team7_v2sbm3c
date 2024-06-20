@@ -8,7 +8,7 @@ public class Qcontents {
     public static int RECORD_PER_PAGE = 5;
 
     /** 블럭당 페이지 수, 하나의 블럭은 10개의 페이지로 구성됨 */
-    public static int PAGE_PER_BLOCK = 10;
+    public static int PAGE_PER_BLOCK = 5;
     
 
     // 일반 이미지 저장 경로

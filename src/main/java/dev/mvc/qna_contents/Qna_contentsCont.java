@@ -91,11 +91,11 @@ public class Qna_contentsCont {
    * @param model
    * @return
    */
-  @GetMapping("/list_all")
+  @GetMapping(value="/list_all")
   public String list_all(HttpSession session, Model model) { 
     // System.out.println("list_all 생성");
     
-    if (this.accountProc.isMemberAdmin(session)) {
+    if (this.accountProc.isMember(session)) {
       ArrayList<Qna_contentsVO> list = this.qna_contentsProc.qna_list_all();
       model.addAttribute("list", list);
       
@@ -255,6 +255,7 @@ public class Qna_contentsCont {
 
     ArrayList<Qna_contentsVO> list = this.qna_contentsProc.list_by_qna_search_paging(map);
     model.addAttribute("list", list);
+    model.addAttribute("word", word);
 
     // 이미지 리스트 가져오기
     ArrayList<Qna_imageVO> allImages = this.qna_contentsProc.qna_list_all_image();
@@ -278,7 +279,6 @@ public class Qna_contentsCont {
     }
 
     model.addAttribute("qna_imageVO", filteredImages);
-    model.addAttribute("word", word);
 
     // 페이징
     int search_count = this.qna_contentsProc.list_by_qna_search_count(map);
@@ -822,6 +822,7 @@ public class Qna_contentsCont {
     
     return json.toString();
   }
+  
   
   /**
    * 이미지 생성 AI

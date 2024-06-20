@@ -1,0 +1,23 @@
+<div th:fragment="list_search_fragment"> <!-- <div th:replace=... -->
+	<div style="text-align: right; clear: both;">
+		<form name="frm_search" method="get" action="/account/log_list">
+			
+			<label>아이디</label>
+			<input type="text" name="word_id" id="word_id" th:value="${word_id}">
+			<label>아이피</label>
+			<input type="text" name="word_ip" id="word_ip" th:value="${word_ip}">
+			
+			<button type='submit' class='btn btn-secondary btn-sm'
+				style="padding: 2px 8px 3px 8px; margin: 0px 0px 2px 0px;">검색</button>
+				
+			<span>
+				<button type='button' class='btn btn-secondary btn-sm'
+					style="padding: 2px 8px 3px 8px; margin: 0px 0px 2px 0px;"
+					th:onclick="|location.href='/account/log_list'|">검색 취소</button>
+			</span>
+
+		</form>
+
+
+	</div>
+</div>

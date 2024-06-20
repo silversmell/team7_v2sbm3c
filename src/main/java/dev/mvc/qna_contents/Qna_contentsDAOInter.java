@@ -357,4 +357,12 @@ public interface Qna_contentsDAOInter {
    * @return
    */
   public int all_qna_delete_recomment(int qcon_no);
+  
+  /**
+   * 질문글 대댓글 수
+   * @param qcon_no
+   * @return
+   */
+  public int qna_search_count_recomment(int qcmt_no);
+  
 }

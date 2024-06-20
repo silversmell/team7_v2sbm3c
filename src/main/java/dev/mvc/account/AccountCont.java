@@ -433,29 +433,79 @@ public class AccountCont {
 
 	}
 
+//	/**
+//	 * 회원 전체 로그 조회
+//	 * 
+//	 * @param model
+//	 * @return
+//	 */
+//	@GetMapping(value = "/log_list")
+//	public String log_list(Model model) {
+//		ArrayList<Map<String, Object>> logs = this.accountProc.logList();
+//
+//		/*
+//		 * for (Map<String, Object> log : logs) { AccountVO account = (AccountVO)
+//		 * log.get("account"); AccLogVO accLog = (AccLogVO) log.get("accLog");
+//		 * 
+//		 * System.out.println("Account acc_id: " + account.getAcc_id());
+//		 * System.out.println("Log acc_log_ip: " + accLog.getAcc_log_ip()); }
+//		 */
+//
+//		model.addAttribute("logs", logs);
+//
+//		return "account/log_list";
+//	}
+
 	/**
-	 * 회원 전체 로그 조회
+	 * 회원 로그 목록
 	 * 
+	 * 검색 키워드
+	 * 1) 회원 아이디
+	 * 2) 아이피
+	 * 
+	 * @param session
 	 * @param model
+	 * @param word_id
 	 * @return
 	 */
+
 	@GetMapping(value = "/log_list")
-	public String log_list(Model model) {
-		ArrayList<Map<String, Object>> logs = this.accountProc.logList();
-		
-		/*
+	public String logListBySearch(HttpSession session, Model model,
+			@RequestParam(name = "word_id", defaultValue = "") String word_id,
+			@RequestParam(name = "word_ip", defaultValue = "") String word_ip) {
+
+		System.out.println("\n********* 검색됨 ***********");
+		System.out.println("아이디 파라미터 word_id: " + word_id);
+		System.out.println("아이피 파라미터 word_ip: " + word_ip);
+		System.out.println("\n********* 검색됨 ***********");
+
+		word_id = Tool.checkNull(word_id).trim();
+		word_ip = Tool.checkNull(word_ip).trim();
+
+		// 검색 조건 맵에 추가
+		Map<String, String> words = new HashMap<>();
+		if (!word_id.isEmpty()) {
+			words.put("word_id", word_id);
+		}
+		if (!word_ip.isEmpty()) {
+			words.put("word_ip", word_ip);
+		}
+
+		ArrayList<Map<String, Object>> logs = this.accountProc.searchLogs(words);
+
 		for (Map<String, Object> log : logs) {
 			AccountVO account = (AccountVO) log.get("account");
 			AccLogVO accLog = (AccLogVO) log.get("accLog");
-			
-	        System.out.println("Account acc_id: " + account.getAcc_id());
-	        System.out.println("Log acc_log_ip: " + accLog.getAcc_log_ip());
+
+			System.out.println("Account acc_id: " + account.getAcc_id());
+			System.out.println("Log acc_log_ip: " + accLog.getAcc_log_ip());
 		}
-		*/
-		
+
+		model.addAttribute("word_id", word_id);
+		model.addAttribute("word_ip", word_ip);
 		model.addAttribute("logs", logs);
-		
-		return "account/log_list";
+
+		return "account/log_list_by_search";
 	}
 
 	/**

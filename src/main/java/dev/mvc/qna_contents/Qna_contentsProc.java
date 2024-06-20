@@ -51,21 +51,21 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
   }
 
   @Override
-  public ArrayList<Qna_contentsVO> list_by_qna_search(HashMap<String, Object> hashMap) {
-    ArrayList<Qna_contentsVO> list = this.qna_contentsDAO.list_by_qna_search(hashMap);
+  public ArrayList<Qna_contentsVO> list_by_qna_search(HashMap<String, Object> map) {
+    ArrayList<Qna_contentsVO> list = this.qna_contentsDAO.list_by_qna_search(map);
     
     return list;
   }
 
   @Override
-  public int list_by_qna_search_count(HashMap<String, Object> hashMap) {
-    int cnt = this.qna_contentsDAO.list_by_qna_search_count(hashMap);
+  public int list_by_qna_search_count(HashMap<String, Object> map) {
+    int cnt = this.qna_contentsDAO.list_by_qna_search_count(map);
     
     return cnt;
   }
 
   @Override
-  public ArrayList<Qna_contentsVO> list_by_qna_search_paging(HashMap<String, Object> hashMap) {
+  public ArrayList<Qna_contentsVO> list_by_qna_search_paging(HashMap<String, Object> map) {
     /*
      * 예) 페이지당 10개의 레코드 출력 1 page: WHERE r >= 1 AND r <= 10 2 page: WHERE r >= 11
      * AND r <= 20 3 page: WHERE r >= 21 AND r <= 30
@@ -74,7 +74,7 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
      * - 1) * 10 --> 0 2 페이지 시작 rownum: now_page = 2, (2 - 1) * 10 --> 10 3 페이지 시작
      * rownum: now_page = 3, (3 - 1) * 10 --> 20
      */
-    int begin_of_page = ((int)hashMap.get("now_page") - 1) * Qcontents.RECORD_PER_PAGE;
+    int begin_of_page = ((int)map.get("now_page") - 1) * Qcontents.RECORD_PER_PAGE;
 
     // 시작 rownum 결정
     // 1 페이지 = 0 + 1: 1
@@ -95,17 +95,17 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
     // System.out.println("begin_of_page: " + begin_of_page);
     // System.out.println("WHERE r >= "+start_num+" AND r <= " + end_num);
 
-    hashMap.put("start_num", start_num);
-    hashMap.put("end_num", end_num);
+    map.put("start_num", start_num);
+    map.put("end_num", end_num);
 
-    ArrayList<Qna_contentsVO> list = this.qna_contentsDAO.list_by_qna_search_paging(hashMap);
+    ArrayList<Qna_contentsVO> list = this.qna_contentsDAO.list_by_qna_search_paging(map);
 
     return list;
   }
 
   @Override
   public String pagingBox(int cate_no, int now_page, String word, String list_file, int search_count, int record_per_page, int page_per_block) {
- // 전체 페이지 수: (double)1/10 -> 0.1 -> 1 페이지, (double)12/10 -> 1.2 페이지 -> 2 페이지
+    // 전체 페이지 수: (double)1/10 -> 0.1 -> 1 페이지, (double)12/10 -> 1.2 페이지 -> 2 페이지
     int total_page = (int) (Math.ceil((double) search_count / record_per_page));
     // 전체 그룹 수: (double)1/10 -> 0.1 -> 1 그룹, (double)12/10 -> 1.2 그룹-> 2 그룹
     int total_grp = (int) (Math.ceil((double) total_page / page_per_block));
@@ -184,7 +184,7 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
     // 현재 페이지 25일경우 -> 현재 3그룹: (3 * 10) + 1 = 4그룹의 시작페이지 31
     _now_page = (now_grp * Qcontents.PAGE_PER_BLOCK) + 1; // 최대 페이지수 + 1
     if (now_grp < total_grp) {
-      str.append("<span class='span_box_1'><A href='" + list_file +  "?word=" + word + "&now_page=" + _now_page
+      str.append("<span class='span_box_1'><A href='" + list_file + "?cate_no=" + cate_no +  "&word=" + word + "&now_page=" + _now_page
           + "'>다음</A></span>");
     }
     str.append("</DIV>");
@@ -494,5 +494,13 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
     
     return cnt;
   }
+  
+  @Override
+  public int  qna_search_count_recomment(int qcmt_no) {
+    int cnt = this.qna_contentsDAO.qna_search_count_recomment(qcmt_no);
+    
+    return cnt;
+  }
+
   
 }

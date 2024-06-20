@@ -103,6 +103,22 @@ public interface AccountProcInter {
 	 * @return
 	 */
 	public ArrayList<Map<String, Object>> logList();
+	
+	/**
+	 * 회원 로그 검색
+	 * 
+	 * @param words
+	 * @return
+	 */
+	public ArrayList<Map<String, Object>> searchLogs(Map<String, String> words);
+	
+	/**
+	 * 회원 아이디로 검색된 레코드 갯수
+	 * 
+	 * @param hashMap
+	 * @return
+	 */
+	public int searchCount(HashMap<String, Object> hashMap);
     
     /**
      * 로그인된 회원 계정인지 검사

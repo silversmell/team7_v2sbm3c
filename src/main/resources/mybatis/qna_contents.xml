@@ -106,7 +106,7 @@
                                                                       OR UPPER(word) LIKE '%' || UPPER(#{word}) || '%')
                           </otherwise>
                         </choose>
-                        ORDER BY qcon_no ASC
+                        ORDER BY qcon_no DESC
                )
     )
     WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>
@@ -433,6 +433,13 @@
         #{item}
     </foreach>
   </delete>
+  
+  <!-- 특정 댓글의 대댓글 수 -->
+  <select id="qna_search_count_recomment" resultType="int" parameterType="int">
+    SELECT count(*)
+    FROM qna_recomment
+    WHERE qcmt_no = #{qcmt_no}
+  </select>
   
 
 </mapper>
