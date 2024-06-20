@@ -105,6 +105,18 @@ public class AccountProc implements AccountProcInter {
 	}
 	
 	@Override
+	public ArrayList<Map<String, Object>> searchLogs(Map<String, String> map) {
+		ArrayList<Map<String, Object>> list = this.accountDAO.searchLogs(map);
+		return list;
+	}
+	
+	@Override
+	public int searchCount(HashMap<String, Object> hashMap) {
+	    int cnt = this.accountDAO.searchCount(hashMap);
+	    return cnt;
+	}
+	
+	@Override
 	public boolean isMember(HttpSession session) {
 		boolean sw = false;	// 로그아웃 상태로 초기화
 		String acc_grade = (String)session.getAttribute("acc_grade");
@@ -190,5 +202,7 @@ public class AccountProc implements AccountProcInter {
 		ArrayList<Share_imageVO> images = this.accountDAO.contentImages(scon_no);
 		return images;
 	}
+
+
 
 }

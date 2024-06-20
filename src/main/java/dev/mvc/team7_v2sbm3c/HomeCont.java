@@ -19,11 +19,4 @@ public class HomeCont {
 		return "index"; // /templates/index.html
 	}
 
-//  @GetMapping("/**")
-//  public String handleRequest(HttpServletRequest request, Model model) {
-//      String currentUrl = request.getRequestURI();
-//      model.addAttribute("currentUrl", currentUrl);
-//      return "index"; // 적절한 뷰 이름으로 변경
-//  }
-
 }

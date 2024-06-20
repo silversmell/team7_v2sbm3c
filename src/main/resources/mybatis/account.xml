@@ -98,6 +98,22 @@
 		INNER JOIN account a ON a.acc_no = l.acc_no
 		ORDER BY l.acc_log_time
 	</select>
+
+	<!-- 회원 로그 검색 -->
+	<select id="searchLogs" resultMap="logListResultMap" parameterType="Map">
+	    SELECT l.acc_log_no, a.acc_no, a.acc_id, l.acc_log_ip, l.acc_log_time
+	    FROM acc_log l
+	    INNER JOIN account a ON a.acc_no = l.acc_no
+	    <where>
+	        <if test="word_id != null and word_id != ''">
+	            AND LOWER(a.acc_id) LIKE '%' || LOWER(#{word_id}) || '%'
+	        </if>
+	        <if test="word_ip != null and word_ip != ''">
+	            AND l.acc_log_ip LIKE '%' || #{word_ip} || '%'
+	        </if>
+	    </where>
+	    ORDER BY l.acc_log_time
+	</select>
 	
 	<resultMap id="logListResultMap" type="map">
 		<association property="account" javaType="dev.mvc.account.AccountVO">
@@ -112,6 +128,25 @@
 		</association>
 	</resultMap>
 	
+	<!-- 회원 아이디로 검색된 레코드 갯수 -->
+	<select id="searchCount" resultType="int" parameterType="HashMap">
+		SELECT COUNT(*) as cnt
+		FROM acc_log l
+		INNER JOIN account a ON a.acc_no = l.acc_no
+		<choose>
+      		<when test="word == null or word == ''">
+				<!-- 검색하지 않는 경우의 레코드 갯수 -->
+      		</when>
+	      	<otherwise>
+				<!-- 검색하는 경우의 레코드 갯수 -->
+		        WHERE  LOWER(a.acc_id) LIKE '%' || LOWER('UsEr2') || '%'
+	      	</otherwise>
+    	</choose>
+	</select>
+	
+
+	
+
 	<!-- 선택된 해시태그 조회(회원 정보 조회) -->
 	<select id="selectedTags" resultType="String" parameterType="int">
 		SELECT LISTAGG(h.tag_name, ',') WITHIN GROUP (ORDER BY tag_code DESC) AS
@@ -190,6 +225,8 @@
 		WHERE scon_no = #{scon_no}
 		ORDER BY file_no ASC
 	</select>
+
+
 
 </mapper>
 
