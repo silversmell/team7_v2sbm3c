@@ -2,15 +2,16 @@
     <div style="text-align: right; clear: both;">
     <form name="frm_search" method="get" action="/qcontents/qna_list_all">
     <input type="hidden" name="cate_no" th:value="${categoryVO.cate_no}"> <!-- cate_no 값 가져오기 -->
+     <input type="hidden" name="now_page" th:value="${now_page}">
       
       <input type="text" name="word" id="word" th:value="${word}" >
       <button type='submit' class='btn btn-secondary btn-sm' 
                    style="padding: 2px 8px 3px 8px; margin: 0px 0px 2px 0px;">검색</button>
       <span th:if="${word != null and word != ''}">
         <button type='button' class='btn btn-secondary btn-sm' 
-                     style="padding: 2px 8px 3px 8px; margin: 0px 0px 2px 0px;"
-                     th:onclick="|location.href='/qcontents/qna_list_all?cate_no=2'|">검색 취소</button>
-      </span>
+                   style="padding: 2px 8px 3px 8px; margin: 0px 0px 2px 0px;"
+                   th:onclick="|location.href='/qcontents/qna_list_all?cate_no=2&word=&now_page=${now_page}'|">
+                   검색 취소</button>
                     
     </form>
   </div>

@@ -279,7 +279,6 @@ public class Qna_contentsCont {
     }
 
     model.addAttribute("qna_imageVO", filteredImages);
-    model.addAttribute("word", word);
 
     // 페이징
     int search_count = this.qna_contentsProc.list_by_qna_search_count(map);
