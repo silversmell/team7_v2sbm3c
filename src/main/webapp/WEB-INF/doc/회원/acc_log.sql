@@ -169,6 +169,13 @@ INNER JOIN account a ON a.acc_no = l.acc_no
 WHERE LOWER(a.acc_id) LIKE '%' || LOWER('UsEr2') || '%'
 ORDER BY l.acc_log_time;
 
+SELECT COUNT(*) as cnt
+FROM acc_log l INNER JOIN account a ON a.acc_no = l.acc_no
+WHERE LOWER(a.acc_id) LIKE '%' || LOWER('uSeR2') || '%'
+AND l.acc_log_ip LIKE '%' || '127.0.0.1' || '%'
+AND l.acc_log_time BETWEEN TO_TIMESTAMP('2024-06-01', 'YYYY-MM-DD') 
+                      AND TO_TIMESTAMP('2024-06-05', 'YYYY-MM-DD')
+ORDER BY l.acc_log_time;
 
 
 

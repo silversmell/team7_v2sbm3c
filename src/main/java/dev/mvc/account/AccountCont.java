@@ -558,7 +558,6 @@ public class AccountCont {
 	    model.addAttribute("word_ip", word_ip);
 	    model.addAttribute("start_date", start_date);
 	    model.addAttribute("end_date", end_date);
-	    model.addAttribute("logs", logs);
 		
 	    int search_count = this.accountProc.searchCount(map);
 	    

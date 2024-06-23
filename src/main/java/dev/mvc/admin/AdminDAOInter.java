@@ -1,4 +1,4 @@
-package dev.mvc.admin;
+ package dev.mvc.admin;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,5 +67,30 @@ public interface AdminDAOInter {
 	 * @return
 	 */
 	public ArrayList<Map<String, Object>> logList();
+	
+	/**
+	 * 관리자 로그 검색
+	 * 
+	 * @param map
+	 * @return
+	 */
+	public ArrayList<Map<String, Object>> searchLogs(Map<String, String> map);
+	
+	/**
+	 * 검색된 레코드 갯수
+	 * 
+	 * @param hashMap
+	 * @return
+	 */
+	public int searchCount(HashMap<String, Object> hashMap);
+	
+	/**
+	 * 관리자 로그 목록 (검색 + 페이징)
+	 * 
+	 * @param map
+	 * @return
+	 */
+	public ArrayList<Map<String, Object>> pagingList(Map<String, Object> map);
+	
 	
 }
