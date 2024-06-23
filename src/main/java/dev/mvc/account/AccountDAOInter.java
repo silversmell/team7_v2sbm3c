@@ -113,12 +113,20 @@ public interface AccountDAOInter {
 	public ArrayList<Map<String, Object>> searchLogs(Map<String, String> map);
 	
 	/**
-	 * 회원 아이디로 검색된 레코드 갯수
+	 * 검색된 레코드 갯수
 	 * 
 	 * @param hashMap
 	 * @return
 	 */
 	public int searchCount(HashMap<String, Object> hashMap);
+	
+	/**
+	 * 회원 로그 목록 (검색 + 페이징)
+	 * 
+	 * @param map
+	 * @return
+	 */
+	public ArrayList<Map<String, Object>> pagingList(Map<String, Object> map);
 	
 	/**
 	 * 선택된 해시태그 조회(회원 정보 조회)

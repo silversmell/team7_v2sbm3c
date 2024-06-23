@@ -116,6 +116,48 @@
 		</where>
 		ORDER BY l.acc_log_time
 	</select>
+	
+	<!-- 검색된 레코드 갯수 -->
+	<select id="searchCount" resultType="int" parameterType="HashMap">
+		SELECT COUNT(*) as cnt 
+		FROM acc_log l INNER JOIN account a ON a.acc_no = l.acc_no
+		<where>
+			<if test="word_id != null and word_id != ''">
+				AND LOWER(a.acc_id) LIKE '%' || LOWER(#{word_id}) || '%'
+			</if>
+			<if test="word_ip != null and word_ip != ''">
+				AND l.acc_log_ip LIKE '%' || #{word_ip} || '%'
+			</if>
+	        <if test="start_date != null and start_date != '' and end_date != null and end_date != ''">
+	            AND l.acc_log_time BETWEEN TO_TIMESTAMP(#{start_date} || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS') 
+	            AND TO_TIMESTAMP(#{end_date} || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+	        </if>
+		</where>
+		ORDER BY l.acc_log_time
+	</select>
+	
+	<!-- 회원 로그 목록 (검색 + 페이징) -->
+	<select id="pagingList" resultMap="logListResultMap" parameterType="map">
+		SELECT * FROM (
+		    SELECT l.acc_log_no, a.acc_no, a.acc_id, l.acc_log_ip, l.acc_log_time,
+		           ROW_NUMBER() OVER (ORDER BY l.acc_log_time) AS r
+		    FROM acc_log l
+		    INNER JOIN account a ON a.acc_no = l.acc_no
+			<where>
+				<if test="word_id != null and word_id != ''">
+					AND LOWER(a.acc_id) LIKE '%' || LOWER(#{word_id}) || '%'
+				</if>
+				<if test="word_ip != null and word_ip != ''">
+					AND l.acc_log_ip LIKE '%' || #{word_ip} || '%'
+				</if>
+		        <if test="start_date != null and start_date != '' and end_date != null and end_date != ''">
+		            AND l.acc_log_time BETWEEN TO_TIMESTAMP(#{start_date} || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS') 
+		            AND TO_TIMESTAMP(#{end_date} || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+		        </if>
+			</where>
+		)
+		WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>
+	</select> 
 
 	<resultMap id="logListResultMap" type="map">
 		<association property="account" javaType="dev.mvc.account.AccountVO">
@@ -129,18 +171,6 @@
 			<result column="acc_log_time" property="acc_log_time" />
 		</association>
 	</resultMap>
-
-	<!-- 회원 아이디로 검색된 레코드 갯수 -->
-	<select id="searchCount" resultType="int" parameterType="HashMap"> SELECT
-		COUNT(*) as cnt FROM acc_log l INNER JOIN account a ON a.acc_no =
-		l.acc_no <choose>
-			<when test="word == null or word == ''">
-				<!-- 검색하지 않는 경우의 레코드 갯수 -->
-			</when>
-			<otherwise>
-				<!-- 검색하는 경우의 레코드 갯수 --> WHERE LOWER(a.acc_id) LIKE '%' || LOWER('UsEr2') || '%' </otherwise>
-		</choose>
-	</select>
 
 	<!-- 선택된 해시태그 조회(회원 정보 조회) -->
 	<select id="selectedTags" resultType="String" parameterType="int">

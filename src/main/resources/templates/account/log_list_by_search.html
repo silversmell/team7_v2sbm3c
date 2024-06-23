@@ -45,9 +45,13 @@
 		</tr>
 
 	</table>
+	
+	<!-- 페이지 버튼 목록 출력 시작 -->
+	<div class="bottom_menu" th:utext="${paging}"></div>
+	<!-- 페이지 버튼 목록 출력 종료 --> 
 
 	<div class='bottom_menu'>
-		<button type='button' onclick="location.reload();" class="btn btn-primary btn-sm">새로 고침</button>
+		<button type='button' onclick="location.reload();" class="btn btn-secondary btn-sm">새로 고침</button>
 	</div>
 
 </div>

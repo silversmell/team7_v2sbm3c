@@ -59,7 +59,7 @@ commit;
 --------------------------------------------------------------------------------
 
 -- 전체 로그 조회
-SELECT acc_log_no, acc_no, acc_log_ip, acc_log_time
+SELECT acc_log_no, acc_no, acc_log_ip, FROM_TZ(acc_log_time, SESSIONTIMEZONE) AS acc_log_time_with_tz 
 FROM acc_log
 WHERE ROWNUM<=100;
 
@@ -134,6 +134,15 @@ AND l.acc_log_ip LIKE '%' || '127.0.0.1' || '%'
 AND l.acc_log_time BETWEEN '2024-06-01' AND '2024-06-05'
 ORDER BY l.acc_log_time;
 
+SELECT l.acc_log_no, a.acc_no, a.acc_id, l.acc_log_ip, l.acc_log_time
+FROM acc_log l INNER JOIN account a ON a.acc_no = l.acc_no
+WHERE LOWER(a.acc_id) LIKE '%' || LOWER('uSeR2') || '%'
+AND l.acc_log_ip LIKE '%' || '127.0.0.1' || '%'
+AND l.acc_log_time BETWEEN TO_TIMESTAMP('2024-06-01', 'YYYY-MM-DD') 
+                      AND TO_TIMESTAMP('2024-06-05', 'YYYY-MM-DD')
+ORDER BY l.acc_log_time;
+
+
 --------------------------------------------------------------------------------
 
 
@@ -198,6 +207,69 @@ WHERE cateno=1 AND (LOWER(word) LIKE '%' || LOWER('Food') || '%'); -- 대소문�
 
 
 SELECT UPPER('한글') FROM dual; -- dual: 오라클에서 SQL 형식을 맞추기위한 시스템 테이블
+
+
+-- ----------------------------------------------------------------------------------------------------
+-- 검색 + 페이징 + 메인 이미지
+-- ----------------------------------------------------------------------------------------------------
+
+-- step 1 검색
+
+SELECT l.acc_log_no, a.acc_no, a.acc_id, l.acc_log_ip, l.acc_log_time
+FROM acc_log l
+INNER JOIN account a ON a.acc_no = l.acc_no
+WHERE LOWER(a.acc_id) LIKE '%' || LOWER('uSeR2') || '%'
+AND l.acc_log_ip LIKE '%' || '127.0.0.1' || '%'
+AND l.acc_log_time BETWEEN TO_TIMESTAMP('2024-06-01', 'YYYY-MM-DD')
+AND TO_TIMESTAMP('2024-06-05', 'YYYY-MM-DD')
+ORDER BY l.acc_log_time;
+
+
+-- step 2 서브쿼리를 사용한 ROW_NUMBER() 추가
+-- 검색 결과에 ROW_NUMBER()를 사용하여 각 행에 순번을 부여
+
+SELECT l.acc_log_no, a.acc_no, a.acc_id, l.acc_log_ip, l.acc_log_time,
+       ROW_NUMBER() OVER (ORDER BY l.acc_log_time) AS r
+FROM acc_log l
+INNER JOIN account a ON a.acc_no = l.acc_no
+WHERE LOWER(a.acc_id) LIKE '%' || LOWER('uSeR2') || '%'
+AND l.acc_log_ip LIKE '%' || '127.0.0.1' || '%'
+AND l.acc_log_time BETWEEN TO_TIMESTAMP('2024-06-01', 'YYYY-MM-DD')
+AND TO_TIMESTAMP('2024-06-05', 'YYYY-MM-DD')
+ORDER BY l.acc_log_time;
+
+
+-- step 3
+-- 페이징 조건 추가
+-- ROW_NUMBER()를 기반으로 특정 범위의 데이터만 조회하여 페이징을 구현
+
+-- 1 page
+SELECT * FROM (
+    SELECT l.acc_log_no, a.acc_no, a.acc_id, l.acc_log_ip, l.acc_log_time,
+           ROW_NUMBER() OVER (ORDER BY l.acc_log_time) AS r
+    FROM acc_log l
+    INNER JOIN account a ON a.acc_no = l.acc_no
+    WHERE LOWER(a.acc_id) LIKE '%' || LOWER('uSeR2') || '%'
+    AND l.acc_log_ip LIKE '%' || '127.0.0.1' || '%'
+    AND l.acc_log_time BETWEEN TO_TIMESTAMP('2024-06-01', 'YYYY-MM-DD')
+    AND TO_TIMESTAMP('2024-06-05', 'YYYY-MM-DD')
+) 
+WHERE r BETWEEN 1 AND 3;
+
+
+-- 2 page
+SELECT * FROM (
+    SELECT l.acc_log_no, a.acc_no, a.acc_id, l.acc_log_ip, l.acc_log_time,
+           ROW_NUMBER() OVER (ORDER BY l.acc_log_time) AS r
+    FROM acc_log l
+    INNER JOIN account a ON a.acc_no = l.acc_no
+    WHERE LOWER(a.acc_id) LIKE '%' || LOWER('uSeR2') || '%'
+    AND l.acc_log_ip LIKE '%' || '127.0.0.1' || '%'
+    AND l.acc_log_time BETWEEN TO_TIMESTAMP('2024-06-01', 'YYYY-MM-DD')
+    AND TO_TIMESTAMP('2024-06-05', 'YYYY-MM-DD')
+) 
+WHERE r BETWEEN 4 AND 6;
+
 
 
 
