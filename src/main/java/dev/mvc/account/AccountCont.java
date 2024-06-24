@@ -27,6 +27,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import dev.mvc.category.CategoryProcInter;
 import dev.mvc.category.CategoryVO;
+import dev.mvc.qna_contents.Qna_contentsProc;
+import dev.mvc.qna_contents.Qna_contentsVO;
 import dev.mvc.recommend.HashtagVO;
 import dev.mvc.recommend.RecommendVO;
 import dev.mvc.share_contents.Contents;
@@ -57,6 +59,10 @@ public class AccountCont {
 	@Autowired
 	@Qualifier("dev.mvc.share_contents.Share_contentsProc")
 	private Share_contentsProc scontentsProc;
+	
+	@Autowired
+	@Qualifier("dev.mvc.qna_contents.Qna_contentsProc")
+	private Qna_contentsProc qcontentsProc;
 
 	@Autowired
 	Security security;
@@ -460,8 +466,57 @@ public class AccountCont {
 //		return "account/log_list_by_search";
 //	}
 
+//	/**
+//	 * 회원 로그 목록
+//	 * 
+//	 * 로그 검색
+//	 * 1) 회원 아이디
+//	 * 2) 아이피
+//	 * 3) 기간
+//	 * 
+//	 * @param session
+//	 * @param model
+//	 * @param word_id
+//	 * @param word_ip
+//	 * @param start_date
+//	 * @param end_date
+//	 * @return
+//	 */
+//	@GetMapping(value = "/log_list")
+//	public String logListBySearch(HttpSession session, Model model,
+//			@RequestParam(name = "word_id", defaultValue = "") String word_id,
+//			@RequestParam(name = "word_ip", defaultValue = "") String word_ip,
+//	        @RequestParam(name = "start_date", defaultValue = "") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start_date,
+//	        @RequestParam(name = "end_date", defaultValue = "") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end_date) {
+//
+//	    word_id = Tool.checkNull(word_id).trim();
+//	    word_ip = Tool.checkNull(word_ip).trim();
+//
+//		Map<String, String> words = new HashMap<>();
+//		if (!word_id.isEmpty()) {
+//			words.put("word_id", word_id);
+//		}
+//		if (!word_ip.isEmpty()) {
+//			words.put("word_ip", word_ip);
+//		}
+//	    if (start_date != null && end_date != null) {
+//	    	words.put("start_date", start_date.toString());
+//	    	words.put("end_date", end_date.toString());
+//	    }
+//
+//		ArrayList<Map<String, Object>> logs = this.accountProc.searchLogs(words);
+//
+//	    model.addAttribute("word_id", word_id);
+//	    model.addAttribute("word_ip", word_ip);
+//	    model.addAttribute("start_date", start_date);
+//	    model.addAttribute("end_date", end_date);
+//	    model.addAttribute("logs", logs);
+//
+//		return "account/log_list_by_search";
+//	}
+
 	/**
-	 * 회원 로그 목록
+	 * 회원 로그 목록 (검색 + 페이징)
 	 * 
 	 * 로그 검색
 	 * 1) 회원 아이디
@@ -474,37 +529,57 @@ public class AccountCont {
 	 * @param word_ip
 	 * @param start_date
 	 * @param end_date
+	 * @param now_page
 	 * @return
 	 */
 	@GetMapping(value = "/log_list")
-	public String logListBySearch(HttpSession session, Model model,
+	public String pagingList(HttpSession session, Model model,
 			@RequestParam(name = "word_id", defaultValue = "") String word_id,
 			@RequestParam(name = "word_ip", defaultValue = "") String word_ip,
 	        @RequestParam(name = "start_date", defaultValue = "") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start_date,
-	        @RequestParam(name = "end_date", defaultValue = "") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end_date) {
+	        @RequestParam(name = "end_date", defaultValue = "") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end_date,
+			@RequestParam(name = "now_page", defaultValue = "1") int now_page) {
 
 	    word_id = Tool.checkNull(word_id).trim();
 	    word_ip = Tool.checkNull(word_ip).trim();
 
-		Map<String, String> words = new HashMap<>();
+	    HashMap<String, Object> map = new HashMap<>();
 		if (!word_id.isEmpty()) {
-			words.put("word_id", word_id);
+			map.put("word_id", word_id);
 		}
 		if (!word_ip.isEmpty()) {
-			words.put("word_ip", word_ip);
+			map.put("word_ip", word_ip);
 		}
 	    if (start_date != null && end_date != null) {
-	    	words.put("start_date", start_date.toString());
-	    	words.put("end_date", end_date.toString());
+	    	map.put("start_date", start_date.toString());
+	    	map.put("end_date", end_date.toString());
 	    }
-
-		ArrayList<Map<String, Object>> logs = this.accountProc.searchLogs(words);
+	    map.put("now_page", now_page);
+	    
+		ArrayList<Map<String, Object>> logs = this.accountProc.pagingList(map);
+		model.addAttribute("logs", logs);
+		// list를 logs로 바꿈 (html에 참고)
 
 	    model.addAttribute("word_id", word_id);
 	    model.addAttribute("word_ip", word_ip);
 	    model.addAttribute("start_date", start_date);
 	    model.addAttribute("end_date", end_date);
-	    model.addAttribute("logs", logs);
+		
+	    int search_count = this.accountProc.searchCount(map);
+	    
+	    String start_date_str = (start_date != null) ? start_date.toString() : "";
+	    String end_date_str = (end_date != null) ? end_date.toString() : "";
+	    
+	    String paging = this.accountProc.pagingBox(now_page, word_id, word_ip, start_date_str, end_date_str,
+	            "/account/log_list", search_count, AccountProc.RECORD_PER_PAGE, AccountProc.PAGE_PER_BLOCK);
+
+		model.addAttribute("paging", paging);
+		model.addAttribute("now_page", now_page);
+		model.addAttribute("search_count", search_count);
+
+		// 일련 변호 생성: 레코드 갯수 - ((현재 페이지수 -1) * 페이지당 레코드 수)
+		int no = search_count - ((now_page - 1) * AccountProc.RECORD_PER_PAGE);
+		model.addAttribute("no", no);
 
 		return "account/log_list_by_search";
 	}
@@ -1004,6 +1079,63 @@ public class AccountCont {
 		ra.addAttribute("cate_no", cate_no);
 
 		return "redirect:/scontents/list_by_search";
+	}
+	
+	/**
+	 * 나의 북마크 목록
+	 * 
+	 * @param session
+	 * @param model
+	 * @return
+	 */
+	@GetMapping("/my_bookmarks")
+	public String myBookmarks(HttpSession session, Model model) {
+		Integer acc_no = (Integer) session.getAttribute("acc_no");
+		System.out.println("\naccount/shareMarks session ==> acc_no: " + acc_no);
+
+		if (acc_no != null) {
+			ArrayList<Share_contentsVO> share_marks = this.accountProc.shareMarks(acc_no);
+			ArrayList<Qna_contentsVO> qna_marks = this.accountProc.qnaMarks(acc_no);
+			
+			int i = 0;
+			for(Share_contentsVO content : share_marks) {
+				System.out.println("공유 게시글 ---> " + i + "번: " + content.getScon_title());
+				i++;
+			}
+			
+			int j = 0;
+			for(Qna_contentsVO content : qna_marks) {
+				System.out.println("질문 게시글 ---> " + j + "번: " + content.getQcon_name());
+				j++;
+			}
+
+			// 각 게시글에 대한 이미지
+			Map<Integer, List<Share_imageVO>> sconImages = new HashMap<>();
+			for (Share_contentsVO content : share_marks) {
+				List<Share_imageVO> image = this.accountProc.contentImages(content.getScon_no());
+				sconImages.put(content.getScon_no(), image);
+			}
+			
+			// 각 게시글에 대한 댓글 수
+			int scon_comment = 0;
+			Map<Integer, Integer> sconComments = new HashMap<>();
+			for (Share_contentsVO content : share_marks) {
+				scon_comment = this.accountProc.sconCmtCnt(content.getScon_no());
+				sconComments.put(content.getScon_no(), scon_comment);
+			}
+
+			model.addAttribute("acc_no", acc_no);
+			model.addAttribute("share_marks", share_marks);
+			model.addAttribute("qna_marks", qna_marks);
+			model.addAttribute("sconImages", sconImages);
+			model.addAttribute("sconComments", sconComments);
+			model.addAttribute("smarks_count", share_marks.size());
+
+		} else {
+			model.addAttribute("code", "login_need");
+		}
+
+		return "account/my_bookmarks";
 	}
 
 }

@@ -54,7 +54,7 @@
 		INSERT INTO admin_log(adm_log_no, adm_no, adm_log_ip, adm_log_time)
 		VALUES(ADMIN_LOG_SEQ.nextval, #{adm_no}, #{adm_log_ip}, TO_CHAR(sysdate, 'YYYY/MM/DD HH24:MI:SS'))
 	</insert>
-
+	
 	<!-- 관리자 로그 전체 조회 -->
 	<select id="logList" resultMap="logListResultMap">
 		SELECT l.adm_log_no, a.adm_no, a.adm_id, l.adm_log_ip, l.adm_log_time
@@ -62,7 +62,70 @@
 		INNER JOIN admin a ON a.adm_no = l.adm_no
 		ORDER BY l.adm_log_time
 	</select>
-
+	
+	<!-- 회원 로그 검색 -->
+	<select id="searchLogs" resultMap="logListResultMap" parameterType="map">
+		SELECT l.adm_log_no, a.adm_no, a.adm_id, l.adm_log_ip, l.adm_log_time
+		FROM admin_log l
+		INNER JOIN admin a ON a.adm_no = l.adm_no
+		<where>
+			<if test="word_id != null and word_id != ''">
+				AND LOWER(a.adm_id) LIKE '%' || LOWER(#{word_id}) || '%'
+			</if>
+			<if test="word_ip != null and word_ip != ''">
+				AND l.adm_log_ip LIKE '%' || #{word_ip} || '%'
+			</if>
+	        <if test="start_date != null and start_date != '' and end_date != null and end_date != ''">
+	            AND l.adm_log_time BETWEEN TO_TIMESTAMP(#{start_date} || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS') 
+	            AND TO_TIMESTAMP(#{end_date} || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+	        </if>
+		</where>
+		ORDER BY l.adm_log_time
+	</select>
+	
+	<!-- 검색된 레코드 갯수 -->
+	<select id="searchCount" resultType="int" parameterType="HashMap">
+		SELECT COUNT(*) as cnt 
+		FROM admin_log l
+		INNER JOIN admin a ON a.adm_no = l.adm_no
+		<where>
+			<if test="word_id != null and word_id != ''">
+				AND LOWER(a.adm_id) LIKE '%' || LOWER(#{word_id}) || '%'
+			</if>
+			<if test="word_ip != null and word_ip != ''">
+				AND l.adm_log_ip LIKE '%' || #{word_ip} || '%'
+			</if>
+	        <if test="start_date != null and start_date != '' and end_date != null and end_date != ''">
+	            AND l.adm_log_time BETWEEN TO_TIMESTAMP(#{start_date} || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS') 
+	            AND TO_TIMESTAMP(#{end_date} || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+	        </if>
+		</where>
+		ORDER BY l.adm_log_time
+	</select>
+	
+	<!-- 회원 로그 목록 (검색 + 페이징) -->
+	<select id="pagingList" resultMap="logListResultMap" parameterType="map">
+		SELECT * FROM (
+		    SELECT l.adm_log_no, a.adm_no, a.adm_id, l.adm_log_ip, l.adm_log_time,
+		           ROW_NUMBER() OVER (ORDER BY l.adm_log_time) AS r
+		    FROM admin_log l
+		    INNER JOIN admin a ON a.adm_no = l.adm_no
+			<where>
+				<if test="word_id != null and word_id != ''">
+					AND LOWER(a.adm_id) LIKE '%' || LOWER(#{word_id}) || '%'
+				</if>
+				<if test="word_ip != null and word_ip != ''">
+					AND l.adm_log_ip LIKE '%' || #{word_ip} || '%'
+				</if>
+		        <if test="start_date != null and start_date != '' and end_date != null and end_date != ''">
+		            AND l.adm_log_time BETWEEN TO_TIMESTAMP(#{start_date} || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS') 
+		            AND TO_TIMESTAMP(#{end_date} || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+		        </if>
+			</where>
+		)
+		WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>
+	</select> 
+	
 	<resultMap id="logListResultMap" type="map">
 		<association property="admin" javaType="dev.mvc.admin.AdminVO">
 			<id column="adm_no" property="adm_no" />
