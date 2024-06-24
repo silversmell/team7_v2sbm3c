@@ -589,10 +589,10 @@
 
        <div style="flex:1; text-align: left;">
        <span style="font-size: 1em; margin-left:10px;" th:text="|조회수: ${scontentsVO.scon_views}|"></span>
-        북마크<span th:if="${scontentsVO.mark =='N'}">
+        북마크<span th:if="${scontentsVO.scon_bookmark =='N'}">
             <img src="/css/images/bookmark_off.png" id="bookmarkImage" class="icon" onclick="mark()" style="width:24px; height: 24px;">
         </span>
-        <span  th:unless="${scontentsVO.mark =='N'}">
+        <span  th:unless="${scontentsVO.scon_bookmark =='N'}">
             <img src="/css/images/bookmark_on.png" id="bookmarkImage" class="icon" onclick="mark()" style="width:24px; height: 24px;">
         </span>
      <span style="font-size: normal; margin-left:1px;" th:text="${count1}">

@@ -99,6 +99,33 @@ SELECT COUNT(adm_no) as cnt
 FROM admin
 WHERE adm_id='admintest' AND adm_pw='fS/kjO+fuEKk06Zl7VYMhg==';
 
+-- READ: List
+SELECT adm_no, adm_id,adm_pw, adm_name, adm_date, adm_grade FROM admin ORDER BY adm_no ASC;
+
+-- READ         
+SELECT adm_no, adm_id,adm_pw, adm_name, adm_date, adm_grade
+FROM admin
+WHERE adm_no=1;
+
+-- READ by id
+SELECT adm_no, adm_id,adm_pw, adm_name, adm_date, adm_grade
+FROM admin
+WHERE adm_id='admin1';
+
+
+COMMIT;
+
+-- DELETE
+DELETE FROM admin WHERE adminno=3;
+         
+-- 로그인, 1: 로그인 성공, 0: 로그인 실패
+SELECT COUNT(*) as cnt
+FROM admin
+WHERE id='admin1' AND passwd='1234'; 
+       CNT
+----------
+         1
+         
 
 
 
@@ -106,6 +133,7 @@ WHERE adm_id='admintest' AND adm_pw='fS/kjO+fuEKk06Zl7VYMhg==';
 
 -- 삭제
 DELETE FROM admin
+
 
 
 

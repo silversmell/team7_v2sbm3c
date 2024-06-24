@@ -95,17 +95,18 @@ public class Share_contentsCont {
 		map.put("acc_no", (int)session.getAttribute("acc_no"));
 		map.put("scon_no", scon_no);
 		if(this.sconProc.mark_check(map).size()>0) { //회원에 따라 마크 다르게 보이게 하기
-			scontentsVO.setMark("Y");
+			scontentsVO.setscon_bookmark("Y");
 		}else {
-			scontentsVO.setMark("N");
+			scontentsVO.setscon_bookmark("N");
 		}
 		
 		String writer = this.sconProc.writer(map);
 		model.addAttribute("writer",writer);
 		model.addAttribute("scontentsVO", scontentsVO);
+		System.out.println("작성날짜 : "+scontentsVO.getScon_date());
 		model.addAttribute("member_no",scontentsVO.getacc_no());
 		int count = this.replyProc.comment_search(scon_no);
-		model.addAttribute("count",count);
+		model.addAttribute("count",count); //댓글수
 		ArrayList<HashtagVO> list1 = this.sconProc.sconno_hashtag(scon_no);
 		
 		model.addAttribute("list2", list1);

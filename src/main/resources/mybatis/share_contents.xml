@@ -6,8 +6,7 @@
 	<!-- 전체 목록 -->
 	<select id="list_all"
 		resultType="dev.mvc.share_contentsdto.Share_contentsVO">
-		SELECT scon_no, scon_title, scon_contents, scon_views,mark,
-		scon_comment, scon_date,scon_priority
+		SELECT scon_no, scon_title, scon_contents, scon_views,scon_bookmark, scon_date,scon_priority
 		FROM share_contents ORDER BY
 		scon_no ASC
 	</select>
@@ -16,7 +15,7 @@
 	<select id="list_by_sconno"
 		resultType="dev.mvc.share_contentsdto.Share_contentsVO">
 		SELECT scon_no, scon_title, scon_contents, scon_views,
-		scon_date, acc_no,mark
+		scon_date, acc_no,scon_bookmark
 		,cate_no
 		FROM share_contents
 		where
@@ -35,10 +34,7 @@
 	<select id="read"
 		resultType="dev.mvc.share_contentsdto.Share_contentsVO"
 		parameterType="Integer">
-		SELECT scon_no, scon_title, scon_contents,
-		scon_views,mark,
-		scon_date, acc_no
-		,cate_no,scon_priority
+		SELECT scon_no, scon_title, scon_contents,scon_views,scon_bookmark,scon_date, acc_no,cate_no,scon_priority
 		FROM
 		share_contents
 		where scon_no=#{scon_no}
@@ -66,23 +62,22 @@
 		INSERT INTO share_contents(scon_no, scon_title,
 		scon_contents,scon_bookmark,
 		scon_views,scon_date, acc_no,cate_no)
-		VALUES(share_contents_SEQ.nextval,#{scon_title},#{scon_contents},1,0,sysdate,#{acc_no},1)
+		VALUES(share_contents_SEQ.nextval,#{scon_title},#{scon_contents},'N',0,sysdate,#{acc_no},1)
 	</insert>
-
 
 	<!-- 카테고리별 검색 + 페이징 목록 -->
 	<select id="list_by_contents_search_paging"
 		resultType="dev.mvc.share_contentsdto.Share_contentsVO"
 		parameterType="HashMap">
-		SELECT scon_no, scon_title, scon_contents, scon_views, scon_comment,acc_no,
+		SELECT scon_no, scon_title, scon_contents, scon_views, acc_no,
 		scon_date,scon_priority, r
 		FROM (
 		SELECT scon_no, scon_title,acc_no,
-		scon_contents, scon_views, scon_comment,
+		scon_contents, scon_views,
 		scon_date,scon_priority,rownum as r
 		FROM (
 		SELECT scon_no, scon_title,acc_no,
-		scon_contents, scon_views, scon_comment,
+		scon_contents, scon_views, 
 		scon_date,scon_priority
 		FROM
 		share_contents
@@ -256,14 +251,14 @@
 	<update id="y_mark" parameterType="int">
 		update share_contents
 		set
-		mark='Y'
+		scon_bookmark='Y'
 		where scon_no=#{scon_no}
 	</update>
 
 	<update id="n_mark" parameterType="int">
 		update share_contents
 		set
-		mark='N'
+		scon_bookmark='N'
 		where scon_no=#{scon_no}
 	</update>
 

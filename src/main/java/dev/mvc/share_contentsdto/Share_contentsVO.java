@@ -19,25 +19,19 @@ public class Share_contentsVO {
 	private int scon_views;
 	
 	private String scon_date;
-	
-	private int scon_bookmark;
-	
-	private int scon_comment;
-	
-	private String scon_commnet;
-	
+
 	private int scon_priority;
 	
 	private String word="";
 	
-	private String mark="N";
+	private String scon_bookmark="N";
 
-	public String getMark() {
-		return mark;
+	public String scon_bookmark() {
+		return scon_bookmark;
 	}
 
-	public void setMark(String mark) {
-		this.mark = mark;
+	public void setscon_bookmark(String scon_bookmark) {
+		this.scon_bookmark = scon_bookmark;
 	}
 
 	public int getScon_no() {
@@ -86,30 +80,6 @@ public class Share_contentsVO {
 
 	public void setScon_date(String scon_date) {
 		this.scon_date = scon_date;
-	}
-
-	public int getScon_bookmark() {
-		return scon_bookmark;
-	}
-
-	public void setScon_bookmark(int scon_bookmark) {
-		this.scon_bookmark = scon_bookmark;
-	}
-
-	public int getScon_comment() {
-		return scon_comment;
-	}
-
-	public void setScon_comment(int scon_comment) {
-		this.scon_comment = scon_comment;
-	}
-
-	public String getScon_commnet() {
-		return scon_commnet;
-	}
-
-	public void setScon_commnet(String scon_commnet) {
-		this.scon_commnet = scon_commnet;
 	}
 
 	public int getScon_priority() {
