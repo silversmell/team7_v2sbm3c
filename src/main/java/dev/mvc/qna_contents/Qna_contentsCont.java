@@ -223,9 +223,6 @@ public class Qna_contentsCont {
     }
   }
 
-    
-    
-
   /**
    * 질문글 목록 + 검색 + 페이징
    *  http://localhost:9093/qcontents/qna_list_all?cate_no=2
@@ -374,8 +371,6 @@ public class Qna_contentsCont {
           return "redirect:/account/login";
       }
   }
-
-
   
   /**
    * 질문글 글 수정 폼
@@ -525,24 +520,23 @@ public class Qna_contentsCont {
     map.put("qcon_passwd", qna_contentsVO.getQcon_passwd());
     
     if (this.qna_contentsProc.qna_password_check(map) == 1) { // 패스워드 일치
-   // 삭제할 파일 정보를 읽어옴, 기존에 등록된 레코드 저장용
+      // 삭제할 파일 정보를 읽어옴, 기존에 등록된 레코드 저장용
       ArrayList<Qna_imageVO> qimage_old = this.qna_contentsProc.qna_read_image(qcon_no);
       
       for (Qna_imageVO qimage: qimage_old) {
         // -------------------------------------------------------------------
         // 파일 삭제 시작
         // -------------------------------------------------------------------
-        String file1saved = qimage.getFile_upload_name();
-        String thumb = qimage.getFile_thumb_name();
+        String file_upload_name = qimage.getFile_upload_name();
+        String file_thumb_name = qimage.getFile_thumb_name();
         
         String upDir = Qcontents.getUploadDir();
-        Tool.deleteFile(upDir, file1saved);
-        Tool.deleteFile(upDir, thumb);
+        Tool.deleteFile(upDir, file_upload_name);
+        Tool.deleteFile(upDir, file_thumb_name);
         // -------------------------------------------------------------------
         // 파일 삭제 종료
         // -------------------------------------------------------------------
       }
-      long size1 = 0;
       // -------------------------------------------------------------------
       // 파일 전송 시작
       // -------------------------------------------------------------------
@@ -568,7 +562,7 @@ public class Qna_contentsCont {
             if (Tool.isImage(file_origin_name)) {
               file_thumb_name = Tool.preview(upDir, file_upload_name, 200, 150);
             }
-          }
+          } 
           
           // System.out.println("-> cnt1: " + cnt1 + ", image_list_old.size(): " +
           // image_list_old.size());
@@ -1128,6 +1122,7 @@ public class Qna_contentsCont {
       
       return obj.toString();
   }
+  
 
   
 }
