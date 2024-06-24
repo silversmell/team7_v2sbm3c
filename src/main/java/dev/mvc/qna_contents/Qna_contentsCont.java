@@ -320,6 +320,7 @@ public class Qna_contentsCont {
       if (this.accountProc.isMember(session)) {
           Integer acc_no = (Integer) session.getAttribute("acc_no");
 
+          
           // 카테고리 가져오기
           CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
           model.addAttribute("categoryVO", categoryVO);
@@ -384,15 +385,16 @@ public class Qna_contentsCont {
    * @param qcon_no
    * @return
    */
-  @GetMapping(value="/qna_update_text")
+  @GetMapping(value="/qna_update_text/{memberno}")
   public String qna_update_text(HttpSession session, Model model, RedirectAttributes ra,
+		  						@PathVariable("memberno") int memberno,
                                 @RequestParam(name="qcon_no") int qcon_no,
                                 @RequestParam(name="cate_no") int cate_no,
                                 @RequestParam(name="now_page") int now_page) {
 
       int acc_no = (int) session.getAttribute("acc_no");
       
-      if (accountProc.isMemberAdmin(session)) { // 관리자 또는 작성자인 경우
+      if (accountProc.isMemberAdmin(session) || memberno==acc_no) { // 관리자 또는 작성자인 경우
           // 카테고리 가져오기
           CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
           model.addAttribute("categoryVO", categoryVO);
@@ -407,7 +409,7 @@ public class Qna_contentsCont {
           model.addAttribute("now_page", now_page);
           model.addAttribute("acc_no", acc_no);
 
-          return "qcontents/qna_update_text"; // 수정 페이지로 이동
+          return "qcontents/qna_update_text"; // 슬래시로 시작하도록
       } else { // 권한이 없는 경우
         ra.addAttribute("url", "/account/login_cookie_need");
         return "redirect:/account/login"; // 로그인 페이지로 이동
@@ -466,14 +468,15 @@ public class Qna_contentsCont {
    * @param now_page
    * @return
    */
-  @GetMapping(value="/qna_update_file")
+  @GetMapping(value="/qna_update_file/{memberno}")
   public String qna_update_file(HttpSession session, RedirectAttributes ra, Model model,
+		  							  @PathVariable("memberno") int memberno,
                                       @RequestParam(name="cate_no", defaultValue = "2") int cate_no, 
                                       int qcon_no, int now_page) {
     
     System.out.println("-> acc_no: " + session.getAttribute("acc_no"));
 
-    if (accountProc.isMember(session)) { // 관리자, 회원으로 로그인한 경우
+    if (accountProc.isMember(session)||memberno ==(int)session.getAttribute("acc_no")) { // 관리자, 회원으로 로그인한 경우
       // 카테고리 가져오기
       CategoryVO categoryVO = this.categoryProc.cate_read(cate_no); // 카테고리 읽어옴
       model.addAttribute("categoryVO", categoryVO);

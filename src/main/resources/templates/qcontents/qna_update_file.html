@@ -43,7 +43,7 @@
         <div style='text-align: left; width: 47%; float: left;'>
           <span style='font-size: 1.5em;' th:text="${qna_contentsVO.qcon_name}"></span>
           <br>
-          <form name='frm' method='POST' action='./qna_update_file' enctype="multipart/form-data">
+          <form name='frm' method='POST' action='/qcontents/qna_update_file' enctype="multipart/form-data">
           <input type="hidden" name="qcon_no" th:value="${qna_contentsVO.qcon_no }">
           <input type="hidden" name="cate_no" th:value="${categoryVO.cate_no}"> <!-- cate_no 데이터 값 가져옴 -->
           <input type="hidden" name="now_page" th:value="${now_page}">

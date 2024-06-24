@@ -26,7 +26,7 @@
   
   <div class='menu_line'></div>
   
-  <form name='frm' method='post' th:object="${qna_contentsVO}" action='./qna_update_text' enctype="multipart/form-data">
+  <form name='frm' method='post' th:object="${qna_contentsVO}" action='/qcontents/qna_update_text' enctype="multipart/form-data">
     <input type="hidden" name="qcon_no" th:value="${qna_contentsVO.qcon_no }">
     <input type="hidden" name="cate_no" th:value="${categoryVO.cate_no}"> <!-- cate_no 데이터 값 가져옴 -->
     <input type="hidden" name="now_page" th:value="${now_page}">
