@@ -370,22 +370,24 @@
         msg += "<div style='font-size: 15px;' value='" + data['acc_id'] + "'>" +
                   "<span style='color: blue; text-decoration: underline;'>@" + data['acc_id'] + "</span> 에게 답장하기" +
                   "</div>";
-        msg += "<textarea name='recomment_comment' class='form-control' id='recomment_comment' style='width: 100%; height: 60px;' placeholder='답글 작성란입니다.' autofocus></textarea>";
+        msg += "<textarea name='recomment_comment' class='form-control' id='recomment_comment' style='width: 100%; height: 60px;' placeholder='@" + data['acc_id'] + " 에게 답글 작성 ....' autofocus></textarea>";
+        msg += "</div>";
       } else {
         msg += "<br/>";
         msg += "<div style='font-size: 15px;' value='" + data['acc_id'] + "'>" +
                    "<span style='color: blue; text-decoration: underline;'>@" + data['acc_id'] + "</span> 에게 답장하기" +
                    "</div>";
-        msg += "<textarea name='recomment_comment' class='form-control' id='recomment_comment' style='width: 100%; height: 60px;' placeholder='답글 작성란입니다.' autofocus></textarea>";
+        msg += "<textarea name='recomment_comment' class='form-control' id='recomment_comment' style='width: 100%; height: 60px;' placeholder='@" + data['acc_id'] + " 에게 답글 작성 ....' autofocus></textarea>";
+        msg += "</div>";
         return;
       }
-      msg += "<div style='text-align: center; margin-top: 10px;'>";
+      msg += "<div style='text-align: right; margin-top: 10px;'>";
       msg += "<br>";
-      msg += " <button type='button' id='recomment_create'>&nbsp;등&nbsp;&nbsp;록&nbsp;</button> ";
+      msg += " <button type='button' id='recomment_create'>&nbsp;답&nbsp;&nbsp;글&nbsp;</button> ";
       msg += " <button type='button' id='recomment_save' style='display: none;'>&nbsp;저&nbsp;&nbsp;장&nbsp;</button> ";
       msg += " <button type='button' id='recomment_delete' style='display: none;'>&nbsp;삭&nbsp;&nbsp;제&nbsp;</button> ";
       msg += " <button type='button' id='recomment_cancel' style='display: none;'>&nbsp;취&nbsp;&nbsp;소&nbsp;</button> ";
-      msg += " <button type='button' id='recomment_close'>&nbsp;닫&nbsp;&nbsp;기&nbsp;</button> ";
+      msg += " <button type='button' id='recomment_close'>&nbsp;취&nbsp;&nbsp;소&nbsp;</button> ";
       msg += "</div>";
 
       document.getElementById("recomment_list").innerHTML = msg;
@@ -508,23 +510,35 @@
     }
       
     // 대댓글 삭제
-    function qna_delete_recomment(qrecmt_no) {
-      fetch("/qcontents/qna_delete_recomment", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ "qrecmt_no": qrecmt_no, "acc_no": '[[${session.acc_no}]]' })
-      })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data['res'] == 1) {
-          console.log("삭제 성공");
-          qna_read_recomment(data['qcmt_no']);
-        } else {
-          alert('댓글 삭제에 실패하였습니다. 다시 시도해주세요.');
-        }
-      });
-    }
-    
+function qna_delete_recomment(qrecmt_no, qrecmt_contents) {
+  // 확인 창을 통해 사용자에게 삭제 여부를 물어봅니다.
+  let sw = "답글을 삭제하시겠습니까? \n삭제하시려면 확인 버튼을 누르세요. 삭제 후 복구할 수 없습니다.";
+  if (confirm(sw)) {
+    fetch("/qcontents/qna_delete_recomment", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ "qrecmt_no": qrecmt_no, "acc_no": '[[${session.acc_no}]]' })
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data['res'] == 1) {
+        console.log("삭제 성공");
+        qna_read_recomment(data['qcmt_no']);
+      } else {
+        alert('댓글 삭제에 실패하였습니다. 다시 시도해주세요.');
+      }
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      alert('댓글 삭제 중 오류가 발생하였습니다. 다시 시도해주세요.');
+    });
+  } else {
+    alert('답글 삭제 취소했습니다.');
+  }
+}
+
+
+
     // 대댓글 목록
     function qna_read_recomment(qcmt_no, acc_no) {
       let area_id = "recomment_id" + qcmt_no;
