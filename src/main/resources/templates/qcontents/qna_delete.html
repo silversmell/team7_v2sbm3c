@@ -3,19 +3,18 @@
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
 <div layout:fragment="content">
   <div class='title_line'>
-  <div th:each="qna_contentsVO : ${qna_contentsVO}">
-  <span th:text="${qna_contentsVO.qcon_name}" class="title_line_text"></span > 
-    > 삭제
-  </div>
+    <span style="font-size: 20px;" th:text="${qna_contentsVO.qcon_name}" class="title_line_text"></span > 
+      > 삭제
+   </div>
   
   <aside class="aside_right">
     <a th:href="@{|/qcontents/qna_create?cate_no=2|}">등록</a>
     <span class='menu_divide'>│</span>
-    <a th:href="@{|/qcontents/qna_update_text?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}|}">글 수정</a>
+    <a th:href="@{|/qcontents/qna_update_text?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}&cate_no=${cate_no}|}">글 수정</a>
     <span class='menu_divide'>│</span>
     <a th:href="@{|/qcontents/qna_update_file?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}|}">파일 수정</a>  
     <span class='menu_divide'>│</span>
-    <a th:href="@{|/qcontents/qna_list_all?cate_no=2&now_page=${now_page}|}">목록</a>   
+    <a th:href="@{|/qcontents/qna_list_all?cate_no=2&now_page=${now_page}|}">돌아가기</a>   
     <span class='menu_divide'>│</span>
     <a href="javascript:location.reload();">새로고침</a>
   </aside>
@@ -46,8 +45,6 @@
         </div>
     </ul>
   </fieldset>  
-
-</div>
 
 </html>
 

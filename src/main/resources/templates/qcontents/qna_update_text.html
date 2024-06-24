@@ -8,7 +8,7 @@
 </head>
 <div layout:fragment="content">
   <div class='title_line'>
-     <span th:text="${qna_contentsVO.qcon_name}" class="title_line_text"></span > 
+     <span style="font-size: 20px;" th:text="${qna_contentsVO.qcon_name}" class="title_line_text"></span > 
     > 글 수정
   </div>
   
@@ -19,7 +19,7 @@
     <span class='menu_divide'>│</span>
     <a th:href="@{|/qcontents/qna_delete?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}&cate_no=2|}">삭제</a>  
     <span class='menu_divide'>│</span>
-    <a th:href="@{|/qcontents/qna_list_all?cate_no=2&now_page=${now_page}|}">목록</a>   
+    <a th:href="@{|/qcontents/qna_list_all?cate_no=2&now_page=${now_page}|}">돌아가기</a>   
     <span class='menu_divide'>│</span>
     <a href="javascript:location.reload();">새로고침</a>
   </aside>
