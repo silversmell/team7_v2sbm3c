@@ -68,8 +68,24 @@ FROM (
         )
         )
         where r&lt;=500
-
   </select>
+  
+  <!-- 작성 댓글 500건 -->
+  <select id="asc_list_by_smt_no_join_500" resultType="dev.mvc.reply.ReplyMemberVO" parameterType="int">
+    SELECT acc_id, scmt_no, scon_no, acc_no, scmt_comment, scmt_date, r
+    FROM (
+          SELECT acc_id, scmt_no, scon_no, acc_no, scmt_comment, scmt_date, rownum as r
+          FROM (
+                SELECT  a.acc_id, 
+                         s.scmt_no, s.scon_no, s.acc_no, s.scmt_comment, s.scmt_date
+                FROM account a, share_comment s      
+                WHERE (a.acc_no = s.acc_no) AND s.scon_no=#{scon_no}
+                ORDER BY s.scmt_no ASC
+          )
+    )
+    WHERE r &lt;= 500
+  </select>
+  
     <select id="read" parameterType="int" resultType="dev.mvc.reply.Share_commentVO">
 	  select scmt_no ,scmt_comment,scmt_date,scon_no,acc_no
 		from share_comment
@@ -110,7 +126,6 @@ FROM (
 			delete from comment_like
 			where scmt_no=#{scmt_no}
 		</delete>
-		
 		
 		
 		

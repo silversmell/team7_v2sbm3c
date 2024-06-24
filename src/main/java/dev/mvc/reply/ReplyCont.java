@@ -81,6 +81,20 @@ public class ReplyCont {
 	  return json.toString();
   }
   
+  /**
+   * 댓글 목록 작성순
+   * @param scon_no
+   * @return
+   */
+  @GetMapping(value="/asc_list_by_smt_no_join_500")
+  @ResponseBody
+  public String asc_list_by_smt_no_join_500(int scon_no) {
+    List<ReplyMemberVO> list=this.replyProc.asc_list_by_smt_no_join_500(scon_no);
+    JSONObject json = new JSONObject();   
+    json.put("res", list);
+    return json.toString();
+  }
+  
   @GetMapping("/read")
   @ResponseBody
   public String read(int scmt_no) {

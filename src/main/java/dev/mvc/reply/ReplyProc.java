@@ -67,6 +67,12 @@ public class ReplyProc implements ReplyProcInter {
 	}
 	
 	@Override
+  public List<ReplyMemberVO> asc_list_by_smt_no_join_500(int scon_no) {
+    List<ReplyMemberVO> list = this.replyDAO.asc_list_by_smt_no_join_500(scon_no);
+    return list;
+  }
+	
+	@Override
 	public Share_commentVO read(int scmt_no) {
 		Share_commentVO share_commentVO = this.replyDAO.read(scmt_no);
  		return share_commentVO;

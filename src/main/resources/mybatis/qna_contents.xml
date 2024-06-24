@@ -222,7 +222,7 @@
     WHERE r &lt;= 500
   </select>
   
-  <!-- 최신 댓글 500건 -->
+  <!-- 작성 댓글 500건 -->
   <select id="asc_list_by_qcmt_no_join_500"  resultType="dev.mvc.qna_contents.Qna_Acc_commentVO" parameterType="int">
     SELECT acc_id, qcmt_no, qcon_no, acc_no, qcmt_contents, qcmt_date, r
     FROM (

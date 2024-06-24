@@ -53,11 +53,21 @@
 					        })
 					        .then((response) => response.json())
 					        .then((data) =>{
-					        	list_by_contents_join()
+                    let sortOption = document.getElementById('latestLink').style.textDecoration === 'underline' ? 'latest' : 'asc';
+                    if (sortOption === 'latest') {
+                      list_by_contentsno_join_500(); // 최신순으로 댓글 목록 갱신
+                      qcmt_contents_tag.focus();
+                    } else {
+                      asc_list_by_smt_no_join_500(); // 작성순으로 댓글 목록 갱신
+                      content_tag.focus();
+                    }
+                    
+					        	content_tag.value = ""; // 댓글 입력 필드 초기화
 					        });
 					        //result_animation_tag.innerHTML = '<img src="/static/images/progress.gif" style="width: 15%; margin-top: 0px;">';
 						}
 					});
+					
 					//페이징 처리
 					btn_add_tag.addEventListener('click',()=>{ //더보기 출력
 						console.log("더보기 클릭함.");
@@ -71,13 +81,14 @@
 								
 								let msg = "";
 								let page_div = document.createElement('div');
-								
+								     /*
 						    	   fetch("/reply/list_by_contentsno_join?scon_no=[[${scontentsVO.scon_no}]]",{
 						    		   "method":"get"
 						    	   })
 						    	   .then((response) => response.json())
 						    	   .then((data) => {
 						    		   reply_data=data['res'];
+						    		   */
 												for(let i = start;i<end;i++){
 													console.log("들어옴");
 													if(i==reply_data.length){
@@ -88,7 +99,6 @@
 					   	             msg += "<span style='font-weight: bold;'>" + row.acc_id + "</span><br>";
 					   	          	 msg += "<br>";
 					   	          	 msg += " "+row.scmt_date;
-					   	          	 
 
 					    	             if("[[${session.acc_no}]]" == row.acc_no){
 					    	                 msg += " <a href='javascript:reply_update("+row.scmt_no+")'>수정</a>";
@@ -103,7 +113,7 @@
 				                 reply_list_tag.appendChild(page_div);
 				                 
 				                 reply_now_page = reply_now_page + 1;
-											});
+											// });
 							}
 						}
 						
@@ -131,16 +141,91 @@
 											content_tag.value="";
 											content_tag.focus();
 											btn_visible('default');
-											
 										}
 									});
 								}
 						
 					});
 
+            underline('latest'); // 댓글 출력 밑줄 초기화
 						list_by_contents_join();
        } // window.onload END
 
+        // 최신순 목록 출력
+        // 5건 미만이면 5회 미만 순환, 5건 이상 5회 순환
+        function list_by_contents_join() {
+           fetch("/reply/list_by_contentsno_join?scon_no=[[${scontentsVO.scon_no}]]&acc_no=[[${session.acc_no}]]", {
+            "method": "get"
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              reply_data = data['res'];
+              render_comments();
+            });
+        }
+        
+        // 작성순 목록 출력
+        // 5건 미만이면 5회 미만 순환, 5건 이상 5회 순환
+        function asc_list_by_smt_no_join_500() {
+          fetch("/reply/asc_list_by_smt_no_join_500?scon_no=[[${scontentsVO.scon_no}]]", {
+            "method": "get"
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              reply_data = data['res'];
+              render_comments();
+            });
+        }
+        
+        // 댓글 목록 출력 함수
+        function render_comments() {
+          let msg = '';
+          let cnt = Math.min(reply_data.length, reply_now_page * 5);
+
+          for (let i = 0; i < cnt; i++) {
+            let row = reply_data[i];
+             msg += "<div id='"+row.scmt_no+"' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px;'>";
+             msg += "<span style='font-weight: bold;'>" + row.acc_id + "</span>";
+             msg += " "+row.scmt_date;
+
+            // 답글 보이기/숨기기 처리
+            msg += "  <a href='javascript:qna_read_recomment(" + row.qcmt_no + ", \"" + row.acc_no + "\")'>답글 </a>";
+            if ("[[${session.acc_no}]]" == row.acc_no) {
+              msg += " <a href='javascript:reply_update(" + row.scmt_no + ")'>수정</a>";
+              msg += "<span class='menu_divide' >│</span>"
+              msg += "  <a href='javascript:reply_delete(" + row.scmt_no + ")'>삭제</a>";
+              msg += "<span class='menu_divide' >│</span>"
+            }
+            msg+= "  <a href='javascript:recomment_read_form("+ row.scmt_no + ", \"" + row.acc_no + "\")'>답글</a>";
+
+            msg += "  " + "<br>";
+            msg += row.scmt_comment;
+            msg += "</div>";
+            msg += "<div id='recomment_area_" + row.scmt_no + "' style='display: none; margin-left: 20px;'></div>";
+          }
+
+         document.getElementById("reply_list").innerHTML = msg;
+        }
+        
+        // 최신순/작성순 클릭에 따라 밑줄 토글 함수
+        function underline(option) {
+          let latestLink = document.getElementById('latestLink');
+          let oldestLink = document.getElementById('oldestLink');
+
+          latestLink.style.textDecoration = 'none';
+          oldestLink.style.textDecoration = 'none';
+
+          if (option === 'latest') {
+            latestLink.style.textDecoration = 'underline';
+            list_by_contents_join(); // 최신순으로 댓글 목록 갱신
+          } else if (option === 'oldest') {
+            oldestLink.style.textDecoration = 'underline';
+            asc_list_by_smt_no_join_500(); // 작성순으로 댓글 목록 갱신
+          }
+        }
+
+       /*
+       // 최신순 목록 old
        function list_by_contents_join(){
     	   let cnt = 0 //출력 순환 횟수
     	   fetch("/reply/list_by_contentsno_join?scon_no=[[${scontentsVO.scon_no}]]&acc_no=[[${session.acc_no}]]",{
@@ -182,7 +267,7 @@
     		   document.getElementById("reply_list").innerHTML = msg;
     	   });
        }
-       
+       )*/
        
 
        function reply_delete(scmt_no){
@@ -237,6 +322,7 @@
     	   });
     	   
        }
+       
        function reply_cancel(scmt_no){
     	   fetch("/reply/like_cancel",{
     		   "method":"POST",
@@ -655,7 +741,11 @@
 			<br><br>
 			 
 			  <div style='width: 80%; margin: 0px auto; clear:both;'>
-			 <div style="float:left;">댓글수: <span th:text="${count}"></span></div><br>
+        <div style="float:left;">
+          댓글수: <span th:text="${count}"></span>
+          &nbsp;<a href="#" id="latestLink" onclick="list_by_contentsno_join(); underline('latest')")>최신순</a>
+                  &nbsp;<a href="#" id="oldestLink" onclick="asc_list_by_smt_no_join_500(); underline('oldest')">작성순</a>
+        </div><br>
 			     <hr>  
 			      <form name='frm_reply' id='frm_reply'> 
 			          <input type='hidden' name='scon_no' id='scon_no' value='${scontentsVO.scon_no}'>

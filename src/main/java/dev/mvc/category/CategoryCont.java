@@ -409,6 +409,7 @@ public class CategoryCont {
     
     this.categoryProc.cate_update_visible_y(cate_no);
     
+    model.addAttribute("outputMode", "public"); // 공개 모드
     return "redirect:/category/cate_list_search?word=" + Tool.encode(word); // /templates/category/cate_list_search
   }
   
@@ -427,6 +428,7 @@ public class CategoryCont {
     
     this.categoryProc.cate_update_visible_n(cate_no);
     
+    model.addAttribute("outputMode", "private"); // 비공개 모드
     return "redirect:/category/cate_list_search?word=" + Tool.encode(word); // /templates/category/cate_list_search
   }
   

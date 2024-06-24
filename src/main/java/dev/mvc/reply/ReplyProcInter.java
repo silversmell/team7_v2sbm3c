@@ -75,6 +75,13 @@ public interface ReplyProcInter {
 	public List<ReplyMemberVO> list_by_contentsno_join_500(HashMap<String,Object> map);
 	
 	/**
+   * scon_no 에 따른 출력 작성순
+   * @param scon_no
+   * @return
+   */
+  public List<ReplyMemberVO> asc_list_by_smt_no_join_500(int scon_no);
+	
+	/**
 	 * 댓글 번호에 따른 댓글 찾기
 	 * @param scmt_no
 	 * @return
