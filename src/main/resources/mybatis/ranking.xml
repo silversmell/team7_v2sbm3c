@@ -5,15 +5,15 @@
 
 <select id="ranking" resultType="dev.mvc.share_contentsdto.Share_contentsVO" >
 		SELECT scon_no, scon_title,
-		scon_contents, scon_views, scon_comment,
+		scon_contents, scon_views,
 		scon_date,scon_priority, r
 		FROM (
 		SELECT scon_no, scon_title,
-		scon_contents, scon_views, scon_comment,
+		scon_contents, scon_views,
 		scon_date,scon_priority,rownum as r
 		FROM (
 		SELECT scon_no, scon_title,
-		scon_contents, scon_views, scon_comment,
+		scon_contents, scon_views,
 		scon_date,scon_priority
         FROM share_contents
         where scon_priority >0
@@ -24,13 +24,13 @@
 </select>
 <!-- 랭킹에 따른 해시태그 찾기 -->
 <select id="ranking_tag" resultType="dev.mvc.share_contentsdto.Share_contentsVO" parameterType="int">
-SELECT scon_no, scon_title, scon_contents, scon_views, scon_comment,
+SELECT scon_no, scon_title, scon_contents, scon_views,
        scon_date, scon_priority, tag_no, r
 FROM (
-    SELECT sc.scon_no, sc.scon_title, sc.scon_contents, sc.scon_views, sc.scon_comment,
+    SELECT sc.scon_no, sc.scon_title, sc.scon_contents, sc.scon_views,
            sc.scon_date, sc.scon_priority, ct.tag_no, ROWNUM as r
     FROM (
-        SELECT scon_no, scon_title, scon_contents, scon_views, scon_comment,
+        SELECT scon_no, scon_title, scon_contents, scon_views,
                scon_date, scon_priority
         FROM share_contents
         WHERE scon_priority > 0
@@ -44,10 +44,10 @@ WHERE r &lt;= 10
 <select id="ranking_tag_count" resultType="int" parameterType="int">
 SELECT count(*)
 FROM (
-    SELECT sc.scon_no,sc.scon_title, sc.scon_contents, sc.scon_views, sc.scon_comment,
+    SELECT sc.scon_no,sc.scon_title, sc.scon_contents, sc.scon_views, 
            sc.scon_date, sc.scon_priority, ct.tag_no,ROWNUM as r
     FROM(
-        SELECT scon_no,scon_title, scon_contents, scon_views, scon_comment,
+        SELECT scon_no,scon_title, scon_contents, scon_views,
                scon_date,scon_priority
        FROM share_contents
        WHERE scon_priority>0
@@ -60,13 +60,13 @@ where r&lt;=10
 </select>
 
 <select id="ranking_tag_list" resultType="dev.mvc.share_contentsdto.Share_contentsVO" parameterType="int">
-SELECT scon_no, scon_title, scon_contents, scon_views, scon_comment,
+SELECT scon_no, scon_title, scon_contents, scon_views,
        scon_date, scon_priority, tag_no, r
 FROM (
-    SELECT sc.scon_no, sc.scon_title, sc.scon_contents, sc.scon_views, sc.scon_comment,
+    SELECT sc.scon_no, sc.scon_title, sc.scon_contents, sc.scon_views,
            sc.scon_date, sc.scon_priority, ct.tag_no,ht.tag_name, ROWNUM as r
     FROM (
-        SELECT scon_no, scon_title, scon_contents, scon_views, scon_comment,
+        SELECT scon_no, scon_title, scon_contents, scon_views,
                scon_date, scon_priority
         FROM share_contents
         WHERE scon_priority > 0
