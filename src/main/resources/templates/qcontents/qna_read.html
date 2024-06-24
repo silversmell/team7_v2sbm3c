@@ -88,7 +88,7 @@
               }
 
               let row = reply_data[i];
-              msg += "<div id='" + row.qcmt_no + "' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px;'>";
+              msg += "<div id='" + row.qcmt_no + "' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px; text-align: left;'>";
               msg += "<span style='font-weight: bold;'>" + row.acc_id + "</span>";
               msg += "  " + row.qcmt_date;
 
@@ -185,7 +185,7 @@
     
       for (let i = 0; i < cnt; i++) {
         let row = reply_data[i];
-        msg += "<div id='" + row.qcmt_no + "' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px;'>";
+        msg += "<div id='" + row.qcmt_no + "' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px; text-align: left;'>";
         msg += "<span style='font-weight: bold;'>" + row.acc_id + "</span>";
         msg += "  " + row.qcmt_date;
     
@@ -202,7 +202,7 @@
         msg += row.qcmt_contents;
         msg += "</div>";
         
-        msg += "<div id='recomment_id" + row.qcmt_no + "' style='display: none; margin-left: 20px;'></div>";
+        msg += "<div id='recomment_id" + row.qcmt_no + "' style='display: none; margin-left: 20px; text-align: left;'></div>";
       }
     
       document.getElementById("reply_list").innerHTML = msg;
@@ -233,26 +233,26 @@
     }
   }
 
-    // 수정 폼 
-    function qna_update_comment(qcmt_no) {
-      let qcmt_no_tag = document.getElementById('qcmt_no')
-      let acc_no_tag = document.getElementById('acc_no')
-      let qcmt_contents_tag = document.getElementById('qcmt_contents')
+  // 수정 폼 
+  function qna_update_comment(qcmt_no) {
+    let qcmt_no_tag = document.getElementById('qcmt_no')
+    let acc_no_tag = document.getElementById('acc_no')
+    let qcmt_contents_tag = document.getElementById('qcmt_contents')
 
-      // fetch로 데이터 읽어 오기
-      fetch("/qcontents/qna_read_comment?qcmt_no=" + qcmt_no, {
-        "method": "get",
-        "headers": {"Content-Type": "application/json"},
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          // alert(data['res']['content']);
-          qcmt_no_tag.value = data['res']['qcmt_no'];
-          acc_no_tag.value = data['res']['acc_no'];
-          qcmt_contents_tag.value = data['res']['qcmt_contents'];
-          qcmt_contents_tag.focus();
-          btn_visible('update');
-        });
+    // fetch로 데이터 읽어 오기
+    fetch("/qcontents/qna_read_comment?qcmt_no=" + qcmt_no, {
+      "method": "get",
+      "headers": {"Content-Type": "application/json"},
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // alert(data['res']['content']);
+        qcmt_no_tag.value = data['res']['qcmt_no'];
+        acc_no_tag.value = data['res']['acc_no'];
+        qcmt_contents_tag.value = data['res']['qcmt_contents'];
+        qcmt_contents_tag.focus();
+        btn_visible('update');
+      });
     }
 
     // 삭제 폼 + 삭제 처리
@@ -626,7 +626,7 @@
         <ul>
           <li class="li_none">
             <div style="width: 100%; word-break: break-all;">
-              <div style='margin: 0px auto; width: 80%;'>
+              <div style='margin: 0px auto; width: 70%;'>
               <br>
                  <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px;">
                   
@@ -670,13 +670,13 @@
               <br>
               
               <div th:if="${qna_imageVO != null and qna_imageVO.size() > 0}"
-                style='margin: 0px auto; width: 80%;'>
+                style='margin: 0px auto; width: 70%;'>
                 <span style="font-size: 1.5em; font-weight: normal; text-align: left;" th:text="${qna_contentsVO.qcon_contents}"></span><br>
                 <div style="white-space: pre-wrap;"></div>
               </div>
               
               <div th:if="${qna_imageVO == null or qna_imageVO.size() == 0}"
-                style='margin: 0px auto; width: 80%;'>
+                style='margin: 0px auto; width: 70%;'>
                 <span style="font-size: 1.5em; font-weight: normal; text-align: left;" th:text="${qna_contentsVO.qcon_contents}"></span><br>
                 <div style="white-space: pre-wrap;"></div>
               </div>
@@ -697,7 +697,7 @@
               </li>
               <br><br>
               
-              <div style='width: 80%; margin: 0px auto; clear:both; text-align:center;'>
+              <div style='width: 70%; margin: 0px auto; clear:both; text-align:center;'>
                 <div style="float:left;">
                   댓글 <span style="font-size: normal; margin-left:3px;" th:text="${comment_cnt}"></span>
                   &nbsp;<a href="#" id="latestLink" onclick="list_by_qcmt_no_join(); underline('latest')")>최신순</a>

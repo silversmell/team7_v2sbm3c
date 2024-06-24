@@ -374,4 +374,11 @@ public interface Qna_contentsDAOInter {
    */
   public AccountVO acc_profile_img(int qcon_no);
   
+  /**
+   * 댓글 작성한 회원의 프로필 사진
+   * @param qcmt_no
+   * @return
+   */
+  public AccountVO acc_profile_img_by_qcmt_no(int qcmt_no);
+  
 }

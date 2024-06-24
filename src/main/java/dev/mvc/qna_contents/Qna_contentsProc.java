@@ -510,4 +510,11 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
     return accountVO;
   }
   
+  @Override
+  public AccountVO acc_profile_img_by_qcmt_no(int qcmt_no) {
+    AccountVO accountVO = this.qna_contentsDAO.acc_profile_img_by_qcmt_no(qcmt_no);
+    
+    return accountVO;
+  }
+  
 }

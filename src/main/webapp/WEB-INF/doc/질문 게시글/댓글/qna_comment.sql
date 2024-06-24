@@ -62,4 +62,10 @@ ORDER BY qcmt_no DESC;
 -- 특정 질문글 전체 댓글
 SELECT count(*)
 FROM qna_comment
-WHERE qcon_no=6;
+WHERE qcon_no=5;
+
+-- 댓글 작성자 프로필 이미지
+SELECT ac.acc_no, ac.acc_id, ac.acc_img, ac.acc_saved_img, ac.acc_thumb_img, ac.acc_img_size
+FROM qna_comment qcmt INNER JOIN account ac
+ON qcmt.acc_no = ac.acc_no
+WHERE qcmt.qcmt_no = 16;

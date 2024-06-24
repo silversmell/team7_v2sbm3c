@@ -441,12 +441,21 @@
     WHERE qcmt_no = #{qcmt_no}
   </select>
   
+  <!-- 글 작성자 프로필 이미지 -->
   <select id = "acc_profile_img" resultType="dev.mvc.account.AccountVO" parameterType="int">
     SELECT ac.acc_no, ac.acc_id, ac.acc_img, ac.acc_saved_img, ac.acc_thumb_img, acc_img_size
     FROM qna_contents qc INNER JOIN account ac
     ON qc.acc_no = ac.acc_no
     WHERE qc.qcon_no=#{qcon_no}
     ORDER BY qc.qcon_no desc
+  </select>
+
+  <!-- 댓글 작성자 프로필 이미지 -->
+  <select id="acc_profile_img_by_qcmt_no" resultType="dev.mvc.account.AccountVO" parameterType="int">
+    SELECT ac.acc_no, ac.acc_id, ac.acc_img, ac.acc_saved_img, ac.acc_thumb_img, ac.acc_img_size
+    FROM qna_comment qcmt INNER JOIN account ac
+    ON qcmt.acc_no = ac.acc_no
+    WHERE qcmt.qcmt_no = #{qcmt_no}
   </select>
 
 </mapper>
