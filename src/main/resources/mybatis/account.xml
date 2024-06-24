@@ -101,63 +101,64 @@
 	<!-- 회원 로그 검색 -->
 	<select id="searchLogs" resultMap="logListResultMap" parameterType="map">
 		SELECT l.acc_log_no, a.acc_no, a.acc_id, l.acc_log_ip, l.acc_log_time
-		FROM acc_log l INNER JOIN account a ON a.acc_no = l.acc_no
-		<where>
+		FROM acc_log l INNER JOIN account a ON a.acc_no = l.acc_no <where>
 			<if test="word_id != null and word_id != ''">
 				AND LOWER(a.acc_id) LIKE '%' || LOWER(#{word_id}) || '%'
 			</if>
 			<if test="word_ip != null and word_ip != ''">
 				AND l.acc_log_ip LIKE '%' || #{word_ip} || '%'
 			</if>
-	        <if test="start_date != null and start_date != '' and end_date != null and end_date != ''">
-	            AND l.acc_log_time BETWEEN TO_TIMESTAMP(#{start_date} || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS') 
-	            AND TO_TIMESTAMP(#{end_date} || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
-	        </if>
+			<if
+				test="start_date != null and start_date != '' and end_date != null and end_date != ''">
+		AND l.acc_log_time BETWEEN TO_TIMESTAMP(#{start_date} || ' 00:00:00',
+		'YYYY-MM-DD HH24:MI:SS')
+				AND TO_TIMESTAMP(#{end_date} || ' 23:59:59', 'YYYY-MM-DD
+		HH24:MI:SS')
+			</if>
 		</where>
-		ORDER BY l.acc_log_time
-	</select>
-	
+		ORDER BY l.acc_log_time </select>
+
 	<!-- 검색된 레코드 갯수 -->
-	<select id="searchCount" resultType="int" parameterType="HashMap">
-		SELECT COUNT(*) as cnt 
-		FROM acc_log l INNER JOIN account a ON a.acc_no = l.acc_no
-		<where>
+	<select id="searchCount" resultType="int" parameterType="HashMap"> SELECT
+		COUNT(*) as cnt FROM acc_log l INNER JOIN account a ON a.acc_no =
+		l.acc_no <where>
 			<if test="word_id != null and word_id != ''">
 				AND LOWER(a.acc_id) LIKE '%' || LOWER(#{word_id}) || '%'
 			</if>
 			<if test="word_ip != null and word_ip != ''">
 				AND l.acc_log_ip LIKE '%' || #{word_ip} || '%'
 			</if>
-	        <if test="start_date != null and start_date != '' and end_date != null and end_date != ''">
-	            AND l.acc_log_time BETWEEN TO_TIMESTAMP(#{start_date} || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS') 
-	            AND TO_TIMESTAMP(#{end_date} || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
-	        </if>
+			<if
+				test="start_date != null and start_date != '' and end_date != null and end_date != ''">
+		AND l.acc_log_time BETWEEN TO_TIMESTAMP(#{start_date} || ' 00:00:00',
+		'YYYY-MM-DD HH24:MI:SS')
+				AND TO_TIMESTAMP(#{end_date} || ' 23:59:59', 'YYYY-MM-DD
+		HH24:MI:SS')
+			</if>
 		</where>
-		ORDER BY l.acc_log_time
-	</select>
-	
+		ORDER BY l.acc_log_time </select>
+
 	<!-- 회원 로그 목록 (검색 + 페이징) -->
 	<select id="pagingList" resultMap="logListResultMap" parameterType="map">
-		SELECT * FROM (
-		    SELECT l.acc_log_no, a.acc_no, a.acc_id, l.acc_log_ip, l.acc_log_time,
-		           ROW_NUMBER() OVER (ORDER BY l.acc_log_time) AS r
-		    FROM acc_log l
-		    INNER JOIN account a ON a.acc_no = l.acc_no
-			<where>
-				<if test="word_id != null and word_id != ''">
-					AND LOWER(a.acc_id) LIKE '%' || LOWER(#{word_id}) || '%'
-				</if>
-				<if test="word_ip != null and word_ip != ''">
-					AND l.acc_log_ip LIKE '%' || #{word_ip} || '%'
-				</if>
-		        <if test="start_date != null and start_date != '' and end_date != null and end_date != ''">
-		            AND l.acc_log_time BETWEEN TO_TIMESTAMP(#{start_date} || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS') 
-		            AND TO_TIMESTAMP(#{end_date} || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
-		        </if>
-			</where>
-		)
-		WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>
-	</select> 
+		SELECT * FROM ( SELECT l.acc_log_no, a.acc_no, a.acc_id, l.acc_log_ip,
+		l.acc_log_time, ROW_NUMBER() OVER (ORDER BY l.acc_log_time) AS r FROM
+		acc_log l INNER JOIN account a ON a.acc_no = l.acc_no <where>
+			<if test="word_id != null and word_id != ''">
+				AND LOWER(a.acc_id) LIKE '%' || LOWER(#{word_id}) || '%'
+			</if>
+			<if test="word_ip != null and word_ip != ''">
+				AND l.acc_log_ip LIKE '%' || #{word_ip} || '%'
+			</if>
+			<if
+				test="start_date != null and start_date != '' and end_date != null and end_date != ''">
+		AND l.acc_log_time BETWEEN TO_TIMESTAMP(#{start_date} || ' 00:00:00',
+		'YYYY-MM-DD HH24:MI:SS')
+				AND TO_TIMESTAMP(#{end_date} || ' 23:59:59', 'YYYY-MM-DD
+		HH24:MI:SS')
+			</if>
+		</where>
+		) WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>
+	</select>
 
 	<resultMap id="logListResultMap" type="map">
 		<association property="account" javaType="dev.mvc.account.AccountVO">
@@ -251,7 +252,44 @@
 		ORDER BY file_no ASC
 	</select>
 
+	<!-- 나의 북마크 목록(공유 게시글) -->
+	<select id="shareMarks"
+		resultType="dev.mvc.share_contentsdto.Share_contentsVO"
+		parameterType="int">
+		SELECT sc.scon_no, sc.scon_title, sc.scon_contents, sc.scon_date,
+		sc.scon_views, sc.scon_priority
+		FROM account a
+		INNER JOIN share_mark sm ON sm.acc_no = a.acc_no
+		INNER JOIN share_contents sc ON sc.scon_no = sm.scon_no
+		WHERE a.acc_no = #{acc_no}
+		ORDER BY sc.scon_date ASC
+	</select>
 
+	<!-- 나의 북마크 목록(질문 게시글) -->
+	<select id="qnaMarks" resultType="dev.mvc.qna_contents.Qna_contentsVO"
+		parameterType="int">
+		SELECT qc.qcon_no, qc.qcon_name, qc.qcon_contents, qc.qcon_date,
+		qc.qcon_views
+		FROM account a
+		INNER JOIN qna_mark qm ON qm.acc_no = a.acc_no
+		INNER JOIN qna_contents qc ON qc.qcon_no = qm.qcon_no
+		WHERE a.acc_no = #{acc_no}
+		ORDER BY qc.qcon_date ASC
+	</select>
+	
+	<!-- 공유 게시글 댓글 수 -->
+	<select id="sconCmtCnt" resultType="int" parameterType="int">
+		SELECT count(*)
+		FROM share_comment
+		WHERE scon_no = #{scon_no}
+	</select>
+
+	<!-- 질문 게시글 댓글 수 -->
+	<select id="qconCmtCnt" resultType="int" parameterType="int">
+		SELECT count(*)
+		FROM qna_comment
+		WHERE qcon_no = #{qcon_no}
+	</select>
 </mapper>
 
 

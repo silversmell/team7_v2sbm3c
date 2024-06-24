@@ -159,6 +159,22 @@ FROM share_contents
 WHERE acc_no = 1
 ORDER BY scon_date ASC;
 
+-- 나의 북마크 모음(공유 게시글)
+SELECT sc.scon_no, sc.scon_title, sc.scon_contents, sc.scon_date, sc.scon_views, sc.scon_priority
+FROM account a
+INNER JOIN share_mark sm ON sm.acc_no = a.acc_no
+INNER JOIN share_contents sc ON sc.scon_no = sm.scon_no
+WHERE a.acc_no = 2
+ORDER BY sc.scon_date ASC;
+
+-- 나의 북마크 모음(질문 게시글)
+SELECT qc.qcon_no, qc.qcon_name, qc.qcon_contents, qc.qcon_date, qc.qcon_views
+FROM account a
+INNER JOIN qna_mark qm ON qm.acc_no = a.acc_no
+INNER JOIN qna_contents qc ON qc.qcon_no = qm.qcon_no
+WHERE a.acc_no = 2
+ORDER BY qc.qcon_date ASC;
+
 --------------------------------------------------------------------------------
 
 SELECT * FROM account;

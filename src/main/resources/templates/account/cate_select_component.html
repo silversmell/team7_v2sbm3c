@@ -1,0 +1,30 @@
+<div th:fragment="cate_select_fragment">
+	<script>
+		$(document).ready(function () {
+			let share_marks = $('tr[data-type="share"]');
+			let qna_marks = $('tr[data-type="qna"]');
+
+			$('#bookmarkType').change(function () {
+				var selectedType = $(this).val();
+				if (selectedType === 'share') {
+					share_marks.show();
+					qna_marks.hide();
+				} else {
+					share_marks.hide();
+					qna_marks.show();
+				}
+			});
+
+			share_marks.show();
+			qna_marks.hide();
+		});
+
+
+	</script>
+	<div style="text-align: right; clear: both;">
+		<select id="bookmarkType">
+			<option value="share">공유 게시글</option>
+			<option value="qna">질문 게시글</option>
+		</select>
+	</div>
+</div>

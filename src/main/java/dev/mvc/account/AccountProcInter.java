@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import dev.mvc.qna_contents.Qna_contentsVO;
 import dev.mvc.recommend.HashtagVO;
 import dev.mvc.recommend.RecommendVO;
 import dev.mvc.share_contentsdto.Share_contentsVO;
@@ -241,5 +242,37 @@ public interface AccountProcInter {
 	 * @return
 	 */
 	public ArrayList<Share_imageVO> contentImages(int scon_no);
+	
+	/**
+	 * 나의 북마크 목록(공유 게시글)
+	 * 
+	 * @param acc_no
+	 * @return
+	 */
+	public ArrayList<Share_contentsVO> shareMarks(int acc_no);
+	
+	/**
+	 * 나의 북마크 목록(질문 게시글)
+	 * 
+	 * @param acc_no
+	 * @return
+	 */
+	public ArrayList<Qna_contentsVO> qnaMarks(int acc_no);
+	
+	/**
+	 * 공유 게시글 댓글 수
+	 * 
+	 * @param scon_no
+	 * @return
+	 */
+	public int sconCmtCnt(int scon_no);
+	
+	/**
+	 * 질문 게시글 댓글 수
+	 * 
+	 * @param qcon_no
+	 * @return
+	 */
+	public int qconCmtCnt(int qcon_no);
 
 }

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}">
+<div layout:fragment="content">
+	<script type="text/javascript" th:src="@{/js/recommend/list.js}"></script>
+
+	<script th:inline="javascript">
+
+		function mark(element) {
+			console.log("mark  클릭");
+
+			//let scon_no = document.getElementById("scon_no").value;
+			let scon_no = element.id
+			let cate_no = 1;
+
+			let url;
+			//let currentImg = document.getElementById("bookmarkImage").src;
+			let currentImg = element.src;
+
+			if (currentImg.endsWith("bookmark_on.png")) {
+				url = '/scontents/down_priority/' + scon_no + '?cate_no=' + cate_no;
+			} else {
+				url = '/scontents/up_priority/' + scon_no + '?cate_no=' + cate_no;
+			}
+
+			fetch(url, {
+				method: 'GET',
+			})
+				.then(response => response.json())
+				.then(rdata => {
+					if (rdata.cnt == 0) {
+						alert("로그인이 필요합니다.");
+						return;
+					}
+					if (rdata.cnt > 0) {
+						//console.log("우선순위 변경 선공");
+						if (currentImg.endsWith("bookmark_off.png")) {
+							element.src = "/css/images/bookmark_on.png";
+							//document.getElementById("bookmarkImage").src = "/css/images/bookmark_on.png";
+							alert("찜하기에 등록했어요!");
+						} else {
+							element.src = "/css/images/bookmark_off.png";
+							//document.getElementById("bookmarkImage").src = "/css/images/bookmark_off.png";
+						}
+					}
+				})
+				.catch(error => {
+					console.log('Error:', error);
+				});
+		}
+	</script>
+
+	<style>
+		td {
+			vertical-align: top;
+			word-break: break-word;
+			overflow: hidden;
+		}
+		
+		.td_basic {
+		    display: flex;
+		    flex-direction: column;
+		    justify-content: space-between;
+		}
+
+		.content {
+		    flex-grow: 1;
+		}
+	</style>
+
+	<div id="code" th:attr="data-code=${code}" style="display: none;"></div>
+
+
+	<div class='title_line'>
+		<span th:text="| 나의 북마크(공유 게시글) (${share_count} 건)|" class="title_line_text"></span>
+	</div>
+
+	<div class="title_line">나의 북마크</div>
+
+	<aside class="aside_right">
+		<a href="javascript:location.reload();">새로고침</a>
+		<span class='menu_divide'>│</span>
+		<a href='./create'>회원 가입</a>
+		<span class='menu_divide'>│</span>
+		<a href='./list'>목록</a>
+	</aside>
+
+	<!-- /account/cate_select_component.html 파일의 cate_select_fragment import -->
+	<div th:replace="~{account/cate_select_component::cate_select_fragment}"></div>
+
+	<div class='menu_line'></div>
+
+	<div style="text-align: right; clear: both;">
+		<div style="display: flex; justify-content: space-between; ">
+			<div style="display: flex; margin-left:78px;">
+			</div>
+		</div>
+		<div style="display:flex; justify-content: center;">
+			<table class="table table-striped" style='width: 80%; justify-content:center;'>
+				<colgroup>
+					<col style='width: 25%;' />
+					<col style='width: 80%;' />
+					<col style='width: 1%;' />
+				</colgroup>
+
+				<thead>
+					<tr>
+						<th class="th_bs">이미지</th>
+						<th class="th_bs">내용</th>
+						<th class="th_bs">북마크</th>
+					</tr>
+				</thead>
+
+				<tbody>
+
+					<tr th:each="smark : ${share_marks}" data-type="share">
+						<input type="hidden" id="scon_no" name="scon_no" th:value="${smark.scon_no}">
+
+						<td class='td_basic' style="vertical-align: middle; text-align: center; margin-bottom: 10px;">
+							<div th:if="${sconImages.containsKey(smark.scon_no)}"
+								style="display: flex; justify-content: center;">
+								<div class="horizontal-container"
+									style="margin-bottom: 10px; display: flex; align-items: center;">
+									<div th:each="image, images : ${sconImages[smark.scon_no]}"
+										th:if="${images.index == 0}" style="margin-right: 5px;">
+										<div th:if="${image.file_origin_name.endsWith('jpg') or image.file_origin_name.endsWith('png') or image.file_origin_name.endsWith('gif')}"
+											style="width: 180px; height: 100px; overflow: hidden;">
+											<img th:src="@{|/contents/storage/${image.file_thumb_name}|}"
+												style="width: 100%; height: 100%; object-fit: cover;">
+										</div>
+									</div>
+								</div>
+							</div>
+						</td>
+
+						<td class='td_basic' style="vertical-align: middle; text-align: center;">
+							<div style="margin-bottom: 15px;">
+								<div style="cursor: pointer; margin-left: 5px; display: flex; justify-content: center;">
+									<div style="width: 260%; height: 102px; margin-bottom: 23px;">
+										<div style="display:flex; align-items: center; width: 100%; height: 100%;">
+											<div style="margin-bottom: 13px; width: 100%; height: 100%;">
+												<div class='td_basic'
+													th:attr="onclick=|location.href='/scontents/read?cate_no=1&scon_no=${smark.scon_no}'|"
+													style="cursor: pointer; margin-bottom: 60px; width: 100%; height: 100%; text-align: left;">
+													<br>
+													<div style="font-weight: bold; font-size: larger; display: block; margin-bottom: 3px;"
+														th:text="${smark.scon_title}"></div>
+													<div style="display: block; margin-bottom: 5px;"
+														th:text="${smark.scon_date.substring(0, 16)}"></div>
+													<div th:if="${smark.scon_contents.length() > 160 }"
+														th:text="|${smark.scon_contents.substring(0, 100)}...|"></div>
+													<div th:if="${smark.scon_contents.length() <= 160 }"
+														th:text="|${smark.scon_contents}|"></div>
+
+													<span id='acc_no' style="display:none;" value=""></span>
+													<br>
+													<div style="margin-top: auto; text-align: right;">
+														<img th:src="@{|/css/images/comment.png|}"
+															style="width: 20px; height: 20px;">
+														<label th:text="${sconComments}"></label>
+
+														<!--<span th:text="|${smark.scon_views} 조회|"></span>-->
+													</div>
+													<br>
+												</div>
+												<div
+													style=" margin-left: auto; text-align: right; margin-right: 10px; margin-top: 5px;">
+
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</td>
+						<td class='td_basic' style="vertical-align: middle; text-align: center; margin-bottom: 10px;">
+							<div style="margin-bottom: 15px; display: flex; justify-content: center;">
+								<div class="horizontal-container"
+									style="margin-bottom: 10px; display: flex; align-items: center;">
+									<div style="margin-right: 5px;">
+										<div style="width: 180px; height: 100px; overflow: hidden;">
+											<span>
+												<img src="/css/images/bookmark_on.png" th:id="${smark.scon_no}"
+													class="icon" onclick="mark(this)" style="width:24px; height: 24px;">
+											</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</td>
+					</tr>
+
+
+					<tr th:each="qmark : ${qna_marks}" data-type="qna" style="display:none;">
+						<input type="hidden" id="qcon_no" name="qcon_no" th:value="${qmark.qcon_no}">
+
+						<td class='td_basic' style="vertical-align: middle; text-align: center; margin-bottom: 10px;">
+							<div style="margin-bottom: 15px; display: flex; justify-content: center;">
+								<div class="horizontal-container"
+									style="margin-bottom: 10px; display: flex; align-items: center;">
+									<div style="margin-right: 5px;">
+										<div style="width: 180px; height: 100px; overflow: hidden;">
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</td>
+
+						<td class='td_basic' style="vertical-align: middle; text-align: center;">
+							<div style="margin-bottom: 20px; margin-top:10px;">
+								<div style="cursor: pointer; margin-left: 5px; display: flex; justify-content: center;">
+									<div style="width: 260%; height: 102px; margin-bottom: 23px;">
+										<div style="display:flex; align-items: center; width: 100%; height: 100%;">
+											<div style="margin-bottom: 13px; width: 100%; height: 100%;">
+												<div class='td_basic'
+													th:attr="onclick=|location.href='/qcontents/read?cate_no=2&qcon_no=${qmark.qcon_no}'|"
+													style="cursor: pointer; margin-top: 10px; margin-bottom: 60px; width: 100%; height: 100%;">
+													<br>제목:<span th:text="${qmark.qcon_name}"
+														style="font-weight: bold;"></span><br>
+													<span th:if="${qmark.qcon_contents.length() > 160 }"
+														th:text="|${qmark.qcon_contents.substring(0, 100)}...|"></span>
+													<span th:if="${qmark.qcon_contents.length() <= 160 }"
+														th:text="|${qmark.qcon_contents}|"></span>
+
+													<span id='acc_no' style="display:none;" value=""></span>
+
+													<br>
+													<div
+														style="margin-left: auto; text-align: right; margin-right: 10px;">
+														조회수: <span th:text="${qmark.qcon_views}"></span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</td>
+						<td class='td_basic' style="vertical-align: middle; text-align: center; margin-bottom: 10px;">
+							<div style="margin-bottom: 15px; display: flex; justify-content: center;">
+								<div class="horizontal-container"
+									style="margin-bottom: 10px; display: flex; align-items: center;">
+									<div style="margin-right: 5px;">
+										<div style="width: 180px; height: 100px; overflow: hidden;">
+											<span th:if="${qmark.qcon_bookmark =='N'}">
+												<img src="/css/images/bookmark_off.png" id="bookmarkImage" class="icon"
+													onclick="mark()" style="width:24px; height: 24px;">
+											</span>
+											<span th:unless="${qmark.qcon_bookmark =='N'}">
+												<img src="/css/images/bookmark_on.png" id="bookmarkImage" class="icon"
+													data-qcon-no="${qmark.qcon_no}"
+													onclick="mark(this, this.getAttribute('data-qcon-no'))"
+													style="width:24px; height: 24px;">
+											</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</td>
+
+					</tr>
+
+					<tr th:if="${count == 0}">
+						<td colspan="2" style="text-align: center;">게시글이 존재하지 않습니다.</td>
+					</tr>
+
+
+				</tbody>
+			</table>
+
+		</div>
+	</div>
+
+</div>
+
+</html>

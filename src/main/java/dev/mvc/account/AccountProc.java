@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import dev.mvc.qna_contents.Qna_contentsVO;
 import dev.mvc.recommend.HashtagVO;
 import dev.mvc.recommend.RecommendVO;
 import dev.mvc.share_contentsdto.Share_contentsVO;
@@ -353,6 +354,30 @@ public class AccountProc implements AccountProcInter {
 	public ArrayList<Share_imageVO> contentImages(int scon_no) {
 		ArrayList<Share_imageVO> images = this.accountDAO.contentImages(scon_no);
 		return images;
+	}
+
+	@Override
+	public ArrayList<Share_contentsVO> shareMarks(int acc_no) {
+		ArrayList<Share_contentsVO> list = this.accountDAO.shareMarks(acc_no);
+		return list;
+	}
+
+	@Override
+	public ArrayList<Qna_contentsVO> qnaMarks(int acc_no) {
+		ArrayList<Qna_contentsVO> list = this.accountDAO.qnaMarks(acc_no);
+		return list;
+	}
+
+	@Override
+	public int sconCmtCnt(int scon_no) {
+	    int cnt = this.accountDAO.sconCmtCnt(scon_no);
+	    return cnt;
+	}
+
+	@Override
+	public int qconCmtCnt(int qcon_no) {
+	    int cnt = this.accountDAO.qconCmtCnt(qcon_no);
+	    return cnt;
 	}
 
 
