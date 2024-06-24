@@ -34,6 +34,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer{
         // 인식되는 가상경로: http://localhost:9093/qcontents/storage"; 
         registry.addResourceHandler("/qcontents/storage/**").addResourceLocations("file:///" +  Qcontents.getUploadDir());
         registry.addResourceHandler("/openai/member/storage/**").addResourceLocations("file:///" +  Qcontents.getUploadDirOpenAI());
+        registry.addResourceHandler("/qcontents/acc/storage/**").addResourceLocations("file:///" +  Qcontents.getUploadDirAccProfile());
     }
  
 }

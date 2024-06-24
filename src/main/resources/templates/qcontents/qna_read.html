@@ -356,20 +356,26 @@
         });
     }
     
-// 대댓글 등록
-function qna_create_recomment(qcmt_no, acc_no, acc_id) {
-  fetch("/qcontents/account_read?acc_no=" + acc_no, {
-    "method": "get",
-    "headers": { "Content-Type": "application/json" },
-  })
+  // 대댓글 등록
+  function qna_create_recomment(qcmt_no, acc_no, acc_id) {
+    fetch("/qcontents/account_read?acc_no=" + acc_no, {
+      "method": "get",
+      "headers": {"Content-Type": "application/json"},
+    })
     .then((response) => response.json())
     .then((data) => {
       let msg = "";
       if (typeof data['acc_id'] !== 'undefined') {
-        msg += "<div style='font-size: 15px; color: blue; text-decoration: underline;' value='" + data['acc_id'] + "'>" + "@" + data['acc_id'] + "</div>";
+        msg += "<br/>";
+        msg += "<div style='font-size: 15px;' value='" + data['acc_id'] + "'>" +
+                  "<span style='color: blue; text-decoration: underline;'>@" + data['acc_id'] + "</span> 에게 답장하기" +
+                  "</div>";
         msg += "<textarea name='recomment_comment' class='form-control' id='recomment_comment' style='width: 100%; height: 60px;' placeholder='답글 작성란입니다.' autofocus></textarea>";
       } else {
-        msg += "<div style='font-size: 10px; color: blue; text-decoration: underline;' value='" + data['acc_id'] + "'>" + "@" + data['acc_id'] + "</div>";
+        msg += "<br/>";
+        msg += "<div style='font-size: 15px;' value='" + data['acc_id'] + "'>" +
+                   "<span style='color: blue; text-decoration: underline;'>@" + data['acc_id'] + "</span> 에게 답장하기" +
+                   "</div>";
         msg += "<textarea name='recomment_comment' class='form-control' id='recomment_comment' style='width: 100%; height: 60px;' placeholder='답글 작성란입니다.' autofocus></textarea>";
         return;
       }
@@ -388,24 +394,24 @@ function qna_create_recomment(qcmt_no, acc_no, acc_id) {
       let recomment_tag = document.getElementById("recomment_create");
       let close_tag = document.getElementById("recomment_close");
       document.getElementById("recomment_list").style.display = '';
-      
+
       recomment_tag.addEventListener('click', () => {
         let content = comment_tag.value.trim();
-        
+
         if (content.length == 0) {
           alert("내용이 없습니다. 내용을 입력해주세요.");
           return;
         } else {
-          fetch("/qcontents/qna_create_recomment", {
-            "method": "post",
-            "headers": { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              "qcon_no": "[[${qna_contentsVO.qcon_no}]]",
-              "qrecmt_contents": "<span style='color: blue; text-decoration: underline;'>@" + data['acc_id'] + "</span> " + content,
-              "qcmt_no": qcmt_no,
-              "acc_no": "[[${session.acc_no}]]"
+            fetch("/qcontents/qna_create_recomment", {
+              "method": "post",
+              "headers": {"Content-Type": "application/json"},
+              body: JSON.stringify({
+                "qcon_no": "[[${qna_contentsVO.qcon_no}]]",
+                "qrecmt_contents": "<span style='color: blue; text-decoration: underline;'>@" + data['acc_id'] + "</span> " + content,
+                "qcmt_no": qcmt_no,
+                "acc_no": "[[${session.acc_no}]]"
+              })
             })
-          })
             .then((response) => response.json())
             .then((data) => {
               comment_tag.value = "";
@@ -414,15 +420,15 @@ function qna_create_recomment(qcmt_no, acc_no, acc_id) {
             .catch((error) => {
               console.error('Error:', error);
             });
-        }
-      });
+          }
+        });
 
-      close_tag.addEventListener('click', () => {
-        close_recomment(qcmt_no); // 대댓글 창 숨기기
-        document.getElementById("recomment_list").style.display = 'none';
+        close_tag.addEventListener('click', () => {
+          close_recomment(qcmt_no); // 대댓글 창 숨기기
+          document.getElementById("recomment_list").style.display = 'none';
+        });
       });
-    });
-}
+    }
     
     // 대댓글 수정
     function qna_update_recomment(qrecmt_no) {
@@ -642,10 +648,16 @@ function qna_create_recomment(qcmt_no, acc_no, acc_id) {
                     <span th:text="${qna_contentsVO.qcon_name}" style="font-size: 2em; font-weight: bold;"></span>
                   </div>
                   
-                  <div style="flex: 1; text-align: right;">
-                    작성자: <span style="font-size: normal;" th:text="${user_name}"></span>
-                    작성일: <span style="font-size: normal;" th:text="${qna_contentsVO.qcon_date}"></span>
+                  <div style="display: flex; align-items: center; text-align: left;">
+                    <img th:src="@{|/qcontents/acc/storage/${acc_profile_img.acc_thumb_img}|}"
+                      th:if="${acc_profile_img.acc_saved_img.endsWith('jpg') or acc_profile_img.acc_saved_img.endsWith('png') or acc_profile_img.acc_saved_img.endsWith('gif')}"
+                      style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;" />
+                    <div>
+                      작성자: <span style="font-size: normal;" th:text="${user_name}"></span>
+                      작성일: <span style="font-size: normal;" th:text="${qna_contentsVO.qcon_date}"></span>
+                    </div>
                   </div>
+
                 </div>
 
                <hr size="9" style="margin-top: 0px; margin-bottom:1px;">

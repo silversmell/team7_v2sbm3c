@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import dev.mvc.account.AccountVO;
+
 public interface Qna_contentsDAOInter {
 
   /**
@@ -364,5 +366,12 @@ public interface Qna_contentsDAOInter {
    * @return
    */
   public int qna_search_count_recomment(int qcmt_no);
+  
+  /**
+   * 글 작성한 회원의 프로필 사진
+   * @param qcon_no
+   * @return
+   */
+  public AccountVO acc_profile_img(int qcon_no);
   
 }

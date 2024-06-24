@@ -313,71 +313,68 @@ public class Qna_contentsCont {
    */
   @GetMapping(value = "/qna_read")
   public String qna_read(Model model, HttpSession session,
-                              @RequestParam(name = "cate_no", defaultValue = "2") int cate_no, 
-                              @RequestParam(name = "qcon_no") int qcon_no,
-                              @RequestParam(name = "now_page") int now_page) {
+                         @RequestParam(name = "cate_no", defaultValue = "2") int cate_no, 
+                         @RequestParam(name = "qcon_no") int qcon_no,
+                         @RequestParam(name = "now_page") int now_page) {
 
-    if (this.accountProc.isMember(session)) {
-      // 세션에서 사용자 정보 가져오기
-      Integer acc_no = (Integer) session.getAttribute("acc_no");
+      if (this.accountProc.isMember(session)) {
+          Integer acc_no = (Integer) session.getAttribute("acc_no");
 
-      // 계정 번호 출력
-      // System.out.println("-> acc_no: " + acc_no);
+          // 카테고리 가져오기
+          CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
+          model.addAttribute("categoryVO", categoryVO);
 
-      // 카테고리 가져오기
-      CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
-      model.addAttribute("categoryVO", categoryVO);
+          // 질문 내용 가져오기
+          Qna_contentsVO qna_contentsVO = this.qna_contentsProc.qna_read(qcon_no);
+          model.addAttribute("qna_contentsVO", qna_contentsVO);
 
-      // 질문 내용 가져오기
-      Qna_contentsVO qna_contentsVO = this.qna_contentsProc.qna_read(qcon_no);
-      model.addAttribute("qna_contentsVO", qna_contentsVO);
+          // 질문 이미지 가져오기
+          ArrayList<Qna_imageVO> qna_imageVO = this.qna_contentsProc.qna_read_image(qcon_no);
+          model.addAttribute("qna_imageVO", qna_imageVO);
+          
+          // 댓글 수 가져오기
+          int comment_cnt = this.qna_contentsProc.qna_search_count_comment(qcon_no);
+          model.addAttribute("comment_cnt", comment_cnt);
+          
+          // 북마크 수 가져오기
+          int mark_cnt = this.qna_contentsProc.bookmark_count(qcon_no);
+          model.addAttribute("mark_cnt", mark_cnt);
 
-      // 질문 이미지 가져오기
-      ArrayList<Qna_imageVO> qna_imageVO = this.qna_contentsProc.qna_read_image(qcon_no);
-      model.addAttribute("qna_imageVO", qna_imageVO);
-      
-      // 댓글 수 가져오기
-      int comment_cnt = this.qna_contentsProc.qna_search_count_comment(qcon_no);
-      model.addAttribute("comment_cnt", comment_cnt);
-      
-      // 북마크 수 가져오기 (로그인 여부와 상관없이)
-      int mark_cnt = this.qna_contentsProc.bookmark_count(qcon_no);
-      model.addAttribute("mark_cnt", mark_cnt);
+          HashMap<String, Object> map = new HashMap<>();
+          map.put("qcon_no", qcon_no);
+          map.put("acc_no", acc_no);
 
-      // 북마크 관련 코드 (로그인된 경우에만 실행)
-      HashMap<String, Object> map = new HashMap<String, Object>();
-      map.put("qcon_no", qcon_no);
-      map.put("acc_no", acc_no);
+          // 북마크 상태 확인
+          if (this.qna_contentsProc.is_bookmarked(map).size() > 0) {
+              qna_contentsVO.setQcon_bookmark("Y");
+          } else {
+              qna_contentsVO.setQcon_bookmark("N");
+          }
+          
+          // 질문글 작성자
+          String user_name = this.qna_contentsProc.user_name(map);
+          
+          // 질문글 작성자 프로필 이미지
+          AccountVO acc_profile_img = this.qna_contentsProc.acc_profile_img(qcon_no);
 
-      // 질문글 북마크 되어있는지 확인
-      if (this.qna_contentsProc.is_bookmarked(map).size() > 0) { // 북마크 된 경우
-        // System.out.println("-> 북마크 공개 모드");
-        qna_contentsVO.setQcon_bookmark("Y");
-      } else { // 북마크 안된 경우
-        // System.out.println("-> 북마크 비공개 모드");
-        qna_contentsVO.setQcon_bookmark("N");
+          // 모델에 필요한 정보 추가
+          model.addAttribute("acc_id", session.getAttribute("acc_id"));
+          model.addAttribute("acc_no", acc_no);
+          model.addAttribute("cate_no", cate_no);
+          model.addAttribute("qcon_no", qcon_no);
+          model.addAttribute("now_page", now_page);
+          model.addAttribute("user_name", user_name);
+          model.addAttribute("acc_profile_img", acc_profile_img);
+
+          // 조회수 업데이트
+          this.qna_contentsProc.qna_update_view(qcon_no);
+
+          return "qcontents/qna_read";
+      } else {
+          return "redirect:/account/login";
       }
-      
-      // 질문글 작성자
-      String user_name = this.qna_contentsProc.user_name(map);
-      
-      // 조회수 업데이트
-      this.qna_contentsProc.qna_update_view(qcon_no);
-
-      // 모델에 필요한 정보 추가
-      model.addAttribute("acc_id", session.getAttribute("acc_id"));
-      model.addAttribute("acc_no", acc_no);
-      model.addAttribute("cate_no", cate_no);
-      model.addAttribute("qcon_no", qcon_no);
-      model.addAttribute("now_page", now_page);
-      model.addAttribute("user_name", user_name);
-
-      return "qcontents/qna_read";
-    } else {
-      return "redirect:/account/login";
-    }
-    
   }
+
 
   
   /**
@@ -388,36 +385,33 @@ public class Qna_contentsCont {
    * @return
    */
   @GetMapping(value="/qna_update_text")
-  public String qna_update_text(HttpSession session, Model model, 
-                                            RedirectAttributes ra,
-                                            String word, int now_page,
-                                            @RequestParam(name="cate_no", defaultValue = "2") int cate_no, int qcon_no) {
+  public String qna_update_text(HttpSession session, Model model, RedirectAttributes ra,
+                                @RequestParam(name="qcon_no") int qcon_no,
+                                @RequestParam(name="cate_no") int cate_no,
+                                @RequestParam(name="now_page") int now_page) {
 
+      int acc_no = (int) session.getAttribute("acc_no");
+      
+      if (accountProc.isMemberAdmin(session)) { // 관리자 또는 작성자인 경우
+          // 카테고리 가져오기
+          CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
+          model.addAttribute("categoryVO", categoryVO);
 
-    
-    System.out.println("-> acc_no: " + session.getAttribute("acc_no"));
+          // 질문글 가져오기
+          Qna_contentsVO qna_contentsVO = this.qna_contentsProc.qna_read(qcon_no);
+          model.addAttribute("qna_contentsVO", qna_contentsVO);
 
-    if (accountProc.isMember(session)) { // 관리자, 회원으로 로그인 한 경우
-      // 카테고리 가져오기
-      CategoryVO categoryVO = this.categoryProc.cate_read(cate_no); // 카테고리 읽어옴
-      model.addAttribute("categoryVO", categoryVO);
-      
-      // 질문글 가져오기
-      Qna_contentsVO qna_contentsVO = this.qna_contentsProc.qna_read(qcon_no);
-      model.addAttribute("qna_contentsVO", qna_contentsVO);
-      
-      model.addAttribute("cate_no", cate_no);
-      model.addAttribute("qcon_no", qcon_no);
-      model.addAttribute("word", word);
-      model.addAttribute("now_page", now_page);
-      model.addAttribute("acc_no",session.getAttribute("acc_no"));
-      
-      return "qcontents/qna_update_text";
-    } else {  // 로그인 실패 한 경우      
-      ra.addAttribute("url", "/account/login_cookie_need"); // /templates/account/login_cookie_need.html
-      return "redirect:/account/login";  // /account/login.html
-    }
-   
+          // 필요한 데이터 모델에 추가
+          model.addAttribute("qcon_no", qcon_no);
+          model.addAttribute("word", "word"); 
+          model.addAttribute("now_page", now_page);
+          model.addAttribute("acc_no", acc_no);
+
+          return "qcontents/qna_update_text"; // 수정 페이지로 이동
+      } else { // 권한이 없는 경우
+        ra.addAttribute("url", "/account/login_cookie_need");
+        return "redirect:/account/login"; // 로그인 페이지로 이동
+      }
   }
   
   /**

@@ -441,6 +441,13 @@
     WHERE qcmt_no = #{qcmt_no}
   </select>
   
+  <select id = "acc_profile_img" resultType="dev.mvc.account.AccountVO" parameterType="int">
+    SELECT ac.acc_no, ac.acc_id, ac.acc_img, ac.acc_saved_img, ac.acc_thumb_img, acc_img_size
+    FROM qna_contents qc INNER JOIN account ac
+    ON qc.acc_no = ac.acc_no
+    WHERE qc.qcon_no=#{qcon_no}
+    ORDER BY qc.qcon_no desc
+  </select>
 
 </mapper>
 

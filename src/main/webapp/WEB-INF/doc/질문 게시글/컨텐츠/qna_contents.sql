@@ -169,4 +169,11 @@ update qna_contents
 set qcon_bookmark='N'
 where qcon_no=3;
 
+-- 글 작성한 회원의 프로필 이미지
+SELECT ac.acc_no, ac.acc_id, ac.acc_img, ac.acc_saved_img, ac.acc_thumb_img, acc_img_size
+FROM qna_contents qc INNER JOIN account ac
+ON qc.acc_no = ac.acc_no
+WHERE qc.qcon_no=5
+ORDER BY qc.qcon_no desc;
+
 select * from qna_contents;

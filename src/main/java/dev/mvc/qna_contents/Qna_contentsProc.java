@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import dev.mvc.account.AccountVO;
 import dev.mvc.re_comment.Share_recommentVO;
 import dev.mvc.tool.Security;
 import dev.mvc.tool.Tool;
@@ -502,5 +503,11 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
     return cnt;
   }
 
+  @Override
+  public AccountVO acc_profile_img(int qcon_no) {
+    AccountVO accountVO = this.qna_contentsDAO.acc_profile_img(qcon_no);
+    
+    return accountVO;
+  }
   
 }
