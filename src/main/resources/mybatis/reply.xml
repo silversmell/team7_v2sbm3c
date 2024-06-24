@@ -65,6 +65,7 @@ FROM (
         SELECT a.acc_id,s.scmt_no,s.scon_no,s.scmt_comment,s.scmt_date,a.acc_no
         FROM share_comment s, account a
         WHERE s.acc_no=a.acc_no AND scon_no=#{scon_no}
+        ORDER BY s.scmt_no ASC
         )
         )
         where r&lt;=500
