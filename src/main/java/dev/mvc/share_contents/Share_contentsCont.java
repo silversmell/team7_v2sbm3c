@@ -132,7 +132,7 @@ public class Share_contentsCont {
 
 		model.addAttribute("share_imageVO", share_imageVO);
 		ArrayList<HashtagVO> list_tag_no = this.sconProc.sconno_hashtag(scon_no);
-		System.out.println(scon_no+"에 대한 tag_np"+list_tag_no.get(0).getTag_name());
+		//System.out.println(scon_no+"에 대한 tag_np"+list_tag_no.get(0).getTag_name());
 		ArrayList<Share_imageVO> tag_share_imageVO = this.sconProc.related_image(list_tag_no.get(0).getTag_no());
 //		for(int i = 0;i<tag_share_imageVO.size();i++) {
 //			System.out.println(tag_share_imageVO.get(i).getFile_thumb_name());
