@@ -24,6 +24,13 @@
   function select_delete() {
     let checkboxes = document.querySelectorAll('input[name="qcon_no"]:checked');
     let qcon_nos = [];
+    
+    // 선택된 체크박스 유무 체크
+    if (checkboxes.length === 0) {
+      alert('선택된 글이 없습니다. 삭제하고자 하는 글을 선택하세요.');
+      return;
+    } 
+    
     checkboxes.forEach((checkbox) => {
       qcon_nos.push(parseInt(checkbox.value));  // 값은 문자열이므로 숫자로 변환
     });
