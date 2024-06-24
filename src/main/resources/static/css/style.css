@@ -771,6 +771,7 @@ tr:nth-child(even) {
 .aside_right {
     text-align: right;
     margin-bottom: 20px;
+    font-size: 15px;
 }
 
 .aside_right a {
