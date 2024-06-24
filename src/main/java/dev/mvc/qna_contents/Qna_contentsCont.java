@@ -314,9 +314,9 @@ public class Qna_contentsCont {
                          @RequestParam(name = "qcon_no") int qcon_no,
                          @RequestParam(name = "now_page") int now_page) {
 
+	  
       if (this.accountProc.isMember(session)) {
           Integer acc_no = (Integer) session.getAttribute("acc_no");
-
           
           // 카테고리 가져오기
           CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
@@ -325,7 +325,10 @@ public class Qna_contentsCont {
           // 질문 내용 가져오기
           Qna_contentsVO qna_contentsVO = this.qna_contentsProc.qna_read(qcon_no);
           model.addAttribute("qna_contentsVO", qna_contentsVO);
-
+          model.addAttribute("memberno" , qna_contentsVO.getAcc_no()); //질문글 작성자
+          model.addAttribute("acc_no",acc_no); 
+         
+          
           // 질문 이미지 가져오기
           ArrayList<Qna_imageVO> qna_imageVO = this.qna_contentsProc.qna_read_image(qcon_no);
           model.addAttribute("qna_imageVO", qna_imageVO);
@@ -612,16 +615,17 @@ public class Qna_contentsCont {
    * @param qcon_no
    * @return
    */
-  @GetMapping(value="/qna_delete")
+  @GetMapping(value="/qna_delete/{memberno}")
   public String qna_delete(HttpSession session, 
                                   Model model, 
                                   RedirectAttributes ra,
+                                  @PathVariable("memberno") int memberno,
                                   @RequestParam(name="cate_no", defaultValue = "2") int cate_no, 
                                   int qcon_no, int now_page) {
     
     System.out.println("-> acc_no: " + session.getAttribute("acc_no"));
 
-    if (accountProc.isMemberAdmin(session)) {
+    if (accountProc.isMemberAdmin(session)|| memberno==(int)session.getAttribute("acc_no")) {
       model.addAttribute("cate_no", cate_no);
       model.addAttribute("now_page", now_page);
       

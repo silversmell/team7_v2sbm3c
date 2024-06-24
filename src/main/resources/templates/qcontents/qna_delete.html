@@ -26,7 +26,7 @@
 
         <div style='text-align: left; width: 47%; float: left;'>
           <br>
-          <form name='frm' method='POST' action='./qna_delete'>
+          <form name='frm' method='POST' action='/qcontents/qna_delete'>
             <input type="hidden" name="qcon_no" th:value="${qna_contentsVO.qcon_no}">
             <input type="hidden" name="cate_no" th:value="${qna_contentsVO.cate_no}"> <!-- cate_no 데이터 값 가져옴 -->
             <input type="hidden" name="now_page" th:value="${now_page}">
