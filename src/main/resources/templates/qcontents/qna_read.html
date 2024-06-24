@@ -92,13 +92,14 @@
               msg += "<span style='font-weight: bold;'>" + row.acc_id + "</span>";
               msg += "  " + row.qcmt_date;
 
+              msg += "  <a href='javascript:qna_read_recomment(" + row.qcmt_no + ", \"" + row.acc_no + "\")'>답글</a>";
+              
               if ('[[${session.acc_no}]]' == row.acc_no) { // 글쓴이 일치여부 확인, 본인의 글만 삭제 가능함 ★
+                msg += "<span class='menu_divide' >│</span>"
                 msg += " <a href='javascript:qna_update_comment(" + row.qcmt_no + ")'>수정 </a>"; // 이미지 추가하고 싶으면, <img src='/reply/images/update.png' style='width: 16px;'>
                 msg += "<span class='menu_divide' >│</span>"
                 msg += " <a href='javascript:qna_delete_comment(" + row.qcmt_no + ")'>삭제 </a>";
-                msg += "<span class='menu_divide' >│</span>"
               }
-              msg += "  <a href='javascript:qna_read_recomment(" + row.qcmt_no + ", \"" + row.acc_no + "\")'>답글</a>";
 
               msg += "  " + "<br>";
               msg += row.qcmt_contents;
@@ -189,15 +190,15 @@
         msg += "<span style='font-weight: bold;'>" + row.acc_id + "</span>";
         msg += "  " + row.qcmt_date;
     
-        if ('[[${session.acc_no}]]' == row.acc_no) {
-          msg += " <a href='javascript:qna_update_comment(" + row.qcmt_no + ")'>수정 </a>";
-          msg += "<span class='menu_divide'>│</span>";
-          msg += " <a href='javascript:qna_delete_comment(" + row.qcmt_no + ")'>삭제 </a>";
-          msg += "<span class='menu_divide'>│</span>";
-        }
-        
         // 답글 보이기/숨기기 처리
         msg += "  <a href='javascript:qna_read_recomment(" + row.qcmt_no + ", \"" + row.acc_no + "\")'>답글 </a>";
+        if ('[[${session.acc_no}]]' == row.acc_no) {
+          msg += "<span class='menu_divide' >│</span>"
+          msg += " <a href='javascript:qna_update_comment("+row.qcmt_no+")'>수정 </a>";
+          msg += "<span class='menu_divide'>│</span>";
+          msg += " <a href='javascript:qna_delete_comment(" + row.qcmt_no + ")'>삭제</a>";
+        }
+        
         msg += "  " + "<br>";
         msg += row.qcmt_contents;
         msg += "</div>";
@@ -266,7 +267,7 @@
       })
         .then((response) => response.json())
         .then((data) => {
-          let sw = confirm("선택된 댓글 내용: 「" + data['res']['qcmt_contents'] + "」 삭제하시려면 확인 버튼을 누르세요. 삭제후 복구 할 수 없습니다.");
+          let sw = confirm("선택된 댓글 내용: 「" + data['res']['qcmt_contents'] + "」 \n삭제하시려면 확인 버튼을 누르세요. 삭제후 복구 할 수 없습니다.");
           if (sw == true) {
             // alert('삭제를 진행합니다.');
             fetch("/qcontents/qna_delete_comment", {
@@ -563,14 +564,14 @@
         msg += " " + row.qrecmt_date + " ";
         // console.log('row.acc_id:' + row.acc_id);
 
+        msg += " <a href='javascript:qna_create_recomment(" + row.qcmt_no + ", \"" + row.acc_no + "\", \"" + row.acc_id + "\")'>답글 </a>";
         if ("[[${session.acc_no}]]" == row.acc_no) {
-          msg += "  <a href='javascript:qna_update_recomment(" + row.qrecmt_no + ")'>수정</a> ";
+          msg += "<span class='menu_divide' >│</span>";
+          msg += " <a href='javascript:qna_update_recomment(" + row.qrecmt_no + ")'>수정</a> ";
           msg += "<span class='menu_divide'>│</span>";
           msg += " <a href='javascript:qna_delete_recomment(" + row.qrecmt_no + ")'>삭제</a> ";
-          msg += "<span class='menu_divide' >│</span>";
         }
-
-        msg += " <a href='javascript:qna_create_recomment(" + row.qcmt_no + ", \"" + row.acc_no + "\", \"" + row.acc_id + "\")'>답글</a>";
+        
         msg += "<br>";
         msg += row.qrecmt_contents;
         msg += "</div>";
