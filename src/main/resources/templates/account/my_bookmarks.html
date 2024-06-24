@@ -50,21 +50,13 @@
 	</script>
 
 	<style>
-		td {
-			vertical-align: top;
-			word-break: break-word;
-			overflow: hidden;
+		
+		.table {
+			width: 100%;
+			table-layout: fixed;
 		}
 		
-		.td_basic {
-		    display: flex;
-		    flex-direction: column;
-		    justify-content: space-between;
-		}
-
-		.content {
-		    flex-grow: 1;
-		}
+		
 	</style>
 
 	<div id="code" th:attr="data-code=${code}" style="display: none;"></div>
@@ -95,18 +87,16 @@
 			</div>
 		</div>
 		<div style="display:flex; justify-content: center;">
-			<table class="table table-striped" style='width: 80%; justify-content:center;'>
+			<table class="table table-striped" style='width: 90%; justify-content:center;'>
 				<colgroup>
-					<col style='width: 25%;' />
+					<col style='width: 20%;' />
 					<col style='width: 80%;' />
-					<col style='width: 1%;' />
 				</colgroup>
 
 				<thead>
 					<tr>
 						<th class="th_bs">이미지</th>
 						<th class="th_bs">내용</th>
-						<th class="th_bs">북마크</th>
 					</tr>
 				</thead>
 
@@ -115,73 +105,65 @@
 					<tr th:each="smark : ${share_marks}" data-type="share">
 						<input type="hidden" id="scon_no" name="scon_no" th:value="${smark.scon_no}">
 
-						<td class='td_basic' style="vertical-align: middle; text-align: center; margin-bottom: 10px;">
-							<div th:if="${sconImages.containsKey(smark.scon_no)}"
-								style="display: flex; justify-content: center;">
-								<div class="horizontal-container"
-									style="margin-bottom: 10px; display: flex; align-items: center;">
-									<div th:each="image, images : ${sconImages[smark.scon_no]}"
-										th:if="${images.index == 0}" style="margin-right: 5px;">
-										<div th:if="${image.file_origin_name.endsWith('jpg') or image.file_origin_name.endsWith('png') or image.file_origin_name.endsWith('gif')}"
-											style="width: 180px; height: 100px; overflow: hidden;">
-											<img th:src="@{|/contents/storage/${image.file_thumb_name}|}"
-												style="width: 100%; height: 100%; object-fit: cover;">
-										</div>
-									</div>
-								</div>
-							</div>
+						<td class='td_basic' style="vertical-align: middle; text-align: center; margin-bottom: 10px; padding: 0; overflow: hidden;">
+						    <div th:if="${sconImages.containsKey(smark.scon_no)}"
+						         style="display: flex; justify-content: center; overflow: hidden; margin: 0 auto; width: 180px; height: 100px;">
+						        <div class="horizontal-container" style="margin-bottom: 10px; display: flex; align-items: center;">
+						            <div th:each="image, images : ${sconImages[smark.scon_no]}"
+						                 th:if="${images.index == 0}" style="margin-right: 5px;">
+						                <div th:if="${image.file_origin_name.endsWith('jpg') or image.file_origin_name.endsWith('png') or image.file_origin_name.endsWith('gif')}"
+						                     style="width: 180px; height: 100px; overflow: hidden;">
+						                    <img th:src="@{|/contents/storage/${image.file_thumb_name}|}"
+						                         style="width: 100%; height: 100%; object-fit: cover;">
+						                </div>
+						            </div>
+						        </div>
+						    </div>
 						</td>
 
-						<td class='td_basic' style="vertical-align: middle; text-align: center;">
-							<div style="margin-bottom: 15px;">
+
+						<td class='td_basic' style="vertical-align: middle; text-align: center; word-break: break-word; overflow: auto;">
+							<div style="flex-grow: 1; margin-bottom: 15px;">
 								<div style="cursor: pointer; margin-left: 5px; display: flex; justify-content: center;">
-									<div style="width: 260%; height: 102px; margin-bottom: 23px;">
+									<div style="width: 260%; height: 130px; margin-bottom: 23px;">
 										<div style="display:flex; align-items: center; width: 100%; height: 100%;">
 											<div style="margin-bottom: 13px; width: 100%; height: 100%;">
-												<div class='td_basic'
-													th:attr="onclick=|location.href='/scontents/read?cate_no=1&scon_no=${smark.scon_no}'|"
+												<div class='td_basic' th:attr="onclick=|location.href='/scontents/read?cate_no=1&scon_no=${smark.scon_no}'|"
 													style="cursor: pointer; margin-bottom: 60px; width: 100%; height: 100%; text-align: left;">
 													<br>
 													<div style="font-weight: bold; font-size: larger; display: block; margin-bottom: 3px;"
-														th:text="${smark.scon_title}"></div>
-													<div style="display: block; margin-bottom: 5px;"
-														th:text="${smark.scon_date.substring(0, 16)}"></div>
+														th:text="${smark.scon_title}">
+													</div>
+													<div style="display: block; margin-bottom: 5px;" th:text="${smark.scon_date.substring(0, 16)}"></div>
 													<div th:if="${smark.scon_contents.length() > 160 }"
-														th:text="|${smark.scon_contents.substring(0, 100)}...|"></div>
+														th:text="|${smark.scon_contents.substring(0, 300)}...|"></div>
 													<div th:if="${smark.scon_contents.length() <= 160 }"
 														th:text="|${smark.scon_contents}|"></div>
 
 													<span id='acc_no' style="display:none;" value=""></span>
 													<br>
-													<div style="margin-top: auto; text-align: right;">
-														<img th:src="@{|/css/images/comment.png|}"
-															style="width: 20px; height: 20px;">
-														<label th:text="${sconComments}"></label>
 
-														<!--<span th:text="|${smark.scon_views} 조회|"></span>-->
+													<div style="display: flex; justify-content: space-between;">
+														<div style="text-align: left;">
+															<img th:src="@{|/css/images/comment.png|}"
+																style="width: 20px; height: 20px;">
+															<label th:text="${sconComments[smark.scon_no]}">0</label>
+														</div>
+														<div style="text-align: right;">
+															<span>
+																<img src="/css/images/bookmark_on.png"
+																	th:id="${smark.scon_no}" class="icon"
+																	onclick="mark(this); event.stopPropagation();"
+																	style="width:24px; height: 24px;">
+															</span>
+														</div>
 													</div>
 													<br>
-												</div>
-												<div
-													style=" margin-left: auto; text-align: right; margin-right: 10px; margin-top: 5px;">
+
 
 												</div>
+
 											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</td>
-						<td class='td_basic' style="vertical-align: middle; text-align: center; margin-bottom: 10px;">
-							<div style="margin-bottom: 15px; display: flex; justify-content: center;">
-								<div class="horizontal-container"
-									style="margin-bottom: 10px; display: flex; align-items: center;">
-									<div style="margin-right: 5px;">
-										<div style="width: 180px; height: 100px; overflow: hidden;">
-											<span>
-												<img src="/css/images/bookmark_on.png" th:id="${smark.scon_no}"
-													class="icon" onclick="mark(this)" style="width:24px; height: 24px;">
-											</span>
 										</div>
 									</div>
 								</div>
@@ -260,7 +242,7 @@
 
 					</tr>
 
-					<tr th:if="${count == 0}">
+					<tr th:if="${smarks_count == 0}">
 						<td colspan="2" style="text-align: center;">게시글이 존재하지 않습니다.</td>
 					</tr>
 
