@@ -1129,6 +1129,7 @@ public class AccountCont {
 			model.addAttribute("qna_marks", qna_marks);
 			model.addAttribute("sconImages", sconImages);
 			model.addAttribute("sconComments", sconComments);
+			System.out.println("---> sconComments: " + sconComments);
 			model.addAttribute("smarks_count", share_marks.size());
 
 		} else {
