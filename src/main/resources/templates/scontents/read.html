@@ -607,7 +607,7 @@
     	});
     }
     function confirmUpdate(member_no, acc_no, scon_no,cate_no){
-    	if(member_no != acc_no){
+    	if(member_no != acc_no && acc_no>3){
     		alert("권한이 필요합니다.");
     		return false;
     	}
@@ -617,7 +617,7 @@
     }
     
     function confirmDelete(member_no, acc_no, scon_no,cate_no){
-    	if(member_no != acc_no){
+    	if(member_no != acc_no && acc_no>3){
     		alert("권한이 필요합니다.");
     		return false;
     	}
@@ -627,7 +627,7 @@
     }
     
     function confirmFile(member_no, acc_no, scon_no,cate_no){
-    	if(member_no != acc_no){
+    	if(member_no != acc_no && acc_no>3){
     		alert("권한이 필요합니다.");
     		return false;
     	}
