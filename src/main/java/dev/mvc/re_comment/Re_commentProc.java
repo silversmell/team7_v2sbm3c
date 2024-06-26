@@ -7,6 +7,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import dev.mvc.account.AccountVO;
+
 @Service("dev.mvc.re_comment.Re_commentProc")
 public class Re_commentProc implements Re_commentProcInter {
 	
@@ -64,6 +66,12 @@ public class Re_commentProc implements Re_commentProcInter {
 	public int delete(int srecmt_no) {
 		int cnt = this.re_commentDAO.delete(srecmt_no);
 		return cnt;
+	}
+
+	@Override
+	public AccountVO recomment_acc(int srecmt_no) {
+		AccountVO acc = this.re_commentDAO.recomment_acc(srecmt_no);
+		return acc;
 	}
 
 }

@@ -86,26 +86,29 @@ public class Re_commentCont {
 	
 	
 	//recomment_no,scmt_no,scon_no,re_comment,re_comment_date
-	@GetMapping("/read_comment")
+	@GetMapping("/read_comment") //해당대댓글 읽어오기
 	@ResponseBody
 	public String read_comment(int srecmt_no) {
 		System.out.println("->recomment_no:" + srecmt_no);
+		HashMap<String,Object> map = new HashMap<>();
+		map.put("srecmt_no",srecmt_no);
 		Share_recommentVO re_comment = this.re_commentProc.read_comment(srecmt_no);
 		
 		JSONObject row = new JSONObject();
-		
+		System.out.println("대댓글 원래 회원 id :" +(String)(this.re_commentProc.recomment_acc(srecmt_no)).getAcc_id() );
 //		System.out.println(re_comment.getSrecmt_contents());
 //		System.out.println(re_comment.getScmt_no());
 //		System.out.println(re_comment.getScon_no());
 //		System.out.println(re_comment.getSrecmt_no());
 //		System.out.println(re_comment.getSrecmt_date());
-		
+		row.put("acc_id", this.re_commentProc.recomment_acc(srecmt_no).getAcc_id());
 		row.put("recomment_no",re_comment.getSrecmt_no());
 		row.put("scmt_no",re_comment.getScmt_no());
 		row.put("scon_no", re_comment.getScon_no());
 		row.put("srecmt_contents", re_comment.getSrecmt_contents());
 		row.put("re_comment_date", re_comment.getSrecmt_date());
 		
+		System.out.println("대댓글 작성시 회원아이디:" + re_comment.getAcc_id()) ;
 		  JSONObject json = new JSONObject();
 		  json.put("res",row);
 		  

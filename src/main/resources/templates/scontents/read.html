@@ -475,7 +475,7 @@
   
         area.style.display = 'none'; // 대댓글 목록 숨기기
       }
-      
+      var a ="";
      //대댓글 수정
      function recomment_update(srecmt_no){
        console.log(srecmt_no);
@@ -491,7 +491,9 @@
        .then((response) => response.json())
        .then((data) =>{
          let srecmt_contents = data['res']['srecmt_contents'];
-        
+        a = data['res']['acc_id'];
+        console.log(data['res']['acc_id']);
+        console.log("acc_id" +a);
          // srecmt_contents에서 span 태그 부분을 제외한 content만 추출하기
          let content = "";
          let div = document.createElement('div');
@@ -520,7 +522,7 @@
            alert("내용이 없습니다. 내용을 입력해주세요.");
          } else {
            // 대댓글 저장 시 span 태그를 포함하여 저장
-           let srecmt_contents = "<span style='color: blue; text-decoration: underline;'>@" + '[[${session.acc_id}]]' + "</span> " + content;
+           let srecmt_contents = "<span style='color: blue; text-decoration: underline;'>@" + a+ "</span> " + content;
 
            fetch("/recomment/update", {
              "method": "post",

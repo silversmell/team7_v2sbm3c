@@ -50,6 +50,14 @@
     delete from share_recomment
 		where srecmt_no = #{srecmt_no}
    </delete>
+   
+   <select id ="recomment_acc" parameterType="int" resultType="dev.mvc.account.AccountVO">
+		select ac.acc_id
+		from share_comment sc inner join share_recomment sr
+		on sc.scmt_no=sr.scmt_no inner join account ac
+		on sc.acc_no = ac.acc_no
+		where srecmt_no=#{srecmt_no}
+   </select>
 
 </mapper>
 

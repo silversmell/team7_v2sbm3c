@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import dev.mvc.account.AccountVO;
+
 public interface Re_commentProcInter {
 	
 	/**
@@ -60,5 +62,12 @@ public interface Re_commentProcInter {
 	 * @return
 	 */
 	public int delete(int srecmt_no);
+	
+	/**
+	 * 해당 대댓글의 댓글 회원
+	 * @param srecmt_no
+	 * @return
+	 */
+	public AccountVO recomment_acc(int srecmt_no);
 
 }
