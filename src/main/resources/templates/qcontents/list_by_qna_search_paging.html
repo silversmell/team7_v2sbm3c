@@ -87,11 +87,9 @@
      
   <div class='menu_line'></div>
   
-  <div style="text-align: right; justify-content: space-between; margin-bottom: 10px;">
-    <div th:if="${session.acc_grade=='admin'}" style="margin-right:88px;">
+  <div style="text-align: right; margin-bottom: 10px; width: 95%;" th:if="${session.acc_grade=='admin'}">
       <button type="button" onclick="select_delete()" class="button_2" style="margin-right:3px;">삭제</button>
       <button type="button" onclick="whole_delete()" class="button_2">전체선택</button>
-    </div>
   </div>
        
   <table class="table table-striped" style='width: 90%; margin: 0 auto;'>
