@@ -711,39 +711,36 @@
           <li class="li_none">
             <div style="width: 100%; word-break: break-all;">
               <div style='margin: 0px auto; width: 75%;'>
-              <br>
-              <div style="display: flex; align-items: center; justify-content: space-between; padding: 2px;">
-                <div style="flex: 1; text-align: left;">
-                  <span style="font-size: 1em;" th:text="|조회수 ${qna_contentsVO.qcon_views}|"></span>
-                  <!-- 북마크 영역 -->
-                  북마크 <span style="font-size: normal; margin-left: 3px;" th:text="${mark_cnt}"></span>
-                  <span th:if="${qna_contentsVO.qcon_bookmark == 'N'}">
-                    <img src="/css/images/bookmark_off.png" id="bookmark_img" class="icon" alt="북마크" onclick="bookmarked()"
-                      style="width: 20px; height: 20px;">
-                  </span>
-                  <span th:unless="${qna_contentsVO.qcon_bookmark == 'N'}">
-                    <img src="/css/images/bookmark_on.png" id="bookmark_img" class="icon" alt="북마크" onclick="bookmarked()"
-                      style="width: 20px; height: 20px;">
-                  </span>
-                </div>
-              
-                <div style="flex: 1; text-align: center;">
-                  <span th:text="${qna_contentsVO.qcon_name}" style="font-size: 2em; font-weight: bold;"></span>
-                </div>
-              
-                <div style="flex: 1; display: flex; align-items: center; justify-content: flex-end;">
-                  <img th:src="@{|/qcontents/acc/storage/${acc_profile_img.acc_thumb_img}|}"
-                    th:if="${acc_profile_img.acc_saved_img.endsWith('jpg') or acc_profile_img.acc_saved_img.endsWith('png') or acc_profile_img.acc_saved_img.endsWith('gif')}"
-                    style="width: 20px; height: 20px; border-radius: 50%; margin-right: 10px;" />
-                  <div>
-                    작성자 <span style="font-size: 14px;" th:text="${user_name}"></span>
-                    작성일 <span style="font-size: 14px;" th:text="${qna_contentsVO.qcon_date}"></span>
+                <br>
+                <div style="display: flex; align-items: flex-end; justify-content: space-between; padding: 2px;">
+                  <div style="flex: 1; text-align: left; margin-bottom: 10px;">
+                    <span style="font-size: 1em;" th:text="|조회수 ${qna_contentsVO.qcon_views}|"></span>
+                    <!-- 북마크 영역 -->
+                    북마크 <span style="font-size: normal; margin-left: 3px;" th:text="${mark_cnt}"></span>
+                    <span th:if="${qna_contentsVO.qcon_bookmark == 'N'}">
+                      <img src="/css/images/bookmark_off.png" id="bookmark_img" class="icon" alt="북마크" onclick="bookmarked()"
+                        style="width: 20px; height: 20px;">
+                    </span>
+                    <span th:unless="${qna_contentsVO.qcon_bookmark == 'N'}">
+                      <img src="/css/images/bookmark_on.png" id="bookmark_img" class="icon" alt="북마크" onclick="bookmarked()"
+                        style="width: 20px; height: 20px;">
+                    </span>
+                  </div>
+                
+                  <div style="flex: 1; text-align: center;">
+                    <span th:text="${qna_contentsVO.qcon_name}" style="font-size: 2em; font-weight: bold;"></span>
+                  </div>
+                
+                  <div style="flex: 1; display: flex; align-items: flex-end; justify-content: flex-end; margin-bottom: 10px">
+                    <img th:src="@{|/qcontents/acc/storage/${acc_profile_img.acc_thumb_img}|}"
+                      th:if="${acc_profile_img.acc_saved_img.endsWith('jpg') or acc_profile_img.acc_saved_img.endsWith('png') or acc_profile_img.acc_saved_img.endsWith('gif')}"
+                      style="width: 20px; height: 20px; border-radius: 50%; margin-right: 10px;" />
+                    <div>
+                      작성자 <span style="font-size: 14px;" th:text="${user_name}"></span>
+                      작성일 <span style="font-size: 14px;" th:text="${qna_contentsVO.qcon_date}"></span>
+                    </div>
                   </div>
                 </div>
-             </div>
-
-
-
                 <hr size="10" style="margin-top: 0px; margin-bottom:1px;">
                
                 <div class="fotorama" data-autoplay="5000" data-nav="thumbs" data-ratio="800/520"
@@ -755,13 +752,13 @@
               <br>
               
               <div th:if="${qna_imageVO != null and qna_imageVO.size() > 0}"
-                style='margin: 0px auto; width: 70%;'>
+                style='margin: 0px auto; width: 75%;'>
                 <span style="font-size: 1.5em; font-weight: normal; text-align: left;" th:text="${qna_contentsVO.qcon_contents}"></span><br>
                 <div style="white-space: pre-wrap;"></div>
               </div>
               
               <div th:if="${qna_imageVO == null or qna_imageVO.size() == 0}"
-                style='margin: 0px auto; width: 70%;'>
+                style='margin: 0px auto; width: 75%;'>
                 <span style="font-size: 1.5em; font-weight: normal; text-align: left;" th:text="${qna_contentsVO.qcon_contents}"></span><br>
                 <div style="white-space: pre-wrap;"></div>
               </div>
@@ -800,7 +797,6 @@
                      <button type='button' id='btn_closel' style='display: none;'>&nbsp;닫&nbsp;&nbsp;기&nbsp;</button>
                    </div>               
                 </form>
-
 
                 <div id='reply_list' data-replypage='1'>  <!-- 목록 -->
                   <!-- 등록된 댓글이 없는 경우 -->

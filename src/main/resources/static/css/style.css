@@ -63,13 +63,14 @@
   	margin-right: 5px;
   }
 
-  .menu_line {
-  	width: 100%;
-  	border-bottom: dotted 1px #777777;
-  	margin: 2px 0px 10px 0px;
-  	/* top -> right -> bottom -> left */
-  	clear: both;
-  }
+.menu_line {
+    width: 100%;
+    border-bottom: dashed 5px #777777;
+    margin: 2px 0px 10px 0px;
+    /* top -> right -> bottom -> left */
+    clear: both;
+}
+
 
   .left_menu {
   	width: 15%;
@@ -647,8 +648,8 @@ body {
 
 .menu_line {
     width: 100%;
-    border-bottom: dotted 1px #777777;
-    margin: 2px 0px 10px 0px;
+    border-bottom: dashed 1px #343a40;;
+    margin: 20px 0px;
     clear: both;
 }
 
@@ -781,10 +782,6 @@ tr:nth-child(even) {
   margin: 0 5px;
 }
 
-.menu_line {
-  border-top: 1px solid #ddd;
-  margin: 20px 0;
-}
 
 .table-centered {
   width: 80%;
