@@ -94,33 +94,41 @@
 													if(i==reply_data.length){
 														break;
 													}
-				    			   			 let row = reply_data[i];
-					   	             msg += "<div id='"+row.scmt_no+"' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px;'>";
-					   	             msg += "<span style='font-weight: bold;'>" + row.acc_id + "</span>";
-					   	          	 msg += " "+row.scmt_date;
+  			    			   			 let row = reply_data[i];
+  				   	             msg += "<div id='"+row.scmt_no+"' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px;'>";
+  				   	             msg += "<span style='font-weight: bold; style='font-size: 16px;''>" + row.acc_id + "</span>";
+  				   	             if ("[[${session.acc_no}]]" == row.acc_no) {
+                              msg += "<span style='font-size: 14px; color: grey;'>" + " (글쓴이)" + "</span>";
+                            }
+                            msg += "<br>";
+                            msg += row.scmt_comment;
+                            msg += "<br>";
+                            msg += "<span style='font-size: 13px;'>" + row.scmt_date + "</span>";
+                            msg += " &nbsp;";
 
-                          msg += "  <a href='javascript:recomment_read_form(" + row.scmt_no + ", \"" + row.acc_no + "\", \"" + row.acc_id + "\")'>답글</a>";
-                          if ("[[${session.acc_no}]]" == row.acc_no) {
-                            msg += "<span class='menu_divide'>│</span>"
-                            msg += " <a href='javascript:recomment_update(" + row.srecmt_no + ")'>수정</a>";
-                            msg += "<span class='menu_divide'>│</span>"
-                            msg += "  <a href='javascript:recomment_delete(" + row.srecmt_no + ")'>삭제</a>";
-                          }
-                          
-                          msg += " " + "<br>";
-			    	              msg += row.scmt_comment;
-			    	              msg += "</div>";
-			    	              msg += "<div id='recomment_area_" + row.scmt_no + "' style='display: none; margin-left: 20px;'></div>";
-												}
-				                 page_div.innerHTML = msg; //  페이지에 속한 레코드들 추가
-				                 reply_list_tag.appendChild(page_div);
-				                 
-				                 reply_now_page = reply_now_page + 1;
-											// });
-							}
-						}
-						
-					});
+                            msg += "  <a style='font-size: 13px;' href='javascript:recomment_read_form(" + row.scmt_no + ", \"" + row.acc_no + "\", \"" + row.acc_id + "\")'>답글</a>";
+                            if ("[[${session.acc_no}]]" == row.acc_no) {
+                              msg += " ";
+                              msg += "<span style='font-size: 13px;' class='menu_divide'>│</span>"
+                              msg += " ";
+                              msg += "<a style='font-size: 13px;' href='javascript:recomment_update(" + row.srecmt_no + ")'>수정</a>";
+                              msg += " ";
+                              msg += "<span style='font-size: 13px;' class='menu_divide'>│</span>"
+                              msg += " ";
+                              msg += " <a style='font-size: 13px;' href='javascript:recomment_delete(" + row.srecmt_no + ")'>삭제</a><br>";
+                            }
+  			    	              msg += "</div>";
+  			    	              msg += "<div id='recomment_area_" + row.scmt_no + "' style='display: none; margin-left: 20px;'></div>";
+  												}
+  				                 page_div.innerHTML = msg; //  페이지에 속한 레코드들 추가
+  				                 reply_list_tag.appendChild(page_div);
+  				                 
+  				                 reply_now_page = reply_now_page + 1;
+  											// });
+  							}
+  						}
+  						
+  					});
 					
 						btn_save_tag.addEventListener('click',()=>{
 							let scmt_no = scmt_no_tag.value;
@@ -192,20 +200,24 @@
           for (let i = 0; i < cnt; i++) {
             let row = reply_data[i];
              msg += "<div id='"+row.scmt_no+"' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px;'>";
-             msg += "<span style='font-weight: bold;'>" + row.acc_id + "</span>";
-             msg += " "+row.scmt_date;
+             msg += "<span style='font-weight: bold; font-size: 16px;'>" + row.acc_id + "</span>";
+             if ('[[${session.acc_no}]]' == row.acc_no) {
+               msg += "<span style='font-size: 14px; color: grey;'>" + " (글쓴이)" + "</span>";
+             }
+            msg += "<br>";
+            msg += row.scmt_comment;
+            msg += "<br>";
+            msg += "<span style='font-size: 13px;'>" + row.scmt_date + "</span>";
+            msg += " &nbsp;";
 
             // 답글 보이기/숨기기 처리
-            msg+= "  <a href='javascript:recomment_read_form("+ row.scmt_no + ", \"" + row.acc_no + "\")'>답글</a>";
+            msg+= "<a style='font-size: 13px;' href='javascript:recomment_read_form("+ row.scmt_no + ", \"" + row.acc_no + "\")'>답글</a>";
             if ("[[${session.acc_no}]]" == row.acc_no) {
-              msg += "<span class='menu_divide' >│</span>"
-              msg += " <a href='javascript:reply_update(" + row.scmt_no + ")'>수정</a>";
-              msg += "<span class='menu_divide' >│</span>"
-              msg += "  <a href='javascript:reply_delete(" + row.scmt_no + ")'>삭제</a>";
+              msg += "<span style='font-size: 13px;' class='menu_divide' >│</span>"
+              msg += " <a style='font-size: 13px;' href='javascript:reply_update(" + row.scmt_no + ")'>수정</a>";
+              msg += "<span style='font-size: 13px;' class='menu_divide' >│</span>"
+              msg += "  <a style='font-size: 13px;' href='javascript:reply_delete(" + row.scmt_no + ")'>삭제</a><br>";
             }
-            
-            msg += "  " + "<br>";
-            msg += row.scmt_comment;
             msg += "</div>";
             msg += "<div id='recomment_area_" + row.scmt_no + "' style='display: none; margin-left: 20px;'></div>";
           }
@@ -283,7 +295,7 @@
     	   })
     	   .then((response) =>response.json())
     	   .then((data)=>{
-    		   let sw = confirm("「" + data['res']['scmt_comment'] + "」 \n삭제하시려면 확인 버튼을 누르세요. 삭제후 복구 할 수 없습니다." );
+    		   let sw = confirm("「" + data['res']['scmt_comment'] + "」 \n\n삭제하시려면 확인 버튼을 누르세요. 삭제후 복구 할 수 없습니다." );
     		   if(sw==true){
     			   fetch("/reply/delete",{
     			   "method":"POST",
@@ -555,7 +567,7 @@
      
     //대댓글 삭제
     function recomment_delete(srecmt_no) {
-      let sw = "답글을 삭제하시겠습니까? \n삭제하시려면 확인 버튼을 누르세요. 삭제 후 복구할 수 없습니다.";
+      let sw = "답글을 삭제하시겠습니까? \n\n삭제하시려면 확인 버튼을 누르세요. 삭제 후 복구할 수 없습니다.";
       
       if (confirm(sw)) {
         fetch("/recomment/delete", {
@@ -598,18 +610,23 @@
           let row = recomment_data[i];
           msg += "<div style='display: flex; align-items: flex-start; margin-left:0px; padding: 10px;'>";
           msg += "<div id='" + row.srecmt_no + "'style='width: 100%; border-bottom: solid 3px #EEEEEE; margin-bottom: 10px;'>";
-          msg += "<span style='font-weight: bold;'>@" + row.acc_id + "</span>";
-          msg += " " + row.srecmt_date + " ";
-          msg += "  <a href='javascript:recomment_create_form(" + row.scmt_no + ", \"" + row.acc_no + "\", \"" + row.acc_id + "\")'>답글</a>";
-          if ("[[${session.acc_no}]]" == row.acc_no) {
-            msg += "<span class='menu_divide'>│</span>"
-            msg += " <a href='javascript:recomment_update(" + row.srecmt_no + ")'>수정</a>";
-            msg += "<span class='menu_divide'>│</span>"
-            msg += "  <a href='javascript:recomment_delete(" + row.srecmt_no + ")'>삭제</a>";
+          msg += "<span style='font-weight: bold; font-size: 15px;'>@" + row.acc_id + "</span>";
+          if ('[[${session.acc_no}]]' == row.acc_no) {
+            msg += "<span style='font-size: 14px; color: grey;'>" + " (글쓴이)" + "</span>";
           }
-
-          msg += "<br/>";
+          msg += "<br>";
           msg += row.srecmt_contents;
+          msg += "<br>";
+          msg += "<span style='font-size: 13px;'>" + row.srecmt_date + "</span>";
+          msg += " &nbsp;";
+          
+          msg += "<a style='font-size: 13px;' href='javascript:recomment_create_form(" + row.scmt_no + ", \"" + row.acc_no + "\", \"" + row.acc_id + "\")'>답글</a>";
+          if ("[[${session.acc_no}]]" == row.acc_no) {
+            msg += "<span style='font-size: 13px;' class='menu_divide'>│</span>"
+            msg += "<a style='font-size: 13px;' href='javascript:recomment_update(" + row.srecmt_no + ")'>수정</a>";
+            msg += "<span style='font-size: 13px;' class='menu_divide'>│</span>"
+            msg += "<a style='font-size: 13px;' href='javascript:recomment_delete(" + row.srecmt_no + ")'>삭제</a><br>";
+          }
           msg += "</div>";
           msg += "</div>";
         }
