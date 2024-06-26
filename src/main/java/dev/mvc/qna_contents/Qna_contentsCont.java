@@ -385,14 +385,14 @@ public class Qna_contentsCont {
    */
   @GetMapping(value="/qna_update_text/{memberno}")
   public String qna_update_text(HttpSession session, Model model, RedirectAttributes ra,
-		  						@PathVariable("memberno") int memberno,
+		  						              @PathVariable("memberno") int memberno,
                                 @RequestParam(name="qcon_no") int qcon_no,
                                 @RequestParam(name="cate_no") int cate_no,
                                 @RequestParam(name="now_page") int now_page) {
 
       int acc_no = (int) session.getAttribute("acc_no");
       
-      if (accountProc.isMemberAdmin(session) || memberno==acc_no) { // 관리자 또는 작성자인 경우
+      if (accountProc.isMemberAdmin(session) || memberno ==(int)session.getAttribute("acc_no")) { // 관리자 또는 작성자인 경우
           // 카테고리 가져오기
           CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
           model.addAttribute("categoryVO", categoryVO);
@@ -474,7 +474,7 @@ public class Qna_contentsCont {
     
     System.out.println("-> acc_no: " + session.getAttribute("acc_no"));
 
-    if (accountProc.isMember(session)||memberno ==(int)session.getAttribute("acc_no")) { // 관리자, 회원으로 로그인한 경우
+    if (accountProc.isMemberAdmin(session) || memberno ==(int)session.getAttribute("acc_no")) { // 관리자, 회원으로 로그인한 경우
       // 카테고리 가져오기
       CategoryVO categoryVO = this.categoryProc.cate_read(cate_no); // 카테고리 읽어옴
       model.addAttribute("categoryVO", categoryVO);
