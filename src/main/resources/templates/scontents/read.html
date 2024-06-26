@@ -55,10 +55,10 @@
 					        .then((data) =>{
                     let sortOption = document.getElementById('latestLink').style.textDecoration === 'underline' ? 'latest' : 'asc';
                     if (sortOption === 'latest') {
-                      list_by_contentsno_join_500(); // 최신순으로 댓글 목록 갱신
-                      qcmt_contents_tag.focus();
+                      list_by_contentsno_join(); // 최신순으로 댓글 목록 갱신
+                      content_tag.focus();
                     } else {
-                      asc_list_by_smt_no_join_500(); // 작성순으로 댓글 목록 갱신
+                      asc_list_by_smt_no_join(); // 작성순으로 댓글 목록 갱신
                       content_tag.focus();
                     }
                     
@@ -96,18 +96,19 @@
 													}
 				    			   			 let row = reply_data[i];
 					   	             msg += "<div id='"+row.scmt_no+"' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px;'>";
-					   	             msg += "<span style='font-weight: bold;'>" + row.acc_id + "</span><br>";
-					   	          	 msg += "<br>";
+					   	             msg += "<span style='font-weight: bold;'>" + row.acc_id + "</span>";
 					   	          	 msg += " "+row.scmt_date;
 
-					    	             if("[[${session.acc_no}]]" == row.acc_no){
-					    	                 msg += " <a href='javascript:reply_update("+row.scmt_no+")'>수정</a>";
-					    	                 msg +="<span class='menu_divide' >│</span>"
-					    	                 msg += "  <a href='javascript:reply_delete("+row.scmt_no+")'>삭제</a>";
-					    	             }
-				    	             msg += " " + "<br>";
-				    	             msg += row.scmt_comment;
-				    	             msg += "</div>";
+                          if ("[[${session.acc_no}]]" == row.acc_no) {
+                            msg += " <a href='javascript:recomment_update(" + row.srecmt_no + ")'>수정</a>";
+                            msg += "<span class='menu_divide'>│</span>"
+                            msg += "  <a href='javascript:recomment_delete(" + row.srecmt_no + ")'>삭제</a>";
+                          }
+                          msg += "<span class='menu_divide' >│</span>";
+                          msg += "  <a href='javascript:recomment_create_form(" + row.scmt_no + ", \"" + row.acc_no + "\", \"" + row.acc_id + "\")'>답글</a>";
+                          msg += " " + "<br>";
+			    	              msg += row.scmt_comment;
+			    	              msg += "</div>";
 												}
 				                 page_div.innerHTML = msg; //  페이지에 속한 레코드들 추가
 				                 reply_list_tag.appendChild(page_div);
@@ -137,7 +138,7 @@
 										if(data['res']==0){
 											alert("댓글 수정에 실패했습니다. 잠시후 다시 시도해 주세요")
 										}else{
-											list_by_contents_join()
+											list_by_contentsno_join()
 											content_tag.value="";
 											content_tag.focus();
 											btn_visible('default');
@@ -148,12 +149,12 @@
 					});
 
             underline('latest'); // 댓글 출력 밑줄 초기화
-						list_by_contents_join();
+						list_by_contentsno_join();
        } // window.onload END
 
         // 최신순 목록 출력
         // 5건 미만이면 5회 미만 순환, 5건 이상 5회 순환
-        function list_by_contents_join() {
+        function list_by_contentsno_join() {
            fetch("/reply/list_by_contentsno_join?scon_no=[[${scontentsVO.scon_no}]]&acc_no=[[${session.acc_no}]]", {
             "method": "get"
           })
@@ -166,8 +167,8 @@
         
         // 작성순 목록 출력
         // 5건 미만이면 5회 미만 순환, 5건 이상 5회 순환
-        function asc_list_by_smt_no_join_500() {
-          fetch("/reply/asc_list_by_smt_no_join_500?scon_no=[[${scontentsVO.scon_no}]]", {
+        function asc_list_by_smt_no_join() {
+          fetch("/reply/asc_list_by_smt_no_join?scon_no=[[${scontentsVO.scon_no}]]", {
             "method": "get"
           })
             .then((response) => response.json())
@@ -189,7 +190,6 @@
              msg += " "+row.scmt_date;
 
             // 답글 보이기/숨기기 처리
-            msg += "  <a href='javascript:qna_read_recomment(" + row.qcmt_no + ", \"" + row.acc_no + "\")'>답글 </a>";
             if ("[[${session.acc_no}]]" == row.acc_no) {
               msg += " <a href='javascript:reply_update(" + row.scmt_no + ")'>수정</a>";
               msg += "<span class='menu_divide' >│</span>"
@@ -217,10 +217,10 @@
 
           if (option === 'latest') {
             latestLink.style.textDecoration = 'underline';
-            list_by_contents_join(); // 최신순으로 댓글 목록 갱신
+            list_by_contentsno_join(); // 최신순으로 댓글 목록 갱신
           } else if (option === 'oldest') {
             oldestLink.style.textDecoration = 'underline';
-            asc_list_by_smt_no_join_500(); // 작성순으로 댓글 목록 갱신
+            asc_list_by_smt_no_join(); // 작성순으로 댓글 목록 갱신
           }
         }
 
@@ -289,7 +289,7 @@
     		   .then((data) =>{
     			   if(data['res'] ==1){
     				   console.log("삭제 성공")
-    				   list_by_contents_join();
+    				   list_by_contentsno_join();
     				   content_tag.value="";
     				   content_tag.focus();
     			   }else{
@@ -336,7 +336,7 @@
     			   console.log("더보기 필요함");
     			   console.log(reply_now_page);
     		   }
-    		   list_by_contents_join();
+    		   list_by_contentsno_join();
     	   })
        }
        
@@ -355,7 +355,7 @@
     			   console.log("더보기 필요함");
     			   console.log(reply_now_page);
     		   }
-    		   list_by_contents_join();
+    		   list_by_contentsno_join();
     	   });
        }
        
@@ -743,8 +743,8 @@
 			  <div style='width: 80%; margin: 0px auto; clear:both;'>
         <div style="float:left;">
           댓글수: <span th:text="${count}"></span>
-          &nbsp;<a href="#" id="latestLink" onclick="list_by_contents_join(); underline('latest')" )>최신순</a>
-          &nbsp;<a href="#" id="oldestLink" onclick="asc_list_by_smt_no_join_500(); underline('oldest')">작성순</a>
+          &nbsp;<a href="#" id="latestLink" onclick="list_by_contentsno_join(); underline('latest')" )>최신순</a>
+          &nbsp;<a href="#" id="oldestLink" onclick="asc_list_by_smt_no_join(); underline('oldest')">작성순</a>
         </div><br>
 			     <hr>  
 			      <form name='frm_reply' id='frm_reply'> 

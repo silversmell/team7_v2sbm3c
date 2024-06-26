@@ -86,11 +86,11 @@ public class ReplyCont {
    * @param scon_no
    * @return
    */
-  @GetMapping(value="/asc_list_by_smt_no_join_500")
+  @GetMapping(value="/asc_list_by_smt_no_join")
   @ResponseBody
-  public String asc_list_by_smt_no_join_500(int scon_no) {
+  public String asc_list_by_smt_no_join(int scon_no) {
     List<ReplyMemberVO> list=this.replyProc.asc_list_by_smt_no_join_500(scon_no);
-    JSONObject json = new JSONObject();   
+    JSONObject json = new JSONObject(); 
     json.put("res", list);
     return json.toString();
   }
