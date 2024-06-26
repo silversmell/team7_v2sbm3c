@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import dev.mvc.qna_contents.Qna_contentsVO;
+import dev.mvc.qna_contents.Qna_imageVO;
 import dev.mvc.recommend.HashtagVO;
 import dev.mvc.recommend.RecommendVO;
 import dev.mvc.share_contentsdto.Share_contentsVO;
@@ -351,8 +352,14 @@ public class AccountProc implements AccountProcInter {
 	}
 
 	@Override
-	public ArrayList<Share_imageVO> contentImages(int scon_no) {
-		ArrayList<Share_imageVO> images = this.accountDAO.contentImages(scon_no);
+	public ArrayList<Share_imageVO> shareImages(int scon_no) {
+		ArrayList<Share_imageVO> images = this.accountDAO.shareImages(scon_no);
+		return images;
+	}
+	
+	@Override
+	public ArrayList<Qna_imageVO> qnaImages(int qcon_no) {
+		ArrayList<Qna_imageVO> images = this.accountDAO.qnaImages(qcon_no);
 		return images;
 	}
 
@@ -367,6 +374,18 @@ public class AccountProc implements AccountProcInter {
 		ArrayList<Qna_contentsVO> list = this.accountDAO.qnaMarks(acc_no);
 		return list;
 	}
+	
+	@Override
+	public int deleteMark(Map<String, Object> map) {
+		int cnt = this.accountDAO.deleteMark(map);
+		return cnt;
+	}
+
+	@Override
+	public int insertMark(Map<String, Object> map) {
+		int cnt = this.accountDAO.insertMark(map);
+		return cnt;
+	}
 
 	@Override
 	public int sconCmtCnt(int scon_no) {
@@ -379,7 +398,6 @@ public class AccountProc implements AccountProcInter {
 	    int cnt = this.accountDAO.qconCmtCnt(qcon_no);
 	    return cnt;
 	}
-
 
 
 }

@@ -10,6 +10,7 @@ import dev.mvc.recommend.RecommendVO;
 import dev.mvc.share_contentsdto.Share_contentsVO;
 import dev.mvc.share_contentsdto.Share_imageVO;
 import dev.mvc.qna_contents.Qna_contentsVO;
+import dev.mvc.qna_contents.Qna_imageVO;
 
 public interface AccountDAOInter {
 
@@ -202,11 +203,21 @@ public interface AccountDAOInter {
 	public ArrayList<Share_contentsVO> myContents(int acc_no);
 	
 	/**
-	 * 게시글 사진 가져오기
+	 * 공유 게시글 사진 가져오기
 	 * 
+	 * @param scon_no
 	 * @return
 	 */
-	public ArrayList<Share_imageVO> contentImages(int scon_no);
+	public ArrayList<Share_imageVO> shareImages(int scon_no);
+	
+	/**
+	 * 질문 게시글 사진 가져오기
+	 * 
+	 * @param qcon_no
+	 * @return
+	 */
+	public ArrayList<Qna_imageVO> qnaImages(int qcon_no);
+	
 	
 	/**
 	 * 나의 북마크 목록(공유 게시글)
@@ -223,6 +234,22 @@ public interface AccountDAOInter {
 	 * @return
 	 */
 	public ArrayList<Qna_contentsVO> qnaMarks(int acc_no);
+	
+	/** 
+	 * 북마크 삭제(공유, 질문)
+	 * 
+	 * @param map
+	 * @return
+	 */
+	public int deleteMark(Map<String, Object> map);
+	
+	/**
+	 * 북마크 저장(공유, 질문)
+	 * 
+	 * @param map
+	 * @return
+	 */
+	public int insertMark(Map<String, Object> map);
 	
 	/**
 	 * 공유 게시글 댓글 수

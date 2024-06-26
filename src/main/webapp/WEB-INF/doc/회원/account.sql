@@ -175,6 +175,26 @@ INNER JOIN qna_contents qc ON qc.qcon_no = qm.qcon_no
 WHERE a.acc_no = 2
 ORDER BY qc.qcon_date ASC;
 
+-- 북마크 삭제(공유 게시글)
+DELETE FROM share_mark
+WHERE acc_no = 2
+AND scon_no = 9;
+
+-- 북마크 삭제(질문 게시글)
+DELETE FROM qna_mark
+WHERE acc_no = 2
+AND qcon_no = 21;
+
+-- 북마크 저장(공유 게시글)
+INSERT INTO share_mark(smark_no, acc_no, scon_no)
+VALUES(SHARE_MARK_SEQ.nextval, 2, 12);
+
+-- 북마크 저장(질문 게시글)
+INSERT INTO qna_mark(qmark_no, acc_no, qcon_no)
+VALUES(QNA_MARK_SEQ.nextval, 2, 21);
+
+commit;
+
 --------------------------------------------------------------------------------
 
 SELECT * FROM account;

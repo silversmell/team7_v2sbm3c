@@ -116,7 +116,7 @@ LEFT JOIN share_image si ON sc.scon_no = si.scon_no
 WHERE r.acc_no = 3
 ORDER BY sc.scon_no ASC;
 
--- 컨텐츠 이미지 가져오기
+-- 컨텐츠 이미지 가져오기(공유 게시글)
 SELECT file_no, scon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date
 FROM share_image
 WHERE scon_no = 2;
@@ -125,6 +125,12 @@ SELECT file_no, scon_no, file_origin_name, file_upload_name, file_thumb_name, fi
 FROM share_image
 WHERE scon_no = 2
 AND ROWNUM<=1
+ORDER BY file_no ASC;
+
+-- 컨텐츠 이미지 가져오기(공유 게시글)
+SELECT file_no, qcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date
+FROM qna_image
+WHERE qcon_no = 21
 ORDER BY file_no ASC;
 
 -- 선택된 해시태그 목록
