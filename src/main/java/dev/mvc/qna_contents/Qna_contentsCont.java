@@ -679,7 +679,7 @@ public class Qna_contentsCont {
 	  
     int cnt_recomments = this.qna_contentsProc.all_qna_delete_recomment(qcon_no);
     if (cnt_recomments > 0) {
-      System.out.println("대댓글 삭제 성공");
+      System.out.println("답글 삭제 성공");
     }
 	  
     int cnt_comments = this.qna_contentsProc.all_qna_delete_comment(qcon_no);
@@ -817,7 +817,7 @@ public class Qna_contentsCont {
     if (acc_no == qna_commentVO.getAcc_no()) { // 회원 자신이 쓴 댓글만 삭제 가능
       JSONObject json = new JSONObject();
       
-      int comment = this.qna_contentsProc.delete_qcmtno_recomment(qna_commentVO.getQcmt_no()); // 전체 대댓글 삭제
+      int comment = this.qna_contentsProc.delete_qcmtno_recomment(qna_commentVO.getQcmt_no()); // 전체 답글 삭제
       int cnt = this.qna_contentsProc.qna_delete_comment(qna_commentVO.getQcmt_no());
       
       json.put("res", cnt);
@@ -949,7 +949,7 @@ public class Qna_contentsCont {
 
       int recomment = this.qna_contentsProc.delete_qconno_recomment(qconNoList);
       if(recomment > 0) {
-        System.out.println("대댓글 삭제 성공");
+        System.out.println("답글 삭제 성공");
       }
       
       // 댓글 삭제
@@ -979,7 +979,7 @@ public class Qna_contentsCont {
   }
   
   /**
-   * 대댓글 작성 처리
+   * 답글 작성 처리
    * @param qna_recommentVO
    * @return
    */
@@ -1002,7 +1002,7 @@ public class Qna_contentsCont {
   }
   
    /**
-    * 회원 대댓글 조회
+    * 회원 답글 조회
     * @param qcmt_no
     * @return
     */
@@ -1015,10 +1015,10 @@ public class Qna_contentsCont {
     ArrayList<Qna_recommentVO> list = this.qna_contentsProc.qna_read_recomment(map);
     
     if(list.size() > 0) {
-      System.out.println("대댓글 조회 성공");
+      System.out.println("답글 조회 성공");
     }
     for(Qna_recommentVO vo : list) {
-      System.out.println("-> 대댓글 :" + vo.getQrecmt_contents());
+      System.out.println("-> 답글 :" + vo.getQrecmt_contents());
       System.out.println("-> acc_no:" + vo.getAcc_no());
       System.out.println("-> acc_id:" + vo.getAcc_id());
     }
@@ -1049,7 +1049,7 @@ public class Qna_contentsCont {
   }
   
   /**
-   * 대댓글 조회
+   * 답글 조회
    * @param qrecmt_no
    * @return
    */
@@ -1058,14 +1058,16 @@ public class Qna_contentsCont {
   public String read_recomment(int qrecmt_no) {
     System.out.println("-> qrecmt_no: " + qrecmt_no);
     
-    Qna_recommentVO qna_recoomentVO = this.qna_contentsProc.read_recomment(qrecmt_no);
+    Qna_recommentVO qna_recomment = this.qna_contentsProc.read_recomment(qrecmt_no);
     
     JSONObject row = new JSONObject();
-    row.put("qrecomt_no", qna_recoomentVO.getQrecmt_no());
-    row.put("qcmt_no", qna_recoomentVO.getQcmt_no());
-    row.put("qcon_no", qna_recoomentVO.getQcon_no());
-    row.put("qrecmt_contents", qna_recoomentVO.getQrecmt_contents());
-    row.put("qrecmt_date", qna_recoomentVO.getQrecmt_date());
+    row.put("qrecomt_no", qna_recomment.getQrecmt_no());
+    row.put("qcmt_no", qna_recomment.getQcmt_no());
+    row.put("qcon_no", qna_recomment.getQcon_no());
+    row.put("qrecmt_contents", qna_recomment.getQrecmt_contents());
+    row.put("qrecmt_date", qna_recomment.getQrecmt_date());
+    row.put("acc_id", qna_recomment.getAcc_id());
+    System.out.println("acc_id -> " + qna_recomment.getAcc_id());
     
     JSONObject obj = new JSONObject();
     obj.put("res", row);
@@ -1074,7 +1076,7 @@ public class Qna_contentsCont {
   }
   
   /**
-   * 대댓글 수정 처리
+   * 답글 수정 처리
    * @param qna_recommentVO
    * @param session
    * @return
@@ -1082,10 +1084,10 @@ public class Qna_contentsCont {
   @PostMapping(value="/qna_update_recomment")
   @ResponseBody
   public String qna_update_recomment(@RequestBody Qna_recommentVO qna_recommentVO, HttpSession session) {
-    System.out.println("대댓글 수정 회원번호: " + qna_recommentVO.getAcc_no());
+    System.out.println("답글 수정 회원번호: " + qna_recommentVO.getAcc_no());
 
     if (qna_recommentVO.getAcc_no() == (int)session.getAttribute("acc_no")) {
-      System.out.println("대댓글 작성한 회원과 동일합니다.");
+      System.out.println("답글 작성한 회원과 동일합니다.");
 
       HashMap<String,Object> map = new HashMap<>();
       map.put("qrecmt_no", qna_recommentVO.getQrecmt_no());
@@ -1105,7 +1107,7 @@ public class Qna_contentsCont {
   }
   
   /**
-   * 대댓글 삭제 처리
+   * 답글 삭제 처리
    * @param qna_recommentVO
    * @param session
    * @return
@@ -1113,21 +1115,21 @@ public class Qna_contentsCont {
   @PostMapping(value="qna_delete_recomment")
   @ResponseBody
   public String qna_delete_recomment(@RequestBody Qna_recommentVO qna_recommentVO, HttpSession session) {
-      JSONObject obj = new JSONObject();
-      if (qna_recommentVO.getAcc_no() == (int)session.getAttribute("acc_no")) {
-          System.out.println("대댓글 작성한 회원과 동일합니다.");
-          
-          Qna_recommentVO vo = this.qna_contentsProc.read_recomment(qna_recommentVO.getQrecmt_no());
-          obj.put("qcmt_no", vo.getQcmt_no());
-          // System.out.println("-> qcmt_no: " + vo.getQcmt_no());
-          
-          int cnt = this.qna_contentsProc.qna_delete_recomment(qna_recommentVO.getQrecmt_no());
-          obj.put("res", cnt);
-      } else {
-          obj.put("res", 0);
-      }
-      
-      return obj.toString();
+    JSONObject obj = new JSONObject();
+    if (qna_recommentVO.getAcc_no() == (int)session.getAttribute("acc_no")) {
+        System.out.println("답글 작성한 회원과 동일합니다.");
+        
+        Qna_recommentVO vo = this.qna_contentsProc.read_recomment(qna_recommentVO.getQrecmt_no());
+        obj.put("qcmt_no", vo.getQcmt_no());
+        // System.out.println("-> qcmt_no: " + vo.getQcmt_no());
+        
+        int cnt = this.qna_contentsProc.qna_delete_recomment(qna_recommentVO.getQrecmt_no());
+        obj.put("res", cnt);
+    } else {
+        obj.put("res", 0);
+    }
+    
+    return obj.toString();
   }
   
 

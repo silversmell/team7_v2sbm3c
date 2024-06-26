@@ -89,20 +89,24 @@
 
               let row = reply_data[i];
               msg += "<div id='" + row.qcmt_no + "' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px; text-align: left;'>";
-              msg += "<span style='font-weight: bold;'>" + row.acc_id + "</span>";
-              msg += "  " + row.qcmt_date;
-
-              msg += "  <a href='javascript:qna_read_recomment(" + row.qcmt_no + ", \"" + row.acc_no + "\")'>답글</a>";
-              
-              if ('[[${session.acc_no}]]' == row.acc_no) { // 글쓴이 일치여부 확인, 본인의 글만 삭제 가능함 ★
-                msg += "<span class='menu_divide' >│</span>"
-                msg += " <a href='javascript:qna_update_comment(" + row.qcmt_no + ")'>수정 </a>"; // 이미지 추가하고 싶으면, <img src='/reply/images/update.png' style='width: 16px;'>
-                msg += "<span class='menu_divide' >│</span>"
-                msg += " <a href='javascript:qna_delete_comment(" + row.qcmt_no + ")'>삭제 </a>";
-              }
-
-              msg += "  " + "<br>";
+              msg += "<span style='font-weight: bold; font-size: 16px;'>" + row.acc_id + "</span>";
+              msg += "<br>";
               msg += row.qcmt_contents;
+              msg += "<br>";
+              msg += "<span style='font-size: 13px;'>" + row.qcmt_date + "</span>";
+              msg += " &nbsp;";
+              
+              msg += "<a style='font-size: 13px;' href='javascript:qna_read_recomment(" + row.qcmt_no + ", \"" + row.acc_no + "\")'>답글</a>";
+              if ('[[${session.acc_no}]]' == row.acc_no) { // 글쓴이 일치여부 확인, 본인의 글만 삭제 가능함 ★
+                msg += " ";
+                msg += "<span style='font-size: 13px;' class='menu_divide' >│</span>"
+                msg += " ";
+                msg += "<a style='font-size: 13px;' href='javascript:qna_update_comment(" + row.qcmt_no + ")'>수정</a>"; // 이미지 추가하고 싶으면, <img src='/reply/images/update.png' style='width: 16px;'>
+                msg += " ";
+                msg += "<span style='font-size: 13px;' class='menu_divide' >│</span>"
+                msg += " ";
+                msg += "<a style='font-size: 13px;' href='javascript:qna_delete_comment(" + row.qcmt_no + ")'>삭제</a><br>";
+              }
               msg += "</div>";
 
               msg += "<div id='recomment_id" + row.qcmt_no + "'style='display: none; margin-left: 20px; text-align: left;'></div>";
@@ -187,20 +191,25 @@
       for (let i = 0; i < cnt; i++) {
         let row = reply_data[i];
         msg += "<div id='" + row.qcmt_no + "' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px; text-align: left;'>";
-        msg += "<span style='font-weight: bold;'>" + row.acc_id + "</span>";
-        msg += "  " + row.qcmt_date;
+        msg += "<span style='font-weight: bold; font-size: 16px;'>" + row.acc_id + "</span>";
+        msg += "<br>";
+        msg += row.qcmt_contents;
+        msg += "<br>";
+        msg += "<span style='font-size: 13px;'>" + row.qcmt_date + "</span>";
+        msg += " &nbsp;";
     
         // 답글 보이기/숨기기 처리
-        msg += "  <a href='javascript:qna_read_recomment(" + row.qcmt_no + ", \"" + row.acc_no + "\")'>답글 </a>";
+        msg += "<a style='font-size: 13px;' href='javascript:qna_read_recomment(" + row.qcmt_no + ", \"" + row.acc_no + "\")'>답글</a>";
         if ('[[${session.acc_no}]]' == row.acc_no) {
-          msg += "<span class='menu_divide' >│</span>"
-          msg += " <a href='javascript:qna_update_comment("+row.qcmt_no+")'>수정 </a>";
-          msg += "<span class='menu_divide'>│</span>";
-          msg += " <a href='javascript:qna_delete_comment(" + row.qcmt_no + ")'>삭제</a>";
+          msg += " ";
+          msg += "<span style='font-size: 13px;' class='menu_divide' >│</span>"
+          msg += " ";
+          msg += "<a style='font-size: 13px;' href='javascript:qna_update_comment("+row.qcmt_no+")'>수정</a>";
+          msg += " ";
+          msg += "<span style='font-size: 13px;' class='menu_divide'>│</span>";
+          msg += " ";
+          msg += "<a style='font-size: 13px;' href='javascript:qna_delete_comment(" + row.qcmt_no + ")'>삭제</a><br>";
         }
-        
-        msg += "  " + "<br>";
-        msg += row.qcmt_contents;
         msg += "</div>";
         
         msg += "<div id='recomment_id" + row.qcmt_no + "' style='display: none; margin-left: 20px; text-align: left;'></div>";
@@ -279,8 +288,8 @@
         .then((data) => {
           if (data['res'] == 1) {
             list_by_qcmt_no_join(); // 목록 출력
-            content_tag.value = '';
-            content_tag.focus();
+            qcmt_contents_tag.value = '';
+            qcmt_contents_tag.focus();
             alert('댓글을 삭제했습니다.');
           } else {
             alert('댓글 삭제에 실패했습니다. 잠시후 다시 시도해주세요.');
@@ -354,7 +363,7 @@
     });
   }
     
-  // 대댓글 등록
+  // 답글 등록
   function qna_create_recomment(qcmt_no, acc_no, acc_id) {
     fetch("/qcontents/account_read?acc_no=" + acc_no, {
       "method": "get",
@@ -366,15 +375,15 @@
       if (typeof data['acc_id'] !== 'undefined') {
         msg += "<br/>";
         msg += "<div style='font-size: 15px;' value='" + data['acc_id'] + "'>" +
-                  "<span style='color: blue; text-decoration: underline;'>@" + data['acc_id'] + "</span> 에게 답장하기" +
+                  "<span style='color: blue; text-decoration: underline; font-size: 16px;'>@" + data['acc_id'] + "</span> 에게 답장하기" +
                   "</div>";
-        msg += "<textarea name='recomment_comment' class='form-control' id='recomment_comment' style='width: 100%; height: 60px;' autofocus='autofocus' placeholder='@" + data['acc_id'] + " 에게 답글 작성 ....' autofocus></textarea>";
+        msg += "<textarea name='recomment_comment' class='form-control' id='recomment_comment' style='width: 100%; height: 60px;' autofocus='autofocus;' placeholder='@" + data['acc_id'] + " 에게 답글 작성 ....' autofocus></textarea>";
       } else {
         msg += "<br/>";
         msg += "<div style='font-size: 15px;' value='" + data['acc_id'] + "'>" +
-                   "<span style='color: blue; text-decoration: underline;'>@" + data['acc_id'] + "</span> 에게 답장하기" +
+                   "<span style='color: blue; text-decoration: underline; font-size: 16px;'>@" + data['acc_id'] + "</span> 에게 답장하기" +
                    "</div>";
-        msg += "<textarea name='recomment_comment' class='form-control' id='recomment_comment' style='width: 100%; height: 60px;' autofocus='autofocus' placeholder='@" + data['acc_id'] + " 에게 답글 작성 ....' autofocus></textarea>";
+        msg += "<textarea name='recomment_comment' class='form-control' id='recomment_comment' style='width: 100%; height: 60px;' autofocus='autofocus;' placeholder='@" + data['acc_id'] + " 에게 답글 작성 ....' autofocus></textarea>";
         return;
       }
       msg += "<div style='text-align: right; margin-top: 10px;'>";
@@ -405,7 +414,7 @@
               "headers": {"Content-Type": "application/json"},
               body: JSON.stringify({
                 "qcon_no": "[[${qna_contentsVO.qcon_no}]]",
-                "qrecmt_contents": "<span style='color: blue; text-decoration: underline;'>@" + data['acc_id'] + "</span> " + content,
+                "qrecmt_contents": "<span style='color: blue; text-decoration: underline; font-size: 15px;'>@" + data['acc_id'] + "</span> " + content,
                 "qcmt_no": qcmt_no,
                 "acc_no": "[[${session.acc_no}]]"
               })
@@ -413,7 +422,7 @@
             .then((response) => response.json())
             .then((data) => {
               comment_tag.value = "";
-              qna_read_recomment(qcmt_no); // 대댓글 읽어오기
+              qna_read_recomment(qcmt_no); // 답글 읽어오기
             })
             .catch((error) => {
               console.error('Error:', error);
@@ -422,24 +431,25 @@
         });
 
         close_tag.addEventListener('click', () => {
-          close_recomment(qcmt_no); // 대댓글 창 숨기기
+          close_recomment(qcmt_no); // 답글 창 숨기기
           document.getElementById("recomment_list").style.display = 'none';
         });
       });
     }
     
-    // 대댓글 보이기/숨기기 함수
+    // 답글 보이기/숨기기 함수
     function close_recomment(qcmt_no, acc_no) {
       let area_id = "recomment_id" + qcmt_no;
       let area = document.getElementById(area_id);
   
-      area.style.display = 'none'; // 대댓글 목록 숨기기
+      area.style.display = 'none'; // 답글 목록 숨기기
     }
     
-    // 대댓글 수정
+    // 답글 수정
     function qna_update_recomment(qrecmt_no) {
       console.log(qrecmt_no);
-      let qcmt_no = ""
+      let qcmt_no = "";
+      let acc_id = "";
       let recomment_tag = document.getElementById("recomment_comment");
       
       fetch("/qcontents/read_recomment?qrecmt_no=" + qrecmt_no, {
@@ -464,20 +474,21 @@
     
         recomment_tag.value = content.trim();
         qcmt_no = data['res']['qcmt_no'];
+        acc_id = data['res']['acc_id'];
         recomment_tag.focus();
         recomment_visible('update');
       });
     
       let update_tag = document.getElementById("recomment_save");
       update_tag.addEventListener('click', () => {
-        console.log("대댓글 저장 클릭");
+        console.log("답글 저장 클릭");
         let content = recomment_tag.value.trim();
     
         if (content.length == 0) {
           alert('내용이 없습니다. 내용을 입력해주세요.');
         } else {
-          // 대댓글 저장 시 span 태그를 포함하여 저장
-          let qrecmt_contents = "<span style='color: blue; text-decoration: underline;'>@" + '[[${session.acc_id}]]' + "</span> " + content;
+          // 답글 저장 시 span 태그를 포함하여 저장
+          let qrecmt_contents = "<span style='color: blue; text-decoration: underline; font-size: 13px;'>@" + acc_id + "</span> " + content;
     
           fetch("/qcontents/qna_update_recomment", {
             method: "POST",
@@ -494,7 +505,7 @@
               alert("댓글 수정에 실패하였습니다. 다시 시도해주세요.");
             } else {
               console.log("답글 수정 완료");
-              // 수정 후 대댓글 목록 다시 불러오기
+              // 수정 후 답글 목록 다시 불러오기
               qna_read_recomment(qcmt_no);
               recomment_tag.value = "";
               recomment_tag.focus();
@@ -513,7 +524,7 @@
       
     }
       
-  // 대댓글 삭제
+  // 답글 삭제
   function qna_delete_recomment(qrecmt_no, qrecmt_contents) {
     // 확인 창을 통해 사용자에게 삭제 여부를 물어봅니다.
     let sw = "답글을 삭제하시겠습니까? \n삭제하시려면 확인 버튼을 누르세요. 삭제 후 복구할 수 없습니다.";
@@ -541,7 +552,7 @@
     }
   }
 
-  // 대댓글 목록
+  // 답글 목록
   function qna_read_recomment(qcmt_no, acc_no) {
     let area_id = "recomment_id" + qcmt_no;
     let area = document.getElementById(area_id);
@@ -563,20 +574,26 @@
         let row = recomment_data[i];
         msg += "<div style='display: flex; align-items: flex-start; margin-left:0px; padding: 10px;'>";
         msg += "<div id='" + row.qrecmt_no + "'style='width: 100%; border-bottom: solid 3px #EEEEEE; margin-bottom: 10px;'>";
-        msg += "<span style='font-weight: bold;'>@" + row.acc_id + "</span>";
-        msg += " " + row.qrecmt_date + " ";
-        // console.log('row.acc_id:' + row.acc_id);
-
-        msg += " <a href='javascript:qna_create_recomment(" + row.qcmt_no + ", \"" + row.acc_no + "\", \"" + row.acc_id + "\")'>답글 </a>";
-        if ("[[${session.acc_no}]]" == row.acc_no) {
-          msg += "<span class='menu_divide' >│</span>";
-          msg += " <a href='javascript:qna_update_recomment(" + row.qrecmt_no + ")'>수정</a> ";
-          msg += "<span class='menu_divide'>│</span>";
-          msg += " <a href='javascript:qna_delete_recomment(" + row.qrecmt_no + ")'>삭제</a> ";
-        }
-        
+        msg += "<span style='font-weight: bold; font-size: 15px;'>@" + row.acc_id + "</span>";
         msg += "<br>";
         msg += row.qrecmt_contents;
+        msg += "<br>";
+        msg += "<span style='font-size: 13px;'>"+ row.qrecmt_date +  "</span>";
+        msg += " &nbsp;";
+        // console.log('row.acc_id:' + row.acc_id);
+
+        msg += "<a style='font-size: 13px;' href='javascript:qna_create_recomment(" + row.qcmt_no + ", \"" + row.acc_no + "\", \"" + row.acc_id + "\")'>답글</a>";
+        if ("[[${session.acc_no}]]" == row.acc_no) {
+          msg += " ";
+          msg += "<span style='font-size: 12px;' class='menu_divide' >│</span>";
+          msg += " ";
+          msg += "<a style='font-size: 13px;' href='javascript:qna_update_recomment(" + row.qrecmt_no + ")'>수정</a>";
+          msg += " ";
+          msg += "<span style='font-size: 12px;' class='menu_divide'>│</span>";
+          msg += " ";
+          msg += "<a style='font-size: 13px;' href='javascript:qna_delete_recomment(" + row.qrecmt_no + ")'>삭제</a><br>";
+        }
+        
         msg += "</div>";
         msg += "</div>";
       }
