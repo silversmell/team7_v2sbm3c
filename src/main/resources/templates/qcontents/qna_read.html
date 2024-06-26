@@ -468,7 +468,7 @@
         // qrecmt_contents에서 span 태그 부분을 제외한 content만 추출하기
         let span = div.querySelector('span'); // span 태그 찾기
         if (span) {
-          select_acc_id = span.textContent.trim().substring(1); // '@' 기호를 제외한 acc_id 추출
+          select_acc_id = span.textContent.trim().substring(1); // '@' 기호를 제외한 acc_id 추출, 형식: @acc_id
         }
     
         // qrecmt_contents에서 span 태그 부분을 제외한 content만 추출하기
