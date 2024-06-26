@@ -761,9 +761,8 @@
                 style="text-align:center; margin-top:30px;">
                 파일 다운로드 ▼<br />
                 <div th:each="image : ${qna_imageVO}">
-                  첨부 파일: <a
-                    th:href="@{|/download?dir=/qcontents/storage&amp;filename=${image.file_upload_name}&downname=${image.file_origin_name}|}"
-                    th:text="|${image.file_origin_name}|"></a>
+                  첨부 파일: <a th:href="@{|/download?dir=/qcontents/storage&filename=${image.file_upload_name}&downname=${image.file_origin_name}|}"
+                                    th:text="|${image.file_origin_name}|"></a>
                 </div>
               </li>
               <li th:if="${qna_imageVO == null or qna_imageVO.size() == 0}" class="li_none"
