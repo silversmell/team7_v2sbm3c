@@ -632,37 +632,37 @@
     } 
   }
   
-  function confirmUpdate(memberno,acc_no,qcon_no,now_page,cate_no){
-	  if(memberno!=acc_no && acc_no>3){
-		  alert("권한이 필요합니다.");
-		  return false;
-	  }
-	  const url=`./qna_update_text/${memberno}?qcon_no=${qcon_no}&now_page=${now_page}&cate_no=${cate_no}`;
-  	window.location.href=url;
-		return true;
+  function confirmUpdate(memberno, acc_no, qcon_no, now_page, cate_no) {
+    if (memberno != acc_no && acc_no > 3) {
+      alert("권한이 필요합니다.");
+      return false;
+    }
+    const url = `./qna_update_text/${memberno}?qcon_no=${qcon_no}&now_page=${now_page}&cate_no=${cate_no}`;
+    window.location.href = url;
+    return true;
+  }
+
+  function confirmFile(memberno, acc_no, qcon_no, now_page, cate_no) {
+    if (memberno != acc_no && acc_no > 3) {
+      alert("권한이 필요합니다.");
+      return false;
+    }
+    const url = `./qna_update_file/${memberno}?qcon_no=${qcon_no}&now_page=${now_page}&cate_no=${cate_no}`;
+    window.location.href = url;
+    return true;
+  }
+
+  function confirmDelete(memberno, acc_no, qcon_no, now_page, cate_no) {
+    console.log(acc_no);
+    if (memberno != acc_no && acc_no > 3) { //memberno가 acc_no 같지 않고 acc_no가 3보다 작을떄
+      alert("권한이 필요합니다.");
+      return false;
+    }
+    const url = `./qna_delete/${memberno}?qcon_no=${qcon_no}&now_page=${now_page}&cate_no=${cate_no}`;
+    window.location.href = url;
+    return true;
   }
   
-  function confirmFile(memberno,acc_no,qcon_no,now_page,cate_no){
-	  if(memberno!=acc_no && acc_no>3){
-		  alert("권한이 필요합니다.");
-		  return false;
-	  }
-	  const url=`./qna_update_file/${memberno}?qcon_no=${qcon_no}&now_page=${now_page}&cate_no=${cate_no}`;
-  	window.location.href=url;
-		return true;
-  }
-  
-  function confirmDelete(memberno,acc_no,qcon_no,now_page,cate_no){
-	  console.log(acc_no); 
-	  if(memberno!=acc_no && acc_no>3){ //memberno가 acc_no 같지 않고 acc_no가 3보다 작을떄
-		  alert("권한이 필요합니다.");
-		  return false;
-	  }
-	  const url=`./qna_delete/${memberno}?qcon_no=${qcon_no}&now_page=${now_page}&cate_no=${cate_no}`;
-  	window.location.href=url;
-		return true;
-  }
-    
   </script>
 </head>
 
@@ -689,7 +689,6 @@
     <span class='menu_divide'>│</span>
     <a href="javascript:location.reload();">새로고침</a>
   </aside>
- 
   <div class='menu_line'></div>
   
     <form action="/qcontents/qna_read" method="get">
