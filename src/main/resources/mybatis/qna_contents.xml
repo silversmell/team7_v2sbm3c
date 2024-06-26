@@ -337,7 +337,7 @@
     WHERE a.acc_no=q.acc_no AND q.qcon_no=#{qcon_no}
   </select>
   
-  <!--  대댓글 작성 -->
+  <!-- 대댓글 작성 -->
   <insert id="qna_create_recomment" parameterType="HashMap">
     INSERT INTO qna_recomment(qrecmt_no, qcmt_no, qcon_no, qrecmt_contents, acc_no, qrecmt_date)
     VALUES(qna_recomment_seq.nextval, #{qcmt_no}, #{qcon_no}, #{qrecmt_contents}, #{acc_no}, sysdate)
@@ -448,6 +448,14 @@
     ON qc.acc_no = ac.acc_no
     WHERE qc.qcon_no=#{qcon_no}
     ORDER BY qc.qcon_no desc
+  </select>
+  
+  <!-- 선택한 답글의 회원 아이디 조회 -->
+  <select id="select_acc_id" resultType="dev.mvc.qna_contents.Qna_recommentVO" parameterType="int">
+    SELECT ac.acc_no, ac.acc_id
+    FROM qna_recomment qr
+    INNER JOIN account ac ON qr.acc_no = ac.acc_no
+    WHERE qr.qrecmt_no = #{qrecmt_no}
   </select>
 
   <!-- 댓글 작성자 프로필 이미지 -->

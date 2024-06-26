@@ -380,4 +380,11 @@ public interface Qna_contentsProcInter {
    */
   public AccountVO acc_profile_img_by_qcmt_no(int qcmt_no);
   
+  /**
+   * 선택한 답글의 회원 아이디 조회
+   * @param qrecmt_no
+   * @return
+   */
+  public Qna_recommentVO select_acc_id(int qrecmt_no);
+  
 }
