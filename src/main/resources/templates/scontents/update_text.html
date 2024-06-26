@@ -9,10 +9,17 @@ function send(){
 	    var url = urlInput.value.trim();
 		let content = document.getElementById("content");
 	  let title_tag = document.getElementById("title");
-	  if(title_tag.value==' '){
-		  alert("제목을 입력해주세요");
-		  return false;
-	  }
+	  
+
+	  if (title_tag.value.trim() === '') {
+		    alert("제목을 입력해주세요");
+		    return false;
+		}
+	    if (title_tag.value.trim().length > 20) {
+	        alert("제목은 20자 내외로 입력해주세요.");
+	        return false
+	    }
+	   
 	  if(content.value==''){
 		  alert("내용을 입력해주세요");
 		  return false
@@ -47,7 +54,7 @@ function send(){
     <div>
        <label>제목</label>
        <input type='text' name='scon_title' th:value='${scontentsVO.scon_title}' required="required"  id="title"
-                 autofocus="autofocus" class="form-control" style='width: 100%;'>
+                 class="form-control"  maxlength="20" style='width: 100%;'>
     </div>
     <div>
        <label>내용</label>

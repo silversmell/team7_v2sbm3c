@@ -15,12 +15,17 @@ function send(){
 	  });
 	    var urlInput = document.getElementById("url");
 	    var url = urlInput.value.trim();
-
+		
 	  let title_tag = document.getElementById("title");
 	  if(title_tag.value==' '){
 		  alert("제목을 입력해주세요");
 		  return false;
 	  }
+	   // 제목 길이 확인 (20자 이내)
+	    if (title_tag.value.trim().length > 20) {
+	        alert("제목은 20자 내외로 입력해주세요.");
+	        return false;
+	    }
 	  if(!isChecked) {
 	    alert("하나 이상의 해시태그를 선택하세요.");
 	    return false;
@@ -62,7 +67,7 @@ function send(){
     <div>
        <label>제목</label>
        <input type='text' name='scon_title' value=' ' required="required" id="title"
-                 autofocus="autofocus" class="form-control" style='width: 100%;'>
+                 autofocus="autofocus" class="form-control" maxlength="20"  style='width: 100%;'>
     </div>
            <input type='hidden' name='acc_no' th:value="${acc_no}" required="required" 
                  autofocus="autofocus" class="form-control" style='width: 100%;'>
