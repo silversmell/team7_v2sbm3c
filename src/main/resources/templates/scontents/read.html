@@ -746,18 +746,21 @@
 <div style='margin: 0px auto; width: 900px;'>
 
     <br>
-    <div style="display:flex; align-items: center; flex-direction:row; justify-content: space-between;" > 
+    <div style="display:flex; align-items: center; flex-direction:row; justify-content: space-between; padding:10px;" > 
        <!-- <div style="margin-left: auto; margin-right:86px;">  -->
 
        <div style="flex:1; text-align: left;">
-       <span style="font-size: 1em; margin-left:10px;" th:text="|조회수: ${scontentsVO.scon_views}|"></span>
-        북마크<span th:if="${scontentsVO.scon_bookmark =='N'}">
+         <span style="font-size: noraml; margin-left:3px;" th:text="|조회수: ${scontentsVO.scon_views}|"></span>
+    
+        북마크
+        <span style="font-size: normal; margin-left:1px;" th:text="${count1}"></span>
+        <span th:if="${scontentsVO.scon_bookmark =='N'}">
             <img src="/css/images/bookmark_off.png" id="bookmarkImage" class="icon" onclick="mark()" style="width:24px; height: 24px;">
         </span>
         <span  th:unless="${scontentsVO.scon_bookmark =='N'}">
             <img src="/css/images/bookmark_on.png" id="bookmarkImage" class="icon" onclick="mark()" style="width:24px; height: 24px;">
         </span>
-     <span style="font-size: normal; margin-left:1px;" th:text="${count1}">
+     			<span style="font-size: normal; margin-left:1px;" th:text="${count1}">
         </span>
         
         </div>
@@ -765,14 +768,15 @@
         <span th:text="${scontentsVO.scon_title}" style="font-size:2em;font-weight: bold;"></span>
         </div>
         
-        <div style="flex: 2; text-align: right;">
+        <div style="display: flex; align-items: center; text-align: left;">
    <img th:src="@{|/contents/storage/${img_acc.acc_thumb_img}|}" style="width: 30px; height: 32px; border-radius: 50%;"
          th:if="${img_acc.acc_saved_img.endsWith('jpg') or img_acc.acc_saved_img.endsWith('png') or img_acc.acc_saved_img.endsWith('gif')}">
     <img src="/scontents/images/profile.png" style="width: 30px; height: 32px; border-radius: 50%;"
          th:unless="${img_acc.acc_saved_img.endsWith('jpg') or img_acc.acc_saved_img.endsWith('png') or img_acc.acc_saved_img.endsWith('gif')}">
-
+		<div>
     작성자: <span style="font-size: normal;" th:text="${writer}"></span>
     작성일: <span style="font-size: normal;" th:text="${scontentsVO.scon_date}"></span>
+			</div>
 			</div>
 			</div>
 
