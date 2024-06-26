@@ -18,6 +18,7 @@
 			})
 			.then(response =>response.json())
 			.then(rdata =>{
+				console.log("들어옴");
 				if(rdata.cnt>0){
 					console.log("삭제 성공");
 					location.href='/scontents/list_by_search?cate_no=1'
