@@ -736,11 +736,11 @@
                 </div>
 
                <hr size="9" style="margin-top: 0px; margin-bottom:1px;">
-              </div>
-             
-              <div class="fotorama" data-autoplay="5000" data-nav="thumbs" data-ratio="800/520" style='display: flex; justify-content: center; align-items: center; width: 100%; margin-top: 30px;'>
+               
+                             <div class="fotorama" data-autoplay="5000" data-nav="thumbs" data-ratio="800/520" style='display: flex; justify-content: center; align-items: center; width: 100%; margin-top: 30px;'>
                 <img th:src="@{|/qcontents/storage/${image.file_upload_name}|}" th:each="image : ${qna_imageVO}"
-                  th:if="${image.file_origin_name.endsWith('jpg') or image.file_origin_name.endsWith('png') or image.file_origin_name.endsWith('gif')}">
+                        th:if="${image.file_origin_name.endsWith('jpg') or image.file_origin_name.endsWith('png') or image.file_origin_name.endsWith('gif')}">
+              </div>
               </div>
               <br>
               
