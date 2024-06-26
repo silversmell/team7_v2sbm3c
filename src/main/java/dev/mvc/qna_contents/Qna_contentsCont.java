@@ -392,7 +392,7 @@ public class Qna_contentsCont {
 
       int acc_no = (int) session.getAttribute("acc_no");
       
-      if (accountProc.isMemberAdmin(session) || memberno ==(int)session.getAttribute("acc_no")) { // 관리자 또는 작성자인 경우
+      if (accountProc.isMemberAdmin(session) || memberno == (int)session.getAttribute("acc_no")) { // 관리자 또는 작성자인 경우
           // 카테고리 가져오기
           CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
           model.addAttribute("categoryVO", categoryVO);

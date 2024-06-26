@@ -5,6 +5,28 @@
   <!-- Fotorama -->
   <link href="/fotorama/fotorama.css" rel="stylesheet">
   <script src="/fotorama/fotorama.js"></script>
+  <script>
+    function confirmUpdate(memberno, acc_no, qcon_no, now_page, cate_no) {
+      if (memberno != acc_no && acc_no > 3) {
+        alert("권한이 필요합니다.");
+        return false;
+      }
+      const url = `../qna_update_text/${memberno}?qcon_no=${qcon_no}&now_page=${now_page}&cate_no=${cate_no}`;
+      window.location.href = url;
+      return true;
+    }
+
+    function confirmDelete(memberno, acc_no, qcon_no, now_page, cate_no) {
+      console.log(acc_no);
+      if (memberno != acc_no && acc_no > 3) { //memberno가 acc_no 같지 않고 acc_no가 3보다 작을떄
+        alert("권한이 필요합니다.");
+        return false;
+      }
+      const url = `../qna_delete/${memberno}?qcon_no=${qcon_no}&now_page=${now_page}&cate_no=${cate_no}`;
+      window.location.href = url;
+      return true;
+    }
+  </script>
 </head>
 
 <div layout:fragment="content">
@@ -16,14 +38,17 @@
   <aside class="aside_right">
     <a th:href="@{|/qcontents/qna_create?cate_no=2|}">등록</a>
     <span class='menu_divide'>│</span>
-    <a th:href="@{|/qcontents/qna_update_text?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}&cate_no=2|}">글 수정</a>  
+    <a href="#" th:attr="onclick=|return confirmUpdate(${memberno}, '${acc_no}', ${qna_contentsVO.qcon_no}, ${now_page}, 2)|">글 수정</a>
+    <!-- <a th:attr="@{|/qcontents/qna_update_text/${qna_contentsVO.acc_no}?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}&cate_no=2|}">글 수정</a>   -->
     <span class='menu_divide'>│</span>
-    <a th:href="@{|/qcontents/qna_delete?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}&cate_no=2|}">삭제</a>  
+    <a href="#" th:attr="onclick=|return confirmDelete(${memberno}, '${acc_no}', ${qna_contentsVO.qcon_no}, ${now_page}, 2)|">삭제</a>
+    <!-- <a th:href="@{|/qcontents/qna_delete?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}&cate_no=2|}">삭제</a>   -->
     <span class='menu_divide'>│</span>
-    <a th:href="@{|/qcontents/qna_list_all?cate_no=2&now_page=${now_page}|}">돌아가기</a>   
+    <a th:href="@{|/qcontents/qna_list_all?cate_no=2&now_page=${now_page}|}">전체 목록</a>   
     <span class='menu_divide'>│</span>
     <a href="javascript:location.reload();">새로고침</a>
   </aside>
+  
   
   <div class='menu_line'></div>
   
@@ -37,9 +62,7 @@
                         th:if="${qimage.file_origin_name.endsWith('jpg') or qimage.file_origin_name.endsWith('png') or qimage.file_origin_name.endsWith('gif')}">
           </div>
         </tr>
-        
 
-    
         <div style='text-align: left; width: 47%; float: left;'>
           <span style='font-size: 1.5em;' th:text="${qna_contentsVO.qcon_name}"></span>
           <br>

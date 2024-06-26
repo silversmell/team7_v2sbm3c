@@ -90,6 +90,9 @@
               let row = reply_data[i];
               msg += "<div id='" + row.qcmt_no + "' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px; text-align: left;'>";
               msg += "<span style='font-weight: bold; font-size: 16px;'>" + row.acc_id + "</span>";
+              if ('[[${session.acc_no}]]' == row.acc_no) {
+                msg += "<span style='font-size: 14px; color: grey;'>" + " (글쓴이)" + "</span>";
+              }
               msg += "<br>";
               msg += row.qcmt_contents;
               msg += "<br>";
@@ -192,6 +195,9 @@
         let row = reply_data[i];
         msg += "<div id='" + row.qcmt_no + "' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px; text-align: left;'>";
         msg += "<span style='font-weight: bold; font-size: 16px;'>" + row.acc_id + "</span>";
+        if ('[[${session.acc_no}]]' == row.acc_no) {
+          msg += "<span style='font-size: 14px; color: grey;'>" + " (글쓴이)" + "</span>";
+        }
         msg += "<br>";
         msg += row.qcmt_contents;
         msg += "<br>";
@@ -276,7 +282,7 @@
     })
     .then((response) => response.json())
     .then((data) => {
-      let sw = confirm("선택된 댓글 내용: 「" + data['res']['qcmt_contents'] + "」 \n삭제하시려면 확인 버튼을 누르세요. 삭제후 복구 할 수 없습니다.");
+      let sw = confirm("선택된 댓글 내용\n: 「" + data['res']['qcmt_contents'] + "」 \n\n삭제하시려면 확인 버튼을 누르세요. 삭제후 복구 할 수 없습니다.");
       if (sw == true) {
         // alert('삭제를 진행합니다.');
         fetch("/qcontents/qna_delete_comment", {
@@ -468,7 +474,7 @@
         // qrecmt_contents에서 span 태그 부분을 제외한 content만 추출하기
         let span = div.querySelector('span'); // span 태그 찾기
         if (span) {
-          select_acc_id = span.textContent.trim().substring(1); // '@' 기호를 제외한 acc_id 추출
+          select_acc_id = span.textContent.trim().substring(1); // '@' 기호를 제외한 acc_id 추출, 형식: @acc_id
         }
     
         // qrecmt_contents에서 span 태그 부분을 제외한 content만 추출하기
@@ -535,7 +541,7 @@
   // 답글 삭제
   function qna_delete_recomment(qrecmt_no, qrecmt_contents) {
     // 확인 창을 통해 사용자에게 삭제 여부를 물어봅니다.
-    let sw = "답글을 삭제하시겠습니까? \n삭제하시려면 확인 버튼을 누르세요. 삭제 후 복구할 수 없습니다.";
+    let sw = "답글을 삭제하시겠습니까? \n\n삭제하시려면 확인 버튼을 누르세요. 삭제 후 복구할 수 없습니다.";
     if (confirm(sw)) {
       fetch("/qcontents/qna_delete_recomment", {
         method: "POST",
@@ -583,6 +589,9 @@
         msg += "<div style='display: flex; align-items: flex-start; margin-left:0px; padding: 10px;'>";
         msg += "<div id='" + row.qrecmt_no + "'style='width: 100%; border-bottom: solid 3px #EEEEEE; margin-bottom: 10px;'>";
         msg += "<span style='font-weight: bold; font-size: 15px;'>@" + row.acc_id + "</span>";
+        if ('[[${session.acc_no}]]' == row.acc_no) {
+          msg += "<span style='font-size: 14px; color: grey;'>" + " (글쓴이)" + "</span>";
+        }
         msg += "<br>";
         msg += row.qrecmt_contents;
         msg += "<br>";
@@ -632,37 +641,37 @@
     } 
   }
   
-  function confirmUpdate(memberno,acc_no,qcon_no,now_page,cate_no){
-	  if(memberno!=acc_no && acc_no>3){
-		  alert("권한이 필요합니다.");
-		  return false;
-	  }
-	  const url=`./qna_update_text/${memberno}?qcon_no=${qcon_no}&now_page=${now_page}&cate_no=${cate_no}`;
-  	window.location.href=url;
-		return true;
+  function confirmUpdate(memberno, acc_no, qcon_no, now_page, cate_no) {
+    if (memberno != acc_no && acc_no > 3) {
+      alert("권한이 필요합니다.");
+      return false;
+    }
+    const url = `./qna_update_text/${memberno}?qcon_no=${qcon_no}&now_page=${now_page}&cate_no=${cate_no}`;
+    window.location.href = url;
+    return true;
+  }
+
+  function confirmFile(memberno, acc_no, qcon_no, now_page, cate_no) {
+    if (memberno != acc_no && acc_no > 3) {
+      alert("권한이 필요합니다.");
+      return false;
+    }
+    const url = `./qna_update_file/${memberno}?qcon_no=${qcon_no}&now_page=${now_page}&cate_no=${cate_no}`;
+    window.location.href = url;
+    return true;
+  }
+
+  function confirmDelete(memberno, acc_no, qcon_no, now_page, cate_no) {
+    console.log(acc_no);
+    if (memberno != acc_no && acc_no > 3) { //memberno가 acc_no 같지 않고 acc_no가 3보다 작을떄
+      alert("권한이 필요합니다.");
+      return false;
+    }
+    const url = `./qna_delete/${memberno}?qcon_no=${qcon_no}&now_page=${now_page}&cate_no=${cate_no}`;
+    window.location.href = url;
+    return true;
   }
   
-  function confirmFile(memberno,acc_no,qcon_no,now_page,cate_no){
-	  if(memberno!=acc_no && acc_no>3){
-		  alert("권한이 필요합니다.");
-		  return false;
-	  }
-	  const url=`./qna_update_file/${memberno}?qcon_no=${qcon_no}&now_page=${now_page}&cate_no=${cate_no}`;
-  	window.location.href=url;
-		return true;
-  }
-  
-  function confirmDelete(memberno,acc_no,qcon_no,now_page,cate_no){
-	  console.log(acc_no); 
-	  if(memberno!=acc_no && acc_no>3){ //memberno가 acc_no 같지 않고 acc_no가 3보다 작을떄
-		  alert("권한이 필요합니다.");
-		  return false;
-	  }
-	  const url=`./qna_delete/${memberno}?qcon_no=${qcon_no}&now_page=${now_page}&cate_no=${cate_no}`;
-  	window.location.href=url;
-		return true;
-  }
-    
   </script>
 </head>
 
@@ -676,10 +685,10 @@
     <a th:href="@{|/qcontents/qna_create?cate_no=2|}">등록</a>
     <span class='menu_divide'>│</span>
     
-    <a href="#" th:attr="onclick=|return confirmUpdate(${memberno}, '${acc_no}', ${qna_contentsVO.qcon_no}, ${now_page}, 2)|">글수정</a>
+    <a href="#" th:attr="onclick=|return confirmUpdate(${memberno}, '${acc_no}', ${qna_contentsVO.qcon_no}, ${now_page}, 2)|">글 수정</a>
     <!-- <a th:attr="@{|/qcontents/qna_update_text/${qna_contentsVO.acc_no}?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}&cate_no=2|}">글 수정</a>   -->
     <span class='menu_divide'>│</span>
-     <a href="#" th:attr="onclick=|return confirmFile(${memberno}, '${acc_no}', ${qna_contentsVO.qcon_no}, ${now_page}, 2)|">파일수정</a>
+     <a href="#" th:attr="onclick=|return confirmFile(${memberno}, '${acc_no}', ${qna_contentsVO.qcon_no}, ${now_page}, 2)|">파일 수정</a>
     <!--<a th:href="@{|/qcontents/qna_update_file/${qna_contentsVO.acc_no}?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}|}">파일 수정</a>   -->
     <span class='menu_divide'>│</span>
     <a href="#" th:attr="onclick=|return confirmDelete(${memberno}, '${acc_no}', ${qna_contentsVO.qcon_no}, ${now_page}, 2)|">삭제</a>
@@ -689,7 +698,6 @@
     <span class='menu_divide'>│</span>
     <a href="javascript:location.reload();">새로고침</a>
   </aside>
- 
   <div class='menu_line'></div>
   
     <form action="/qcontents/qna_read" method="get">
@@ -737,11 +745,11 @@
                 </div>
 
                <hr size="9" style="margin-top: 0px; margin-bottom:1px;">
-              </div>
-             
-              <div class="fotorama" data-autoplay="5000" data-nav="thumbs" data-ratio="800/520" style='display: flex; justify-content: center; align-items: center; width: 100%; margin-top: 30px;'>
+               
+                             <div class="fotorama" data-autoplay="5000" data-nav="thumbs" data-ratio="800/520" style='display: flex; justify-content: center; align-items: center; width: 100%; margin-top: 30px;'>
                 <img th:src="@{|/qcontents/storage/${image.file_upload_name}|}" th:each="image : ${qna_imageVO}"
-                  th:if="${image.file_origin_name.endsWith('jpg') or image.file_origin_name.endsWith('png') or image.file_origin_name.endsWith('gif')}">
+                        th:if="${image.file_origin_name.endsWith('jpg') or image.file_origin_name.endsWith('png') or image.file_origin_name.endsWith('gif')}">
+              </div>
               </div>
               <br>
               
@@ -761,9 +769,8 @@
                 style="text-align:center; margin-top:30px;">
                 파일 다운로드 ▼<br />
                 <div th:each="image : ${qna_imageVO}">
-                  첨부 파일: <a
-                    th:href="@{|/download?dir=/qcontents/storage&amp;filename=${image.file_upload_name}&downname=${image.file_origin_name}|}"
-                    th:text="|${image.file_origin_name}|"></a>
+                  첨부 파일: <a th:href="@{|/download?dir=/qcontents/storage&filename=${image.file_upload_name}&downname=${image.file_origin_name}|}"
+                                    th:text="|${image.file_origin_name}|"></a>
                 </div>
               </li>
               <li th:if="${qna_imageVO == null or qna_imageVO.size() == 0}" class="li_none"

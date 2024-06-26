@@ -242,13 +242,22 @@
 		ORDER BY scon_date ASC
 	</select>
 
-	<!-- 게시글 사진 가져오기 -->
-	<select id="contentImages"
+	<!-- 공유 게시글 사진 가져오기 -->
+	<select id="shareImages"
 		resultType="dev.mvc.share_contentsdto.Share_imageVO" parameterType="int">
 		SELECT file_no, scon_no, file_origin_name, file_upload_name,
 		file_thumb_name, file_size, file_date
 		FROM share_image
 		WHERE scon_no = #{scon_no}
+		ORDER BY file_no ASC
+	</select>
+	
+	<!-- 질문 게시글 사진 가져오기 -->
+	<select id="qnaImages" resultType="dev.mvc.qna_contents.Qna_imageVO" parameterType="int">
+		SELECT file_no, qcon_no, file_origin_name, file_upload_name,
+		file_thumb_name, file_size, file_date
+		FROM qna_image
+		WHERE qcon_no = #{qcon_no}
 		ORDER BY file_no ASC
 	</select>
 
@@ -266,8 +275,7 @@
 	</select>
 
 	<!-- 나의 북마크 목록(질문 게시글) -->
-	<select id="qnaMarks" resultType="dev.mvc.qna_contents.Qna_contentsVO"
-		parameterType="int">
+	<select id="qnaMarks" resultType="dev.mvc.qna_contents.Qna_contentsVO" parameterType="int">
 		SELECT qc.qcon_no, qc.qcon_name, qc.qcon_contents, qc.qcon_date,
 		qc.qcon_views
 		FROM account a
@@ -276,6 +284,32 @@
 		WHERE a.acc_no = #{acc_no}
 		ORDER BY qc.qcon_date ASC
 	</select>
+	
+	<!-- 북마크 삭제(공유 게시글) -->
+	<delete id="deleteShareMark" parameterType="HashMap">
+		DELETE FROM share_mark
+		WHERE acc_no = #{acc_no}
+		AND scon_no = #{scon_no}
+	</delete>
+	
+	<!-- 북마크 삭제(질문 게시글) -->
+	<delete id="deleteQnaMark" parameterType="HashMap">
+		DELETE FROM qna_mark
+		WHERE acc_no = #{acc_no}
+		AND qcon_no = #{qcon_no}
+	</delete>
+	
+	<!-- 북마크 저장(공유 게시글) -->
+	<insert id="insertShareMark" parameterType="HashMap">
+		INSERT INTO share_mark(smark_no, acc_no, scon_no)
+		VALUES(SHARE_MARK_SEQ.nextval, #{acc_no}, #{scon_no})
+	</insert>
+	
+	<!-- 북마크 저장(질문 게시글) -->
+	<insert id="insertQnaMark" parameterType="HashMap">
+		INSERT INTO qna_mark(qmark_no, acc_no, qcon_no)
+		VALUES(QNA_MARK_SEQ.nextval, #{acc_no}, #{qcon_no})
+	</insert>
 	
 	<!-- 공유 게시글 댓글 수 -->
 	<select id="sconCmtCnt" resultType="int" parameterType="int">

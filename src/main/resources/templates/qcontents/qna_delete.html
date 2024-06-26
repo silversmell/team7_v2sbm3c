@@ -1,24 +1,51 @@
 <!DOCTYPE html>
 
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<head>
+  <script>
+  function confirmUpdate(memberno, acc_no, qcon_no, now_page, cate_no) {
+    if (memberno != acc_no && acc_no > 3) {
+      alert("권한이 필요합니다.");
+      return false;
+    }
+    const url = `../qna_update_text/${memberno}?qcon_no=${qcon_no}&now_page=${now_page}&cate_no=${cate_no}`;
+    window.location.href = url;
+    return true;
+  }
+
+  function confirmFile(memberno, acc_no, qcon_no, now_page, cate_no) {
+    if (memberno != acc_no && acc_no > 3) {
+      alert("권한이 필요합니다.");
+      return false;
+    }
+    const url = `../qna_update_file/${memberno}?qcon_no=${qcon_no}&now_page=${now_page}&cate_no=${cate_no}`;
+    window.location.href = url;
+    return true;
+  }
+
+  </script>
+</head>
+
 <div layout:fragment="content">
   <div class='title_line'>
     <span style="font-size: 20px;" th:text="${qna_contentsVO.qcon_name}" class="title_line_text"></span > 
       > 삭제
    </div>
-  
-  <aside class="aside_right">
+   
+   <aside class="aside_right">
     <a th:href="@{|/qcontents/qna_create?cate_no=2|}">등록</a>
     <span class='menu_divide'>│</span>
-    <a th:href="@{|/qcontents/qna_update_text?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}&cate_no=${cate_no}|}">글 수정</a>
+    
+    <a href="#" th:attr="onclick=|return confirmUpdate(${memberno}, '${acc_no}', ${qna_contentsVO.qcon_no}, ${now_page}, 2)|">글 수정</a>
+    <!-- <a th:attr="@{|/qcontents/qna_update_text/${qna_contentsVO.acc_no}?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}&cate_no=2|}">글 수정</a>   -->
     <span class='menu_divide'>│</span>
-    <a th:href="@{|/qcontents/qna_update_file?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}|}">파일 수정</a>  
+     <a href="#" th:attr="onclick=|return confirmFile(${memberno}, '${acc_no}', ${qna_contentsVO.qcon_no}, ${now_page}, 2)|">파일 수정</a>
+    <!--<a th:href="@{|/qcontents/qna_update_file/${qna_contentsVO.acc_no}?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}|}">파일 수정</a>   -->
     <span class='menu_divide'>│</span>
-    <a th:href="@{|/qcontents/qna_list_all?cate_no=2&now_page=${now_page}|}">돌아가기</a>   
+    <a th:href="@{|/qcontents/qna_list_all?cate_no=2&now_page=${now_page}|}">전체 목록</a>   
     <span class='menu_divide'>│</span>
     <a href="javascript:location.reload();">새로고침</a>
   </aside>
-  
   <div class='menu_line'></div>
   
   <fieldset class="fieldset_basic">
