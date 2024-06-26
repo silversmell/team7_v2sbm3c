@@ -689,23 +689,36 @@ public class Share_contentsCont {
 	@PostMapping("/delete")
 	@ResponseBody
 	public String delete(@RequestBody String json_src) {
-
+	
 		String cleanedJsonSrc = json_src.replace(";", "");
 		 JSONObject src = new JSONObject(cleanedJsonSrc);
 		 System.out.println(src);
 		System.out.println("ok");
-
 		int cate_no = src.getInt("cate_no");
 		int scon_no = (int) src.getInt("scon_no");
 		System.out.println("-> cate_no:" +cate_no);
 		System.out.println("-> scon_no:" +scon_no);
 		Share_contentsVO share_contentsVO = this.sconProc.read(scon_no); // scon_no 가져오기
+		List<Integer> scon = new ArrayList<>();
+		scon.add(scon_no);
+		int cnt1 = this.sconProc.bookmarall_delete(scon_no);
+		if(cnt1>0) {
+			System.out.println("북마크 삭제");
+		}
+		this.re_commentProc.sconno_delete(scon);
 		
-		this.sconProc.bookmarall_delete(scon_no);
 		this.replyProc.delete_comment(scon_no);
+		if(cnt1>0) {
+			System.out.println("댓글삭제");
+		}
 		this.sconProc.delete_url(scon_no);
+		if(cnt1>0) {
+			System.out.println("url삭제");
+		}
 		this.sconProc.delete_tag(scon_no);
-		this.sconProc.bookmarall_delete(scon_no);
+		if(cnt1>0) {
+			System.out.println("태그삭제");
+		}
 		ArrayList<Share_imageVO> list = this.sconProc.read_image(scon_no);
 		for (Share_imageVO image : list) {
 			String file_saved = image.getFile_upload_name();
