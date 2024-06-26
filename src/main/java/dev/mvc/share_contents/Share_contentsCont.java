@@ -103,7 +103,7 @@ public class Share_contentsCont {
 		String writer = this.sconProc.writer(map);
 		model.addAttribute("writer",writer);
 		model.addAttribute("scontentsVO", scontentsVO);
-		System.out.println("작성날짜 : "+scontentsVO.getScon_date());
+		//System.out.println("작성날짜 : "+scontentsVO.getScon_date());
 		model.addAttribute("member_no",scontentsVO.getacc_no());
 		int count = this.replyProc.comment_search(scon_no);
 		model.addAttribute("count",count); //댓글수
@@ -360,7 +360,8 @@ public class Share_contentsCont {
 
 		Share_contentsVO scontentsVO = this.sconProc.read(scon_no);
 		model.addAttribute("scontentsVO", scontentsVO);
-
+		model.addAttribute("member_no",scontentsVO.getacc_no());
+		model.addAttribute("acc_no",session.getAttribute("acc_no"));
 		ArrayList<Contents_urlVO> url_list = this.sconProc.only_url(scon_no);
 		for (int i = 0; i < url_list.size(); i++) {
 			String url = url_list.get(i).getUrl_link();
@@ -432,6 +433,8 @@ public class Share_contentsCont {
 		if(this.accountProc.isMemberAdmin(session) || (acc_no==(int)session.getAttribute("acc_no"))) {
 		Share_contentsVO scontentsVO = this.sconProc.read(scon_no);
 		model.addAttribute("scontentsVO", scontentsVO);
+		model.addAttribute("member_no",scontentsVO.getacc_no());
+		model.addAttribute("acc_no",session.getAttribute("acc_no"));
 
 		CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
 		model.addAttribute("categoryVO", categoryVO);
@@ -645,9 +648,11 @@ public class Share_contentsCont {
 		if(this.accountProc.isMemberAdmin(session) || ((int)session.getAttribute("acc_no")==acc_no)){
 		CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
 		model.addAttribute("categoryVO", categoryVO);
-
+		model.addAttribute("acc_no", (int)session.getAttribute("acc_no"));
+		
 		Share_contentsVO scontentsVO = this.sconProc.read(scon_no);
 		model.addAttribute("scontentsVO", scontentsVO);
+		model.addAttribute("member_no",scontentsVO.getacc_no());
 
 		return "scontents/delete";
 		}else {
@@ -702,23 +707,15 @@ public class Share_contentsCont {
 		List<Integer> scon = new ArrayList<>();
 		scon.add(scon_no);
 		int cnt1 = this.sconProc.bookmarall_delete(scon_no);
-		if(cnt1>0) {
-			System.out.println("북마크 삭제");
-		}
+
 		this.re_commentProc.sconno_delete(scon);
 		
 		this.replyProc.delete_comment(scon_no);
-		if(cnt1>0) {
-			System.out.println("댓글삭제");
-		}
+
 		this.sconProc.delete_url(scon_no);
-		if(cnt1>0) {
-			System.out.println("url삭제");
-		}
+
 		this.sconProc.delete_tag(scon_no);
-		if(cnt1>0) {
-			System.out.println("태그삭제");
-		}
+
 		ArrayList<Share_imageVO> list = this.sconProc.read_image(scon_no);
 		for (Share_imageVO image : list) {
 			String file_saved = image.getFile_upload_name();
