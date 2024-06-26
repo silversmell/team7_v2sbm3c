@@ -449,7 +449,7 @@
     function qna_update_recomment(qrecmt_no) {
       console.log(qrecmt_no);
       let qcmt_no = "";
-      let acc_id = "";
+      let select_acc_id = "";
       let recomment_tag = document.getElementById("recomment_comment");
       
       fetch("/qcontents/read_recomment?qrecmt_no=" + qrecmt_no, {
@@ -459,11 +459,19 @@
       .then((response) => response.json())
       .then((data) => {
         let qrecmt_contents = data['res']['qrecmt_contents'];
-    
-        // qrecmt_contents에서 span 태그 부분을 제외한 content만 추출하기
+        
+        // -------- 답글 태그 관련 중요 코드 시작 --------
         let content = "";
         let div = document.createElement('div');
         div.innerHTML = qrecmt_contents;
+
+        // qrecmt_contents에서 span 태그 부분을 제외한 content만 추출하기
+        let span = div.querySelector('span'); // span 태그 찾기
+        if (span) {
+          select_acc_id = span.textContent.trim().substring(1); // '@' 기호를 제외한 acc_id 추출
+        }
+    
+        // qrecmt_contents에서 span 태그 부분을 제외한 content만 추출하기
         let div_nodes = div.childNodes;
         for (let i = 0; i < div_nodes.length; i++) {
           let node = div_nodes[i];
@@ -471,10 +479,10 @@
             content += node.textContent || node.innerText;
           }
         }
-    
         recomment_tag.value = content.trim();
+        // -------- 답글 태그 관련 중요 코드 종료 --------
+        
         qcmt_no = data['res']['qcmt_no'];
-        acc_id = data['res']['acc_id'];
         recomment_tag.focus();
         recomment_visible('update');
       });
@@ -488,7 +496,7 @@
           alert('내용이 없습니다. 내용을 입력해주세요.');
         } else {
           // 답글 저장 시 span 태그를 포함하여 저장
-          let qrecmt_contents = "<span style='color: blue; text-decoration: underline; font-size: 13px;'>@" + acc_id + "</span> " + content;
+          let qrecmt_contents = "<span style='color: blue; text-decoration: underline; font-size: 13px;'>@" + select_acc_id + "</span> " + content;
     
           fetch("/qcontents/qna_update_recomment", {
             method: "POST",

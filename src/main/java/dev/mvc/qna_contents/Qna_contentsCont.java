@@ -1066,9 +1066,7 @@ public class Qna_contentsCont {
     row.put("qcon_no", qna_recomment.getQcon_no());
     row.put("qrecmt_contents", qna_recomment.getQrecmt_contents());
     row.put("qrecmt_date", qna_recomment.getQrecmt_date());
-    row.put("acc_id", qna_recomment.getAcc_id());
-    System.out.println("acc_id -> " + qna_recomment.getAcc_id());
-    
+
     JSONObject obj = new JSONObject();
     obj.put("res", row);
     

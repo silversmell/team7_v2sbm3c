@@ -62,8 +62,13 @@ select qrecmt_no, qcmt_no, qcon_no, qrecmt_contents, acc_no, qrecmt_date
 from qna_recomment
 where qrecmt_no= 1;
 
-
 -- 특정 질문글 전체 대댓글 삭제
 delete from qna_recomment
 where qrecmt_no = 1;
+
+-- 선택한 답글의 회원 아이디 조회
+SELECT ac.acc_no, ac.acc_id
+FROM qna_recomment qr
+INNER JOIN account ac ON qr.acc_no = ac.acc_no
+WHERE qr.qrecmt_no = 29;
 

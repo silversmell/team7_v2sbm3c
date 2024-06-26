@@ -361,6 +361,13 @@ public interface Qna_contentsDAOInter {
   public int all_qna_delete_recomment(int qcon_no);
   
   /**
+   * 선택한 답글의 회원 아이디 조회
+   * @param qrecmt_no
+   * @return
+   */
+  public Qna_recommentVO select_acc_id(int qrecmt_no);
+  
+  /**
    * 질문글 대댓글 수
    * @param qcon_no
    * @return

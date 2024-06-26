@@ -516,5 +516,12 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
     
     return accountVO;
   }
+
+  @Override
+  public Qna_recommentVO select_acc_id(int qrecmt_no) {
+    Qna_recommentVO qna_recommentVO = this.qna_contentsDAO.select_acc_id(qrecmt_no);
+    
+    return qna_recommentVO;
+  }
   
 }
