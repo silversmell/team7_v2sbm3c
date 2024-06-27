@@ -326,9 +326,8 @@ public class Qna_contentsCont {
           Qna_contentsVO qna_contentsVO = this.qna_contentsProc.qna_read(qcon_no);
           model.addAttribute("qna_contentsVO", qna_contentsVO);
           model.addAttribute("memberno" , qna_contentsVO.getAcc_no()); //질문글 작성자
-          model.addAttribute("acc_no",acc_no); 
+          model.addAttribute("acc_no",acc_no);
          
-          
           // 질문 이미지 가져오기
           ArrayList<Qna_imageVO> qna_imageVO = this.qna_contentsProc.qna_read_image(qcon_no);
           model.addAttribute("qna_imageVO", qna_imageVO);
@@ -367,8 +366,21 @@ public class Qna_contentsCont {
           model.addAttribute("user_name", user_name);
           model.addAttribute("acc_profile_img", acc_profile_img);
 
-          // 조회수 업데이트
-          this.qna_contentsProc.qna_update_view(qcon_no);
+          // 조회수 업데이트 old ver.
+          // this.qnacontentsProc.qna_update_view(qcon_no);
+
+          // 현재 시간을 기준으로 조회 여부 확인
+          Long current_session = System.currentTimeMillis();
+          Long last_session = (Long) session.getAttribute("qna_last_view_time" + qcon_no);
+
+          // 만약 세션에 기록된 시간이 없거나, 마지막 조회 시간이 현재 시간보다 오래된 경우에만 조회수 증가
+          if (last_session == null || (current_session - last_session > 300000)) { // 300000 밀리초 = 5분
+            // 조회수 업데이트
+            this.qna_contentsProc.qna_update_view(qcon_no);
+
+            // 세션에 마지막 조회 시간 기록
+            session.setAttribute("qna_last_view_time" + qcon_no, current_session);
+          }
 
           return "qcontents/qna_read";
       } else {
