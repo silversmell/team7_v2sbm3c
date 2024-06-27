@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout}"> <!-- layout.html 상속 -->
 <head>
- <link rel="stylesheet" href="styles.css">
- 
+ <link href="/css/style.css" rel="Stylesheet" type="text/css">
+
 <script>
   function whole_delete() {
     let checkboxes = document.querySelectorAll('Input[name="qcon_no"]');
@@ -100,8 +100,8 @@
     
     <thead>
       <tr>
-        <th class='th_bs'>파일</th>
-        <th class='th_bs'>제목</th>
+        <th class='th_bs' style=" background-color: #35C5F0; color: white; border: none;">파일</th>
+        <th class='th_bs' style=" background-color: #35C5F0; color: white; border: none;">제목</th>
       </tr>
     </thead>
     
@@ -116,14 +116,14 @@
         </div>
           <div th:if="${#lists.size(qna_imageVO) > status.index and qna_imageVO[status.index] != null and qna_imageVO[status.index].file_thumb_name != null}">
             <img th:src="@{|/qcontents/storage/${qna_imageVO[status.index].file_thumb_name}|}"
-                 style="width: 120px; height: 90px;">
+                 style="width: 120px; height: 90px; border-radius: 15%;">
           </div>
           <div th:unless="${#lists.size(qna_imageVO) > status.index and qna_imageVO[status.index] != null and qna_imageVO[status.index].file_thumb_name != null}"
                style="width: 120px; height: 90px; background-color: transparent;">
           </div>
         </td>
         
-        <td class='td_basic' style="position: relative; cursor: pointer; vertical-align: middle; text-align: center;" th:attr="onclick=|location.href='/qcontents/qna_read?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}'|">
+        <td class='td_basic' style="position: relative; cursor: pointer; vertical-align: middle; text-align: left;" th:attr="onclick=|location.href='/qcontents/qna_read?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}'|">
           <div style="margin-bottom: 20px; margin-top:10px;">
             <div style="width: 100%; height: 100%; margin-bottom: 23px;">
               <div style="display: flex; align-items: center; width: 100%; height: 100%;">
@@ -135,9 +135,12 @@
                   <span th:if="${qna_contentsVO.qcon_contents.length() <= 160}" th:text="|${qna_contentsVO.qcon_contents}|"></span>
                   
                   <span id='acc_no' style="display:none;" value=""></span><br>
-                  <div style="position: absolute; bottom: 0px auto; right: 0; margin-right: 20px; text-align: right; margin-top: 10px;">
+                  <div style="position: absolute; bottom: 0px auto; right: 0; margin-right: 10px; text-align: right; margin-top: 15px;">
                     <span style="font-size: 1em;" th:text="|조회수 ${qna_contentsVO.qcon_views}|"></span>
-                    <span style="font-size: 1em;" th:text="|댓글수 ${qna_contentsVO.qcon_comment}|"></span>
+                    <span style="font-size: 1em;">
+                      <img src="/css/images/comment.png" id="comment" class="icon" alt="댓글" style="width: 20px; height: 20px;">
+                      <span th:text="${qna_contentsVO.qcon_comment}"></span>
+                    </span>
                   </div>
                 </div>
               </div>

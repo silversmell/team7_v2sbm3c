@@ -10,6 +10,7 @@
     let reply_now_page = 1; // 댓글 현재 페이지
   </script>
   
+  <!-- moment 함수 쓰기 위해 import -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 
 
@@ -102,6 +103,11 @@
               msg += "<span style='font-size: 13px;'>" + changeToDate(row.qcmt_date) + "</span>";
               msg += " &nbsp;";
               
+              /*
+              msg += "<a href='javascript:void(0);' onclick='qna_read_recomment(" + row.qcmt_no + ", \"" + row.acc_no + "\")'>";
+              msg += "<img src='/path/to/reply_image.png' style='width: 15px; height: 15px;' alt='답글'>";
+              msg += "</a>";
+              */
               msg += "<a style='font-size: 13px;' href='javascript:qna_read_recomment(" + row.qcmt_no + ", \"" + row.acc_no + "\")'>답글</a>";
               if ('[[${session.acc_no}]]' == row.acc_no) { // 글쓴이 일치여부 확인, 본인의 글만 삭제 가능함 ★
                 msg += " ";

@@ -64,11 +64,11 @@
   }
 
 .content {
-    width: 80%;
+    width: 90%;
     margin: 20px auto;
   }
   .content_body {
-    width: 80%;
+    width: 90%;
     margin: 10px auto;
   }
 
@@ -101,8 +101,10 @@
 
   .bottom_menu {
   	text-align: center;
-  	margin: 20px auto;
+  	margin: 10px auto;
   	clear: both;
+  	background-color: white;
+  	color: black;
   	/* 앞쪽 태그의 float 효과를 제거함. */
   }
 
@@ -213,7 +215,7 @@
 
   .title_line {
   	text-align: left;
-  	border-bottom: solid 3px #343a40;
+  	border-bottom: solid 3px #35C5F0;
   	width: 100%;
   	margin: 20px auto;
   	margin-top: 10px;
@@ -271,17 +273,21 @@
 
   .th_bs {
   	text-align: center;
-  	border: 1px solid rgb(0, 0, 0); /* 경계선 색상 */
+  	border: none;
+  	color: white; /* 글자색을 하얀색으로 설정 */
+    padding: 10px; /* 패딩 설정 */
+    background-color: #35C5F0;  
   }
-
+  
   .td_basic {
+    border: none;
   	border-top: none;
   	border-right: none;
   	border-bottom: none;
   	border-left: none;
   	text-align: center;
   	vertical-align: middle;
-  	border: 1px solid rgb(0, 0, 0); /* 경계선 색상 */
+  	/* border: 1px solid rgb(0, 0, 0); */ /* 경계선 색상 */
   }
 
   .td_left {
@@ -307,7 +313,7 @@
   	/* 방문전 상태 */
   	text-decoration: none;
   	/* 밑줄 삭제 */
-  	color: rgb(0, 128, 128);
+  	color: rgb(0, 0, 0);
   }
 
   a:visited {
@@ -545,9 +551,8 @@
   	vertical-align: middle;
   }
   
-      
 .footer {
-    background-color: #343a40;
+    background-color: #35C5F0;
     color: #ffffff;
     text-align: center;
     padding: 20px 0;
@@ -583,7 +588,7 @@
 
 .menu_line {
     width: 100%;
-    border-bottom: dashed 1px #343a40;;
+    border-bottom: dashed 1px rgb(3, 137, 152);;
     margin: 20px 0px;
     clear: both;
 }
@@ -597,7 +602,7 @@ table {
 
 /* 테이블 경계선 */
 table, th, td {
-    border: 1px solid #ccc;
+    /*border: 1px solid rgb(0, 0, 0);*/
     text-align: center; /* 가운데 정렬 */
 }
 
@@ -681,8 +686,9 @@ table, th, td {
 
 .aside_right a {
   text-decoration: none;
-  color: rgb(0, 64, 64);
+  color: rgb(0, 0, 0);
   margin: 0 5px;
+  font-size: 15px;
 }
 
 .table-centered {
@@ -690,13 +696,6 @@ table, th, td {
   margin: 0 auto;
   border-collapse: collapse;
 }
-
-
-
-.table th {
-  background-color: #f1f1f1;
-}
-
 
 .content-wrapper {
   margin-bottom: 20px;
@@ -766,8 +765,5 @@ table, th, td {
      height: 100%;
  }
 
-
-
-  
   
   
