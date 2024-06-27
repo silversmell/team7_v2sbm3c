@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import dev.mvc.account.AccountProc;
+import dev.mvc.account.AccountVO;
 import dev.mvc.category.CategoryProcInter;
 import dev.mvc.category.CategoryVO;
 import dev.mvc.tool.MailTool;
@@ -399,80 +400,6 @@ public class AdminCont {
 
 	}
 	
-//	/**
-//	 * 관리자 전체 로그 목록
-//	 * 
-//	 * @param model
-//	 * @return
-//	 */
-//	@GetMapping(value = "/log_list")
-//	public String log_list(Model model) {
-//		ArrayList<Map<String, Object>> logs = this.adminProc.logList();
-//		
-//		/*
-//		for (Map<String, Object> log : logs) {
-//			AdminVO admin = (AdminVO) log.get("admin");
-//			AdminLogVO adminLog = (AdminLogVO) log.get("adminLog");
-//			
-//	        System.out.println("Admin adm_id: " + admin.getAdm_id());
-//	        System.out.println("Log adm_log_ip: " + adminLog.getAdm_log_ip());
-//		}
-//		*/
-//		
-//		model.addAttribute("logs", logs);
-//		
-//		return "admin/log_list_by_search";
-//	}
-	
-//	/**
-//	 * 관리자 로그 목록
-//	 * 
-//	 * 로그 검색
-//	 * 1) 관리자 아이디
-//	 * 2) 아이피
-//	 * 3) 기간
-//	 * 
-//	 * @param session
-//	 * @param model
-//	 * @param word_id
-//	 * @param word_ip
-//	 * @param start_date
-//	 * @param end_date
-//	 * @return
-//	 */
-//	@GetMapping(value = "/log_list")
-//	public String logListBySearch(HttpSession session, Model model,
-//			@RequestParam(name = "word_id", defaultValue = "") String word_id,
-//			@RequestParam(name = "word_ip", defaultValue = "") String word_ip,
-//	        @RequestParam(name = "start_date", defaultValue = "") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start_date,
-//	        @RequestParam(name = "end_date", defaultValue = "") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end_date) {
-//
-//	    word_id = Tool.checkNull(word_id).trim();
-//	    word_ip = Tool.checkNull(word_ip).trim();
-//
-//		Map<String, String> words = new HashMap<>();
-//		if (!word_id.isEmpty()) {
-//			words.put("word_id", word_id);
-//		}
-//		if (!word_ip.isEmpty()) {
-//			words.put("word_ip", word_ip);
-//		}
-//	    if (start_date != null && end_date != null) {
-//	    	words.put("start_date", start_date.toString());
-//	    	words.put("end_date", end_date.toString());
-//	    }
-//
-//		ArrayList<Map<String, Object>> logs = this.adminProc.searchLogs(words);
-//
-//	    model.addAttribute("word_id", word_id);
-//	    model.addAttribute("word_ip", word_ip);
-//	    model.addAttribute("start_date", start_date);
-//	    model.addAttribute("end_date", end_date);
-//	    model.addAttribute("logs", logs);
-//
-//		return "admin/log_list_by_search";
-//	}
-	
 	/**
 	 * 관리자 로그 목록 (검색 + 페이징)
 	 * 
@@ -538,7 +465,7 @@ public class AdminCont {
 		int no = search_count - ((now_page - 1) * AccountProc.RECORD_PER_PAGE);
 		model.addAttribute("no", no);
 
-		return "admin/log_list_by_search";
+		return "admin/log_list";
 	}
 
 	/**
@@ -555,5 +482,86 @@ public class AdminCont {
 		System.out.println("---> 관리자 로그아웃");
 		return "redirect:/admin";
 	}
+	
+	/**
+	 * 회원 목록
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@GetMapping(value = "/acc_list")
+	public String list(HttpSession session, Model model) {
+		ArrayList<AccountVO> list = this.adminProc.accList();
+		model.addAttribute("list", list);
+
+		return "admin/acc_list";
+	}
+
+	/**
+	 * 회원 로그 목록 (검색 + 페이징)
+	 * 
+	 * 로그 검색 1) 회원 아이디 2) 아이피 3) 기간
+	 * 
+	 * @param session
+	 * @param model
+	 * @param word_id
+	 * @param word_ip
+	 * @param start_date
+	 * @param end_date
+	 * @param now_page
+	 * @return
+	 */
+	@GetMapping(value = "/acc_log_list")
+	public String accPagingList(HttpSession session, Model model,
+			@RequestParam(name = "word_id", defaultValue = "") String word_id,
+			@RequestParam(name = "word_ip", defaultValue = "") String word_ip,
+			@RequestParam(name = "start_date", defaultValue = "") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start_date,
+			@RequestParam(name = "end_date", defaultValue = "") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end_date,
+			@RequestParam(name = "now_page", defaultValue = "1") int now_page) {
+
+		word_id = Tool.checkNull(word_id).trim();
+		word_ip = Tool.checkNull(word_ip).trim();
+
+		HashMap<String, Object> map = new HashMap<>();
+		if (!word_id.isEmpty()) {
+			map.put("word_id", word_id);
+		}
+		if (!word_ip.isEmpty()) {
+			map.put("word_ip", word_ip);
+		}
+		if (start_date != null && end_date != null) {
+			map.put("start_date", start_date.toString());
+			map.put("end_date", end_date.toString());
+		}
+		map.put("now_page", now_page);
+
+		ArrayList<Map<String, Object>> logs = this.adminProc.accPagingList(map);
+		model.addAttribute("logs", logs);
+		// list를 logs로 바꿈 (html에 참고)
+
+		model.addAttribute("word_id", word_id);
+		model.addAttribute("word_ip", word_ip);
+		model.addAttribute("start_date", start_date);
+		model.addAttribute("end_date", end_date);
+
+		int search_count = this.adminProc.accSearchCount(map);
+
+		String start_date_str = (start_date != null) ? start_date.toString() : "";
+		String end_date_str = (end_date != null) ? end_date.toString() : "";
+
+		String paging = this.adminProc.pagingBox(now_page, word_id, word_ip, start_date_str, end_date_str,
+				"/admin/acc_log_list", search_count, AccountProc.RECORD_PER_PAGE, AccountProc.PAGE_PER_BLOCK);
+
+		model.addAttribute("paging", paging);
+		model.addAttribute("now_page", now_page);
+		model.addAttribute("search_count", search_count);
+
+		// 일련 변호 생성: 레코드 갯수 - ((현재 페이지수 -1) * 페이지당 레코드 수)
+		int no = search_count - ((now_page - 1) * AccountProc.RECORD_PER_PAGE);
+		model.addAttribute("no", no);
+
+		return "admin/acc_log_list";
+	}
+
 
 }

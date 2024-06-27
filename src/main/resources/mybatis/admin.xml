@@ -56,15 +56,15 @@
 	</insert>
 	
 	<!-- 관리자 로그 전체 조회 -->
-	<select id="logList" resultMap="logListResultMap">
+	<select id="logList" resultMap="adminLogResultMap">
 		SELECT l.adm_log_no, a.adm_no, a.adm_id, l.adm_log_ip, l.adm_log_time
 		FROM admin_log l
 		INNER JOIN admin a ON a.adm_no = l.adm_no
 		ORDER BY l.adm_log_time
 	</select>
 	
-	<!-- 회원 로그 검색 -->
-	<select id="searchLogs" resultMap="logListResultMap" parameterType="map">
+	<!-- 관리자 로그 검색 -->
+	<select id="searchLogs" resultMap="adminLogResultMap" parameterType="map">
 		SELECT l.adm_log_no, a.adm_no, a.adm_id, l.adm_log_ip, l.adm_log_time
 		FROM admin_log l
 		INNER JOIN admin a ON a.adm_no = l.adm_no
@@ -103,8 +103,8 @@
 		ORDER BY l.adm_log_time
 	</select>
 	
-	<!-- 회원 로그 목록 (검색 + 페이징) -->
-	<select id="pagingList" resultMap="logListResultMap" parameterType="map">
+	<!-- 관리자 로그 목록 (검색 + 페이징) -->
+	<select id="pagingList" resultMap="adminLogResultMap" parameterType="map">
 		SELECT * FROM (
 		    SELECT l.adm_log_no, a.adm_no, a.adm_id, l.adm_log_ip, l.adm_log_time,
 		           ROW_NUMBER() OVER (ORDER BY l.adm_log_time) AS r
@@ -126,7 +126,7 @@
 		WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>
 	</select> 
 	
-	<resultMap id="logListResultMap" type="map">
+	<resultMap id="adminLogResultMap" type="map">
 		<association property="admin" javaType="dev.mvc.admin.AdminVO">
 			<id column="adm_no" property="adm_no" />
 			<result column="adm_id" property="adm_id" />
@@ -136,6 +136,102 @@
 			<result column="adm_no" property="adm_no" />
 			<result column="adm_log_ip" property="adm_log_ip" />
 			<result column="adm_log_time" property="adm_log_time" />
+		</association>
+	</resultMap>
+	
+	<!-- ************* 회원 (Account) ************* -->
+	<!-- ************* 회원 (Account) ************* -->
+	<!-- ************* 회원 (Account) ************* -->
+	
+	<!-- 회원 목록 -->
+	<select id="accList" resultType="dev.mvc.account.AccountVO">
+		SELECT acc_no, acc_id, acc_pw, acc_name, acc_tel, acc_age, acc_date,
+		acc_grade,
+		acc_img, acc_saved_img, acc_thumb_img, acc_img_size
+		FROM account
+		ORDER BY acc_grade ASC, acc_id ASC
+	</select>
+
+	<!-- 회원 로그 전체 조회 -->
+	<select id="accLogList" resultMap="accLogResultMap">
+		SELECT l.acc_log_no, a.acc_no, a.acc_id, l.acc_log_ip, l.acc_log_time
+		FROM acc_log l
+		INNER JOIN account a ON a.acc_no = l.acc_no
+		ORDER BY l.acc_log_time
+	</select>
+
+	<!-- 회원 로그 검색 -->
+	<select id="accSearchLogs" resultMap="accLogResultMap" parameterType="map">
+		SELECT l.acc_log_no, a.acc_no, a.acc_id, l.acc_log_ip, l.acc_log_time
+		FROM acc_log l INNER JOIN account a ON a.acc_no = l.acc_no <where>
+			<if test="word_id != null and word_id != ''">
+				AND LOWER(a.acc_id) LIKE '%' || LOWER(#{word_id}) || '%'
+			</if>
+			<if test="word_ip != null and word_ip != ''">
+				AND l.acc_log_ip LIKE '%' || #{word_ip} || '%'
+			</if>
+			<if
+				test="start_date != null and start_date != '' and end_date != null and end_date != ''">
+		AND l.acc_log_time BETWEEN TO_TIMESTAMP(#{start_date} || ' 00:00:00',
+		'YYYY-MM-DD HH24:MI:SS')
+				AND TO_TIMESTAMP(#{end_date} || ' 23:59:59', 'YYYY-MM-DD
+		HH24:MI:SS')
+			</if>
+		</where>
+		ORDER BY l.acc_log_time </select>
+
+	<!-- 검색된 레코드 갯수 -->
+	<select id="accSearchCount" resultType="int" parameterType="HashMap"> SELECT
+		COUNT(*) as cnt FROM acc_log l INNER JOIN account a ON a.acc_no =
+		l.acc_no <where>
+			<if test="word_id != null and word_id != ''">
+				AND LOWER(a.acc_id) LIKE '%' || LOWER(#{word_id}) || '%'
+			</if>
+			<if test="word_ip != null and word_ip != ''">
+				AND l.acc_log_ip LIKE '%' || #{word_ip} || '%'
+			</if>
+			<if
+				test="start_date != null and start_date != '' and end_date != null and end_date != ''">
+		AND l.acc_log_time BETWEEN TO_TIMESTAMP(#{start_date} || ' 00:00:00',
+		'YYYY-MM-DD HH24:MI:SS')
+				AND TO_TIMESTAMP(#{end_date} || ' 23:59:59', 'YYYY-MM-DD
+		HH24:MI:SS')
+			</if>
+		</where>
+		ORDER BY l.acc_log_time </select>
+
+	<!-- 회원 로그 목록 (검색 + 페이징) -->
+	<select id="accPagingList" resultMap="accLogResultMap" parameterType="map">
+		SELECT * FROM ( SELECT l.acc_log_no, a.acc_no, a.acc_id, l.acc_log_ip,
+		l.acc_log_time, ROW_NUMBER() OVER (ORDER BY l.acc_log_time) AS r FROM
+		acc_log l INNER JOIN account a ON a.acc_no = l.acc_no <where>
+			<if test="word_id != null and word_id != ''">
+				AND LOWER(a.acc_id) LIKE '%' || LOWER(#{word_id}) || '%'
+			</if>
+			<if test="word_ip != null and word_ip != ''">
+				AND l.acc_log_ip LIKE '%' || #{word_ip} || '%'
+			</if>
+			<if
+				test="start_date != null and start_date != '' and end_date != null and end_date != ''">
+		AND l.acc_log_time BETWEEN TO_TIMESTAMP(#{start_date} || ' 00:00:00',
+		'YYYY-MM-DD HH24:MI:SS')
+				AND TO_TIMESTAMP(#{end_date} || ' 23:59:59', 'YYYY-MM-DD
+		HH24:MI:SS')
+			</if>
+		</where>
+		) WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>
+	</select>
+
+	<resultMap id="accLogResultMap" type="map">
+		<association property="account" javaType="dev.mvc.account.AccountVO">
+			<id column="acc_no" property="acc_no" />
+			<result column="acc_id" property="acc_id" />
+		</association>
+		<association property="accLog" javaType="dev.mvc.account.AccLogVO">
+			<id column="acc_log_no" property="acc_log_no" />
+			<result column="acc_no" property="acc_no" />
+			<result column="acc_log_ip" property="acc_log_ip" />
+			<result column="acc_log_time" property="acc_log_time" />
 		</association>
 	</resultMap>
 

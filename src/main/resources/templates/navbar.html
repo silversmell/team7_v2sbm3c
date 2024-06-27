@@ -19,14 +19,14 @@
 	</div>
 	<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
 		<div class="container-fluid">
-			<a class="navbar-brand" href="/">데스크 투어</a>
+
+			<!-- 회원 메뉴 시작 -->
+			<a class="navbar-brand" href="/" th:if="${!(currentUrl.contains('admin'))}">데스크 투어</a>
 			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
 				aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
-
-			<!-- 회원 메뉴 시작 -->
-			<!--th:if="${(currentUrl != null and currentUrl.contains('account')) or (currentUrl == '/')}"-->
+			
 			<div class="collapse navbar-collapse" id="navbarNavDropdown" th:if="${!(currentUrl.contains('admin'))}">
 				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 					<li class="nav-item dropdown" th:each="categoryVOMenu: ${menu}"
@@ -92,6 +92,12 @@
 			<!-- 회원 메뉴 종료 -->
 
 			<!-- 관리자 메뉴 시작 -->
+			<a class="navbar-brand" href="/admin" th:if="${currentUrl != null and currentUrl.contains('admin')}">데스크 투어</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+				aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			
 			<div class="collapse navbar-collapse" id="navbarNavDropdown"
 				th:if="${currentUrl != null and currentUrl.contains('admin')}">
 
@@ -120,8 +126,8 @@
 							회원 조회
 						</a>
 						<ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-							<li class="nav-item"><a class="nav-link" href="/account/list">회원 목록</a></li>
-							<li class="nav-item"><a class="nav-link" href="account/log_list">회원 로그 기록</a></li>
+							<li class="nav-item"><a class="nav-link" href="/admin/acc_list">회원 목록</a></li>
+							<li class="nav-item"><a class="nav-link" href="/admin/acc_log_list">회원 로그 기록</a></li>
 						</ul>
 					</li>
 
@@ -131,32 +137,11 @@
 							관리자 조회
 						</a>
 						<ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-							<li class="nav-item"><a class="nav-link" href="admin/list">관리자 목록</a></li>
-							<li class="nav-item"><a class="nav-link" href="admin/log_list">관리자 로그 기록</a></li>
+							<li class="nav-item"><a class="nav-link" href="/admin/list">관리자 목록</a></li>
+							<li class="nav-item"><a class="nav-link" href="/admin/log_list">관리자 로그 기록</a></li>
 						</ul>
 					</li>
 
-					<li class="nav-item dropdown">
-						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
-							data-bs-toggle="dropdown" aria-expanded="false">
-							게시판 목록
-						</a>
-						<ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-							<li class="nav-item">
-								<a class="nav-link" href="/scontents/list_by_search?cate_no=1" th:text="공유게시판"></a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" th:href="@{|/qcontents/qna_list_all?cate_no=2|}"
-									th:text="질문게시판"></a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" href="#" th:text="팁게시판"></a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" th:href="@{|/scontents/rank?cate_no=4|}" th:text="랭킹게시판"></a>
-							</li>
-						</ul>
-					</li>
 
 
 				</ul>

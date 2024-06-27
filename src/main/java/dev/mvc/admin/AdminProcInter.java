@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import dev.mvc.account.AccountVO;
+
 public interface AdminProcInter {
 
 	/**
@@ -110,5 +112,42 @@ public interface AdminProcInter {
 	public String pagingBox(int now_page, String word_id, String word_ip, String start_date, String end_date,
 			String list_file, int search_count, int record_per_page, int page_per_block);
 
+	/**
+	 * 회원 목록
+	 * 
+	 * @return
+	 */
+	public ArrayList<AccountVO> accList();
+
+	/**
+	 * 회원 로그 전체 조회
+	 * 
+	 * @return
+	 */
+	public ArrayList<Map<String, Object>> accLogList();
+
+	/**
+	 * 회원 로그 검색
+	 * 
+	 * @param words
+	 * @return
+	 */
+	public ArrayList<Map<String, Object>> accSearchLogs(Map<String, String> words);
+	
+	/**
+	 * 검색된 레코드 갯수
+	 * 
+	 * @param hashMap
+	 * @return
+	 */
+	public int accSearchCount(HashMap<String, Object> hashMap);
+
+	/**
+	 * 회원 로그 목록 (검색 + 페이징)
+	 * 
+	 * @param map
+	 * @return
+	 */
+	public ArrayList<Map<String, Object>> accPagingList(Map<String, Object> map);
 
 }

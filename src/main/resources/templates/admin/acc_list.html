@@ -3,26 +3,20 @@
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
 <div layout:fragment="content">
 
-	<div class='title_line'>회원(관리자 전용)</div>
-
-	<aside class="aside_right">
-		<a href="javascript:location.reload();">새로고침</a>
-		<span class='menu_divide'>│</span>
-		<a href='./create'>회원 가입</a>
-		<span class='menu_divide'>│</span>
-		<a href='./list'>목록</a>
-	</aside>
+	<div class='title_line'>회원 목록</div>
+	
+	<!-- 검색 폼 -->
+	<div style="text-align: center; clear: both;">
+	</div>
 
 	<div class='menu_line'></div>
 
-	<table class="table table-striped" style='width: 100%;'>
+	<table class="table table-striped" style='width: 70%;'>
 		<colgroup>
-			<col style='width: 5%;' />
 			<col style='width: 10%;' />
-			<col style='width: 15%;' />
-			<col style='width: 15%;' />
 			<col style='width: 30%;' />
-			<col style='width: 15%;' />
+			<col style='width: 25%;' />
+			<col style='width: 25%;' />
 			<col style='width: 10%;' />
 		</colgroup>
 
@@ -42,8 +36,8 @@
 				<div th:if="${accountVO.acc_grade >= 30 and accountVO.acc_grade <= 39}"><img src='/account/images/pause.png' title="정지 회원" class="icon"></div>
 				<div th:if="${accountVO.acc_grade >= 40 and accountVO.acc_grade <= 49}"><img src='/account/images/x.png' title="탈퇴 회원" class="icon"></div>
 			</td>
-			<td class='td_left'><a th:href="@{|./read?acc_no=${accountVO.acc_no}|}" th:text="${accountVO.acc_id}"></a></td>
-			<td class='td_left'><a th:href="@{|./read?acc_no=${accountVO.acc_no}|}" th:text="${accountVO.acc_name}"></a></td>
+			<td class='td_basic'><a th:href="@{|./read?acc_no=${accountVO.acc_no}|}" th:text="${accountVO.acc_id}"></a></td>
+			<td class='td_basic'><a th:href="@{|./read?acc_no=${accountVO.acc_no}|}" th:text="${accountVO.acc_name}"></a></td>
 			<td class='td_basic' th:text="${accountVO.acc_date.substring(0, 10)}"></td>
 			<td class='td_basic'>
 			  <a th:href="@{|./read?acc_no=${accountVO.acc_no}|}"><img src='/account/images/update.png' title='수정' class="icon"></a>
@@ -54,10 +48,9 @@
 	</table>
 
 	<div class='bottom_menu'>
-		<button type='button' onclick="location.reload();" class="btn btn-primary btn-sm">새로 고침</button>
+		<button type="button" onclick="location.reload();" class="btn btn-secondary btn-sm"
+			style="padding: 2px 8px 3px 8px; margin: 0px 0px 2px 0px;">새로고침</button>
 	</div>
-
-
 
 </div>
 
