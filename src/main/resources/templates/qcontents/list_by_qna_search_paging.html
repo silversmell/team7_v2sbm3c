@@ -1,165 +1,189 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout}"> <!-- layout.html 상속 -->
 <head>
- <link href="/css/style.css" rel="Stylesheet" type="text/css">
+  <link href="/css/style.css" rel="stylesheet" type="text/css">
 
-<script>
-  function whole_delete() {
-    let checkboxes = document.querySelectorAll('Input[name="qcon_no"]');
-    let allchecked = true;
+  <script th:inline="javascript">
+    var searchWord = /*[[${word}]]*/ ''; // Thymeleaf 템플릿 엔진에서 word 값 가져오기
+    document.addEventListener('DOMContentLoaded', function() {
+      highlightSearchWord(searchWord);
+    });
 
-    checkboxes.forEach(checkbox => {
-      if (!checkbox.checked) {
-        allchecked = false;
-        return;
+    function highlightSearchWord(searchWord) {
+      if (searchWord && searchWord.trim() !== '') {
+        var titles = document.querySelectorAll('.qcon_name'); // 제목을 포함한 요소 선택
+
+        titles.forEach(function(title) {
+          var text = title.textContent; // 제목 텍스트 가져오기
+          var lowerCaseText = text.toLowerCase();
+          var lowerCaseSearchWord = searchWord.toLowerCase();
+          var index = lowerCaseText.indexOf(lowerCaseSearchWord); // 검색어가 포함된 위치 찾기
+
+          if (index !== -1) {
+            var highlightedText = text.substring(0, index) +
+              '<span style="color: red; font-weight: bold;">' +
+              text.substring(index, index + searchWord.length) +
+              '</span>' +
+              text.substring(index + searchWord.length); // 검색어 부분 강조 처리
+
+            title.innerHTML = highlightedText; // 강조된 텍스트로 제목 업데이트
+          }
+        });
       }
-    });
-
-    checkboxes.forEach(checkbox => {
-      checkbox.checked = !allchecked;
-    });
-  }
-
-
-  function select_delete() {
-    let checkboxes = document.querySelectorAll('input[name="qcon_no"]:checked');
-    let qcon_nos = [];
-    
-    // 선택된 체크박스 유무 체크
-    if (checkboxes.length === 0) {
-      alert('선택된 글이 없습니다. 삭제하고자 하는 글을 선택하세요.');
-      return;
-    } 
-    
-    checkboxes.forEach((checkbox) => {
-      qcon_nos.push(parseInt(checkbox.value));  // 값은 문자열이므로 숫자로 변환
-    });
-  
-    for (let i = 0; i < qcon_nos.length; i++) {
-      console.log(qcon_nos[i]);
     }
-  
-    let confirmation = confirm("삭제하시면 복구할 수 없습니다. 정말 삭제하시겠습니까?");
-    if (confirmation) {
-      fetch('/qcontents/qna_select_delete', {
-        method: 'POST',
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({"qcon_nos": qcon_nos, "cate_no": 2})
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.cnt == 0) {
-          alert("관리자 권한이 필요합니다.");
+
+    function whole_delete() {
+      let checkboxes = document.querySelectorAll('Input[name="qcon_no"]');
+      let allchecked = true;
+
+      checkboxes.forEach(checkbox => {
+        if (!checkbox.checked) {
+          allchecked = false;
           return;
         }
-        if (data.cnt > 0) {
-          console.log('삭제 성공');
-          window.location.reload();
-        } else {
-          console.log('삭제 실패');
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
+      });
+
+      checkboxes.forEach(checkbox => {
+        checkbox.checked = !allchecked;
       });
     }
-  }
 
-    
+    function select_delete() {
+      let checkboxes = document.querySelectorAll('input[name="qcon_no"]:checked');
+      let qcon_nos = [];
+
+      // 선택된 체크박스 유무 체크
+      if (checkboxes.length === 0) {
+        alert('선택된 글이 없습니다. 삭제하고자 하는 글을 선택하세요.');
+        return;
+      }
+
+      checkboxes.forEach((checkbox) => {
+        qcon_nos.push(parseInt(checkbox.value));  // 값은 문자열이므로 숫자로 변환
+      });
+
+      let confirmation = confirm("삭제하시면 복구할 수 없습니다. 정말 삭제하시겠습니까?");
+      if (confirmation) {
+        fetch('/qcontents/qna_select_delete', {
+          method: 'POST',
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({"qcon_nos": qcon_nos, "cate_no": 2})
+        })
+          .then(response => response.json())
+          .then(data => {
+            if (data.cnt == 0) {
+              alert("관리자 권한이 필요합니다.");
+              return;
+            }
+            if (data.cnt > 0) {
+              console.log('삭제 성공');
+              window.location.reload();
+            } else {
+              console.log('삭제 실패');
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+      }
+    }
   </script>
 </head>
-<div layout:fragment="content">
 
+<body>
+<div layout:fragment="content">
   <div class='title_line'>
     <span style="font-size: 20px;" th:text="${categoryVO.cate_name}" class="title_line_text"></span>
   </div>
 
-  <aside class="aside_right">  
+  <aside class="aside_right">
     <a th:href="@{|/qcontents/qna_create?cate_no=${categoryVO.cate_no}|}">등록</a>
-    <span class="menu_devide">│</span>    
+    <span class="menu_devide">│</span>
     <a th:href="@{|./qna_list_all?cate_no=${categoryVO.cate_no}&now_page=${now_page}|}">목록</a>
-    <span class='menu_divide'>│</span>    
+    <span class='menu_divide'>│</span>
     <a href="javascript:location.reload();">새로고침</a>
-  </aside> 
+  </aside>
 
   <!-- /contents/list_search_component.html 파일의 list_search_fragment import -->
   <div th:replace="~{qcontents/list_search_component::list_search_fragment}"></div>
-     
+
   <div class='menu_line'></div>
-  
+
   <div style="text-align: right; margin-bottom: 10px; width: 95%;" th:if="${session.acc_grade=='admin'}">
-      <button type="button" onclick="select_delete()" class="button_2" style="margin-right:3px;">삭제</button>
-      <button type="button" onclick="whole_delete()" class="button_2">전체선택</button>
+    <button type="button" onclick="select_delete()" class="button_2" style="margin-right:3px;">삭제</button>
+    <button type="button" onclick="whole_delete()" class="button_2">전체선택</button>
   </div>
-       
+
   <table class="table table-striped" style='width: 90%; margin: 0 auto;'>
     <colgroup>
       <col style='width: 20%;'/>
       <col style='width: 80%;'/>
     </colgroup>
-    
+
     <thead>
-      <tr>
-        <th class='th_bs' style=" background-color: #35C5F0; color: white; border: none;">파일</th>
-        <th class='th_bs' style=" background-color: #35C5F0; color: white; border: none;">제목</th>
-      </tr>
-    </thead>
-    
-    <tbody>
     <tr>
-      <tr th:if="${list.size() > 0}" th:each="qna_contentsVO, status : ${list}"
-          style="height: 90px;">
-        <td class='td_basic' style="vertical-align: middle; text-align: center; margin-bottom: 10px;">
+      <th class='th_bs' style="background-color: #35C5F0; color: white; border: none;">파일</th>
+      <th class='th_bs' style="background-color: #35C5F0; color: white; border: none;">제목</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:if="${list.size() > 0}" th:each="qna_contentsVO, status : ${list}">
+      <td class='td_basic' style="vertical-align: middle; text-align: center; margin-bottom: 10px;">
         <div th:if="${session.acc_grade=='admin'}">
           <input type="checkbox" id="qcon_no" name="qcon_no"
-                    th:value="${qna_contentsVO.qcon_no}" style="margin-right: 5px; cursor: pointer; margin-top: 10px;">
+                 th:value="${qna_contentsVO.qcon_no}" style="margin-right: 5px; cursor: pointer; margin-top: 10px;">
         </div>
-          <div th:if="${#lists.size(qna_imageVO) > status.index and qna_imageVO[status.index] != null and qna_imageVO[status.index].file_thumb_name != null}">
-            <img th:src="@{|/qcontents/storage/${qna_imageVO[status.index].file_thumb_name}|}"
-                 style="width: 120px; height: 90px; border-radius: 15%;">
-          </div>
-          <div th:unless="${#lists.size(qna_imageVO) > status.index and qna_imageVO[status.index] != null and qna_imageVO[status.index].file_thumb_name != null}"
-               style="width: 120px; height: 90px; background-color: transparent;">
-          </div>
-        </td>
-        
-        <td class='td_basic' style="position: relative; cursor: pointer; vertical-align: middle; text-align: left;" th:attr="onclick=|location.href='/qcontents/qna_read?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}'|">
-          <div style="margin-bottom: 20px; margin-top:10px;">
-            <div style="width: 100%; height: 100%; margin-bottom: 23px;">
-              <div style="display: flex; align-items: center; width: 100%; height: 100%;">
-                <div style="margin-bottom: 13px; width: 100%; height: 100%;">
-                  <span th:text="|${qna_contentsVO.qcon_name}|" style="font-weight: bold;"></span>
-                  | <span th:text="| ${qna_contentsVO.qcon_date.substring(0, 10)}|"></span><br><br>
-                  
-                  <span th:if="${qna_contentsVO.qcon_contents.length() > 160}" th:text="|${qna_contentsVO.qcon_contents.substring(0, 160)}...|"></span>
-                  <span th:if="${qna_contentsVO.qcon_contents.length() <= 160}" th:text="|${qna_contentsVO.qcon_contents}|"></span>
-                  
-                  <span id='acc_no' style="display:none;" value=""></span><br>
-                  <div style="position: absolute; bottom: 0px auto; right: 0; margin-right: 10px; text-align: right; margin-top: 15px;">
-                    <span style="font-size: 1em;" th:text="|조회수 ${qna_contentsVO.qcon_views}|"></span>
-                    <span style="font-size: 1em;">
-                      <img src="/css/images/comment.png" id="comment" class="icon" alt="댓글" style="width: 20px; height: 20px;">
-                      <span th:text="${qna_contentsVO.qcon_comment}"></span>
-                    </span>
-                  </div>
+        <div th:if="${#lists.size(qna_imageVO) > status.index and qna_imageVO[status.index] != null and qna_imageVO[status.index].file_thumb_name != null}">
+          <img th:src="@{|/qcontents/storage/${qna_imageVO[status.index].file_thumb_name}|}"
+               style="width: 120px; height: 90px; border-radius: 15%;">
+        </div>
+        <div th:unless="${#lists.size(qna_imageVO) > status.index and qna_imageVO[status.index] != null and qna_imageVO[status.index].file_thumb_name != null}"
+             style="width: 120px; height: 90px; background-color: transparent;">
+        </div>
+      </td>
+
+      <td class='td_basic' style="position: relative; cursor: pointer; vertical-align: middle; text-align: left;"
+          th:attr="onclick=|location.href='/qcontents/qna_read?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}'|">
+        <div style="margin-bottom: 20px; margin-top:10px;">
+          <div style="width: 100%; height: 100%; margin-bottom: 23px;">
+            <div style="display: flex; align-items: center; width: 100%; height: 100%;">
+              <div style="margin-bottom: 13px; width: 100%; height: 100%;">
+                <span class="qcon_name" th:text="${qna_contentsVO.qcon_name}" style="font-weight: bold;"></span>
+                | <span th:text="${qna_contentsVO.qcon_date.substring(0, 10)}"></span><br><br>
+
+                <span th:if="${qna_contentsVO.qcon_contents.length() > 160}"
+                      th:text="|${qna_contentsVO.qcon_contents.substring(0, 160)}...|"></span>
+                <span th:if="${qna_contentsVO.qcon_contents.length() <= 160}"
+                      th:text="|${qna_contentsVO.qcon_contents}|"></span>
+
+                <span id='acc_no' style="display:none;" value=""></span><br>
+                <div style="position: absolute; bottom: 0px auto; right: 0; margin-right: 10px; text-align: right; margin-top: 15px;">
+                  <span style="font-size: 1em;" th:text="|조회수 ${qna_contentsVO.qcon_views}|"></span>
+                  <span style="font-size: 1em;">
+                    <img src="/css/images/comment.png" id="comment" class="icon" alt="댓글"
+                         style="width: 20px; height: 20px;">
+                    <span th:text="${qna_contentsVO.qcon_comment}"></span>
+                  </span>
                 </div>
               </div>
             </div>
           </div>
-        </td>
-      </tr>
-       
-      <!-- 리스트가 비어있을 때 -->
-      <tr th:if="${list.size() == 0}">
-        <td colspan="2" style="text-align: center;">관련된 글이 없습니다.</td>
-      </tr>
-     </tr>
+        </div>
+      </td>
+    </tr>
+
+    <!-- 리스트가 비어있을 때 -->
+    <tr th:if="${list.size() == 0}">
+      <td colspan="2" style="text-align: center;">관련된 글이 없습니다.</td>
+    </tr>
     </tbody>
   </table>
-   
+
   <!-- 페이지 버튼 목록 출력 시작 -->
   <div class="bottom_menu" th:utext="${paging}"></div>
-  <!-- 페이지 버튼 목록 출력 종료 --> 
+  <!-- 페이지 버튼 목록 출력 종료 -->
 
 </div>
+</body>
 </html>
