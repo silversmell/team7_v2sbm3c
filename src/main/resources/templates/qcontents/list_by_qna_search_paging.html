@@ -112,7 +112,7 @@
         <td class='td_basic' style="vertical-align: middle; text-align: center; margin-bottom: 10px;">
         <div th:if="${session.acc_grade=='admin'}">
           <input type="checkbox" id="qcon_no" name="qcon_no"
-                    th:value="${qna_contentsVO.qcon_no}" style="margin-right: 5px; cursor: pointer;">
+                    th:value="${qna_contentsVO.qcon_no}" style="margin-right: 5px; cursor: pointer; margin-top: 10px;">
         </div>
           <div th:if="${#lists.size(qna_imageVO) > status.index and qna_imageVO[status.index] != null and qna_imageVO[status.index].file_thumb_name != null}">
             <img th:src="@{|/qcontents/storage/${qna_imageVO[status.index].file_thumb_name}|}"
