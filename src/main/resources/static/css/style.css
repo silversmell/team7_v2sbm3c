@@ -846,7 +846,7 @@ tr:nth-child(even) {
 }
 
  .container {
-     width: 45%;
+     width: 80%;
      background-color: #f0f0f0;
      border-radius: 10px;
      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -868,7 +868,7 @@ tr:nth-child(even) {
      width: 80%;
      height: 110px; /* 이미지 크기를 줄이기 위해 높이를 줄임 */
      box-sizing: border-box;
-     margin-left:20px;
+     margin-left:26px;
      margin-bottom:12px;
  }
  .grid-item img {
