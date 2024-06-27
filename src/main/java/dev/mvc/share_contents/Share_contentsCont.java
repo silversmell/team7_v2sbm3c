@@ -734,8 +734,6 @@ public class Share_contentsCont {
 		if(cnt>0) {
 			System.out.println("게시글 삭제 성공");
 		}
-		
-
 		this.categoryProc.cnt_minus(share_contentsVO.getCate_no()); // 관련 글 수 감소
 		//System.out.println(" -> 삭제 한 scon_no:" + scon_no);
 

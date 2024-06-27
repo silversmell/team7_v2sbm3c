@@ -30,7 +30,6 @@ public class RankCont {
 	    System.out.println("-> RankCont created.");  
 	  }
 	
-
 	@Autowired
 	@Qualifier("dev.mvc.share_contents.Share_contentsProc")
 	private Share_contentsProc sconProc;
