@@ -590,7 +590,7 @@
         let row = recomment_data[i];
         msg += "<div style='display: flex; align-items: flex-start; margin-left:0px; padding: 10px;'>";
         msg += "<div id='" + row.qrecmt_no + "'style='width: 100%; border-bottom: solid 3px #EEEEEE; margin-bottom: 10px;'>";
-        msg += "<span style='font-weight: bold; font-size: 15px;'>@" + row.acc_id + "</span>";
+        msg += "└ " + "<span style='font-weight: bold; font-size: 15px;'>@" + row.acc_id + "</span>";
         if ('[[${qna_contentsVO.acc_no}]]' == row.acc_no) {
           msg += "<span style='font-size: 14px; color: grey;'>" + " (글쓴이)" + "</span>";
         }
