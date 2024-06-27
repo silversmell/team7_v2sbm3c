@@ -9,6 +9,9 @@
     let reply_data; // 댓글 500건 저장
     let reply_now_page = 1; // 댓글 현재 페이지
   </script>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
 
   <script>
     window.onload = () => {
@@ -96,7 +99,7 @@
               msg += "<br>";
               msg += row.qcmt_contents;
               msg += "<br>";
-              msg += "<span style='font-size: 13px;'>" + row.qcmt_date + "</span>";
+              msg += "<span style='font-size: 13px;'>" + changeToDate(row.qcmt_date) + "</span>";
               msg += " &nbsp;";
               
               msg += "<a style='font-size: 13px;' href='javascript:qna_read_recomment(" + row.qcmt_no + ", \"" + row.acc_no + "\")'>답글</a>";
@@ -119,7 +122,6 @@
 
             reply_now_page = reply_now_page + 1;
           }
-
         }
       });
       
@@ -190,7 +192,7 @@
     function render_comments() {
       let msg = '';
       let cnt = Math.min(reply_data.length, reply_now_page * 5);
-    
+  
       for (let i = 0; i < cnt; i++) {
         let row = reply_data[i];
         msg += "<div id='" + row.qcmt_no + "' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px; text-align: left;'>";
@@ -201,26 +203,26 @@
         msg += "<br>";
         msg += row.qcmt_contents;
         msg += "<br>";
-        msg += "<span style='font-size: 13px;'>" + row.qcmt_date + "</span>";
+        msg += "<span style='font-size: 13px;'>" + changeToDate(row.qcmt_date) + "</span>"; // changeToDate 함수 호출하여 시간 변환
         msg += " &nbsp;";
-    
+  
         // 답글 보이기/숨기기 처리
         msg += "<a style='font-size: 13px;' href='javascript:qna_read_recomment(" + row.qcmt_no + ", \"" + row.acc_no + "\")'>답글</a>";
         if ('[[${session.acc_no}]]' == row.acc_no) {
           msg += " ";
-          msg += "<span style='font-size: 13px;' class='menu_divide' >│</span>"
+          msg += "<span style='font-size: 13px;' class='menu_divide'>│</span>";
           msg += " ";
-          msg += "<a style='font-size: 13px;' href='javascript:qna_update_comment("+row.qcmt_no+")'>수정</a>";
+          msg += "<a style='font-size: 13px;' href='javascript:qna_update_comment(" + row.qcmt_no + ")'>수정</a>";
           msg += " ";
           msg += "<span style='font-size: 13px;' class='menu_divide'>│</span>";
           msg += " ";
           msg += "<a style='font-size: 13px;' href='javascript:qna_delete_comment(" + row.qcmt_no + ")'>삭제</a><br>";
         }
         msg += "</div>";
-        
+  
         msg += "<div id='recomment_id" + row.qcmt_no + "' style='display: none; margin-left: 20px; text-align: left;'></div>";
       }
-    
+  
       document.getElementById("reply_list").innerHTML = msg;
     }
     
@@ -595,7 +597,7 @@
         msg += "<br>";
         msg += row.qrecmt_contents;
         msg += "<br>";
-        msg += "<span style='font-size: 13px;'>"+ row.qrecmt_date +  "</span>";
+        msg += "<span style='font-size: 13px;'>"+ changeToDate(row.qrecmt_date) +  "</span>";
         msg += " &nbsp;";
         // console.log('row.acc_id:' + row.acc_id);
 
@@ -663,7 +665,7 @@
 
   function confirmDelete(memberno, acc_no, qcon_no, now_page, cate_no) {
     console.log(acc_no);
-    if (memberno != acc_no && acc_no > 3) { //memberno가 acc_no 같지 않고 acc_no가 3보다 작을떄
+    if (memberno != acc_no && acc_no > 3) { // memberno가 acc_no 같지 않고 acc_no가 3보다 작을떄
       alert("권한이 필요합니다.");
       return false;
     }
@@ -671,6 +673,40 @@
     window.location.href = url;
     return true;
   }
+  
+  // 댓글 작성시간 현재시점 기준으로 출력
+  function changeToDate(datetime) {
+    let now = moment(); // 현재 시간
+    let commentTime = moment(datetime); // 댓글 작성 시간
+  
+    let duration = moment.duration(now.diff(commentTime)); // 현재 시간과 댓글 작성 시간의 차이 계산
+  
+    let seconds = duration.asSeconds();
+    let minutes = duration.asMinutes();
+    let hours = duration.asHours();
+    let days = duration.asDays();
+    let weeks = duration.asWeeks();
+    let months = duration.asMonths();
+    let years = duration.asYears();
+  
+    if (minutes < 1) {
+      return parseInt(seconds) + '초 전';
+    } else if (hours < 1) {
+      return parseInt(minutes) + '분 전';
+    } else if (hours < 24) {
+      return parseInt(hours) + '시간 전';
+    } else if (days < 7) {
+      return parseInt(days) + '일 전';
+    } else if (weeks < 4) {
+      return parseInt(weeks) + '주 전';
+    } else if (months < 12) {
+      return parseInt(months) + '달 전';
+    } else {
+      return parseInt(years) + '년 전';
+    }
+  }
+
+
   
   </script>
 </head>
