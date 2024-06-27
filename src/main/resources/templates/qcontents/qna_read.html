@@ -713,17 +713,17 @@
               <div style='margin: 0px auto; width: 75%;'>
                 <br>
                 <div style="display: flex; align-items: flex-end; justify-content: space-between; padding: 2px;">
-                  <div style="flex: 1; text-align: left; margin-bottom: 10px;">
+                  <div style="flex: 1; text-align: left; margin-bottom: 15px;">
                     <span style="font-size: 1em;" th:text="|조회수 ${qna_contentsVO.qcon_views}|"></span>
                     <!-- 북마크 영역 -->
                     북마크 <span style="font-size: normal; margin-left: 3px;" th:text="${mark_cnt}"></span>
                     <span th:if="${qna_contentsVO.qcon_bookmark == 'N'}">
                       <img src="/css/images/bookmark_off.png" id="bookmark_img" class="icon" alt="북마크" onclick="bookmarked()"
-                        style="width: 20px; height: 20px;">
+                        style="width: 27px; height: 27px;">
                     </span>
                     <span th:unless="${qna_contentsVO.qcon_bookmark == 'N'}">
                       <img src="/css/images/bookmark_on.png" id="bookmark_img" class="icon" alt="북마크" onclick="bookmarked()"
-                        style="width: 20px; height: 20px;">
+                        style="width: 27px; height: 27px;">
                     </span>
                   </div>
                 
@@ -731,10 +731,10 @@
                     <span th:text="${qna_contentsVO.qcon_name}" style="font-size: 2em; font-weight: bold;"></span>
                   </div>
                 
-                  <div style="flex: 1; display: flex; align-items: flex-end; justify-content: flex-end; margin-bottom: 10px">
+                  <div style="flex: 1; display: flex; align-items: flex-end; justify-content: flex-end; margin-bottom: 15px;">
                     <img th:src="@{|/qcontents/acc/storage/${acc_profile_img.acc_thumb_img}|}"
                       th:if="${acc_profile_img.acc_saved_img.endsWith('jpg') or acc_profile_img.acc_saved_img.endsWith('png') or acc_profile_img.acc_saved_img.endsWith('gif')}"
-                      style="width: 20px; height: 20px; border-radius: 50%; margin-right: 10px;" />
+                      style="width: 27px; height: 27px; border-radius: 50%; margin-right: 10px;" />
                     <div>
                       작성자 <span style="font-size: 14px;" th:text="${user_name}"></span>
                       작성일 <span style="font-size: 14px;" th:text="${qna_contentsVO.qcon_date}"></span>
