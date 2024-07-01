@@ -108,6 +108,14 @@
   	color: black;
   	/* 앞쪽 태그의 float 효과를 제거함. */
   }
+  
+  .bottom_reset {
+  	text-align: center;
+  	margin: 10px auto;
+  	clear: both;
+  	color: black;
+  	/* 앞쪽 태그의 float 효과를 제거함. */
+  }
 
   .aside_left {
   	float: left;

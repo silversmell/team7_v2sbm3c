@@ -72,6 +72,18 @@ public class AdminProc implements AdminProcInter {
 		int cnt = this.adminDAO.recordLog(adminLogVO);
 		return cnt;
 	}
+	
+	@Override
+	public ArrayList<AdminVO> list() {
+		ArrayList<AdminVO> list = this.adminDAO.list();
+		return list;
+	}
+
+	@Override
+	public ArrayList<AdminVO> searchList(Map<String, Object> map) {
+		ArrayList<AdminVO> list = this.adminDAO.searchList(map);
+		return list;
+	}
 
 	@Override
 	public ArrayList<Map<String, Object>> logList() {

@@ -55,7 +55,7 @@
 		</colgroup>
 
 		<tr>
-			<th class='th_bs'> </TH>
+			<th class='th_bs'>상태</TH>
 			<th class='th_bs'>아이디</th>
 			<th class='th_bs'>이름</th>
 			<th class='th_bs'>가입일</th>
@@ -64,7 +64,6 @@
 
 		<tr th:each="accountVO, status:${list}">
 			<td class='td_basic'>
-				<!--각 프로필 사진 필요 user.png는 임시 사진 -->
 				<div th:if="${accountVO.acc_grade >= 1 and accountVO.acc_grade <= 10}"><img src='/admin/images/admin.png' title="관리자" class="icon_acc"></div>
 				<div th:if="${accountVO.acc_grade >= 11 and accountVO.acc_grade <= 20}"><img src='/admin/images/member.png' title="일반 회원" class="icon_acc"></div>
 				<div th:if="${accountVO.acc_grade >= 20 and accountVO.acc_grade <= 29}"><img src='/admin/images/dormant.png' title="휴면 회원" class="icon_acc"></div>
@@ -82,7 +81,7 @@
 
 	</table>
 
-	<div class='bottom_menu'>
+	<div class='bottom_reset'>
 		<button type="button" onclick="location.reload();" class="btn btn-secondary btn-sm"
 			style="padding: 2px 8px 3px 8px; margin: 0px 0px 2px 0px;">새로고침</button>
 	</div>

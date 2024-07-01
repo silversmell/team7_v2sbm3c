@@ -55,6 +55,35 @@
 		VALUES(ADMIN_LOG_SEQ.nextval, #{adm_no}, #{adm_log_ip}, TO_CHAR(sysdate, 'YYYY/MM/DD HH24:MI:SS'))
 	</insert>
 	
+	<!-- 관리자 목록 -->
+	<select id="list" resultType="dev.mvc.admin.AdminVO">
+		SELECT adm_no, cate_no, adm_id, adm_name, adm_email, adm_tel, adm_date
+		FROM admin
+		ORDER BY cate_no ASC, adm_no ASC
+	</select>
+	
+	<!-- 관리자 검색 -->
+	<select id="searchList" resultType="dev.mvc.admin.AdminVO" parameterType="map">
+		SELECT adm_no, cate_no, adm_id, adm_name, adm_email, adm_tel, adm_date
+		FROM admin
+		<where>
+			<if test="selected_cate != null and selected_cate != ''">
+				AND cate_no = #{selected_cate}
+			</if>
+			<if test="word_id != null and word_id != ''">
+				AND LOWER(adm_id) LIKE '%' || LOWER(#{word_id}) || '%'
+			</if>
+			<if test="word_name != null and word_name != ''">
+				AND LOWER(adm_name) LIKE '%' || LOWER(#{word_name}) || '%'
+			</if>
+			<if test="start_date != null and start_date != '' and end_date != null and end_date != ''">
+				AND adm_date BETWEEN TO_TIMESTAMP(#{start_date} || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS')
+				AND TO_TIMESTAMP(#{end_date} || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+			</if>
+		</where>
+		ORDER BY cate_no ASC, adm_no ASC
+	</select>
+	
 	<!-- 관리자 로그 전체 조회 -->
 	<select id="logList" resultMap="adminLogResultMap">
 		SELECT l.adm_log_no, a.adm_no, a.adm_id, l.adm_log_ip, l.adm_log_time
