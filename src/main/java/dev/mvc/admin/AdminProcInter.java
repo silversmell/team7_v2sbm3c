@@ -118,6 +118,14 @@ public interface AdminProcInter {
 	 * @return
 	 */
 	public ArrayList<AccountVO> accList();
+	
+	/**
+	 * 회원 검색
+	 * 
+	 * @param map
+	 * @return
+	 */
+	public ArrayList<AccountVO> accSearchList(Map<String, Object> map);
 
 	/**
 	 * 회원 로그 전체 조회

@@ -244,6 +244,12 @@ public class AdminProc implements AdminProcInter {
 	}
 	
 	@Override
+	public ArrayList<AccountVO> accSearchList(Map<String, Object> map) {
+		ArrayList<AccountVO> list = this.adminDAO.accSearchList(map);
+		return list;
+	}
+	
+	@Override
 	public ArrayList<Map<String, Object>> accLogList() {
 		ArrayList<Map<String, Object>> list = this.adminDAO.accLogList();
 		return list;
@@ -299,5 +305,4 @@ public class AdminProc implements AdminProcInter {
 		return list;
 	}
 	
-
 }

@@ -1,4 +1,4 @@
-/* account > list_search_component.html 참조 */
+/* admin > acc_list.html 참조 */
 
 document.addEventListener('DOMContentLoaded', function() {
 	/* 날짜 검색 유효성 검사 */

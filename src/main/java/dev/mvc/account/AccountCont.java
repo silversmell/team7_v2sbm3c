@@ -401,7 +401,9 @@ public class AccountCont {
 				session.setAttribute("acc_grade", "admin"); // 관리자
 			} else if (accountVO.getAcc_grade() >= 11 && accountVO.getAcc_grade() <= 20) {
 				session.setAttribute("acc_grade", "member"); // 일반 회원
-			} else if (accountVO.getAcc_grade() >= 30 && accountVO.getAcc_grade() <= 39) {
+			} else if (accountVO.getAcc_grade() >= 21 && accountVO.getAcc_grade() <= 29) {
+				session.setAttribute("acc_grade", "dormant"); // 휴면 회원
+			} else if (accountVO.getAcc_grade() >= 31 && accountVO.getAcc_grade() <= 39) {
 				session.setAttribute("acc_grade", "suspended"); // 정지 회원
 			} else if (accountVO.getAcc_grade() == 99) {
 				session.setAttribute("acc_grade", "withdrawn"); // 탈퇴 회원
