@@ -86,21 +86,22 @@
   <div style="margin: 10px auto; width: 90%;">
     <h4>나만의 이미지 생성하기(AI 서비스)</h4>
     <textarea id="prompt" name="prompt" style="width: 100%; height: 200px;">
-      아래의 규칙에 맞는 이미지를 생성해줘.
+아래의 규칙에 맞는 이미지를 생성해줘.
 
-      1. 국가: 한국
-      2. 컬러: 화이트
-      3. 컨셉: 모던
-      4. 상황: 개발자 컴퓨터 책상을 정면으로 바라본 구조 이미지 생성해줘.
-      5. 제작 유형: 3D로 제작
+1. 국가: 한국
+2. 컬러: 화이트
+3. 컨셉: 모던
+4. 상황: 개발자 컴퓨터 책상을 정면으로 바라본 구조 이미지 생성해줘.
+5. 제작 유형: 3D로 제작
 
     </textarea> <br />
 
     <div style="margin-top: 10px auto; width: 100%; text-align: center;">
+      <button id="download" class="btn btn-info btn-sm">다운로드</button>
       <button id="send" class="btn btn-info btn-sm">나의 이미지 생성하기</button>
       <button id="clear" class="btn btn-info btn-sm">입력 내용 삭제하기</button>
-      <button id="download" class="btn btn-info btn-sm">다운로드</button>
-      <button type="button" th:attr="onclick=|location.href='http://localhost:9093/'|" class="btn btn-info btn-sm">나가기</button><br />
+      <button type="button" onclick="history.back();" class="btn btn-info btn-sm">돌아가기</button>
+      <button type="button" th:attr="onclick=|location.href='http://localhost:9093/'|" class="btn btn-info btn-sm">HOME</button><br /> <br />
     </div>
     <div id="result" style="margin: 10px auto; width: 40%; text-align: center;"></div>
     <div id="panel" style="margin-top: 10px; width: 100%; height: 50px; text-align: center; display: none;"></div>

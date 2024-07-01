@@ -198,9 +198,10 @@
     function render_comments() {
       let msg = '';
       let cnt = Math.min(reply_data.length, reply_now_page * 5);
-  
+    
       for (let i = 0; i < cnt; i++) {
         let row = reply_data[i];
+    
         msg += "<div id='" + row.qcmt_no + "' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px; text-align: left;'>";
         msg += "<span style='font-weight: bold; font-size: 16px;'>" + row.acc_id + "</span>";
         if ('[[${qna_contentsVO.acc_no}]]' == row.acc_no) {
@@ -209,9 +210,11 @@
         msg += "<br>";
         msg += row.qcmt_contents;
         msg += "<br>";
+    
+    
         msg += "<span style='font-size: 13px;'>" + changeToDate(row.qcmt_date) + "</span>"; // changeToDate 함수 호출하여 시간 변환
         msg += " &nbsp;";
-  
+    
         // 답글 보이기/숨기기 처리
         msg += "<a style='font-size: 13px;' href='javascript:qna_read_recomment(" + row.qcmt_no + ", \"" + row.acc_no + "\")'>답글</a>";
         if ('[[${session.acc_no}]]' == row.acc_no) {
@@ -225,12 +228,13 @@
           msg += "<a style='font-size: 13px;' href='javascript:qna_delete_comment(" + row.qcmt_no + ")'>삭제</a><br>";
         }
         msg += "</div>";
-  
+    
         msg += "<div id='recomment_id" + row.qcmt_no + "' style='display: none; margin-left: 20px; text-align: left;'></div>";
       }
-  
+      
       document.getElementById("reply_list").innerHTML = msg;
     }
+
     
    // 최신순/작성순 클릭에 따라 밑줄 토글 함수
    function underline(option) {
@@ -711,7 +715,6 @@
       return parseInt(years) + '년 전';
     }
   }
-
 
   
   </script>
