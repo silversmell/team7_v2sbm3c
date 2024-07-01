@@ -102,8 +102,6 @@
   <aside class="aside_right">
     <a th:href="@{|/qcontents/qna_create?cate_no=${categoryVO.cate_no}|}">등록</a>
     <span class="menu_devide">│</span>
-    <a th:href="@{|./qna_list_all?cate_no=${categoryVO.cate_no}&now_page=${now_page}|}">목록</a>
-    <span class='menu_divide'>│</span>
     <a href="javascript:location.reload();">새로고침</a>
   </aside>
 
@@ -112,9 +110,9 @@
 
   <div class='menu_line'></div>
 
-  <div style="text-align: right; margin-bottom: 10px; width: 95%;" th:if="${session.acc_grade=='admin'}">
-    <button type="button" onclick="select_delete()" class="button_2" style="margin-right:3px;">삭제</button>
+  <div style="text-align: right; margin-bottom: 10px; width: 95%;" th:if="${session.acc_grade=='admin'}" class="btn_group">
     <button type="button" onclick="whole_delete()" class="button_2">전체선택</button>
+    <button type="button" onclick="select_delete()" class="button_2">삭제</button>
   </div>
 
   <table class="table table-striped" style='width: 90%; margin: 0 auto;'>
@@ -151,7 +149,7 @@
         <div style="margin-bottom: 20px; margin-top:10px;">
           <div style="width: 100%; height: 100%; margin-bottom: 23px;">
             <div style="display: flex; align-items: center; width: 100%; height: 100%;">
-              <div style="margin-bottom: 13px; width: 100%; height: 100%;">
+              <div style="margin-bottom: 13px; width: 100%; height: 100%; margin-top: 30px; margin-bottom: 0px auto;">
                 <span class="qcon_name" th:text="${qna_contentsVO.qcon_name}" style="font-weight: bold;"></span>
                 | <span th:text="${qna_contentsVO.qcon_date.substring(0, 10)}"></span><br><br>
 

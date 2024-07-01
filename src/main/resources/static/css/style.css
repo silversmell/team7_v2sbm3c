@@ -589,7 +589,7 @@
 
 .menu_line {
     width: 100%;
-    border-bottom: dashed 1px rgb(3, 137, 152);;
+    border-bottom: dashed 1px rgb(128, 128, 128);;
     margin: 20px 0px;
     clear: both;
 }
@@ -619,16 +619,16 @@ table, th, td {
     color: rgb(255, 0, 0);
 }
   button.button_2 {
-  border: 1px solid #cccccc;
+  border: 1px solid white;
   outline: none;
   font-size: 15px;
-  background: white;
+  background: #35C5F0;
   margin: 3px;
-  color: black;
-  padding: 2px;
+  color: white;
+  padding: 10px;
   cursor: pointer;
-  border-radius: 1px;
 }
+
   .hashtag {
   border: 1px solid #cccccc;
   outline: none;
@@ -766,5 +766,9 @@ table, th, td {
      height: 100%;
  }
 
-  
-  
+
+.btn_group {
+    text-align: right;
+    margin-bottom: 10px;
+    width: 95%;
+}
