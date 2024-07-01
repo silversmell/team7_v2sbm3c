@@ -4,34 +4,36 @@
   <link href="/css/style.css" rel="stylesheet" type="text/css">
 
   <script th:inline="javascript">
-    var searchWord = /*[[${word}]]*/ ''; // Thymeleaf 템플릿 엔진에서 word 값 가져오기
+    let search_word = /*[[${word}]]*/ '';
     document.addEventListener('DOMContentLoaded', function() {
-      highlightSearchWord(searchWord);
+      hightlight_search_word(search_word);
     });
 
-    function highlightSearchWord(searchWord) {
-      if (searchWord && searchWord.trim() !== '') {
-        var titles = document.querySelectorAll('.qcon_name'); // 제목을 포함한 요소 선택
+    // 검색 단어 하이라이트
+    function hightlight_search_word(search_word) {
+      if (search_word && search_word.trim() !== '') {
+        let titles = document.querySelectorAll('.qcon_name'); // 제목을 포함한 요소 선택
 
         titles.forEach(function(title) {
-          var text = title.textContent; // 제목 텍스트 가져오기
-          var lowerCaseText = text.toLowerCase();
-          var lowerCaseSearchWord = searchWord.toLowerCase();
-          var index = lowerCaseText.indexOf(lowerCaseSearchWord); // 검색어가 포함된 위치 찾기
+          let text = title.textContent; // 제목 텍스트 가져오기
+          let lower_text = text.toLowerCase();
+          let lower_search_word = search_word.toLowerCase();
+          let index = lower_text.indexOf(lower_search_word); // 검색어가 포함된 위치 찾기
 
           if (index !== -1) {
-            var highlightedText = text.substring(0, index) +
-              '<span style="color: red; font-weight: bold;">' +
-              text.substring(index, index + searchWord.length) +
-              '</span>' +
-              text.substring(index + searchWord.length); // 검색어 부분 강조 처리
+            let hightlight_text = text.substring(0, index) +
+            '<span style="color: red; font-weight: bold;">' +
+            text.substring(index, index + search_word.length) +
+            '</span>' +
+            text.substring(index + search_word.length); // 검색어 부분 강조 처리
 
-            title.innerHTML = highlightedText; // 강조된 텍스트로 제목 업데이트
+            title.innerHTML = hightlight_text; // 강조된 텍스트로 제목 업데이트
           }
         });
       }
     }
 
+    // 체크박스 전체 선택
     function whole_delete() {
       let checkboxes = document.querySelectorAll('Input[name="qcon_no"]');
       let allchecked = true;
@@ -48,6 +50,7 @@
       });
     }
 
+    // 선택된 체크박스 삭제
     function select_delete() {
       let checkboxes = document.querySelectorAll('input[name="qcon_no"]:checked');
       let qcon_nos = [];
@@ -62,29 +65,29 @@
         qcon_nos.push(parseInt(checkbox.value));  // 값은 문자열이므로 숫자로 변환
       });
 
-      let confirmation = confirm("삭제하시면 복구할 수 없습니다. 정말 삭제하시겠습니까?");
-      if (confirmation) {
+      let mention = confirm("삭제하시면 복구할 수 없습니다. 정말 삭제하시겠습니까?");
+      if (mention) {
         fetch('/qcontents/qna_select_delete', {
           method: 'POST',
           headers: {"Content-Type": "application/json"},
           body: JSON.stringify({"qcon_nos": qcon_nos, "cate_no": 2})
         })
-          .then(response => response.json())
-          .then(data => {
-            if (data.cnt == 0) {
-              alert("관리자 권한이 필요합니다.");
-              return;
-            }
-            if (data.cnt > 0) {
-              console.log('삭제 성공');
-              window.location.reload();
-            } else {
-              console.log('삭제 실패');
-            }
-          })
-          .catch(error => {
-            console.error('Error:', error);
-          });
+        .then(response => response.json())
+        .then(data => {
+          if (data.cnt == 0) {
+            alert("관리자 권한이 필요합니다.");
+            return;
+          }
+          if (data.cnt > 0) {
+            console.log('삭제 성공');
+            window.location.reload();
+          } else {
+            console.log('삭제 실패');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
       }
     }
   </script>
