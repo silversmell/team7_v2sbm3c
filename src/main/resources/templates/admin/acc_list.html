@@ -17,7 +17,7 @@
 			        <option value="">전체</option>
 			        <option value="member" th:selected="${selected_grade == 'member'}">일반</option>
 			        <option value="dormant" th:selected="${selected_grade == 'dormant'}">휴면</option>
-			        <option value="suspended" th:selected="${selected_grade == 'suspended'}">정지</option>
+			        <option value="pause" th:selected="${selected_grade == 'pause'}">정지</option>
 			        <option value="withdrawn" th:selected="${selected_grade == 'withdrawn'}">탈퇴</option>
 			    </select>
 			</div>
@@ -65,10 +65,11 @@
 		<tr th:each="accountVO, status:${list}">
 			<td class='td_basic'>
 				<!--각 프로필 사진 필요 user.png는 임시 사진 -->
-				<div th:if="${accountVO.acc_grade >= 1 and accountVO.acc_grade <= 10}"><img src='/account/images/admin.png' title="관리자" class="icon"></div>
-				<div th:if="${accountVO.acc_grade >= 11 and accountVO.acc_grade <= 20}"><img src='/account/images/user.png' title="회원" class="icon"></div>
-				<div th:if="${accountVO.acc_grade >= 30 and accountVO.acc_grade <= 39}"><img src='/account/images/pause.png' title="정지 회원" class="icon"></div>
-				<div th:if="${accountVO.acc_grade >= 40 and accountVO.acc_grade <= 49}"><img src='/account/images/x.png' title="탈퇴 회원" class="icon"></div>
+				<div th:if="${accountVO.acc_grade >= 1 and accountVO.acc_grade <= 10}"><img src='/admin/images/admin.png' title="관리자" class="icon_acc"></div>
+				<div th:if="${accountVO.acc_grade >= 11 and accountVO.acc_grade <= 20}"><img src='/admin/images/member.png' title="일반 회원" class="icon_acc"></div>
+				<div th:if="${accountVO.acc_grade >= 20 and accountVO.acc_grade <= 29}"><img src='/admin/images/dormant.png' title="휴면 회원" class="icon_acc"></div>
+				<div th:if="${accountVO.acc_grade >= 30 and accountVO.acc_grade <= 39}"><img src='/admin/images/pause.png' title="정지 회원" class="icon_acc"></div>
+				<div th:if="${accountVO.acc_grade == 99}"><img src='/admin/images/withdrawn.png' title="탈퇴 회원" class="icon_acc"></div>
 			</td>
 			<td class='td_basic'><a th:href="@{|./read?acc_no=${accountVO.acc_no}|}" th:text="${accountVO.acc_id}"></a></td>
 			<td class='td_basic'><a th:href="@{|./read?acc_no=${accountVO.acc_no}|}" th:text="${accountVO.acc_name}"></a></td>

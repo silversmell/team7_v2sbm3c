@@ -527,7 +527,7 @@ public class AdminCont {
 	            case "dormant":
 	                grade = 25;
 	                break;
-	            case "suspended":
+	            case "pause":
 	                grade = 35;
 	                break;
 	            case "withdrawn":

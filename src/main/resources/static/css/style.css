@@ -522,6 +522,10 @@
   .icon {
   	width: 16px;
   }
+  
+  .icon_acc {
+  	width: 20px;
+  }
 
   .form_input {
   	margin-top: 5px;
