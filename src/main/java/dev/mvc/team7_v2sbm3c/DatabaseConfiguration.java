@@ -29,6 +29,10 @@ import com.zaxxer.hikari.HikariDataSource;
 @MapperScan(basePackages= {"dev.mvc.rank"})
 @MapperScan(basePackages= {"dev.mvc.re_comment"}) 
 @MapperScan(basePackages= {"dev.mvc.recommend"}) // recommendDAO interface를 찾는 위치
+@MapperScan(basePackages= {"dev.mvc.issue.web"}) 
+@MapperScan(basePackages= {"dev.mvc.issue.domain"}) 
+@MapperScan(basePackages= {"dev.mvc.issue"}) 
+@MapperScan(basePackages= {"dev.mvc.issue.employee"}) 
 
 
 public class DatabaseConfiguration {
