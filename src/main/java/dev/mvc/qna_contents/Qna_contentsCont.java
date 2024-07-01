@@ -1142,6 +1142,18 @@ public class Qna_contentsCont {
     return obj.toString();
   }
   
+  /**
+   * 댓글 요약 서비스 AI
+   * http://localhost:9093/qcontents/summary
+   * @param session
+   * @return
+   */
+  @GetMapping(value="/summary")
+  public String summary(HttpSession session) {
+    
+    return "qcontents/summary";
+  }
+  
 
   
 }

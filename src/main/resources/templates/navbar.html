@@ -75,11 +75,17 @@
 							<a class="nav-link" th:href="@{|/account/read?acc_no=${session.acc_no}|}"
 								style="display: inline-block;">마이페이지</a>
 						</span>
+						
+						
 						<span th:if="${session.acc_no != null}">
 							<a class="nav-link" href="javascript: openRecom();" style="display: inline-block;">
 								추천 받기
 							</a>
 						</span>
+            <span th:if="${session.acc_no != null}">
+              <a class="nav-link" th:href="@{|http://192.168.12.159:9093/qcontents/summary|}" th:text="@{|요약 서비스 AI|}"
+                style="display: inline-block;"></a>
+            </span>
 						<span th:if="${session.acc_no != null}">
 							<button type="button"
 								th:attr="onclick=|location.href='http://192.168.12.159:9093/qcontents/member_img'|">
