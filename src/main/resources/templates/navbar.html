@@ -11,10 +11,8 @@
 
       win.moveTo(x, y);
     }
+    
 </script>
-<style>
-
-</style>
   
 <div th:fragment="navbarFragment">
 	<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
@@ -96,12 +94,6 @@
 			<!-- 회원 메뉴 종료 -->
 
 			<!-- 관리자 메뉴 시작 -->
-			<a class="navbar-brand" href="/admin" th:if="${currentUrl != null and currentUrl.contains('admin')}">데스크 투어</a>
-			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
-				aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-			
 			<div class="collapse navbar-collapse" id="navbarNavDropdown"
 				th:if="${currentUrl != null and currentUrl.contains('admin')}">
 
@@ -146,7 +138,6 @@
 					</li>
 				</ul>
 
-
 				<!-- right side -->
 				<ul class="navbar-nav ms-auto">
 					<li class="nav-item" style="float: right;">
@@ -168,7 +159,5 @@
 			<!-- 관리자 메뉴 종료 -->
 	</nav>
 	
-	
-
 
 </div>
