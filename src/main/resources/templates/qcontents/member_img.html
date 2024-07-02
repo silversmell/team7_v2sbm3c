@@ -89,6 +89,7 @@
           .then((response) => response.json()) // response.json(), response.text()
           .then((rdata) => {
             let cnt = 0; // div 갯수
+            let popular = ''; // 클릭한 div의 생성어 저장 변수
             
             rdata.res.forEach(row => {
               if (cnt < 10) { // 최대 출력 div 10개 이하
@@ -99,8 +100,10 @@
                 
                 div.textContent =`${cnt + 1}) ${simple_prompt}`; // 앞에 번호 추가, 문장이 길면 문장을 짤라서 사용
                 div.addEventListener('click', function () {
-                  alert('dalle_no: ' + row.dalle_no + ' prompt: ' + row.prompt);
+                  alert('dalle_no: ' + row.dalle_no + '\nprompt: ' + row.prompt);
                   // location.href='/qna_list_all?prompt=' + row.prompt;
+                  
+                  popular = row.prompt;
                 }); // div.addEventListener 종료
                 panel2.appendChild(div);
                 cnt++;
