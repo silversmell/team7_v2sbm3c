@@ -388,4 +388,11 @@ public interface Qna_contentsDAOInter {
    */
   public AccountVO acc_profile_img_by_qcmt_no(int qcmt_no);
   
+  /**
+   * 프롬포트 실시간 생성어 
+   * @param map
+   * @return
+   */
+  public ArrayList<Qna_dalleVO> get_prompt(HashMap <String, Object> map);
+  
 }

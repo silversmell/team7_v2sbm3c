@@ -535,4 +535,11 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
     return qna_recommentVO;
   }
   
+  @Override
+  public ArrayList<Qna_dalleVO> get_prompt(HashMap<String, Object> map) {
+    ArrayList<Qna_dalleVO> list = this.qna_contentsDAO.get_prompt(map);
+    
+    return list;
+  }
+  
 }

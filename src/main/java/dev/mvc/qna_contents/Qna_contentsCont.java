@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -298,7 +299,6 @@ public class Qna_contentsCont {
     
     return "qcontents/list_by_qna_search_paging"; // /templates/qcontents/list_by_qna_search_paging.html
   }
-
   
   /**
    * 질문글 조회
@@ -1154,7 +1154,47 @@ public class Qna_contentsCont {
     return "qcontents/summary";
   }
   
+  /**
+   * 실시간 프롬포트 생성어
+   * @param session
+   * @return
+   */
+  @GetMapping(value="/get_prompt") // http://localhost:9093/qcontents/get_prompt?cate_no=2&prompt=한국
+  @ResponseBody // post, get 상관없이 응답 받는 페이지에 필요한 필수
+  public String get_prompt(HttpSession session, Model model,
+                                  @RequestParam(name = "cate_no", defaultValue = "2") int cate_no, 
+                                  @RequestParam(name = "prompt", defaultValue = "") String prompt) {
+    
+    HashMap<String, Object> map = new HashMap<>();
+    map.put("prompt", prompt);
+    
+    JSONArray array = new JSONArray();
 
+    ArrayList<Qna_dalleVO> list = this.qna_contentsProc.get_prompt(map);
+    model.addAttribute("list", list);
+    
+    for (Qna_dalleVO qna_dalleVO : list) {
+      JSONObject obj = new JSONObject();
+      
+      int dalle_no = qna_dalleVO.getDalle_no();
+      System.out.println("dalle_no: " + dalle_no);
+      map.put("dalle_no", dalle_no);
+      obj.put("dalle_no", dalle_no);
+      
+      String prompts = qna_dalleVO.getPrompt();
+      System.out.println("prompts: "  + prompts);
+      map.put("prompt", prompts);
+      obj.put("prompt", prompts);
+      
+      array.put(obj);
+    }
+
+    JSONObject json = new JSONObject(); 
+    json.put("res", array);
+    
+    return json.toString();
+  }
+  
   
 }
 

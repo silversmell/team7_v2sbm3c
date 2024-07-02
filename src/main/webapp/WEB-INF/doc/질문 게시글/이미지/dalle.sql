@@ -78,7 +78,7 @@ WHERE acc_no=3 and TO_CHAR(ddate, 'YYYY-MM-DD') = '2024-06-12';
 -- 조인(LIKE) 조회
 SELECT dalle_no, acc_no, prompt, dalle_origin, dalle_thumb, dalle_size, ddate
 FROM dalle
-WHERE acc_no=3 and dalle_origin LIKE '%달리%';
+WHERE prompt LIKE '%한국%';
 
 -- 원본명 바꾸기
 UPDATE dalle
@@ -88,6 +88,9 @@ WHERE dalle_no=1;
 COMMIT;
 
 SELECT dalle_no, acc_no, prompt, dalle_origin, dalle_thumb, dalle_size, ddate
+FROM dalle ORDER BY dalle_no DESC;
+
+SELECT dalle_no, acc_no, prompt
 FROM dalle ORDER BY dalle_no DESC;
 
 -- 삭제

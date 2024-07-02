@@ -27,7 +27,7 @@ public interface Qna_contentsProcInter {
    * @param qcon_no
    * @return
    */
-  public ArrayList<Qna_contentsVO> list_by_qcon_no(int qcon_no);
+  public ArrayList<Qna_contentsVO>  list_by_qcon_no(int qcon_no);
   
   /**
    * 질문글 조회
@@ -386,5 +386,12 @@ public interface Qna_contentsProcInter {
    * @return
    */
   public Qna_recommentVO select_acc_id(int qrecmt_no);
+  
+  /**
+   * 프롬포트 실시간 생성어 
+   * @param map
+   * @return
+   */
+  public ArrayList<Qna_dalleVO> get_prompt(HashMap <String, Object> map);
   
 }
