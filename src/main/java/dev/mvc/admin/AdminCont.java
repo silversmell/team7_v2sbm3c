@@ -400,6 +400,75 @@ public class AdminCont {
 
 	}
 	
+//	/**
+//	 * 관리자 목록
+//	 * 
+//	 * @param session
+//	 * @param model
+//	 * @return
+//	 */
+//	@GetMapping(value = "/list")
+//	public String list(HttpSession session, Model model) {
+//		ArrayList<AdminVO> list = this.adminProc.list();
+//		model.addAttribute("list", list);
+//
+//		return "admin/list";
+//	}
+	
+	/**
+	 * 관리자 목록 (검색)
+	 * 
+	 * 관리자 검색 1) 담당 2) 관리자 아이디 3) 관리자 이름 4) 가입일
+	 * 
+	 * @param session
+	 * @param model
+	 * @param selected_cate
+	 * @param word_id
+	 * @param word_name
+	 * @param start_date
+	 * @param end_date
+	 * @return
+	 */
+	@GetMapping(value = "/list")
+	public String list(HttpSession session, Model model,
+			@RequestParam(name = "selected_cate", required = false) Integer selected_cate,
+			@RequestParam(name = "word_id", defaultValue = "") String word_id,
+			@RequestParam(name = "word_name", defaultValue = "") String word_name,
+			@RequestParam(name = "start_date", defaultValue = "") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start_date,
+			@RequestParam(name = "end_date", defaultValue = "") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end_date) {
+		
+	    word_id = Tool.checkNull(word_id).trim();
+	    word_name = Tool.checkNull(word_name).trim();
+	    
+	    Map<String, Object> words = new HashMap<>();
+	    
+	    if (selected_cate != null) {
+	        words.put("selected_cate", selected_cate);
+	    }
+	    if (word_id != null && !word_id.isEmpty()) {
+	        words.put("word_id", word_id);
+	    }
+	    if (word_name != null && !word_name.isEmpty()) {
+	        words.put("word_name", word_name);
+	    }
+	    if (start_date != null && end_date != null) {
+	    	words.put("start_date", start_date.toString());
+	    	words.put("end_date", end_date.toString());
+	    }
+
+	    ArrayList<AdminVO> list = this.adminProc.searchList(words);
+
+	    model.addAttribute("word_id", word_id);
+	    model.addAttribute("word_name", word_name);
+	    model.addAttribute("selected_cate", selected_cate);
+	    model.addAttribute("start_date", start_date);
+	    model.addAttribute("end_date", end_date);
+	    model.addAttribute("list", list);
+
+		return "admin/list";
+	}
+
+
 	/**
 	 * 관리자 로그 목록 (검색 + 페이징)
 	 * 
@@ -483,16 +552,78 @@ public class AdminCont {
 		return "redirect:/admin";
 	}
 	
+//	/**
+//	 * 회원 목록
+//	 * 
+//	 * @param model
+//	 * @return
+//	 */
+//	@GetMapping(value = "/acc_list")
+//	public String acc_list(HttpSession session, Model model) {
+//		ArrayList<AccountVO> list = this.adminProc.accList();
+//		model.addAttribute("list", list);
+//
+//		return "admin/acc_list";
+//	}
+	
 	/**
-	 * 회원 목록
+	 * 회원 목록 (검색)
+	 * 
+	 * 회원 검색 1) 회원 등급(상태) 2) 회원 아이디 3) 회원 이름 4) 가입일
 	 * 
 	 * @param model
 	 * @return
 	 */
 	@GetMapping(value = "/acc_list")
-	public String list(HttpSession session, Model model) {
-		ArrayList<AccountVO> list = this.adminProc.accList();
-		model.addAttribute("list", list);
+	public String acc_list(HttpSession session, Model model,
+			@RequestParam(name = "selected_grade", required = false) String selected_grade,
+			@RequestParam(name = "word_id", defaultValue = "") String word_id,
+			@RequestParam(name = "word_name", defaultValue = "") String word_name,
+			@RequestParam(name = "start_date", defaultValue = "") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start_date,
+			@RequestParam(name = "end_date", defaultValue = "") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end_date) {
+		
+	    word_id = Tool.checkNull(word_id).trim();
+	    word_name = Tool.checkNull(word_name).trim();
+	    
+	    Map<String, Object> words = new HashMap<>();
+
+	    if (selected_grade != null && !selected_grade.isEmpty()) {
+	        int grade = 0;
+	        switch (selected_grade) {
+	            case "member":
+	                grade = 15;
+	                break;
+	            case "dormant":
+	                grade = 25;
+	                break;
+	            case "pause":
+	                grade = 35;
+	                break;
+	            case "withdrawn":
+	                grade = 99;
+	                break;
+	        }
+	        words.put("selected_grade", grade);
+	    }
+	    if (word_id != null && !word_id.isEmpty()) {
+	        words.put("word_id", word_id);
+	    }
+	    if (word_name != null && !word_name.isEmpty()) {
+	        words.put("word_name", word_name);
+	    }
+	    if (start_date != null && end_date != null) {
+	    	words.put("start_date", start_date.toString());
+	    	words.put("end_date", end_date.toString());
+	    }
+
+	    ArrayList<AccountVO> list = this.adminProc.accSearchList(words);
+
+	    model.addAttribute("word_id", word_id);
+	    model.addAttribute("word_name", word_name);
+	    model.addAttribute("selected_grade", selected_grade);
+	    model.addAttribute("start_date", start_date);
+	    model.addAttribute("end_date", end_date);
+	    model.addAttribute("list", list);
 
 		return "admin/acc_list";
 	}

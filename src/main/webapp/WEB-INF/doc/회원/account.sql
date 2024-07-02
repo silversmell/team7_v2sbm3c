@@ -59,6 +59,15 @@ VALUES(ACCOUNT_SEQ.nextval,'user5','P+faf8xV+BRvnALZIp7rcQ==','RECO2',sysdate,1)
 INSERT INTO ACCOUNT(acc_no, acc_id, acc_pw, acc_name, acc_date, acc_grade)
 VALUES(ACCOUNT_SEQ.nextval,'user6','P+faf8xV+BRvnALZIp7rcQ==','RECO3',sysdate,1);
 
+INSERT INTO ACCOUNT(acc_no, acc_id, acc_pw, acc_name, acc_date, acc_grade)
+VALUES(ACCOUNT_SEQ.nextval,'user7','P+faf8xV+BRvnALZIp7rcQ==','15 일반회원',sysdate,15);
+INSERT INTO ACCOUNT(acc_no, acc_id, acc_pw, acc_name, acc_date, acc_grade)
+VALUES(ACCOUNT_SEQ.nextval,'user8','P+faf8xV+BRvnALZIp7rcQ==','25 휴면회원',sysdate,25);
+INSERT INTO ACCOUNT(acc_no, acc_id, acc_pw, acc_name, acc_date, acc_grade)
+VALUES(ACCOUNT_SEQ.nextval,'user9','P+faf8xV+BRvnALZIp7rcQ==', '35 정지회원',sysdate,35);
+INSERT INTO ACCOUNT(acc_no, acc_id, acc_pw, acc_name, acc_date, acc_grade)
+VALUES(ACCOUNT_SEQ.nextval,'user9','P+faf8xV+BRvnALZIp7rcQ==', '99 탈퇴회원',sysdate,99);
+
 commit;
 --------------------------------------------------------------------------------
 
@@ -77,7 +86,33 @@ SELECT acc_no, acc_id, acc_pw, acc_name, acc_tel, acc_age, acc_date, acc_grade,
 FROM account
 WHERE acc_id = 'user2';
 
+SELECT acc_no, acc_id, acc_pw, acc_name, acc_tel, acc_age, acc_date, acc_grade, 
+       acc_img, acc_saved_img, acc_thumb_img, acc_img_size
+FROM account
+WHERE acc_grade = 25;
 
+-- 회원 검색
+SELECT acc_no, acc_id, acc_pw, acc_name, acc_tel, acc_age, acc_date, acc_grade, 
+       acc_img, acc_saved_img, acc_thumb_img, acc_img_size
+FROM account
+WHERE LOWER(acc_id) LIKE '%' || LOWER('uSeR2') || '%'
+AND LOWER(acc_name) LIKE '%' || LOWER('장영은') || '%'
+AND acc_grade = 1
+AND acc_date BETWEEN TO_TIMESTAMP( '2024-05-01' || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS')
+                 AND TO_TIMESTAMP('2024-05-31' || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+ORDER BY acc_date;
+
+-- 회원 검색(등급 포함)
+SELECT acc_no, acc_id, acc_pw, acc_name, acc_tel, acc_age, acc_date, acc_grade, 
+       acc_img, acc_saved_img, acc_thumb_img, acc_img_size
+FROM account
+WHERE acc_grade = 1
+AND LOWER(acc_id) LIKE '%' || LOWER('uSeR2') || '%'
+AND LOWER(acc_name) LIKE '%' || LOWER('장영은') || '%'
+AND acc_grade = 1
+AND acc_date BETWEEN TO_TIMESTAMP( '2024-05-01' || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS')
+                 AND TO_TIMESTAMP('2024-05-31' || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+ORDER BY acc_date;
 --------------------------------------------------------------------------------
 
 
@@ -194,6 +229,7 @@ INSERT INTO qna_mark(qmark_no, acc_no, qcon_no)
 VALUES(QNA_MARK_SEQ.nextval, 2, 21);
 
 commit;
+
 
 --------------------------------------------------------------------------------
 
