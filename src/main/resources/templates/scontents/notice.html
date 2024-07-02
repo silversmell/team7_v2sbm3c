@@ -9,6 +9,7 @@
             loadData();
         });
         function loadData(){
+        	let msg ="";
         	let url='http://localhost:9095/api/notification/read/'+'[[${session.acc_no}]]';
         	console.log(url);
         	fetch(url,{
@@ -26,11 +27,21 @@
         				let sender = item.sender;
         				let createdAt = item.create_At;
         				let scon_no = item.scon_no;
-        				console.log('Contents:'+ contents + ' Sender:' + sender + ' created_At:'+ createdAt +' Scon No:'+ scon_no);
-        			})
+        				//console.log('Contents:'+ contents + ' Sender:' + sender + ' created_At:'+ createdAt +' Scon No:'+ scon_no);
+        				let href = 'http://localhost:9093/scontents/read?cate_no=1&scon_no='+scon_no;
+        				msg +="<a href=" +href+ ">"
+        				msg+= sender + "님으로 부터 새로운 답글이 달렸습니다." + "<br>";
+        				msg += "<div>" + "내용: " +contents +"<br>" 
+        				msg+=" time: " + createdAt + "</div></a>";
+        				msg+="<br>";
+        				 document.getElementById('notification-container').innerHTML = msg; // msg를 div에 삽입
+        			}
+        			
+        			)
         		}
-        	})
         	}
+        	)
+        }
         
 
       
@@ -50,6 +61,7 @@
         <div style="width: 100%; word-break: break-all;">
 
 <div style='margin: 0px auto; width: 900px;'>
+<div id="notification-container"></div>
 
     <br>
     <div style="display:flex; align-items: center; flex-direction:row; justify-content: space-between; padding:10px;" > 
@@ -63,22 +75,7 @@
 				<br>
 		
 <div style="display:flex; flex-direction:row; justify-content: space-between;">
-    <div>
-        <span style="font-size:1.5em">데스크 제품 목록</span>
-        
-        <br>
-        <a style="font-size: 1em;" th:href="${url_list0}" th:text="${url_list0}" th:if="${url_list0 != '1'}" >Link1</a><br>
-        <a style="font-size: 1em;" th:href="${url_list1}" th:text="${url_list1}" th:if="${url_list1 != '1'}">Link2</a><br>
-        <a style="font-size: 1em;" th:href="${url_list2}" th:text="${url_list2}"  th:if="${url_list2 != '1'}">Link3</a><br>
-        <a style="font-size: 1em;" th:href="${url_list3}" th:text="${url_list3}"   th:if="${url_list3 != '1'}">Link4</a><br>
-        <a style="font-size: 1em;" th:href="${url_list4}" th:text="${url_list4}"  th:if="${url_list4 != '1'}">Link5</a>
-    </div>
 </div>
-			<br><br>
-			 
-			  <br>
-			  <br>
-			  관련된 글<hr>
 
 </div>
     </div>
