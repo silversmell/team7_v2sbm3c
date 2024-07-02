@@ -1122,7 +1122,7 @@ public class Qna_contentsCont {
    * @param session
    * @return
    */
-  @PostMapping(value="qna_delete_recomment")
+  @PostMapping(value="/qna_delete_recomment")
   @ResponseBody
   public String qna_delete_recomment(@RequestBody Qna_recommentVO qna_recommentVO, HttpSession session) {
     JSONObject obj = new JSONObject();
