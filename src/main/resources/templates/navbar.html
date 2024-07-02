@@ -59,6 +59,10 @@
 					<li class="nav-item" th:if="${session.acc_no != null}">
 						<a class="nav-link" href="/recommend/list" th:text="추천글"></a>
 					</li>
+							<span th:if="${session.acc_no != null}" style="font-size: 25px;">|</span>
+					<li class="nav-item" th:if="${session.acc_no != null}">
+						<a class="nav-link" th:href="@{|/scontents/notice/${session.acc_no}|}" th:text="알림"></a>
+					</li>
 				</ul>
 
 				<!-- right side -->

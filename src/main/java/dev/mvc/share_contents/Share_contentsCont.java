@@ -883,4 +883,10 @@ public class Share_contentsCont {
 		return "scontents/list_by_search_paging";
 
 	}
+	@GetMapping("/notice/{id}")
+	public String notice(@PathVariable("id") int acc_no) {
+		return "/scontents/notice";
+	}
+	
+	
 }

@@ -130,6 +130,13 @@ public interface ReplyProcInter {
 	 */
 	public int like_delete(int scmt_no);
 	
+	/**
+	 * 해당 게시글의 첫번째 댓글
+	 * @param scon_no
+	 * @return
+	 */
+	public int first_scmtno(int scon_no);
+	
 //	/**
 //	 * 댓글 나빠요
 //	 * @param scmt_no

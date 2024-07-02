@@ -210,6 +210,18 @@ public class ReplyCont {
 	  return json.toString();
   }
   
+  @GetMapping("/first_scmtno")
+  @ResponseBody
+  public String first_scmtno(int scon_no) {
+	  System.out.println("first_scmtno로 들어옴");
+	  JSONObject json = new JSONObject();
+	  int cnt =this.replyProc.first_scmtno(scon_no);
+	  System.out.println("scmt_no"+cnt);
+	  json.put("scmt_no", cnt);
+	  return json.toString();
+	  
+  }
+  
   
 }
 

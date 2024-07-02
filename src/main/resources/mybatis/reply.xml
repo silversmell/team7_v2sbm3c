@@ -128,6 +128,17 @@ FROM (
 			where scmt_no=#{scmt_no}
 		</delete>
 		
+		<select id ="first_scmtno" parameterType="int" resultType="int">
+			SELECT scmt_no 
+			FROM 
+			(SELECT scmt_no,rownum as r,scon_no
+			    FROM share_comment
+			    WHERE scon_no=#{scon_no}
+			    ORDER BY scmt_no desc
+		    )
+			where r=1
+		</select>
+		
 		
 		
 		<!--  

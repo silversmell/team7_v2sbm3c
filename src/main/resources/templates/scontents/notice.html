@@ -1,0 +1,98 @@
+<!DOCTYPE html> 
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+<script>
+			
+        document.addEventListener('DOMContentLoaded', function() {
+            // 페이지 로드 시 자동으로 데이터를 불러옴
+            loadData();
+        });
+        function loadData(){
+        	let url='http://localhost:9095/api/notification/read/'+'[[${session.acc_no}]]';
+        	console.log(url);
+        	fetch(url,{
+        		"method":"GET"
+        	})
+        	.then((response) => response.json())
+        	.then((data) =>{
+        		//console.log(data.res);
+        		for(let i = 0;i<data.res.length;i++){
+        			console.log(data.res[i]);
+        		}
+        		if(data.res){
+        			data.res.forEach(item =>{
+        				let contents = item.contents;
+        				let sender = item.sender;
+        				let createdAt = item.create_At;
+        				let scon_no = item.scon_no;
+        				console.log('Contents:'+ contents + ' Sender:' + sender + ' created_At:'+ createdAt +' Scon No:'+ scon_no);
+        			})
+        		}
+        	})
+        	}
+        
+
+      
+    </script>
+
+  <div class='title_line'>
+ 
+    > 알림
+  </div>
+  
+  <div class='menu_line'></div>
+
+  <fieldset class="fieldset_basic">
+    <ul>
+    <div>
+      <li class="li_none">
+        <div style="width: 100%; word-break: break-all;">
+
+<div style='margin: 0px auto; width: 900px;'>
+
+    <br>
+    <div style="display:flex; align-items: center; flex-direction:row; justify-content: space-between; padding:10px;" > 
+       <!-- <div style="margin-left: auto; margin-right:86px;">  -->
+			</div>
+
+     <hr size="10;" style="margin-top:1px; margin-bottom:1px;"> 
+
+    		<br>
+   
+				<br>
+		
+<div style="display:flex; flex-direction:row; justify-content: space-between;">
+    <div>
+        <span style="font-size:1.5em">데스크 제품 목록</span>
+        
+        <br>
+        <a style="font-size: 1em;" th:href="${url_list0}" th:text="${url_list0}" th:if="${url_list0 != '1'}" >Link1</a><br>
+        <a style="font-size: 1em;" th:href="${url_list1}" th:text="${url_list1}" th:if="${url_list1 != '1'}">Link2</a><br>
+        <a style="font-size: 1em;" th:href="${url_list2}" th:text="${url_list2}"  th:if="${url_list2 != '1'}">Link3</a><br>
+        <a style="font-size: 1em;" th:href="${url_list3}" th:text="${url_list3}"   th:if="${url_list3 != '1'}">Link4</a><br>
+        <a style="font-size: 1em;" th:href="${url_list4}" th:text="${url_list4}"  th:if="${url_list4 != '1'}">Link5</a>
+    </div>
+</div>
+			<br><br>
+			 
+			  <br>
+			  <br>
+			  관련된 글<hr>
+
+</div>
+    </div>
+    </div>
+      </li>
+
+      </div>
+    </ul>
+    <br>
+  </fieldset>
+
+
+    <span id='id_msg'></span>  
+
+</div>
+
+</html>
