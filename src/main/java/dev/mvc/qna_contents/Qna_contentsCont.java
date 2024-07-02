@@ -1174,20 +1174,23 @@ public class Qna_contentsCont {
     model.addAttribute("list", list);
     
     for (Qna_dalleVO qna_dalleVO : list) {
-      JSONObject obj = new JSONObject();
-      
-      int dalle_no = qna_dalleVO.getDalle_no();
-      System.out.println("dalle_no: " + dalle_no);
-      map.put("dalle_no", dalle_no);
-      obj.put("dalle_no", dalle_no);
-      
-      String prompts = qna_dalleVO.getPrompt();
-      System.out.println("prompts: "  + prompts);
-      map.put("prompt", prompts);
-      obj.put("prompt", prompts);
-      
-      array.put(obj);
+      if (prompt.equals("한국")) {
+        JSONObject obj = new JSONObject();
+        
+        int dalle_no = qna_dalleVO.getDalle_no();
+        System.out.println("dalle_no: " + dalle_no);
+        map.put("dalle_no", dalle_no);
+        obj.put("dalle_no", dalle_no);
+        
+        String prompts = qna_dalleVO.getPrompt();
+        System.out.println("prompt: "  + prompts);
+        map.put("prompt", prompts);
+        obj.put("prompt", prompts);
+        
+        array.put(obj);
+      }
     }
+    
 
     JSONObject json = new JSONObject(); 
     json.put("res", array);

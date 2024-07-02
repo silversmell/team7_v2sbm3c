@@ -792,5 +792,25 @@ table, th, td {
     padding: 20px;
 }
 
-  
+.suggestions {
+    border: 1px solid #ccc;
+    width: 20%;
+    margin: 0px auto;
+    background-color: white;
+    text-align: left;
+    z-index: 100;
+    position: absolute;
+    left: 5%;
+}
+.suggestion-item {
+    padding: 0px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+}
+.suggestion-item:last-child {
+    border-bottom: none;
+}
+.suggestion-item:hover {
+    background-color: #f0f0f0;
+}
         

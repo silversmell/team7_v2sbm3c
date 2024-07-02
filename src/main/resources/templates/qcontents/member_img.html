@@ -73,7 +73,53 @@
         document.getElementById("prompt").value = "";
         document.getElementById("prompt").focus();
       });
-    }
+      
+      // 실시간 생성어: 키 입력할 때마다 서버에 요청
+      document.getElementById("prompts").addEventListener("keyup", function() { // keydown, keypress: 마지막 문자값 처리 늦음, keyup: "실시간 문자값 반영"
+        let prompts = this.value;
+        console.log(prompts);
+        
+        let panel2 = document.getElementById('panel2');
+        if (prompts.length > 0) {
+          const url = '/qcontents/get_prompt?cate_no=2&prompt=' + prompts;
+          
+          fetch(url, {
+            method: 'GET',
+          })
+          .then((response) => response.json()) // response.json(), response.text()
+          .then((rdata) => {
+            let cnt = 0; // div 갯수
+            
+            rdata.res.forEach(row => {
+              if (cnt < 10) { // 최대 출력 div 10개 이하
+                let div = document.createElement('div');
+                div.className = 'suggestion-item';
+                
+                let simple_prompt = row.prompt.length > 35 ? row.prompt.substring(0, 35) + '...' : row.prompt;
+                
+                div.textContent =`${cnt + 1}) ${simple_prompt}`; // 앞에 번호 추가, 문장이 길면 문장을 짤라서 사용
+                div.addEventListener('click', function () {
+                  alert('dalle_no: ' + row.dalle_no + ' prompt: ' + row.prompt);
+                  // location.href='/qna_list_all?prompt=' + row.prompt;
+                }); // div.addEventListener 종료
+                panel2.appendChild(div);
+                cnt++;
+              }
+
+            }); // forEach 종료
+            
+            if (rdata.res.length > 0) {
+              panel2.style.display = ''; // 출력
+            }
+          });
+        } else { // 사용자가 검색어를 지울 경우 추천 목록 삭제
+          panel2.innerHTML = '';
+          panel2.style.display = 'none';
+        }
+      });
+      
+      
+    } // window.onload 종료
 
     function ai_img(formData, panel, result) {
       confirm(formData + " <= 내용")
@@ -96,16 +142,20 @@
     </aside>
     <div class='menu_line'></div>
     
+  <span id="part_explanation" style="margin-top: 10px; text-align: left; font-size: 20px; ">실시간 인기 생성어</span><br />
+  <input type='text' id='prompts' placeholder="생성어를 입력하세요." autocomplete="off">
+  <div id='panel2' class='suggestions' style='display: none;'></div>
+  <br /><br />
+    
   <textarea id="prompt" name="prompt" style="width: 100%; height: 200px;">
 아래의 규칙에 맞는 이미지를 생성해줘.
 
-ex)
+
 1. 국가: 한국
 2. 컬러: 화이트
 3. 컨셉: 모던
 4. 상황: 개발자 컴퓨터 책상을 정면으로 바라본 구조 이미지 생성해줘.
 5. 제작 유형: 3D로 제작
-
     </textarea><br />
     
     <div style="margin-top: 10px auto; width: 100%; text-align: center;">
