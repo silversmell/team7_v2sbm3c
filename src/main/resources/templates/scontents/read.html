@@ -431,6 +431,7 @@
           msg += "<div style='text-align: right; margin-top: 10px;'>";
           msg += "<br>";
           msg += " <button type='button' id='recomment_create'>  답  글  </button> ";
+          msg += "<button type='button' onclick='setupSSE()'>알람</button>";
           msg += " <button type='button' id='recomment_save' style='display: none;'>  저  장  </button> ";
           msg += " <button type='button' id='recomment_delete' style='display: none;'>  삭  제  </button> ";
           msg += " <button type='button' id='recomment_cancel' style='display: none;'>  취  소  </button> ";
@@ -467,8 +468,11 @@
               .then((response) => response.json())
               .then((data) => {
                 comment_tag.value = "";
+                console.log("create-alaram");
+                setupSSE();
                 //console.log(data['cnt']);
                 recomment_read_form(scmt_no); //대댓글 읽어오기
+                
               });
             }
           });
@@ -589,6 +593,48 @@
         alert('답글 삭제 취소했습니다.');
       }
     }
+    
+function alarm() {
+  console.log("alarm 함수에 들어옴");
+    const url = 'http://localhost:9100/notifications/subscribe/2';
+    
+    fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+     .then((response) => response.json())
+    .then(data => {
+        console.log('네트워크 응답 성공', data['data']);
+        // 원하는 추가 작업을 수행할 수 있습니다.
+    })
+    .catch(error => {
+        console.error('문제 발생:', error);
+    });
+}
+
+function setupSSE() {
+    const url = 'http://localhost:9100/notifications/subscribe/2'; // SSE 엔드포인트 URL
+
+    const eventSource = new EventSource(url);
+              //console.log(eventSource)
+          eventSource.addEventListener("sse", function(event) {
+               console.log(event.data)
+          })
+
+    // 이벤트 핸들러 등록
+    eventSource.onmessage = function(event) {
+      console.log('onmessage 들어옴');
+        console.log('서버에서 이벤트 수신:', event.data);
+        // 받은 데이터를 원하는 방식으로 처리
+    };
+
+    eventSource.onerror = function(event) {
+        console.error('SSE 연결 중 오류가 발생했습니다.', event);
+    };
+
+}
   
     // 대댓글 목록
     function recomment_read_form(scmt_no, acc_no) {
@@ -662,6 +708,7 @@
 		</script>
   
     <script>
+      
 
       function mark() {
         console.log("mark  클릭");

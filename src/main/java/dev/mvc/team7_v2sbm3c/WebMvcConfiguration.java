@@ -1,6 +1,7 @@
 package dev.mvc.team7_v2sbm3c;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -35,6 +36,15 @@ public class WebMvcConfiguration implements WebMvcConfigurer{
         registry.addResourceHandler("/qcontents/storage/**").addResourceLocations("file:///" +  Qcontents.getUploadDir());
         registry.addResourceHandler("/openai/member/storage/**").addResourceLocations("file:///" +  Qcontents.getUploadDirOpenAI());
         registry.addResourceHandler("/qcontents/acc/storage/**").addResourceLocations("file:///" +  Qcontents.getUploadDirAccProfile());
+    }
+    
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                   .allowedOriginPatterns("*")
+                   .allowedMethods("GET", "POST", "PUT", "DELETE")
+                   .allowedHeaders("*")
+                   .allowCredentials(true);
     }
  
 }
