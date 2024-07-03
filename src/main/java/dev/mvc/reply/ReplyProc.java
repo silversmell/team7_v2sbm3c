@@ -138,5 +138,11 @@ public class ReplyProc implements ReplyProcInter {
 		return cnt;
 	}
 
+	@Override
+	public int first_scmtno(int scon_no) {
+		int scmtno = this.replyDAO.first_scmtno(scon_no);
+		return scmtno;
+	}
+
 
 }

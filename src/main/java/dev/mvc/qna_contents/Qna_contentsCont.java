@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -43,6 +44,7 @@ import dev.mvc.tool.Tool;
 import dev.mvc.tool.Upload;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import oracle.jdbc.proxy.annotation.Post;
 
 
 @RequestMapping("/qcontents")
@@ -244,6 +246,7 @@ public class Qna_contentsCont {
     model.addAttribute("categoryVO", categoryVO);
 
     word = Tool.checkNull(word).trim();
+    
 
     HashMap<String, Object> map = new HashMap<>();
     map.put("cate_no", cate_no);
@@ -298,11 +301,10 @@ public class Qna_contentsCont {
     
     return "qcontents/list_by_qna_search_paging"; // /templates/qcontents/list_by_qna_search_paging.html
   }
-
   
   /**
    * 질문글 조회
-   * http://localhost:9093/qcontents/qna_read?cate_no=2
+   * http://localhost:9093/qcontents/qna_read?cate_no=2&qcon_no=31&now_page=1
    * @param model
    * @param cate_no
    * @param qcon_no
@@ -843,7 +845,6 @@ public class Qna_contentsCont {
     return json.toString();
   }
   
-  
   /**
    * 이미지 생성 AI
    * http://localhost:9093/qcontents/member_img
@@ -1122,7 +1123,7 @@ public class Qna_contentsCont {
    * @param session
    * @return
    */
-  @PostMapping(value="qna_delete_recomment")
+  @PostMapping(value="/qna_delete_recomment")
   @ResponseBody
   public String qna_delete_recomment(@RequestBody Qna_recommentVO qna_recommentVO, HttpSession session) {
     JSONObject obj = new JSONObject();
@@ -1142,7 +1143,65 @@ public class Qna_contentsCont {
     return obj.toString();
   }
   
+  /**
+   * 댓글 요약 서비스 AI
+   * http://localhost:9093/qcontents/summary
+   * @param session
+   * @return
+   */
+  @GetMapping(value="/summary")
+  public String summary(HttpSession session) {
+    
+    return "qcontents/summary";
+  }
+  
+  /**
+   * 실시간 프롬포트 생성어
+   * @param session
+   * @return
+   */
+  @GetMapping(value="/get_prompt") // http://localhost:9093/qcontents/get_prompt?cate_no=2&prompt=한국
+  @ResponseBody // post, get 상관없이 응답 받는 페이지에 필요한 필수
+  public String get_prompt(HttpSession session, Model model,
+                                  @RequestParam(name = "cate_no", defaultValue = "2") int cate_no, 
+                                  @RequestParam(name = "prompt", defaultValue = "") String prompt) {
+    
+    HashMap<String, Object> map = new HashMap<>();
+    map.put("prompt", prompt);
+    
+    JSONArray array = new JSONArray();
 
+    ArrayList<Qna_dalleVO> list = this.qna_contentsProc.get_prompt(map);
+    model.addAttribute("list", list);
+    
+    for (Qna_dalleVO qna_dalleVO : list) {
+        JSONObject obj = new JSONObject();
+        
+        int dalle_no = qna_dalleVO.getDalle_no();
+        System.out.println("dalle_no: " + dalle_no);
+        map.put("dalle_no", dalle_no);
+        obj.put("dalle_no", dalle_no);
+        
+        String prompts = qna_dalleVO.getPrompt();
+        System.out.println("prompt: "  + prompts);
+        map.put("prompt", prompts);
+        obj.put("prompt", prompts);
+        
+        String dalle_origin = qna_dalleVO.getDalle_origin();
+        System.out.println("dalle_origin: "  + dalle_origin);
+        map.put("dalle_origin", dalle_origin);
+        obj.put("dalle_origin", dalle_origin);
+        
+        array.put(obj);
+    }
+    
+    JSONObject json = new JSONObject(); 
+    json.put("res", array);
+    
+    return json.toString();
+  }
+
+  
   
 }
 

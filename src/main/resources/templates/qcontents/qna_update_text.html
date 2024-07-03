@@ -34,13 +34,15 @@
   <aside class="aside_right">
     <a th:href="@{|/qcontents/qna_create?cate_no=2|}">등록</a>
     <span class='menu_divide'>│</span>
-    <a href="#" th:attr="onclick=|return confirmFile(${memberno}, '${acc_no}', ${qna_contentsVO.qcon_no}, ${now_page}, 2)|">파일 수정</a>
-    <!--<a th:href="@{|/qcontents/qna_update_file/${qna_contentsVO.acc_no}?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}|}">파일 수정</a>   -->
-    <span class='menu_divide'>│</span>
     <a href="#" th:attr="onclick=|return confirmDelete(${memberno}, '${acc_no}', ${qna_contentsVO.qcon_no}, ${now_page}, 2)|">삭제</a>
     <!-- <a th:href="@{|/qcontents/qna_delete?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}&cate_no=2|}">삭제</a>   -->
     <span class='menu_divide'>│</span>
-    <a th:href="@{|/qcontents/qna_list_all?cate_no=2&now_page=${now_page}|}">전체 목록</a>   
+    <a href="#" th:attr="onclick=|return confirmFile(${memberno}, '${acc_no}', ${qna_contentsVO.qcon_no}, ${now_page}, 2)|">파일 수정</a>
+    <!--<a th:href="@{|/qcontents/qna_update_file/${qna_contentsVO.acc_no}?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}|}">파일 수정</a>   -->
+    <span class='menu_divide'>│</span>
+    <a th:href="@{|/qcontents/qna_list_all?cate_no=2&now_page=${now_page}|}">전체 목록</a>
+    <span class='menu_divide'>│</span>
+    <a href="javascript:history.back();">돌아가기</a> 
     <span class='menu_divide'>│</span>
     <a href="javascript:location.reload();">새로고침</a>
   </aside>
@@ -65,13 +67,12 @@
 
     <div>
        <label>패스워드</label>
-       <input type='password' name='qcon_passwd' th:value='1234' required="required" 
-                 class="form-control" style='width: 50%;'>
+       <input type='password' name='qcon_passwd' th:value='1234' required="required" class="form-control" style='width: 50%;'>
     </div>
 
-    <div class="content_body_bottom">
-      <button type="submit" class="btn btn-secondary btn-sm">저장</button>
-      <button type="button" onclick="history.back();" class="btn btn-secondary btn-sm">취소</button>
+    <div style="text-align: left;" class="content_body_bottom">
+      <button type="submit" class="btn btn-info btn-sm">저장</button>
+      <button type="button" onclick="history.back();" class="btn btn-info btn-sm">취소</button>
     </div>
  
   </form>

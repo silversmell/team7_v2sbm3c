@@ -99,8 +99,12 @@ SELECT COUNT(adm_no) as cnt
 FROM admin
 WHERE adm_id='admintest' AND adm_pw='fS/kjO+fuEKk06Zl7VYMhg==';
 
--- READ: List
-SELECT adm_no, adm_id,adm_pw, adm_name, adm_date, adm_grade FROM admin ORDER BY adm_no ASC;
+--------------------------------------------------------------------------------
+
+-- 관리자 전체 조회 
+SELECT adm_no, cate_no, adm_id, adm_pw, adm_name, adm_email, adm_tel, adm_date
+FROM admin
+ORDER BY cate_no, adm_no ASC;
 
 -- READ         
 SELECT adm_no, adm_id,adm_pw, adm_name, adm_date, adm_grade

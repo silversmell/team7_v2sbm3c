@@ -64,6 +64,21 @@ public interface AdminDAOInter {
 	public int recordLog(AdminLogVO adminLogVO);
 	
 	/**
+	 * 관리자 목록
+	 * 
+	 * @return
+	 */
+	public ArrayList<AdminVO> list();
+	
+	/**
+	 * 관리자 검색
+	 * 
+	 * @param map
+	 * @return
+	 */
+	public ArrayList<AdminVO> searchList(Map<String, Object> map);
+	
+	/**
 	 * 관리자 로그 전체 조회
 	 * 
 	 * @return
@@ -100,6 +115,14 @@ public interface AdminDAOInter {
 	 * @return
 	 */
 	public ArrayList<AccountVO> accList();
+	
+	/**
+	 * 회원 검색
+	 * 
+	 * @param map
+	 * @return
+	 */
+	public ArrayList<AccountVO> accSearchList(Map<String, Object> map);
 	
 	/**
 	 * 회원 로그 전체 조회

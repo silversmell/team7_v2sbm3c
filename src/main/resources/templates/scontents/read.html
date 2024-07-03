@@ -37,6 +37,7 @@
 						}
 					});
 					
+				
 					btn_create_tag.addEventListener('click',() =>{
 					let content = content_tag.value.trim();
 						if(content.length == 0){
@@ -64,6 +65,30 @@
                     
 					        	content_tag.value = ""; // 댓글 입력 필드 초기화
 					        });
+					        let scon_no = "[[${scontentsVO.scon_no}]]";
+					        let url = '/reply/first_scmtno?scon_no='+scon_no;
+					        console.log(url);
+					        fetch(url,{
+					        		"method": "GET", 
+					        })
+					        .then((response) => response.json())
+					        .then((data)=>{
+					        	console.log(data['scmt_no']);
+					        	let url = 'http://localhost:9095/api/notification/comment/' + data['scmt_no'];
+					        	fetch(url, {
+					        	    method: "GET"
+					        	})
+					        	.then(response => {
+					        	    if (response.ok) {
+					        	        console.log("응답됨");
+					        	    } else {
+					        	        console.error('응답 에러:', response.statusText);
+					        	    }
+					        	})
+					        	.catch(error => {
+					        	    console.error('Fetch 에러:', error);
+					        	});
+					        })
 					        //result_animation_tag.innerHTML = '<img src="/static/images/progress.gif" style="width: 15%; margin-top: 0px;">';
 						}
 					});
@@ -777,6 +802,7 @@ function setupSSE() {
         window.location.href = url;
         return true;
       }
+      
     </script>
 
   <div class='title_line'>

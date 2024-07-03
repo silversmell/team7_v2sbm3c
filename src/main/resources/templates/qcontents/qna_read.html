@@ -198,9 +198,10 @@
     function render_comments() {
       let msg = '';
       let cnt = Math.min(reply_data.length, reply_now_page * 5);
-  
+    
       for (let i = 0; i < cnt; i++) {
         let row = reply_data[i];
+    
         msg += "<div id='" + row.qcmt_no + "' style='border-bottom: solid 1px #EEEEEE; margin-bottom: 10px; text-align: left;'>";
         msg += "<span style='font-weight: bold; font-size: 16px;'>" + row.acc_id + "</span>";
         if ('[[${qna_contentsVO.acc_no}]]' == row.acc_no) {
@@ -209,9 +210,11 @@
         msg += "<br>";
         msg += row.qcmt_contents;
         msg += "<br>";
+    
+    
         msg += "<span style='font-size: 13px;'>" + changeToDate(row.qcmt_date) + "</span>"; // changeToDate 함수 호출하여 시간 변환
         msg += " &nbsp;";
-  
+    
         // 답글 보이기/숨기기 처리
         msg += "<a style='font-size: 13px;' href='javascript:qna_read_recomment(" + row.qcmt_no + ", \"" + row.acc_no + "\")'>답글</a>";
         if ('[[${session.acc_no}]]' == row.acc_no) {
@@ -225,12 +228,13 @@
           msg += "<a style='font-size: 13px;' href='javascript:qna_delete_comment(" + row.qcmt_no + ")'>삭제</a><br>";
         }
         msg += "</div>";
-  
+    
         msg += "<div id='recomment_id" + row.qcmt_no + "' style='display: none; margin-left: 20px; text-align: left;'></div>";
       }
-  
+      
       document.getElementById("reply_list").innerHTML = msg;
     }
+
     
    // 최신순/작성순 클릭에 따라 밑줄 토글 함수
    function underline(option) {
@@ -712,7 +716,6 @@
     }
   }
 
-
   
   </script>
 </head>
@@ -726,17 +729,18 @@
   <aside class="aside_right">
     <a th:href="@{|/qcontents/qna_create?cate_no=2|}">등록</a>
     <span class='menu_divide'>│</span>
-    
-    <a href="#" th:attr="onclick=|return confirmUpdate(${memberno}, '${acc_no}', ${qna_contentsVO.qcon_no}, ${now_page}, 2)|">글 수정</a>
-    <!-- <a th:attr="@{|/qcontents/qna_update_text/${qna_contentsVO.acc_no}?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}&cate_no=2|}">글 수정</a>   -->
+    <a href="#" th:attr="onclick=|return confirmDelete(${memberno}, '${acc_no}', ${qna_contentsVO.qcon_no}, ${now_page}, 2)|">삭제</a>
+    <!-- <a th:href="@{|/qcontents/qna_delete?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}&cate_no=2|}">삭제</a>   -->
     <span class='menu_divide'>│</span>
      <a href="#" th:attr="onclick=|return confirmFile(${memberno}, '${acc_no}', ${qna_contentsVO.qcon_no}, ${now_page}, 2)|">파일 수정</a>
     <!--<a th:href="@{|/qcontents/qna_update_file/${qna_contentsVO.acc_no}?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}|}">파일 수정</a>   -->
     <span class='menu_divide'>│</span>
-    <a href="#" th:attr="onclick=|return confirmDelete(${memberno}, '${acc_no}', ${qna_contentsVO.qcon_no}, ${now_page}, 2)|">삭제</a>
-    <!-- <a th:href="@{|/qcontents/qna_delete?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}&cate_no=2|}">삭제</a>   -->
+    <a href="#" th:attr="onclick=|return confirmUpdate(${memberno}, '${acc_no}', ${qna_contentsVO.qcon_no}, ${now_page}, 2)|">글 수정</a>
+    <!-- <a th:attr="@{|/qcontents/qna_update_text/${qna_contentsVO.acc_no}?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}&cate_no=2|}">글 수정</a>   -->
     <span class='menu_divide'>│</span>
-    <a th:href="@{|/qcontents/qna_list_all?cate_no=2&now_page=${now_page}|}">돌아가기</a>   
+    <a th:href="@{|/qcontents/qna_list_all?cate_no=2&now_page=${now_page}|}">전체 목록</a>   
+    <span class='menu_divide'>│</span>
+    <a href="javascript:history.back();">돌아가기</a> 
     <span class='menu_divide'>│</span>
     <a href="javascript:location.reload();">새로고침</a>
   </aside>

@@ -1,22 +1,20 @@
 <link href="/css/style.css" rel="Stylesheet" type="text/css">
+<script>
+    function openRecom() {
+      let acc_no = '[[${session.acc_no}]]';
+
+      var url = 'http://192.168.12.157:5000/recom?acc_no=' + acc_no; // 배포할 때 AWS IP로 변경
+      var win = window.open(url, '추천 받기', 'width=1000px, height=1000px');
+
+      var x = (screen.width - 450) / 2;
+      var y = (screen.heigth - 450) / 2;
+
+      win.moveTo(x, y);
+    }
+    
+</script>
+  
 <div th:fragment="navbarFragment">
-
-	<script>
-		function openRecom() {
-			let acc_no = '[[${session.acc_no}]]';
-
-			var url = 'http://192.168.12.157:5000/recom?acc_no=' + acc_no; // 배포할 때 AWS IP로 변경
-			var win = window.open(url, '추천 받기', 'width=1000px, height=1000px');
-
-			var x = (screen.width - 450) / 2;
-			var y = (screen.heigth - 450) / 2;
-
-			win.moveTo(x, y);
-		}
-	</script>
-
-	<div class="top_menu_img">
-	</div>
 	<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
 		<div class="container-fluid">
 
@@ -51,9 +49,17 @@
 					<li class="nav-item">
 						<a class="nav-link" th:href="@{|/scontents/rank?cate_no=4|}" th:text="랭킹게시판"></a>
 					</li>
+					<span style="font-size: 25px;">|</span>
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{|http://192.168.12.160:3000/issue/find_all|}" th:text="공지사항"></a>
+					</li>
 					<span th:if="${session.acc_no != null}" style="font-size: 25px;">|</span>
 					<li class="nav-item" th:if="${session.acc_no != null}">
 						<a class="nav-link" href="/recommend/list" th:text="추천글"></a>
+					</li>
+							<span th:if="${session.acc_no != null}" style="font-size: 25px;">|</span>
+					<li class="nav-item" th:if="${session.acc_no != null}">
+						<a class="nav-link" th:href="@{|/scontents/notice/${session.acc_no}|}" th:text="알림"></a>
 					</li>
 				</ul>
 
@@ -73,11 +79,17 @@
 							<a class="nav-link" th:href="@{|/account/read?acc_no=${session.acc_no}|}"
 								style="display: inline-block;">마이페이지</a>
 						</span>
+						
+						
 						<span th:if="${session.acc_no != null}">
 							<a class="nav-link" href="javascript: openRecom();" style="display: inline-block;">
 								추천 받기
 							</a>
 						</span>
+            <span th:if="${session.acc_no != null}">
+              <a class="nav-link" th:href="@{|http://192.168.12.159:9093/qcontents/summary|}" th:text="@{|요약 서비스 AI|}"
+                style="display: inline-block;"></a>
+            </span>
 						<span th:if="${session.acc_no != null}">
 							<button type="button"
 								th:attr="onclick=|location.href='http://192.168.12.159:9093/qcontents/member_img'|">
@@ -92,12 +104,6 @@
 			<!-- 회원 메뉴 종료 -->
 
 			<!-- 관리자 메뉴 시작 -->
-			<a class="navbar-brand" href="/admin" th:if="${currentUrl != null and currentUrl.contains('admin')}">데스크 투어</a>
-			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
-				aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-			
 			<div class="collapse navbar-collapse" id="navbarNavDropdown"
 				th:if="${currentUrl != null and currentUrl.contains('admin')}">
 
@@ -118,7 +124,6 @@
 									목록</a></li>
 						</ul>
 					</li>
-
 
 					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
@@ -141,11 +146,7 @@
 							<li class="nav-item"><a class="nav-link" href="/admin/log_list">관리자 로그 기록</a></li>
 						</ul>
 					</li>
-
-
-
 				</ul>
-
 
 				<!-- right side -->
 				<ul class="navbar-nav ms-auto">
@@ -167,5 +168,6 @@
 			</div>
 			<!-- 관리자 메뉴 종료 -->
 	</nav>
+	
 
 </div>

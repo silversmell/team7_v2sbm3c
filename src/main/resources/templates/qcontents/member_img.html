@@ -5,6 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <link href="/css/style.css" rel="stylesheet" type="text/css">
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -19,9 +21,6 @@
         if (acc_no == '') {
           alert('로그인해야 이미지를 생성할 수 있습니다.');
           location.href = "/account/login?url";
-        } else {
-          // alert('로그인 됨');
-          // content_tag.focus();
         }
 
         let formData = new FormData();
@@ -29,11 +28,12 @@
         formData.append("acc_no", acc_no);
 
         let panel = document.getElementById("panel");
-        panel.innerHTML = '<img src="/images/progress.gif" style="width: 5%; margin-top: 20px;">';
+        panel.innerHTML = '<img src="/images/progress.gif" style="width: 5%; margin-top 0px auto;">';
         panel.style.display = "block";
 
         let result = document.getElementById("result");
         let download = document.getElementById("download");
+        
         // result.style.display = "none";  // 태그 감추기
 
         /*
@@ -49,12 +49,13 @@
         })
         .then((response) => response.json())
         .then((data) => { // OpenAI에서 생성된 이미지 출력
-          alert('이미지가 생성되었습니다! \n생성된 파일 경로: ' + data.file_name);
+          // alert('이미지가 생성되었습니다! \n\n생성된 파일 경로: ' + data.file_name);
           // return;
+          // alert('이미지가 생성되었습니다!');
           
           result.innerHTML = `<img src="${data.file_name}" style="width: 100%;">`;
           panel.style.display = "none"; // 진행 animation 숨기기
-          download.style.display = "true";
+          download.style.display = "";
           
           // 다운로드 버튼 코드
           download.style.display = "inline-block";
@@ -72,40 +73,117 @@
         document.getElementById("prompt").value = "";
         document.getElementById("prompt").focus();
       });
-    }
+      
+      // 실시간 생성어: 키 입력할 때마다 서버에 요청
+      document.getElementById("prompts").addEventListener("keyup", function () { // keydown, keypress: 마지막 문자값 처리 늦음, keyup: "실시간 문자값 반영"
+        let prompts = this.value;
+        console.log(prompts);
+
+        let panel2 = document.getElementById('panel2');
+
+        // 입력된 값이 변경될 때마다 panel2의 내용을 초기화
+        panel2.innerHTML = '';
+
+        if (prompts.length > 0) {
+          const url = '/qcontents/get_prompt?cate_no=2&prompt=' + prompts;
+
+          fetch(url, {
+            method: 'GET',
+          })
+          .then((response) => response.json()) // response.json(), response.text()
+          .then((rdata) => {
+            let cnt = 0; // div 갯수
+
+            rdata.res.forEach(row => {
+              if (cnt < 10) { // 최대 출력 div 10개 이하
+                let div = document.createElement('div');
+                div.className = 'suggestion-item';
+
+                let simple_prompt = row.prompt.length > 50 ? row.prompt.substring(0, 50) + '...' : row.prompt;
+                
+                let simple_dalle_origin_cnt = row.dalle_origin.length;
+                let simple_dalle_origin = row.dalle_origin.substring(20, simple_dalle_origin_cnt);
+                // console.log(simple_dalle_origin)
+  
+                div.textContent = `${cnt + 1}) ${simple_prompt}`; // 앞에 번호 추가, 문장이 길면 문장을 짤라서 사용
+                div.addEventListener('click', function () {
+                  // 클릭한 생성어로 생성어 입력됨
+                  document.getElementById('prompt').textContent = row.prompt;
+                  panel2.style.display = 'none';
+                  
+                  alert('dalle_no: ' + row.dalle_no + '\nprompt: ' + row.prompt + '\ndalle_origin: ' + simple_dalle_origin);
+                  //location.href='/qna_list_all?cate_no=2&word=' + row.prompt;
+                }); // div.addEventListener 종료
+                panel2.appendChild(div);
+                cnt++;
+              }
+            }); // forEach 종료
+
+            if (rdata.res.length > 0) {
+              panel2.style.display = ''; // 출력
+            } else {
+              panel2.style.display = 'none';
+            }
+          });
+        } else { // 사용자가 검색어를 지울 경우 추천 목록 삭제
+          panel2.style.display = 'none';
+        }
+      });
+
+      
+    } // window.onload 종료
 
     function ai_img(formData, panel, result) {
       confirm(formData + " <= 내용")
     }
-
-
-
+    
 
   </script>
 </head>
 
 <body>
   <div style="margin: 10px auto; width: 90%;">
-    <h4>나만의 이미지 생성하기(AI 서비스)</h4>
-    <textarea id="prompt" name="prompt" style="width: 100%; height: 200px;">
-      아래의 규칙에 맞는 이미지를 생성해줘.
+    <span style="font-size: 20px;" class="title_line_text">이미지 생성 서비스 AI </span>
+    <div class='title_line'></div>
+    
+    <aside class="aside_right">
+      <a th:href="@{http://localhost:9093/}">홈</a>
+      <span class="menu_devide">│</span>
+      <a href="javascript:history.back();">돌아가기</a>
+      <span class="menu_devide">│</span>
+      <a href="javascript:location.reload();">새로고침</a>
+    </aside>
+    <div class='menu_line'></div>
+    
+    <div style="text-align: left;">
+        <span id="prompts_explanation" style="margin-top: 10px; font-size: 20px; ">실시간 생성어</span>
+        <span style="margin-left: 0px; font-size: 15px; color: grey;">(*다른 사용자들이 사용한 생성어)</span>
+        <span id="part_explanation" style="margin-left: 0px; margin-top: 10px; font-size: 20px; ">검색 및 호출</span><br />
+        <input type='text' id='prompts' placeholder="찾고싶은 키워드가 들어간 생성어 검색란" style="width: 28%;" autocomplete="off">
+        <div id='panel2' class='suggestions' style='display: none;'></div>
+        <br /><br />
+    </div>
+    
+  <textarea id="prompt" name="prompt" style="width: 100%; height: 200px;">
+아래의 규칙에 맞는 이미지를 생성해줘.
 
-      1. 국가: 한국
-      2. 컬러: 화이트
-      3. 컨셉: 모던
-      4. 상황: 개발자 컴퓨터 책상을 정면으로 바라본 구조 이미지 생성해줘.
-      5. 제작 유형: 3D로 제작
 
-    </textarea> <br />
-
+1. 국가: 한국
+2. 컬러: 화이트
+3. 컨셉: 모던
+4. 상황: 개발자 컴퓨터 책상을 정면으로 바라본 구조 이미지 생성해줘.
+5. 제작 유형: 3D로 제작
+    </textarea><br />
+    
     <div style="margin-top: 10px auto; width: 100%; text-align: center;">
       <button id="send" class="btn btn-info btn-sm">나의 이미지 생성하기</button>
       <button id="clear" class="btn btn-info btn-sm">입력 내용 삭제하기</button>
       <button id="download" class="btn btn-info btn-sm">다운로드</button>
-      <button type="button" th:attr="onclick=|location.href='http://localhost:9093/'|" class="btn btn-info btn-sm">나가기</button><br />
     </div>
-    <div id="result" style="margin: 10px auto; width: 40%; text-align: center;"></div>
-    <div id="panel" style="margin-top: 10px; width: 100%; height: 50px; text-align: center; display: none;"></div>
+    
+    <div id="result" style="margin: 5px auto; width: 40%; text-align: center;"></div>
+    <div id="panel" style="margin: 5px auto; margin-bottom: 20px; width: 100%; height: 50px; text-align: center; display: none;"></div><br />
+    
   </div>
 </body>
 
