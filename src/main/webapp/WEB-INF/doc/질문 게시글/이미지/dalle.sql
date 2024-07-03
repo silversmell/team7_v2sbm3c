@@ -80,6 +80,8 @@ SELECT dalle_no, acc_no, prompt, dalle_origin, dalle_thumb, dalle_size, ddate
 FROM dalle
 WHERE prompt LIKE '%한국%';
 
+select * from dalle;
+
 -- 원본명 바꾸기
 UPDATE dalle
 SET dalle_origin='dalle.jpg'

@@ -2,12 +2,6 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<script>
-  window.onload = function() {
-
-  } // window.onlaod 종료.
-  
-</script>
 
 <body>
   <div th:fragment="list_search_fragment"> <!-- <div th:replace=... -->
@@ -15,9 +9,6 @@
       <form name="frm_search" method="get" action="/qcontents/qna_list_all">
         <input type="hidden" name="cate_no" th:value="${categoryVO.cate_no}"> <!-- cate_no 값 가져오기 -->
         <input type="hidden" name="now_page" th:value="${now_page}">
-         
-         <span class="aside_left" id="popular_text">생성어 </span>
-        
   
         <input type="text" name="word" id="word" th:value="${word}" style="height: 30px;" placeholder="게시글 검색란">
         <button type='submit' class='btn btn-secondary btn-sm'

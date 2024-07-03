@@ -121,6 +121,10 @@
     float: left;
     font-size: 1.3em;
   }
+  
+  .aside_left:hover {
+
+  }
 
   /** 본래의 A 태그의 크기를 제거하고 부모의 가변 크기를 사용 */
   .aside_left A {
@@ -132,6 +136,10 @@
     font-size: 15px;
     margin-bottom: 20px;
     /* 부모 글꼴 크기 대비 90%로 출력 */
+  }
+  
+  .aside_right:hover {
+    
   }
 
   .aside_right A {

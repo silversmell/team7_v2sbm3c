@@ -108,6 +108,7 @@
 
                   // 클릭한 생성어로 생성어 입력됨
                   document.getElementById('prompt').textContent = row.prompt;
+                  panel2.style.display = 'none';
                 }); // div.addEventListener 종료
                 panel2.appendChild(div);
                 cnt++;
@@ -153,7 +154,7 @@
     <div class='menu_line'></div>
     
   <span id="part_explanation" style="margin-top: 10px; text-align: left; font-size: 20px; ">실시간 생성어 검색 및 호출</span><br />
-  <input type='text' id='prompts' placeholder="핵심 생성어를 입력하세요." style="width: 22%;" autocomplete="off">
+  <input type='text' id='prompts' placeholder="유사한 생성어 호출 가능합니다." style="width: 22%;" autocomplete="off">
   <div id='panel2' class='suggestions' style='display: none;'></div>
   <br /><br />
     
