@@ -129,14 +129,18 @@ FROM (
 		</delete>
 		
 		<select id ="first_scmtno" parameterType="int" resultType="int">
-			SELECT scmt_no 
-			FROM 
-			(SELECT scmt_no,rownum as r,scon_no
-			    FROM share_comment
-			    WHERE scon_no=#{scon_no}
-			    ORDER BY scmt_no desc
-		    )
-			where r=1
+        SELECT scmt_no, scmt_comment, r
+        FROM (
+            SELECT scmt_no, scmt_comment, rownum as r
+            FROM (
+                SELECT scmt_no, scmt_comment
+                FROM share_comment
+                WHERE scon_no = #{scon_no}
+                ORDER BY scmt_no DESC
+            )
+        )
+        where r = 1
+        ORDER BY r ASC
 		</select>
 		
 		
