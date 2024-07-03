@@ -104,10 +104,10 @@
                 div.textContent = `${cnt + 1}) ${simple_prompt}`; // 앞에 번호 추가, 문장이 길면 문장을 짤라서 사용
                 div.addEventListener('click', function () {
                   // alert('dalle_no: ' + row.dalle_no + '\nprompt: ' + row.prompt);
-                  location.href='/qna_list_all?cate_no=2&word=' + row.prompt;
+                  // location.href='/qna_list_all?cate_no=2&word=' + row.prompt;
 
                   // 클릭한 생성어로 생성어 입력됨
-                  // document.getElementById('prompt').textContent = row.prompt;
+                  document.getElementById('prompt').textContent = row.prompt;
                 }); // div.addEventListener 종료
                 panel2.appendChild(div);
                 cnt++;
