@@ -99,16 +99,20 @@
                 let div = document.createElement('div');
                 div.className = 'suggestion-item';
 
-                let simple_prompt = row.prompt.length > 32 ? row.prompt.substring(0, 32) + '...' : row.prompt;
-
+                let simple_prompt = row.prompt.length > 50 ? row.prompt.substring(0, 50) + '...' : row.prompt;
+                
+                let simple_dalle_origin_cnt = row.dalle_origin.length;
+                let simple_dalle_origin = row.dalle_origin.substring(20, simple_dalle_origin_cnt);
+                // console.log(simple_dalle_origin)
+  
                 div.textContent = `${cnt + 1}) ${simple_prompt}`; // 앞에 번호 추가, 문장이 길면 문장을 짤라서 사용
                 div.addEventListener('click', function () {
-                  // alert('dalle_no: ' + row.dalle_no + '\nprompt: ' + row.prompt);
-                  // location.href='/qna_list_all?cate_no=2&word=' + row.prompt;
-
                   // 클릭한 생성어로 생성어 입력됨
                   document.getElementById('prompt').textContent = row.prompt;
                   panel2.style.display = 'none';
+                  
+                  alert('dalle_no: ' + row.dalle_no + '\nprompt: ' + row.prompt + '\ndalle_origin: ' + simple_dalle_origin);
+                  //location.href='/qna_list_all?cate_no=2&word=' + row.prompt;
                 }); // div.addEventListener 종료
                 panel2.appendChild(div);
                 cnt++;
@@ -142,8 +146,6 @@
     <span style="font-size: 20px;" class="title_line_text">이미지 생성 서비스 AI </span>
     <div class='title_line'></div>
     
-    <span class="aside_left" id="popular"></span>
-    
     <aside class="aside_right">
       <a th:href="@{http://localhost:9093/}">홈</a>
       <span class="menu_devide">│</span>
@@ -153,10 +155,14 @@
     </aside>
     <div class='menu_line'></div>
     
-  <span id="part_explanation" style="margin-top: 10px; text-align: left; font-size: 20px; ">실시간 생성어 검색 및 호출</span><br />
-  <input type='text' id='prompts' placeholder="유사한 생성어 호출 가능합니다." style="width: 22%;" autocomplete="off">
-  <div id='panel2' class='suggestions' style='display: none;'></div>
-  <br /><br />
+    <div style="text-align: left;">
+        <span id="prompts_explanation" style="margin-top: 10px; font-size: 20px; ">실시간 생성어</span>
+        <span style="margin-left: 8px; font-size: 15px; color: grey;">(*다른 사용자들이 사용한 생성어)</span>
+        <span id="part_explanation" style="margin-left: 8px; margin-top: 10px; font-size: 20px; ">검색 및 호출</span><br />
+        <input type='text' id='prompts' placeholder="찾고싶은 키워드가 들어간 생성어 검색란" style="width: 28%;" autocomplete="off">
+        <div id='panel2' class='suggestions' style='display: none;'></div>
+        <br /><br />
+    </div>
     
   <textarea id="prompt" name="prompt" style="width: 100%; height: 200px;">
 아래의 규칙에 맞는 이미지를 생성해줘.

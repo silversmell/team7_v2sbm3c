@@ -801,7 +801,7 @@ table, th, td {
 
 .suggestions {
     border: 1px solid #ccc;
-    width: 20%;
+    width: 26%;
     margin: 0px auto;
     background-color: white;
     text-align: left;
@@ -809,14 +809,17 @@ table, th, td {
     position: absolute;
     left: 5%;
 }
+
 .suggestion-item {
     padding: 0px;
     border-bottom: 1px solid #eee;
     cursor: pointer;
 }
+
 .suggestion-item:last-child {
     border-bottom: none;
 }
+
 .suggestion-item:hover {
     background-color: #f0f0f0;
 }

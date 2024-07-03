@@ -44,6 +44,7 @@ import dev.mvc.tool.Tool;
 import dev.mvc.tool.Upload;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import oracle.jdbc.proxy.annotation.Post;
 
 
 @RequestMapping("/qcontents")
@@ -303,7 +304,7 @@ public class Qna_contentsCont {
   
   /**
    * 질문글 조회
-   * http://localhost:9093/qcontents/qna_read?cate_no=2
+   * http://localhost:9093/qcontents/qna_read?cate_no=2&qcon_no=31&now_page=1
    * @param model
    * @param cate_no
    * @param qcon_no
@@ -844,7 +845,6 @@ public class Qna_contentsCont {
     return json.toString();
   }
   
-  
   /**
    * 이미지 생성 AI
    * http://localhost:9093/qcontents/member_img
@@ -1187,6 +1187,11 @@ public class Qna_contentsCont {
         map.put("prompt", prompts);
         obj.put("prompt", prompts);
         
+        String dalle_origin = qna_dalleVO.getDalle_origin();
+        System.out.println("dalle_origin: "  + dalle_origin);
+        map.put("dalle_origin", dalle_origin);
+        obj.put("dalle_origin", dalle_origin);
+        
         array.put(obj);
     }
     
@@ -1195,6 +1200,7 @@ public class Qna_contentsCont {
     
     return json.toString();
   }
+
   
   
 }

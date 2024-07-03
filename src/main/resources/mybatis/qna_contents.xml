@@ -468,7 +468,7 @@
   
   <!-- 프롬포트 실시간 인기 생성어 -->
   <select id="get_prompt" resultType="dev.mvc.qna_contents.Qna_dalleVO" parameterType="HashMap">
-      SELECT dalle_no, prompt
+      SELECT dalle_no, prompt, dalle_origin
       FROM dalle
       WHERE UPPER(prompt) LIKE '%' || UPPER(#{prompt}) || '%'
   </select>
