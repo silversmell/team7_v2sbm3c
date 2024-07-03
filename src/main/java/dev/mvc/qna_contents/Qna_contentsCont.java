@@ -245,6 +245,7 @@ public class Qna_contentsCont {
     model.addAttribute("categoryVO", categoryVO);
 
     word = Tool.checkNull(word).trim();
+    
 
     HashMap<String, Object> map = new HashMap<>();
     map.put("cate_no", cate_no);
@@ -1174,7 +1175,6 @@ public class Qna_contentsCont {
     model.addAttribute("list", list);
     
     for (Qna_dalleVO qna_dalleVO : list) {
-      if (prompt.equals("한국")) {
         JSONObject obj = new JSONObject();
         
         int dalle_no = qna_dalleVO.getDalle_no();
@@ -1188,10 +1188,8 @@ public class Qna_contentsCont {
         obj.put("prompt", prompts);
         
         array.put(obj);
-      }
     }
     
-
     JSONObject json = new JSONObject(); 
     json.put("res", array);
     

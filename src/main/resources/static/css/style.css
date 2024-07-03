@@ -745,7 +745,7 @@ table, th, td {
      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
      padding: 20px;
      box-sizing: border-box;
-     
+     border: none 10px;
  }
  .grid-container {
      display: grid;
@@ -786,9 +786,8 @@ table, th, td {
 .right-panel {
     width: 48%;
     background-color: rgb(255, 255, 255);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
     overflow: hidden; /* 내용이 넘칠 때 대비 */
+    border: none 10px;
     padding: 20px;
 }
 

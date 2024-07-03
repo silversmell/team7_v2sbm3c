@@ -75,52 +75,56 @@
       });
       
       // 실시간 생성어: 키 입력할 때마다 서버에 요청
-      document.getElementById("prompts").addEventListener("keyup", function() { // keydown, keypress: 마지막 문자값 처리 늦음, keyup: "실시간 문자값 반영"
+      document.getElementById("prompts").addEventListener("keyup", function () { // keydown, keypress: 마지막 문자값 처리 늦음, keyup: "실시간 문자값 반영"
         let prompts = this.value;
         console.log(prompts);
-        
+
         let panel2 = document.getElementById('panel2');
+
+        // 입력된 값이 변경될 때마다 panel2의 내용을 초기화
+        panel2.innerHTML = '';
+
         if (prompts.length > 0) {
           const url = '/qcontents/get_prompt?cate_no=2&prompt=' + prompts;
-          
+
           fetch(url, {
             method: 'GET',
           })
           .then((response) => response.json()) // response.json(), response.text()
           .then((rdata) => {
             let cnt = 0; // div 갯수
-            let popular = ''; // 클릭한 div의 생성어 저장 변수
-            
+
             rdata.res.forEach(row => {
               if (cnt < 10) { // 최대 출력 div 10개 이하
                 let div = document.createElement('div');
                 div.className = 'suggestion-item';
-                
-                let simple_prompt = row.prompt.length > 35 ? row.prompt.substring(0, 35) + '...' : row.prompt;
-                
-                div.textContent =`${cnt + 1}) ${simple_prompt}`; // 앞에 번호 추가, 문장이 길면 문장을 짤라서 사용
+
+                let simple_prompt = row.prompt.length > 32 ? row.prompt.substring(0, 32) + '...' : row.prompt;
+
+                div.textContent = `${cnt + 1}) ${simple_prompt}`; // 앞에 번호 추가, 문장이 길면 문장을 짤라서 사용
                 div.addEventListener('click', function () {
-                  alert('dalle_no: ' + row.dalle_no + '\nprompt: ' + row.prompt);
-                  // location.href='/qna_list_all?prompt=' + row.prompt;
-                  
-                  popular = row.prompt;
+                  // alert('dalle_no: ' + row.dalle_no + '\nprompt: ' + row.prompt);
+                  location.href='/qna_list_all?cate_no=2&word=' + row.prompt;
+
+                  // 클릭한 생성어로 생성어 입력됨
+                  // document.getElementById('prompt').textContent = row.prompt;
                 }); // div.addEventListener 종료
                 panel2.appendChild(div);
                 cnt++;
               }
-
             }); // forEach 종료
-            
+
             if (rdata.res.length > 0) {
               panel2.style.display = ''; // 출력
+            } else {
+              panel2.style.display = 'none';
             }
           });
         } else { // 사용자가 검색어를 지울 경우 추천 목록 삭제
-          panel2.innerHTML = '';
           panel2.style.display = 'none';
         }
       });
-      
+
       
     } // window.onload 종료
 
@@ -136,6 +140,9 @@
   <div style="margin: 10px auto; width: 90%;">
     <span style="font-size: 20px;" class="title_line_text">이미지 생성 서비스 AI </span>
     <div class='title_line'></div>
+    
+    <span class="aside_left" id="popular"></span>
+    
     <aside class="aside_right">
       <a th:href="@{http://localhost:9093/}">홈</a>
       <span class="menu_devide">│</span>
@@ -145,8 +152,8 @@
     </aside>
     <div class='menu_line'></div>
     
-  <span id="part_explanation" style="margin-top: 10px; text-align: left; font-size: 20px; ">실시간 인기 생성어</span><br />
-  <input type='text' id='prompts' placeholder="생성어를 입력하세요." autocomplete="off">
+  <span id="part_explanation" style="margin-top: 10px; text-align: left; font-size: 20px; ">실시간 생성어 검색 및 호출</span><br />
+  <input type='text' id='prompts' placeholder="핵심 생성어를 입력하세요." style="width: 22%;" autocomplete="off">
   <div id='panel2' class='suggestions' style='display: none;'></div>
   <br /><br />
     
