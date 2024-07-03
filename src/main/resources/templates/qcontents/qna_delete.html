@@ -44,6 +44,8 @@
     <span class='menu_divide'>│</span>
     <a th:href="@{|/qcontents/qna_list_all?cate_no=2&now_page=${now_page}|}">전체 목록</a>   
     <span class='menu_divide'>│</span>
+    <a href="javascript:history.back();">돌아가기</a> 
+    <span class='menu_divide'>│</span>
     <a href="javascript:location.reload();">새로고침</a>
   </aside>
   <div class='menu_line'></div>
@@ -51,21 +53,23 @@
   <fieldset class="fieldset_basic">
     <ul>
 
-        <div style='text-align: left; width: 47%; float: left;'>
+        <div style='text-align: left; width: 100%; float: left;'>
           <br>
           <form name='frm' method='POST' action='/qcontents/qna_delete'>
             <input type="hidden" name="qcon_no" th:value="${qna_contentsVO.qcon_no}">
             <input type="hidden" name="cate_no" th:value="${qna_contentsVO.cate_no}"> <!-- cate_no 데이터 값 가져옴 -->
             <input type="hidden" name="now_page" th:value="${now_page}">
             <div th:each="qna_contentsVO : ${qna_contentsVO}">
-            <span style='font-size: 1.5em;' th:text="${qna_contentsVO.qcon_name}"></span>
-                  
-             <br> 
-             <div style='margin-top: 20px; clear: both;'>
-               <span style="color: #FF0000; font-weight: bold;">삭제를 진행 하시겠습니까? 삭제하시면 복구 할 수 없습니다.</span>
-               <br><br><br>  
-               <button type="submit" class="btn btn-secondary btn-sm">삭제</button>
-               <button type="button" onclick="history.back();" class="btn btn-secondary btn-sm">취소</button>
+              <span style='font-size: 1.5em;' th:text="${qna_contentsVO.qcon_name}"></span>
+                    
+               <br> 
+               <div style='margin-top: 20px; clear: both;'>
+                 <span style="color: #FF0000; font-weight: bold;" >삭제를 진행 하시겠습니까? 삭제하시면 복구 할 수 없습니다.</span>
+                 <br><br><br>
+                 <div style="text-align: left;" class="content_body_bottom">
+                   <button type="submit" class="btn btn-info btn-sm">삭제</button>
+                   <button type="button" onclick="history.back();" class="btn btn-info btn-sm">취소</button>
+                 </div>
               </div>
               </div>  
           </form>

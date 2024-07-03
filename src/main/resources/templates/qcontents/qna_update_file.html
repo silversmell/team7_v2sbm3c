@@ -38,13 +38,15 @@
   <aside class="aside_right">
     <a th:href="@{|/qcontents/qna_create?cate_no=2|}">등록</a>
     <span class='menu_divide'>│</span>
-    <a href="#" th:attr="onclick=|return confirmUpdate(${memberno}, '${acc_no}', ${qna_contentsVO.qcon_no}, ${now_page}, 2)|">글 수정</a>
-    <!-- <a th:attr="@{|/qcontents/qna_update_text/${qna_contentsVO.acc_no}?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}&cate_no=2|}">글 수정</a>   -->
-    <span class='menu_divide'>│</span>
     <a href="#" th:attr="onclick=|return confirmDelete(${memberno}, '${acc_no}', ${qna_contentsVO.qcon_no}, ${now_page}, 2)|">삭제</a>
     <!-- <a th:href="@{|/qcontents/qna_delete?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}&cate_no=2|}">삭제</a>   -->
     <span class='menu_divide'>│</span>
+    <a href="#" th:attr="onclick=|return confirmUpdate(${memberno}, '${acc_no}', ${qna_contentsVO.qcon_no}, ${now_page}, 2)|">글 수정</a>
+    <!-- <a th:attr="@{|/qcontents/qna_update_text/${qna_contentsVO.acc_no}?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}&cate_no=2|}">글 수정</a>   -->
+    <span class='menu_divide'>│</span>
     <a th:href="@{|/qcontents/qna_list_all?cate_no=2&now_page=${now_page}|}">전체 목록</a>   
+    <span class='menu_divide'>│</span>
+    <a href="javascript:history.back();">돌아가기</a> 
     <span class='menu_divide'>│</span>
     <a href="javascript:location.reload();">새로고침</a>
   </aside>
@@ -63,7 +65,7 @@
           </div>
         </tr>
 
-        <div style='text-align: left; width: 47%; float: left;'>
+        <div style='text-align: left; margin-top: 1%; width: 47%; float: left;'>
           <span style='font-size: 1.5em;' th:text="${qna_contentsVO.qcon_name}"></span>
           <br>
           <form name='frm' method='POST' action='/qcontents/qna_update_file' enctype="multipart/form-data">
@@ -74,7 +76,7 @@
             <br><br> 
             변경 이미지 선택<br>  
             <div>
-               <input type='file' class="form-control" name='fnamesMF' placeholder="파일 선택" multiple/>
+               <input type='file' class="form-control" name='fnamesMF' placeholder="파일 선택" style='width: 50%;' multiple="multiple"/>
             </div>
             <br>
             
@@ -85,8 +87,8 @@
             </div>
             
             <div style='margin-top: 20px; clear: both;'>  
-              <button type="submit" class="btn btn-secondary btn-sm">파일 변경 처리</button>
-              <button type="button" onclick="history.back();" class="btn btn-secondary btn-sm">취소</button>
+              <button type="submit" class="btn btn-info btn-sm">파일 변경 처리</button>
+              <button type="button" onclick="history.back();" class="btn btn-info btn-sm">취소</button>
             </div>
             
           </form>
