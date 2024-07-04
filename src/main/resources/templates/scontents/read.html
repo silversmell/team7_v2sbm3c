@@ -54,6 +54,29 @@
 					        })
 					        .then((response) => response.json())
 					        .then((data) =>{
+						        let scon_no = "[[${scontentsVO.scon_no}]]";
+						        let url = '/reply/first_scmtno?scon_no='+scon_no;
+						        console.log(url);
+						        fetch(url,{
+						        		"method": "GET", 
+						        })
+						        .then((response) => response.json())
+						        .then((data)=>{
+						        	console.log(data['scmt_no']);
+						        	let url = 'http://localhost:9095/api/notification/comment/' + data['scmt_no'];
+						        	fetch(url, {
+						        	    method: "GET"
+						        	})
+						        	.then(response => {
+						        	    if (response.ok) {
+						        	        console.log("응답됨");
+						        	    } else {
+						        	        console.error('응답 에러:', response.statusText);
+						        	    }
+						        	})
+						        	.catch(error => {
+						        	    console.error('Fetch 에러:', error);
+						        	});
                     let sortOption = document.getElementById('latestLink').style.textDecoration === 'underline' ? 'latest' : 'asc';
                     if (sortOption === 'latest') {
                       list_by_contentsno_join(); // 최신순으로 댓글 목록 갱신
@@ -65,29 +88,7 @@
                     
 					        	content_tag.value = ""; // 댓글 입력 필드 초기화
 					        });
-					        let scon_no = "[[${scontentsVO.scon_no}]]";
-					        let url = '/reply/first_scmtno?scon_no='+scon_no;
-					        console.log(url);
-					        fetch(url,{
-					        		"method": "GET", 
-					        })
-					        .then((response) => response.json())
-					        .then((data)=>{
-					        	console.log(data['scmt_no']);
-					        	let url = 'http://localhost:9095/api/notification/comment/' + data['scmt_no'];
-					        	fetch(url, {
-					        	    method: "GET"
-					        	})
-					        	.then(response => {
-					        	    if (response.ok) {
-					        	        console.log("응답됨");
-					        	    } else {
-					        	        console.error('응답 에러:', response.statusText);
-					        	    }
-					        	})
-					        	.catch(error => {
-					        	    console.error('Fetch 에러:', error);
-					        	});
+					       
 					        })
 					        //result_animation_tag.innerHTML = '<img src="/static/images/progress.gif" style="width: 15%; margin-top: 0px;">';
 						}
