@@ -304,7 +304,7 @@ public class Qna_contentsCont {
   
   /**
    * 질문글 조회
-   * http://localhost:9093/qcontents/qna_read?cate_no=2&qcon_no=31&now_page=1
+   * http://localhost:9093/qcontents/qna_read?cate_no=2&qcon_no=31&now_page=1&prompt=테스트&dalle_origin=20240704171452_789.jpg
    * @param model
    * @param cate_no
    * @param qcon_no
@@ -314,7 +314,9 @@ public class Qna_contentsCont {
   public String qna_read(Model model, HttpSession session,
                          @RequestParam(name = "cate_no", defaultValue = "2") int cate_no, 
                          @RequestParam(name = "qcon_no") int qcon_no,
-                         @RequestParam(name = "now_page") int now_page) {
+                         @RequestParam(name = "now_page") int now_page,
+                         @RequestParam(name = "prompt", required=false) String prompt,
+                         @RequestParam(name = "dalle_origin", required=false) String dalle_origin) {
 
 	  
       if (this.accountProc.isMember(session)) {
@@ -367,8 +369,10 @@ public class Qna_contentsCont {
           model.addAttribute("now_page", now_page);
           model.addAttribute("user_name", user_name);
           model.addAttribute("acc_profile_img", acc_profile_img);
+          model.addAttribute("prompt", prompt);
+          model.addAttribute("dalle_origin", dalle_origin);          
 
-          // 조회수 업데이트 old ver.
+          // 조회수 업데이트 - old ver.
           // this.qnacontentsProc.qna_update_view(qcon_no);
 
           // 현재 시간을 기준으로 조회 여부 확인
@@ -1181,16 +1185,19 @@ public class Qna_contentsCont {
         System.out.println("dalle_no: " + dalle_no);
         map.put("dalle_no", dalle_no);
         obj.put("dalle_no", dalle_no);
+        model.addAttribute("dalle_no", dalle_no);
         
         String prompts = qna_dalleVO.getPrompt();
         System.out.println("prompt: "  + prompts);
         map.put("prompt", prompts);
         obj.put("prompt", prompts);
+        model.addAttribute("prompt", prompts);
         
         String dalle_origin = qna_dalleVO.getDalle_origin();
         System.out.println("dalle_origin: "  + dalle_origin);
         map.put("dalle_origin", dalle_origin);
         obj.put("dalle_origin", dalle_origin);
+        model.addAttribute("dalle_origin", dalle_origin);
         
         array.put(obj);
     }
@@ -1200,7 +1207,6 @@ public class Qna_contentsCont {
     
     return json.toString();
   }
-
   
   
 }

@@ -83,8 +83,8 @@
         panel2.innerHTML = ''; // 입력된 값이 변경될 때마다 panel2의 내용을 초기화
         
         // 게시글 이동 url
-        let move_link = document.getElementById('move_link');
-        move_link.style.display = 'none'; // 입력된 값이 변경될 때마다 move_link 숨기기
+        let move_tag = document.getElementById('move_link');
+        move_tag.style.display = 'none'; // 입력된 값이 변경될 때마다 move_link 숨기기
 
         // Enter 키가 눌렸을 때 기본 동작(폼 제출 등)을 제한
         if (event.key === 'Enter') {
@@ -122,8 +122,8 @@
                   // alert('dalle_no: ' + row.dalle_no + '\nprompt: ' + row.prompt + '\ndalle_origin: ' + simple_dalle_origin);
                   // location.href='/qna_list_all?cate_no=2&word=' + row.prompt;
                   
-                  move_link.style.display = 'inline';
-                  move_link.href = `/qna_list_all?cate_no=2&word=${row.prompt}`;
+                  move_tag.style.display = 'inline';
+                  move_tag.href = `/qcontents/qna_read?cate_no=2&prompt=${row.prompt}&dalle_origin=${row.dalle_origin}'`;
                 }); // div.addEventListener 종료
                 panel2.appendChild(div);
                 cnt++;
