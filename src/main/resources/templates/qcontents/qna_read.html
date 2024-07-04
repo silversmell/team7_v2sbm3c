@@ -61,8 +61,8 @@
           })
           .then(response => response.json())
           .then(data => {
-            let sortOption = document.getElementById('latestLink').style.textDecoration === 'underline' ? 'latest' : 'asc';
-            if (sortOption === 'latest') {
+            let option = document.getElementById('latestLink').style.textDecoration === 'underline' ? 'latest' : 'asc';
+            if (option === 'latest') {
               list_by_qcmt_no_join(); // 최신순으로 댓글 목록 갱신
               qcmt_contents_tag.focus();
             } else {
