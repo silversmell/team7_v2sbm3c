@@ -313,6 +313,10 @@ public class Share_contentsCont {
 		if(this.accountProc.isMemberAdmin(session)) {
 		List<Integer> sconNoList = (List<Integer>) scon_no.get("scon_no");
 		
+		int delete_notice=this.sconProc.sdelete_notice(sconNoList);
+		if(delete_notice>0) {
+			System.out.println("알림 삭제 성공");
+		}
 		int re_comment = this.re_commentProc.sconno_delete(sconNoList);
 		if(re_comment>0) {
 			System.out.println("대댓글 삭제 성공");
@@ -694,7 +698,7 @@ public class Share_contentsCont {
 	@PostMapping("/delete")
 	@ResponseBody
 	public String delete(@RequestBody String json_src) {
-	
+		
 		String cleanedJsonSrc = json_src.replace(";", "");
 		 JSONObject src = new JSONObject(cleanedJsonSrc);
 		 System.out.println(src);
@@ -707,14 +711,30 @@ public class Share_contentsCont {
 		List<Integer> scon = new ArrayList<>();
 		scon.add(scon_no);
 		int cnt1 = this.sconProc.bookmarall_delete(scon_no);
+		int cnt_notice = this.sconProc.delete_notice(scon_no);
+		if(cnt_notice>0) {
+			System.out.println("알림 삭제 성공");
+		}
 
-		this.re_commentProc.sconno_delete(scon);
+		int re_commentcnt = this.re_commentProc.sconno_delete(scon);
+		if(re_commentcnt>0) {
+			System.out.println("대댓글 삭제");
+		}
 		
-		this.replyProc.delete_comment(scon_no);
+		int cnt_comment=this.replyProc.delete_comment(scon_no);
+		if(cnt_comment>0) {
+			System.err.println("comment 삭제");
+		}
 
-		this.sconProc.delete_url(scon_no);
+		int cnt_url=this.sconProc.delete_url(scon_no);
+		if(cnt_url>0) {
+			System.out.println("url 삭제");
+		}
 
-		this.sconProc.delete_tag(scon_no);
+		int cnt_delete=this.sconProc.delete_tag(scon_no);
+		if(cnt_delete>0) {
+			System.out.println("태그 삭제");
+		}
 
 		ArrayList<Share_imageVO> list = this.sconProc.read_image(scon_no);
 		for (Share_imageVO image : list) {
@@ -726,9 +746,9 @@ public class Share_contentsCont {
 			Tool.deleteFile(uploadDir, thumb);
 		}
 		int cnt_image = this.sconProc.delete_image(scon_no);
-//		if (cnt_image > 0) {
-//			System.out.println("이미지 삭제 성공");
-//		}
+		if (cnt_image > 0) {
+			System.out.println("이미지 삭제 성공");
+		}
 		
 		int cnt = this.sconProc.delete(scon_no);
 		if(cnt>0) {

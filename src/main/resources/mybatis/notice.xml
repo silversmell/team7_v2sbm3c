@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.mvc.share_contents.Share_contentsDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
+
+<delete id = "delete_notice" parameterType="int">
+      delete from notification
+      where scon_no=#{scon_no}
+</delete>
+
+	<delete id="sdelete_notice" parameterType="list">
+		DELETE FROM notification
+		WHERE scon_no IN
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+</mapper>

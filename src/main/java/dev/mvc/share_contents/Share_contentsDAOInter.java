@@ -367,6 +367,20 @@ public interface Share_contentsDAOInter {
     */
    public AccountVO read_img(int scon_no);
    
+   /**
+    * 해당하는 컨텐츠 알림 삭제
+    * @param scon_no
+    * @return
+    */
+   public int  delete_notice(int scon_no);
+   
+   /**
+    *
+    * @param scon_no
+    * @return
+    */
+   public int sdelete_notice(List<Integer> scon_no);
+   
 
 
 }

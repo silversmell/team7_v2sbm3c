@@ -470,6 +470,18 @@ public class Share_contentsProc implements Share_contentsProcInter {
 		return accountVO;
 	}
 
+	@Override
+	public int delete_notice(int scon_no) {
+		int cnt = this.scontentsDAO.delete_notice(scon_no);
+		return cnt;
+	}
+
+	@Override
+	public int sdelete_notice(List<Integer> scon_no) {
+		int cnt = this.scontentsDAO.sdelete_notice(scon_no);
+		return cnt;
+	}
+
 
 
 }
