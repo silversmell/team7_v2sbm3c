@@ -10,7 +10,6 @@
         });
         function loadData(){
          console.log("loadData 들어옴");
-        	//let msg ="";
         	let url='http://localhost:9095/api/notification/read/'+'[[${session.acc_no}]]';
         	console.log(url);
         	fetch(url,{
@@ -18,14 +17,13 @@
         	})
         	.then((response) => response.json())
         	.then((data) =>{
+        		let msg ="";
         		console.log(data.res);
         		for(let i = 0;i<data.res.length;i++){
         			console.log(data.res[i]);
-        		
         		}
         		if(data.res.length>0){
         			data.res.forEach(item =>{
-        				let msg ="";
         				let contents = item.contents;
         				let sender = item.sender;
         				let createdAt = item.create_At;
@@ -34,16 +32,16 @@
         				console.log('Contents:'+ contents + ' Sender:' + sender + ' created_At:'+ createdAt +' Scon No:'+ scon_no +'id:' +id);
         				let href = 'http://localhost:9093/scontents/read?cate_no=1&scon_no='+scon_no;
         				let url = 'http://localhost:9093/scontents/delete_notice/'+id+'?cate_no=1;'
-        				msg += "<div onclick='delete_notice(" + id + ")'>삭제</div>"; // delete_notice 호출
+        				//msg += "<div onclick='delete_notice(" + id + ")'>삭제</div>"; // delete_notice 호출
+        				msg += "<div onclick='delete_notice(" + id + ")'><img src='/scontents/images/delete.png' alt='삭제' style='cursor:pointer; width:16px; height:16px;'></div>"; // delete_notice 호출
         				msg +="<a href=" +href+ ">"
         				msg+= sender + "님으로 부터 새로운 답글이 달렸습니다." + "<br>";
         				msg += "<div>" + "내용: " +contents +"<br>" 
         				msg+=" time: " + createdAt + "</div></a>";
         				msg+="<br>";
-        				 document.getElementById('notification-container').innerHTML = msg; // msg를 div에 삽입
-        			}
-        			
-        			)
+        				
+        			})
+        			document.getElementById('notification-container').innerHTML = msg; // 반복문이 끝난 후 msg를 div에 삽입
         		}else{
         			document.getElementById('notification-container').innerHTML = "알림이 없습니다."; // 알림이 없을 경우
         		}
