@@ -55,11 +55,22 @@
         result_animation_tag.style.display='block';
       });
 
+      // 입력란 내용 전체 삭제
       clear_tag.addEventListener("click", function() {
         article_tag.value='';
         article_tag.focus();
-      })
-    }
+      });
+      
+      // 요약 결과 영역 복사
+      result_tag.addEventListener('click', function () {
+        result_tag.select();
+        document.execCommand('copy');
+
+        alert('클립보드에 복사되었습니다.');
+      });
+      
+      
+    } // window.onload() 종료
   </script>
 
 </head>
@@ -75,10 +86,8 @@
         <a href="javascript:location.reload();">새로고침</a>
       </aside>
       <div class='menu_line'></div>
+      <span id="article_explanation" style="margin-left: 0px; font-size: 15px; color: grey;">아래 입력란에 요약하고싶은 글이나 댓글을 복사+붙여넣기 해보세요.</span><br />
       <textarea id="article" name="article" style="width: 100%; height: 200px;">
-요약하고싶은 글이나 댓글을 복사+붙여넣기 해보세요.
-
-
 사무실 책상을 꾸미려는데요 책상이 저 사진보다 쪼금 밝은 색이에요 근데 저는 연보라색으로 캐주얼한 감성으로 꾸미고싶어서 흰색바탕이 예쁠거같은데.. 이런 경우에는 보통 어떻게하나용 흰색 아크릴같은거 사이즈맞춰 까는게 나을지 (왠지 회사책상으로 그렇게까지하는게 오버스러움) 흰색 데스크매트 하나사서 책상에 넓게 까는게 나을지 (기존의 우드톤과 대비감 느껴져서 이상할듯) 고민이네요..
       </textarea><br />
     
@@ -89,7 +98,7 @@
     
     <span id="result_explanation" style="margin-top: 10px; text-align: left; display: none; font-size: 20px; ">결과</span>
     <div id="result_animation" style="margin-top: 10px; width: 100%; height: 50px; text-align: center; display: none;"></div>
-    <textarea id="result" style="margin-top: 10px; width: 100%; height: 100px; display: none;"></textarea>
+    <textarea id="result" style="margin-top: 10px; width: 100%; height: 100px; display: none;" readonly="readonly"></textarea>
   </div>
 
 </body>
