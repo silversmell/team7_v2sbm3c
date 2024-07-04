@@ -482,6 +482,12 @@ public class Share_contentsProc implements Share_contentsProcInter {
 		return cnt;
 	}
 
+	@Override
+	public int id_delete(long id) {
+		int cnt = this.scontentsDAO.id_delete(id);
+		return cnt;
+	}
+
 
 
 }

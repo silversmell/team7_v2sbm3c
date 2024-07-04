@@ -16,5 +16,10 @@
 			#{item}
 		</foreach>
 	</delete>
+	
+	<delete id = "id_delete" parameterType="long">
+		delete from notification
+		where id = #{id}
+	</delete>
 
 </mapper>

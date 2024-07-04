@@ -30,10 +30,12 @@ import dev.mvc.account.AccountVO;
 import dev.mvc.category.CategoryProcInter;
 import dev.mvc.category.CategoryVO;
 import dev.mvc.re_comment.Re_commentProcInter;
+import dev.mvc.re_comment.Share_recommentVO;
 import dev.mvc.recommend.HashtagVO;
 import dev.mvc.share_contents.Contents;
 import dev.mvc.share_contentsdto.Contents_tagVO;
 import dev.mvc.share_contentsdto.Contents_urlVO;
+import dev.mvc.share_contentsdto.NotificationVO;
 import dev.mvc.reply.ReplyProcInter;
 import dev.mvc.reply.Share_commentVO;
 import dev.mvc.share_contentsdto.Share_contentsVO;
@@ -906,6 +908,19 @@ public class Share_contentsCont {
 	@GetMapping("/notice/{id}")
 	public String notice(@PathVariable("id") int acc_no) {
 		return "/scontents/notice";
+	}
+	@PostMapping("/notice/delete")
+	@ResponseBody
+	public String notice_delete(@RequestBody NotificationVO notice) {
+		System.out.println("notice_delete 들어옴");
+		JSONObject json = new JSONObject();
+		System.out.println("notice.id:" +notice.getId());
+		int cnt = this.sconProc.id_delete(notice.getId());
+		if(cnt>0) {
+			System.out.println("알림삭제성공");
+		}
+		json.put("cnt", cnt);
+		return json.toString();
 	}
 	
 	

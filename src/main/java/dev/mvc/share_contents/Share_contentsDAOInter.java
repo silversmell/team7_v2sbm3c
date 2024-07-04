@@ -381,6 +381,13 @@ public interface Share_contentsDAOInter {
     */
    public int sdelete_notice(List<Integer> scon_no);
    
+   /**
+    * 알림 id에 따른 삭제
+    * @param id
+    * @return
+    */
+   public int id_delete(long id);
+   
 
 
 }
