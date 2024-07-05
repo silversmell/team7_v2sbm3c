@@ -863,9 +863,6 @@ public class Share_contentsCont {
 		CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
 		model.addAttribute("categoryVO", categoryVO);
 		
-
-		// System.out.println("-> categoryVO.cate_no :" +categoryVO.getCate_no());
-
 		ArrayList<HashtagVO> list_hashtag = this.sconProc.select_hashtag();
 		model.addAttribute("list_hashtag", list_hashtag);
 
@@ -876,13 +873,10 @@ public class Share_contentsCont {
 		ArrayList<Share_contentsVO> list = this.sconProc.list_by_contents_search_paging(map);
 		model.addAttribute("list", list);
 		model.addAttribute("word", word);
-		// 사진 하나만 나오게 하기
-//		ArrayList<Share_imageVO> list_image = new ArrayList<>();
-//		
-//		for (Share_contentsVO list1 : list) {
-//			ArrayList<Share_imageVO> distinct_image = this.sconProc.read_image(list1.getScon_no());
-//			list_image.add(distinct_image.get(0)); // 첫번째 것
-//		}
+		for(int i = 0;i<list.size();i++) {
+		  this.replyProc.count_comment(list.get(i).getScon_no()); //갯수
+		}
+
 		ArrayList<Share_imageVO> list_image = new ArrayList<>();
 		for(Share_contentsVO list1:list) {
 			list_image.addAll(this.sconProc.distinct_image(list1.getScon_no()));

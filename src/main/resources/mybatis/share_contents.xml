@@ -379,6 +379,7 @@
 		WHERE hashtag.tag_no=contents_tag.tag_no
 	</select>
 
+<!--해시태그 조회--> 
 	<select id="read_hashtag_name"
 		resultType="dev.mvc.recommend.HashtagVO" parameterType="int">
 		SELECT tag_name,r
@@ -400,9 +401,9 @@
 		FROM share_contents RIGHT OUTER JOIN contents_tag
 		ON(share_contents.scon_no = contents_tag.scon_no)
 		WHERE share_contents.scon_no=#{scon_no})
-
 	</select>
-
+	
+ <!-- 사진이 여러개일 경우 한개만 보이게  -->
 	<select id="distinct_image"
 		resultType="dev.mvc.share_contentsdto.Share_imageVO"
 		parameterType="int">
@@ -426,12 +427,14 @@
 	WHERE account.acc_no=share_contents.acc_no AND share_contents.scon_no=#{scon_no}
 	</select>
 	
+	<!-- 게시글 태그 갯수-->
 	<select id="bookmark_count" resultType="int" parameterType="int">
 	SELECT count(*)
 	FROM share_mark
   WHERE scon_no=#{scon_no}
 	</select>
-
+	
+<!-- 태그에 따른 이미지 조회 -->
 	<select id="related_image"
 		resultType="dev.mvc.share_contentsdto.Share_imageVO"
 		parameterType="int">
@@ -449,6 +452,7 @@
 		ORDER BY r ASC
 
 	</select>
+	<!-- 태그에 따른 이미지 갯수 조회 -->
 	<select id="related_image_count" resultType="int">
 		SELECT COUNT(*)
 		FROM(
@@ -467,6 +471,7 @@
 		)
 	</select>
 	
+	<!-- 회원별 프로필 사진  -->
 	<select id = "read_img" resultType="dev.mvc.account.AccountVO" parameterType="int">
 		SELECT ac.acc_img,ac.acc_saved_img,ac.acc_thumb_img,acc_img_size,ac.acc_no,ac.acc_id,sc.scon_title
 		FROM share_contents sc INNER JOIN account ac

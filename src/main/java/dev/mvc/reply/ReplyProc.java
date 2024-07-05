@@ -144,5 +144,11 @@ public class ReplyProc implements ReplyProcInter {
 		return scmtno;
 	}
 
+  @Override
+  public int count_comment(int scon_no) {
+    int cnt = this.replyDAO.count_comment(scon_no);
+    return cnt;
+  }
+
 
 }

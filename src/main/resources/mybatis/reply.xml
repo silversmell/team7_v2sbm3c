@@ -143,6 +143,12 @@ FROM (
         ORDER BY r ASC
 		</select>
 		
+		<select id ="count_comment" parameterType="int" resultType="int">
+        select count(*) as count
+        from share_comment
+        where scon_no=#{scon_no}
+    </select>
+		
 		
 		
 		<!--  

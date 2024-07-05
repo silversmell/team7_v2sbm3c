@@ -250,9 +250,6 @@ public interface Share_contentsDAOInter {
 	  */
 	 public int delete_tag(int scon_no);
 	 
-
-
-	 
 	 /**
 	  * 해시태그에 따른 게시물 갯수
 	  * @param tag_no
@@ -387,6 +384,7 @@ public interface Share_contentsDAOInter {
     * @return
     */
    public int id_delete(long id);
+   
    
 
 

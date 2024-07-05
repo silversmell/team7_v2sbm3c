@@ -143,6 +143,13 @@ public interface ReplyDAOInter {
 	 */
 	public int first_scmtno(int scon_no);
 	
+  /**
+   * scon_no에 따른 댓글 갯수
+   * @param scon_no
+   * @return
+   */
+  public int count_comment(int scon_no);
+	
 	
 	
 //	/**
