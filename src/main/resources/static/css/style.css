@@ -67,11 +67,11 @@
 
 .content {
     width: 90%;
-    margin: 20px auto;
+    margin: 0px auto;
   }
   .content_body {
     width: 90%;
-    margin: 10px auto;
+    margin: 0px auto;
   }
 
 /*
@@ -292,8 +292,9 @@
   .th_bs {
     text-align: center;
     border: none;
+    font-size: 14px;
     color: white; /* 글자색을 하얀색으로 설정 */
-    padding: 10px; /* 패딩 설정 */
+    padding: 5px; /* 패딩 설정 */
     background-color: #35C5F0;  
   }
   
