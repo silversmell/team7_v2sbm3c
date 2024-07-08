@@ -166,7 +166,26 @@
       
       underline('latest'); // 댓글 출력 밑줄 초기화
       list_by_qcmt_no_join(); // 목록 출력
-    }
+      
+      document.addEventListener('DOMContentLoaded', function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const prompt = urlParams.get('prompt');
+        const dalleOrigin = urlParams.get('dalle_origin');
+
+        if (prompt && dalleOrigin) {
+          const promptValueElem = document.getElementById('promptValue');
+          const dalleOriginValueElem = document.getElementById('dalleOriginValue');
+
+          promptValueElem.textContent = prompt;
+          dalleOriginValueElem.textContent = dalleOrigin;
+        } else {
+          // URL 파라미터가 없는 경우 처리
+          const promptInfoDiv = document.getElementById('promptInfo');
+          promptInfoDiv.innerHTML = '<p>조회할 생성어 및 dalle_origin이 지정되지 않았습니다.</p>';
+        }
+      });
+      
+    } // window.onload() 종료
 
     // 최신순 목록 출력
     // 5건 미만이면 5회 미만 순환, 5건 이상 5회 순환

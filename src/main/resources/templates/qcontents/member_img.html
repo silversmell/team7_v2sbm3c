@@ -81,10 +81,7 @@
 
         let panel2 = document.getElementById('panel2');
         panel2.innerHTML = ''; // 입력된 값이 변경될 때마다 panel2의 내용을 초기화
-        
-        // 게시글 이동 url
-        let move_tag = document.getElementById('move_link');
-        move_tag.style.display = 'none'; // 입력된 값이 변경될 때마다 move_link 숨기기
+
 
         // Enter 키가 눌렸을 때 기본 동작(폼 제출 등)을 제한
         if (event.key === 'Enter') {
@@ -118,12 +115,10 @@
                   // 클릭한 생성어로 생성어 입력됨
                   document.getElementById('prompt').textContent = row.prompt;
                   panel2.style.display = 'none';
-                  
                   // alert('dalle_no: ' + row.dalle_no + '\nprompt: ' + row.prompt + '\ndalle_origin: ' + simple_dalle_origin);
                   // location.href='/qna_list_all?cate_no=2&word=' + row.prompt;
                   
-                  move_tag.style.display = 'inline';
-                  move_tag.href = `/qcontents/qna_read?cate_no=2&prompt=${row.prompt}&dalle_origin=${row.dalle_origin}'`;
+                  alert('클릭한 생성어로 입력란 생성어가 바뀌었습니다.');
                 }); // div.addEventListener 종료
                 panel2.appendChild(div);
                 cnt++;
@@ -135,12 +130,12 @@
             } else {
               panel2.style.display = 'none';
             }
+            
           });
         } else { // 사용자가 검색어를 지울 경우 추천 목록 삭제
           panel2.style.display = 'none';
         }
       });
-
       
     } // window.onload 종료
 
@@ -170,9 +165,8 @@
         <span id="prompts_explanation" style="margin-top: 10px; font-size: 20px; ">실시간 생성어</span>
         <span style="margin-left: 0px; font-size: 15px; color: grey;">(*다른 사용자들이 사용한 생성어)</span>
         <span id="part_explanation" style="margin-left: 0px; margin-top: 10px; font-size: 20px; ">검색 및 호출</span><br />
-        <input type='text' id='prompts' placeholder="찾고싶은 키워드가 들어간 생성어 검색란" style="width: 28%;" autocomplete="off">
+        <input type='text' id='prompts' placeholder="찾고싶은 키워드가 들어간 생성어 검색란" style="width: 16%;" autocomplete="off">
         <div id='panel2' class='suggestions' style='display: none;'></div>
-        <a href="#" id="move_link" style="margin-left: 8px; display: none;">→ 이미지 보러가기</a>
         <br /><br />
     </div>
    

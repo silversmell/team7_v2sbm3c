@@ -314,7 +314,9 @@ public class Qna_contentsCont {
   public String qna_read(Model model, HttpSession session,
                          @RequestParam(name = "cate_no", defaultValue = "2") int cate_no, 
                          @RequestParam(name = "qcon_no") int qcon_no,
-                         @RequestParam(name = "now_page") int now_page) {
+                         @RequestParam(name = "now_page") int now_page,
+                         @RequestParam(name = "dalle_origin", required = false) String dalle_origin,
+                         @RequestParam(name = "prompt", required = false) String prompt) {
 
 	  
       if (this.accountProc.isMember(session)) {
@@ -367,6 +369,8 @@ public class Qna_contentsCont {
           model.addAttribute("now_page", now_page);
           model.addAttribute("user_name", user_name);
           model.addAttribute("acc_profile_img", acc_profile_img);
+          model.addAttribute("dalle_origin", dalle_origin);
+          model.addAttribute("prompt", prompt);
 
           // 조회수 업데이트 old ver.
           // this.qnacontentsProc.qna_update_view(qcon_no);
