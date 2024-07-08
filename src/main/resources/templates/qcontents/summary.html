@@ -18,7 +18,9 @@
       let result_explanation_tag = document.getElementById('result_explanation');
       let result_tag = document.getElementById('result');
       let acc_no = '[[${session.acc_no}]]';
-
+      
+      // URL 파라미터에서 content 값을 가져와 article 입력란에 삽입
+      
       // async: 비동기 통신, 일단 요청을 하고 응답이 즉시 안와도 에러가 발생 안됨, 응답이 오면 그때 이어서 처리. 
       send_tag.addEventListener("click", async function() {
         let article = article_tag.value.trim();
@@ -69,6 +71,69 @@
         alert('클립보드에 복사되었습니다.');
       });
       
+      // 실시간 생성어: 키 입력할 때마다 서버에 요청
+      document.getElementById("prompts").addEventListener("keyup", function () { // keydown, keypress: 마지막 문자값 처리 늦음, keyup: "실시간 문자값 반영"
+        let prompts = this.value;
+        console.log(prompts);
+
+        let panel2 = document.getElementById('panel2');
+        panel2.innerHTML = ''; // 입력된 값이 변경될 때마다 panel2의 내용을 초기화
+
+
+        // Enter 키가 눌렸을 때 기본 동작(폼 제출 등)을 제한
+        if (event.key === 'Enter') {
+          event.preventDefault();
+        }
+
+        if (prompts.length > 0) {
+          const url = '/qcontents/get_prompt?cate_no=2&prompt=' + prompts;
+
+          fetch(url, {
+            method: 'GET',
+          })
+          .then((response) => response.json()) // response.json(), response.text()
+          .then((rdata) => {
+            let cnt = 0; // div 갯수
+
+            rdata.res.forEach(row => {
+              if (cnt < 10) { // 최대 출력 div 10개 이하
+                let div = document.createElement('div');
+                div.className = 'suggestion-item';
+
+                let simple_prompt = row.prompt.length > 50 ? row.prompt.substring(0, 50) + '...' : row.prompt;
+                
+                let simple_dalle_origin_cnt = row.dalle_origin.length;
+                let simple_dalle_origin = row.dalle_origin.substring(20, simple_dalle_origin_cnt);
+                console.log(simple_dalle_origin);
+  
+                div.textContent = `${cnt + 1}) ${simple_prompt}`; // 앞에 번호 추가, 문장이 길면 문장을 짤라서 사용
+                
+                div.addEventListener('click', function () {
+                  // 클릭한 생성어로 생성어 입력됨
+                  document.getElementById('prompt').textContent = row.prompt;
+                  panel2.style.display = 'none';
+                  // alert('dalle_no: ' + row.dalle_no + '\nprompt: ' + row.prompt + '\ndalle_origin: ' + simple_dalle_origin);
+                  // location.href='/qna_list_all?cate_no=2&word=' + row.prompt;
+                  
+                  alert('클릭한 생성어로 입력란 생성어가 바뀌었습니다.');
+                }); // div.addEventListener 종료
+                panel2.appendChild(div);
+                cnt++;
+              }
+            }); // forEach 종료
+
+            if (rdata.res.length > 0) {
+              panel2.style.display = ''; // 출력
+            } else {
+              panel2.style.display = 'none';
+            }
+            
+          });
+        } else { // 사용자가 검색어를 지울 경우 추천 목록 삭제
+          panel2.style.display = 'none';
+        }
+      });
+      
       
     } // window.onload() 종료
   </script>
@@ -86,6 +151,7 @@
         <a href="javascript:location.reload();">새로고침</a>
       </aside>
       <div class='menu_line'></div>
+      
       <span id="article_explanation" style="margin-left: 0px; font-size: 15px; color: grey;">아래 입력란에 요약하고싶은 글이나 댓글을 복사+붙여넣기 해보세요.</span><br />
       <textarea id="article" name="article" style="width: 100%; height: 200px;">
 사무실 책상을 꾸미려는데요 책상이 저 사진보다 쪼금 밝은 색이에요 근데 저는 연보라색으로 캐주얼한 감성으로 꾸미고싶어서 흰색바탕이 예쁠거같은데.. 이런 경우에는 보통 어떻게하나용 흰색 아크릴같은거 사이즈맞춰 까는게 나을지 (왠지 회사책상으로 그렇게까지하는게 오버스러움) 흰색 데스크매트 하나사서 책상에 넓게 까는게 나을지 (기존의 우드톤과 대비감 느껴져서 이상할듯) 고민이네요..

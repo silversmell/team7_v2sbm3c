@@ -171,33 +171,44 @@ public class AdminProc implements AdminProcInter {
 		StringBuffer str = new StringBuffer(); // String class 보다 문자열 추가등의 편집시 속도가 빠름
 
 		// style이 java 파일에 명시되는 경우는 로직에 따라 css가 영향을 많이 받는 경우에 사용하는 방법
-		str.append("<style type='text/css'>");
-		str.append("  #paging {text-align: center; margin-top: 5px; font-size: 1em;}");
-		str.append("  #paging A:link {text-decoration:none; color:black; font-size: 1em;}");
-		str.append("  #paging A:hover{text-decoration:none; background-color: #FFFFFF; color:black; font-size: 1em;}");
-		str.append("  #paging A:visited {text-decoration:none;color:black; font-size: 1em;}");
-		str.append("  .span_box_1{");
-		str.append("    text-align: center;");
-		str.append("    font-size: 1em;");
-		str.append("    border: 1px;");
-		str.append("    border-style: solid;");
-		str.append("    border-color: #cccccc;");
-		str.append("    padding:1px 6px 1px 6px; /*위, 오른쪽, 아래, 왼쪽*/");
-		str.append("    margin:1px 2px 1px 2px; /*위, 오른쪽, 아래, 왼쪽*/");
-		str.append("  }");
-		str.append("  .span_box_2{");
-		str.append("    text-align: center;");
-		str.append("    background-color: #668db4;");
-		str.append("    color: #FFFFFF;");
-		str.append("    font-size: 1em;");
-		str.append("    border: 1px;");
-		str.append("    border-style: solid;");
-		str.append("    border-color: #cccccc;");
-		str.append("    padding:1px 6px 1px 6px; /*위, 오른쪽, 아래, 왼쪽*/");
-		str.append("    margin:1px 2px 1px 2px; /*위, 오른쪽, 아래, 왼쪽*/");
-		str.append("  }");
-		str.append("</style>");
-		str.append("<div id='paging'>");
+    str.append("<style type='text/css'>");
+    str.append("  #paging {text-align: center; margin-top: 5px; font-size: 1em;}");
+    str.append("  #paging A:link {text-decoration:none; color:black; font-size: 1em;}");
+    str.append("  #paging A:hover{text-decoration:none; background-color: #FFFFFF; color:black; font-size: 1em;}");
+    str.append("  #paging A:visited {text-decoration:none;color:black; font-size: 1em;}");
+    str.append("  .span_box_1{");
+    str.append("    text-align: center;");
+    str.append("    font-size: 15px;");
+    str.append("    font-weight: bold;");
+    str.append("    border: none;"); // 테두리 제거
+    str.append("    background: none;"); // 배경 제거
+    str.append("    padding: 0 13px; /*위, 오른쪽, 아래, 왼쪽*/");
+    str.append("    margin:1px 2px 1px 2px; /*위, 오른쪽, 아래, 왼쪽*/");
+    str.append("    display: inline-flex;");
+    str.append("    justify-content: center;");
+    str.append("    align-items: center;");
+    str.append("    height: 40px;");
+    str.append("    border-radius: 4px;");
+    str.append("    box-sizing: border-box;");
+    str.append("  }");
+    str.append("  .span_box_2{");
+    str.append("    text-align: center;");
+    str.append("    background-color: #35C5F0;");
+    str.append("    color: #FFFFFF;");
+    str.append("    font-size: 15px;");
+    str.append("    font-weight: bold;");
+    str.append("    border: 1px solid #35C5F0;");
+    str.append("    padding: 0 13px; /* 위, 오른쪽, 아래, 왼쪽 */");
+    str.append("    margin:1px 2px 1px 2px; /*위, 오른쪽, 아래, 왼쪽*/");
+    str.append("    display: inline-flex;");
+    str.append("    justify-content: center;");
+    str.append("    align-items: center;");
+    str.append("    height: 40px;");
+    str.append("    border-radius: 4px;");
+    str.append("    box-sizing: border-box;");
+    str.append("  }");
+    str.append("</style>");
+    str.append("<DIV id='paging'>");
 		// str.append("현재 페이지: " + nowPage + " / " + totalPage + "  "); 
 
 		// 이전 10개 페이지로 이동
@@ -211,7 +222,7 @@ public class AdminProc implements AdminProcInter {
 			str.append("<span class='span_box_1'><A href='" + list_file 
 					+ "?word_id=" + word_id + "&word_ip=" + word_ip
 					+ "&start_date=" + start_date + "&end_date=" + end_date
-					+ "&now_page=" + _now_page + "'>이전</A></span>");
+					+ "&now_page=" + _now_page + "'>◀</A></span>");
 		}
 		
 
@@ -242,7 +253,7 @@ public class AdminProc implements AdminProcInter {
 			str.append("<span class='span_box_1'><A href='" + list_file
 					+ "?word_id=" + word_id + "&word_ip=" + word_ip
 					+ "&start_date=" + start_date + "&end_date=" + end_date
-					+ "&now_page=" + _now_page + "'>다음</A></span>");
+					+ "&now_page=" + _now_page + "'>▶</A></span>");
 		}
 		str.append("</div>");
 

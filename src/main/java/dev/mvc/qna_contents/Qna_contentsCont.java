@@ -40,6 +40,7 @@ import dev.mvc.admin.AdminProc;
 import dev.mvc.category.CategoryProcInter;
 import dev.mvc.category.CategoryVO;
 import dev.mvc.category.CategoryVOMenu;
+import dev.mvc.share_contentsdto.NotificationVO;
 import dev.mvc.tool.Tool;
 import dev.mvc.tool.Upload;
 import jakarta.servlet.http.HttpServletRequest;
@@ -1204,8 +1205,14 @@ public class Qna_contentsCont {
     
     return json.toString();
   }
-
   
+  @GetMapping(value="/summary_log")
+  public String summary_log() {
+    return "/qcontents/summary_log";
+  }
+  
+  
+
   
 }
 
