@@ -81,6 +81,11 @@
           if (data.cnt > 0) {
             console.log('삭제 성공');
             window.location.reload();
+            
+            // 선택된 체크박스 수만큼 카테고리 관련 자료수 감소
+            checkboxes.forEach((checkbox) => {
+              this.categoryProc.cnt_minus(qna_contentsVO.getCate_no());
+            });
           } else {
             console.log('삭제 실패');
           }
