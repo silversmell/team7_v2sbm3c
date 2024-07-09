@@ -23,6 +23,14 @@
     function select_delete(){
      let checkboxes = document.querySelectorAll('input[name="scon_no"]:checked');
      let sconnos=[];
+     
+     
+     // 선택된 체크박스 유무 체크
+     if (checkboxes.length === 0) {
+       alert('선택된 글이 없습니다. 삭제하고자 하는 글을 선택하세요.');
+       return;
+     }
+     
      checkboxes.forEach((checkboxes) =>{
        sconnos.push(checkboxes.value);
      });
@@ -49,6 +57,10 @@
           if(rdata.cnt>0){
             console.log('삭제성공');
             window.location.reload();
+            
+            checkboxes.forEach((checkbox) => {
+                this.categoryProc.cnt_minus(qna_contentsVO.getCate_no());
+              });
         }
           else { 
           console.log('삭제 실패');
