@@ -48,6 +48,15 @@
       checkboxes.forEach(checkbox => {
         checkbox.checked = !allchecked;
       });
+      
+      // 전체 선택 상태에서 카테고리 관련 자료수 감소
+      if (allchecked) {
+        checkboxes.forEach(checkbox => {
+          if (checkbox.checked) {
+            this.categoryProc.cnt_minus(qna_contentsVO.getCate_no());
+          }
+        });
+      }
     }
 
     // 선택된 체크박스 삭제
