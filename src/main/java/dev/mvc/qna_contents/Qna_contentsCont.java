@@ -1208,6 +1208,8 @@ public class Qna_contentsCont {
   
   @GetMapping(value="/summary_log")
   public String summary_log() {
+    
+    
     return "/qcontents/summary_log";
   }
   

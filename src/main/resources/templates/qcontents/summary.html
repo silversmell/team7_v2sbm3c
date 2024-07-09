@@ -17,13 +17,14 @@
       let result_animation_tag = document.getElementById('result_animation');
       let result_explanation_tag = document.getElementById('result_explanation');
       let result_tag = document.getElementById('result');
-      let acc_no = '[[${session.acc_no}]]';
       
       // URL 파라미터에서 content 값을 가져와 article 입력란에 삽입
       
       // async: 비동기 통신, 일단 요청을 하고 응답이 즉시 안와도 에러가 발생 안됨, 응답이 오면 그때 이어서 처리. 
       send_tag.addEventListener("click", async function() {
-        let article = article_tag.value.trim();
+        let article = article_tag.value;
+        let acc_no = '[[${session.acc_no}]]'; //  javascript -> Thymeleaf -> session
+        
         result_tag.style.display='none';
 
         if (acc_no == '') {
@@ -39,11 +40,15 @@
           article_tag.focus();
           return;
         }
+        
+        let formData = new FormData();
+        formData.append("article", article);
+        formData.append("acc_no", acc_no);
 
         fetch("http://192.168.12.159:5000/qcontents/summary", {
           "method": "post", 
           "headers": {"Content-Type": "application/json"},
-          body: JSON.stringify({article})
+          body: JSON.stringify({article, acc_no})
         })
         .then((response) => response.json())
         .then((data) => {
@@ -51,6 +56,9 @@
           result_animation_tag.style.display = 'none';
           result_explanation_tag.style.display = 'block';
           result_tag.style.display='block'; // none: 감춤, block: 보임
+          
+          let response = result_tag.value;
+          formData.append("response", response);
         });
 
         result_animation_tag.innerHTML = '<img src="/images/progress.gif" style="width: 5%; margin-top: 0px;">';
@@ -69,69 +77,6 @@
         document.execCommand('copy');
 
         alert('클립보드에 복사되었습니다.');
-      });
-      
-      // 실시간 생성어: 키 입력할 때마다 서버에 요청
-      document.getElementById("prompts").addEventListener("keyup", function () { // keydown, keypress: 마지막 문자값 처리 늦음, keyup: "실시간 문자값 반영"
-        let prompts = this.value;
-        console.log(prompts);
-
-        let panel2 = document.getElementById('panel2');
-        panel2.innerHTML = ''; // 입력된 값이 변경될 때마다 panel2의 내용을 초기화
-
-
-        // Enter 키가 눌렸을 때 기본 동작(폼 제출 등)을 제한
-        if (event.key === 'Enter') {
-          event.preventDefault();
-        }
-
-        if (prompts.length > 0) {
-          const url = '/qcontents/get_prompt?cate_no=2&prompt=' + prompts;
-
-          fetch(url, {
-            method: 'GET',
-          })
-          .then((response) => response.json()) // response.json(), response.text()
-          .then((rdata) => {
-            let cnt = 0; // div 갯수
-
-            rdata.res.forEach(row => {
-              if (cnt < 10) { // 최대 출력 div 10개 이하
-                let div = document.createElement('div');
-                div.className = 'suggestion-item';
-
-                let simple_prompt = row.prompt.length > 50 ? row.prompt.substring(0, 50) + '...' : row.prompt;
-                
-                let simple_dalle_origin_cnt = row.dalle_origin.length;
-                let simple_dalle_origin = row.dalle_origin.substring(20, simple_dalle_origin_cnt);
-                console.log(simple_dalle_origin);
-  
-                div.textContent = `${cnt + 1}) ${simple_prompt}`; // 앞에 번호 추가, 문장이 길면 문장을 짤라서 사용
-                
-                div.addEventListener('click', function () {
-                  // 클릭한 생성어로 생성어 입력됨
-                  document.getElementById('prompt').textContent = row.prompt;
-                  panel2.style.display = 'none';
-                  // alert('dalle_no: ' + row.dalle_no + '\nprompt: ' + row.prompt + '\ndalle_origin: ' + simple_dalle_origin);
-                  // location.href='/qna_list_all?cate_no=2&word=' + row.prompt;
-                  
-                  alert('클릭한 생성어로 입력란 생성어가 바뀌었습니다.');
-                }); // div.addEventListener 종료
-                panel2.appendChild(div);
-                cnt++;
-              }
-            }); // forEach 종료
-
-            if (rdata.res.length > 0) {
-              panel2.style.display = ''; // 출력
-            } else {
-              panel2.style.display = 'none';
-            }
-            
-          });
-        } else { // 사용자가 검색어를 지울 경우 추천 목록 삭제
-          panel2.style.display = 'none';
-        }
       });
       
       
@@ -162,7 +107,7 @@
       <button id="clear" class="btn btn-info btn-sm">내용 삭제하기</button>
     </div><br /><br />
     
-    <span id="result_explanation" style="margin-top: 10px; text-align: left; display: none; font-size: 20px; ">결과<br /><span style="margin-left: 0px; font-size: 15px; color: grey;">아래 입력란 클릭 시, 해당 내용 복사됩니다.</span></span>
+    <span id="result_explanation" style="margin-top: 10px; text-align: left; display: none; font-size: 20px; ">결과<br /><span style="margin-left: 0px; font-size: 15px; color: grey;">아래의 상자를 클릭하면 텍스트가 복사됩니다.</span></span>
     <div id="result_animation" style="margin-top: 0px; width: 100%; height: 50px; text-align: center; display: none;"></div>
     <textarea id="result" style="margin-top: 0px; width: 100%; height: 100px; display: none;" readonly="readonly"></textarea>
   </div>
