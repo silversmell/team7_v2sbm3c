@@ -1207,7 +1207,7 @@ public class Qna_contentsCont {
   }
   
   /**
-   * 요약 로그 페이지
+   * 실시간 요약 페이지
    *  http://localhost:9093/qcontents/summary_log?acc_no=3
    * @return
    */
@@ -1218,6 +1218,10 @@ public class Qna_contentsCont {
     return "/qcontents/summary_log";
   }
   
+  /**
+   * 실시간 요약 조회 처리
+   * @return
+   */
   @PostMapping(value="/summary_log")
   @ResponseBody
   public String summary_log_proc() {

@@ -127,6 +127,11 @@
             reply_list_tag.appendChild(page_div);
 
             reply_now_page = reply_now_page + 1;
+            
+            // 모든 데이터가 로드되면 더보기 버튼 숨기기
+            if (end >= reply_data.length) {
+              btn_add_tag.style.display = 'none';
+            }
           }
         }
       });
@@ -148,7 +153,7 @@
             .then((response) => response.json())
             .then((data) => {
               if (data['res'] == 0) {
-                alert('댓글 수정에 실패 했습니다.\n 잠시후 다시 시도해 주세요(관리자: 02-123-1234)');
+                alert('댓글 수정에 실패 했습니다.\n 잠시후 다시 시도해 주세요(관리자: 010-1234-5678)');
               } else {
                 list_by_qcmt_no_join(); // 목록 출력
                 qcmt_contents_tag.value = '';
