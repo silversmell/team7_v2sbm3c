@@ -56,9 +56,8 @@
           if(rdata.cnt>0){
             console.log('삭제성공');
             window.location.reload();
-            
             checkboxes.forEach((checkbox) => {
-                this.categoryProc.cnt_minus(qna_contentsVO.getCate_no());
+                this.categoryProc.cnt_minus(share_contentsVO.getCate_no());
               });
         }
           else { 
