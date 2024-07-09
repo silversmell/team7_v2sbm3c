@@ -6,21 +6,20 @@
   <script>
     window.onload = () => {
       summary_logs();
-      
-      // 주기적으로 요약 로그를 가져오는 함수 호출 (예: 5초마다)
-      setInterval(summary_logs, 5000);
     };
     
     function summary_logs() {
       let acc_no = '[[${session.acc_no}]]'; //  javascript -> Thymeleaf -> session
       
       // 데이터를 서버에서 가져오는 fetch 요청
-      fetch(`/qcontents/summary_log?acc_no=` + acc_no, {
+      fetch(`/qcontents/summary_log`, {
         method: "POST",
         "headers": {"Content-Type": "application/json"},
       })
       .then(response => response.json())
       .then(data => {
+        let container = document.getElementById('result');
+        container.innerHTML = '';
         
         for(let i = 0;i<data.res.length;i++){
           console.log(data.res[i]);
@@ -33,9 +32,15 @@
             let acc_no = log.acc_no;
             let article = log.article;
             let response = log.response;
+            let sdate = log.sdate;
             
-            
-           
+            container.innerHTML = `
+             ${sdate} ${acc_id}이 보낸 요청: <br><br>${article}
+             <hr size="10;" style="margin-top:1px; margin-bottom:1px;">
+             <br>
+             ${sdate} ${acc_id}이 받은 응답: <br><br>${response}
+            `;
+
           });
         } else {
           alert('요약 기록이 없습니다.');
@@ -56,16 +61,11 @@
         <li class="li_none">
           <div style="width: 100%; word-break: break-all;">
 
-            <div style='margin: 0px auto; width: 900px;'>
-              <div id="summary-log-container">
+            <div style='margin: 0px auto; width: 90%;'>
+              <div id="result">
                 <!-- 여기에 요약 로그가 실시간으로 추가됩니다 -->
-                
               </div>
 
-              <hr size="10;" style="margin-top:1px; margin-bottom:1px;">
-              <br /><br />
-
-              <div id="response"></div>
             </div>
           </div>
         </li>

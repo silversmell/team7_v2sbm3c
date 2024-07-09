@@ -478,6 +478,7 @@
       SELECT su.summary_no, ac.acc_no, su.article, su.response, su.sdate, ac.acc_id
       FROM summary su
       INNER JOIN account ac ON ac.acc_no = su.acc_no
+      ORDER BY sdate DESC
   </select>
 
 

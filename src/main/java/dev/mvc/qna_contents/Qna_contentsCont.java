@@ -1220,8 +1220,8 @@ public class Qna_contentsCont {
   
   @PostMapping(value="/summary_log")
   @ResponseBody
-  public String summary_log_proc(@RequestParam(name = "acc_no") int acc_no) {
-    HashMap<String,Object> map = new HashMap<>();
+  public String summary_log_proc() {
+    HashMap<String, Object> map = new HashMap<>();
     // 요약 로그 데이터를 데이터베이스에서 가져오는 로직
     List<Qna_summaryVO> list = this.qna_contentsProc.get_summary_log(map);
     
@@ -1247,6 +1247,11 @@ public class Qna_contentsCont {
       System.out.println("response: "  + response);
       map.put("response", response);
       obj.put("response", response);
+      
+      String sdate = qna_summaryVO.getSdate();
+      System.out.println("sdate: "  + sdate);
+      map.put("sdate", sdate);
+      obj.put("sdate", sdate);
       
       array.put(obj);
     }
