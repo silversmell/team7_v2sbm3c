@@ -32,6 +32,11 @@ COMMIT;
 INSERT INTO summary(summary_no, acc_no, article, response, sdate)
 VALUES(summary_seq.nextval, 3, '사무실 책상을 꾸미려는데요 책상이 저 사진보다 쪼금 밝은 색이에요 근데 저는 연보라색으로 캐주얼한 감성으로 꾸미고싶어서 흰색바탕이 예쁠거같은데.. 이런 경우에는 보통 어떻게하나용 흰색 아크릴같은거 사이즈맞춰 까는게 나을지 고민이네요..', 
                                 '사무실 책상 꾸미기 좋은 아이디 추천해주세요.', sysdate);
+            
+-- 실시간 요약 로그 조회                    
+SELECT su.summary_no, ac.acc_no, su.article, su.response, su.sdate, ac.acc_id
+FROM summary su
+INNER JOIN account ac ON su.acc_no = 3;
                                 
 select * FROM summary;
 

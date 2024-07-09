@@ -1206,15 +1206,57 @@ public class Qna_contentsCont {
     return json.toString();
   }
   
-  @GetMapping(value="/summary_log")
-  public String summary_log() {
-    
+  /**
+   * 요약 로그 페이지
+   *  http://localhost:9093/qcontents/summary_log?acc_no=3
+   * @return
+   */
+  @GetMapping(value="/summary_log") 
+  public String summary_log(Model model, @RequestParam(name = "acc_no") int acc_no) {
+    model.addAttribute("acc_no", acc_no);
     
     return "/qcontents/summary_log";
   }
   
+  @PostMapping(value="/summary_log")
+  @ResponseBody
+  public String summary_log_proc(@RequestParam(name = "acc_no") int acc_no) {
+    HashMap<String,Object> map = new HashMap<>();
+    // 요약 로그 데이터를 데이터베이스에서 가져오는 로직
+    List<Qna_summaryVO> list = this.qna_contentsProc.get_summary_log(map);
+    
+    JSONArray array = new JSONArray();
+    for (Qna_summaryVO qna_summaryVO : list) {
+      JSONObject obj = new JSONObject();
+      int acc_nos = qna_summaryVO.getAcc_no();
+      System.out.println("acc_no: " + acc_nos);
+      map.put("acc_no", acc_nos);
+      obj.put("acc_no", acc_nos);
+      
+      String acc_id = qna_summaryVO.getAcc_id();
+      System.out.println("acc_id: "  + acc_id);
+      map.put("acc_id", acc_id);
+      obj.put("acc_id", acc_id);
+      
+      String article = qna_summaryVO.getArticle();
+      System.out.println("article: "  + article);
+      map.put("article", article);
+      obj.put("article", article);
+      
+      String response = qna_summaryVO.getResponse();
+      System.out.println("response: "  + response);
+      map.put("response", response);
+      obj.put("response", response);
+      
+      array.put(obj);
+    }
+    
+    JSONObject json = new JSONObject();
+    json.put("res", array);
+    
+    return json.toString();
+  }
   
-
   
 }
 

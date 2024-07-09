@@ -542,4 +542,11 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
     return list;
   }
   
+  @Override
+  public ArrayList<Qna_summaryVO> get_summary_log(HashMap<String, Object> map) {
+    ArrayList<Qna_summaryVO> list = this.qna_contentsDAO.get_summary_log(map);
+    
+    return list;
+  }
+  
 }

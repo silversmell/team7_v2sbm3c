@@ -473,6 +473,13 @@
       WHERE UPPER(prompt) LIKE '%' || UPPER(#{prompt}) || '%'
   </select>
 
+  <!-- 요약 로그 실시간 조회 -->
+  <select id="get_summary_log" resultType="dev.mvc.qna_contents.Qna_summaryVO" parameterType="HashMap">
+      SELECT su.summary_no, ac.acc_no, su.article, su.response, su.sdate, ac.acc_id
+      FROM summary su
+      INNER JOIN account ac ON ac.acc_no = su.acc_no
+  </select>
+
 
 </mapper>
 

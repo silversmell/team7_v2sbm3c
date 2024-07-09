@@ -394,4 +394,11 @@ public interface Qna_contentsProcInter {
    */
   public ArrayList<Qna_dalleVO> get_prompt(HashMap <String, Object> map);
   
+  /**
+   * 요약로그 실시간 조회
+   * @param map
+   * @return
+   */
+  public ArrayList<Qna_summaryVO> get_summary_log(HashMap <String, Object> map);
+  
 }
