@@ -21,12 +21,14 @@
         let container = document.getElementById('result');
         container.innerHTML = '';
         
-        for(let i = 0;i<data.res.length;i++){
-          console.log(data.res[i]);
-        }
+        let cnt = 0; // div 갯수
         
-        if (data.res.length > 0) {
+        for(let i = 0; i < data.res.length; i++) {
+          console.log(data.res[i]);
+          
+          if (data.res.length > 0) {
           // 서버에서 받은 JSON 데이터를 처리하여 HTML에 추가
+          
           data.res.forEach(log => {
             let acc_id = log.acc_id;
             let acc_no = log.acc_no;
@@ -34,16 +36,19 @@
             let response = log.response;
             let sdate = log.sdate;
             
-            container.innerHTML = `
-             ${sdate} ${acc_id}이 보낸 요청: <br><br>${article}
+           container.innerHTML = `
+              [${cnt + 1}번째 요청]<br>
+              ${sdate} ${acc_id}님이 보낸 요청문: <br><br>${article}<br>
+             
              <hr size="10;" style="margin-top:1px; margin-bottom:1px;">
-             <br>
-             ${sdate} ${acc_id}이 받은 응답: <br><br>${response}
+             [${cnt + 1}번째 응답]<br>
+             ${sdate} ${acc_id}님이 받은 응답문: <br><br>${response}<br>
             `;
-
+            
           });
         } else {
           alert('요약 기록이 없습니다.');
+          }
         }
       });
     }
