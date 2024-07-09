@@ -1,63 +1,100 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 
 <html layout:decorate="~{layout}">
 <head>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
+    let summary_data = []; // 요약 500건 저장
+    let summary_now_page = 1; // 요약 현재 페이지
+    let items_per_page = 3; // 페이지당 출력할 레코드 수
+
     window.onload = () => {
       summary_logs();
+
+      // 더보기 버튼 이벤트 처리
+      document.getElementById('btn_add').addEventListener('click', () => {
+        // 현재 페이지보다 레코드 갯수가 더 많은 경우만 실행
+        summary_now_page++;
+        `<hr size="10;" style="margin-top:1px; margin-bottom:1px;">` + display_logs(); // 요약 조회
+      });
     };
-    
+
+    // 요약 로그 가져오는 함수
     function summary_logs() {
-      let acc_no = '[[${session.acc_no}]]'; //  javascript -> Thymeleaf -> session
-      
       // 데이터를 서버에서 가져오는 fetch 요청
       fetch(`/qcontents/summary_log`, {
         method: "POST",
-        "headers": {"Content-Type": "application/json"},
+        headers: {"Content-Type": "application/json"},
       })
       .then(response => response.json())
       .then(data => {
-        let container = document.getElementById('result');
-        container.innerHTML = '';
-        
-        let cnt = 0; // div 갯수
-        
-        for(let i = 0; i < data.res.length; i++) {
-          console.log(data.res[i]);
-          
-          if (data.res.length > 0) {
-          // 서버에서 받은 JSON 데이터를 처리하여 HTML에 추가
-          
-          data.res.forEach(log => {
-            let acc_id = log.acc_id;
-            let acc_no = log.acc_no;
-            let article = log.article;
-            let response = log.response;
-            let sdate = log.sdate;
-            
-           container.innerHTML = `
-              [${cnt + 1}번째 요청]<br>
-              ${sdate} ${acc_id}님이 보낸 요청문: <br><br>${article}<br>
-             
-             <hr size="10;" style="margin-top:1px; margin-bottom:1px;">
-             [${cnt + 1}번째 응답]<br>
-             ${sdate} ${acc_id}님이 받은 응답문: <br><br>${response}<br>
-            `;
-            
-          });
+        if (data.res.length > 0) {
+          summary_data = data.res;
+          display_logs(); // 요약 조회
         } else {
           alert('요약 기록이 없습니다.');
-          }
         }
       });
+    }
+
+    // 요약 로그 조회
+    function display_logs() {
+      let container = document.getElementById('result');
+      let start_index = (summary_now_page - 1) * items_per_page;
+      let end_index = summary_now_page * items_per_page;
+      let logs = '';
+    
+      for (let i = start_index; i < end_index && i < summary_data.length; i++) {
+        let log = summary_data[i];
+        let acc_id = log.acc_id;
+        let acc_no = log.acc_no;
+        let article = log.article;
+        let response = log.response;
+        let sdate = log.sdate;
+        let cnt = i + 1;
+    
+        let log_index = `
+          <div>
+            [${cnt}번째 요청] | 생성날짜: ${sdate} | 아이디: ${acc_id}<br>
+            ${acc_id}님께서 보내신 요청문: <br><br>${article}<br>
+            <br>
+            [${cnt}번째 응답] | 생성날짜: ${sdate} | 아이디: ${acc_id}<br>
+            ${acc_id}님이 받으신 응답문: <br><br>${response}<br>
+          </div>
+        `;
+    
+        // 마지막 레코드 행이 아니면 hr 태그 추가
+        if (i < end_index - 1 && i < summary_data.length - 1) {
+          log_index += '<br><hr size="10;" style="margin-top:1px; margin-bottom:1px;">';
+        }
+    
+        logs += log_index;
+      }
+    
+      // 새로운 레코드 행이 출력되기 전에 <br><hr> 태그 추가
+      if (summary_now_page > 1) {
+        logs = '<br><hr size="10;" style="margin-top:1px; margin-bottom:1px;">' + logs;
+      }
+    
+      if (summary_now_page === 1) {
+        container.innerHTML = logs;
+      } else {
+        container.innerHTML += logs;
+      }
+    
+      // 모든 데이터가 로드되면 더보기 버튼 숨기기
+      if (end_index >= summary_data.length) {
+        document.getElementById('btn_add').style.display = 'none';
+      } else {
+        document.getElementById('btn_add').style.display = 'block'; // 더보기 버튼 보이기
+      }
     }
   </script>
 </head>
 
 <body>
 <div layout:fragment="content">
-  <div class='title_line'>요약 로그</div>
+  <div class='title_line'>실시간 요약</div>
   <div class='menu_line'></div>
 
   <fieldset class="fieldset_basic">
@@ -67,11 +104,16 @@
           <div style="width: 100%; word-break: break-all;">
 
             <div style='margin: 0px auto; width: 90%;'>
-              <div id="result">
+              <div id="result" style="text-align: left;">
                 <!-- 여기에 요약 로그가 실시간으로 추가됩니다 -->
               </div>
 
+              <br />
+              <div id='reply_list_btn' style='border: none'>
+                <button type='button' id='btn_add' style='width: 100%;'>더보기 ▽</button>
+              </div>
             </div>
+
           </div>
         </li>
       </div>
