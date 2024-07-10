@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout}"> <!-- layout.html 상속 -->
-<div layout:fragment="content" style="margin: 80px auto; text-align: center; display: flex; justify-content: space-between;">
+<div layout:fragment="content" style="margin: 20px auto; text-align: center; display: flex; justify-content: space-between;">
   <!-- 왼쪽 영역 -->
   <div style="width: 48%; background-color: rgb(255, 255, 255); padding: 20px; margin-left: 20px;">
     <div class="container">
-      <h2 style="margin-bottom: 20px;">랭킹 글</h2>
+      <h2>랭킹 글</h2>
+      <hr style="margin-bottom: 20px;">
       <div class="grid-container">
         <div th:each="share_imageVO, status:${list_image}" class="grid-item"
           th:attr="onclick=|location.href='/scontents/read?cate_no=1&scon_no=${share_imageVO.scon_no}'|"
@@ -29,7 +30,8 @@
  <!-- 오른쪽 영역 -->
   <div class="right-panel">
     <div class="container">
-      <h2 style="margin-bottom: 20px;">추천 글</h2>
+      <h2>추천 글</h2>
+      <hr style="margin-bottom: 20px;">
       <p>관리자만 작성 가능한 게시글입니다.</p>
     </div>
   </div>
