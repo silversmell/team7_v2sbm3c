@@ -799,15 +799,17 @@ table, th, td {
     padding: 20px;
 }
 
-.suggestions {
+ .suggestions {
     border: 1px solid #ccc;
-    width: 26%;
+    width: 30%;
     margin: 0px auto;
     background-color: white;
     text-align: left;
     z-index: 100;
     position: absolute;
     left: 5%;
+    max-height: 95px; /* 패널의 최대 높이를 설정 */
+    overflow-y: auto; /* 세로 스크롤바 활성화 */
 }
 
 .suggestion-item {
