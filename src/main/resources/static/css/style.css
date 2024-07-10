@@ -679,7 +679,7 @@ table, th, td {
 }
   
  /* 더보기 버튼 스타일 */
-  #reply_list_btn {
+  .reply_list_btn {
     margin-bottom: 10px;
   }
   
@@ -695,8 +695,10 @@ table, th, td {
   }
   
   #btn_add:hover {
-    border-bottom-color: rgb(128, 128, 128); /* 호버 시 밑줄 색상 변경 */
+    border-bottom-color: rgb(255, 0, 0); /* 호버 시 밑줄 색상 변경 */
+    color: rgb(255, 0, 0);
   }
+  
   .reply-item {
     padding: 10px;
     background-color: #f9f9f9;
