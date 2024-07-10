@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}">
+<head>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    let summary_data = []; // 요약 500건 저장
+    let summary_now_page = 1; // 요약 현재 페이지
+    let items_per_page = 5; // 페이지당 출력할 레코드 수
+
+    window.onload = () => {
+      summary_logs();
+
+      // 더보기 버튼 이벤트 처리
+      document.getElementById('btn_add').addEventListener('click', () => {
+        // 현재 페이지보다 레코드 갯수가 더 많은 경우만 실행
+        summary_now_page++;
+        `<hr size="10;" style="margin-top:1px; margin-bottom:1px;">` + display_logs(); // 요약 조회
+      });
+    };
+
+    
+    
+      // 모든 데이터가 로드되면 더보기 버튼 숨기기
+      if (end_index >= summary_data.length) {
+        document.getElementById('btn_add').style.display = 'none';
+      } else {
+        document.getElementById('btn_add').style.display = 'block'; // 더보기 버튼 보이기
+      }
+    }
+  </script>
+</head>
+
+<body>
+<div layout:fragment="content">
+  <div class='title_line'>실시간 이미지 생성어</div>
+  <div class='menu_line'></div>
+
+  <fieldset class="fieldset_basic">
+    <ul>
+      <div>
+        <li class="li_none">
+          <div style="width: 100%; word-break: break-all;">
+
+            <div style='margin: 0px auto; width: 90%;'>
+              <div id="result" style="text-align: left;">
+                <!-- 여기에 요약 로그가 실시간으로 추가됩니다 -->
+              </div>
+              
+              <div id="else_result" style="text-align: center;">
+                <!-- 요약 로그 데이터 존재하지 않는 경우 -->
+              </div>
+
+              <br />
+              <div id='reply_list_btn' style='border: none'>
+                <button type='button' id='btn_add' style='width: 100%;'>더보기 ▽</button>
+              </div>
+            </div>
+
+          </div>
+        </li>
+      </div>
+    </ul>
+  </fieldset>
+
+</div>
+</body>
+</html>

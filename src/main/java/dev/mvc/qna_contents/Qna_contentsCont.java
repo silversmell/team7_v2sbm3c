@@ -1215,7 +1215,7 @@ public class Qna_contentsCont {
   public String summary_log(Model model, @RequestParam(name = "acc_no") int acc_no) {
     model.addAttribute("acc_no", acc_no);
     
-    return "/qcontents/summary_log";
+    return "qcontents/summary_log";
   }
   
   /**
@@ -1264,6 +1264,18 @@ public class Qna_contentsCont {
     json.put("res", array);
     
     return json.toString();
+  }
+  
+  /**
+   * 실시간 이미지 페이지
+   *  http://localhost:9093/qcontents/member_img_log?acc_no=3
+   * @return
+   */
+  @GetMapping(value="/member_img_log") 
+  public String member_img_log(Model model, @RequestParam(name = "acc_no") int acc_no) {
+    model.addAttribute("acc_no", acc_no);
+    
+    return "qcontents/member_img_log";
   }
   
   

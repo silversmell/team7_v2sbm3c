@@ -65,6 +65,10 @@
           <li class="nav-item" th:if="${session.acc_no != null}">
             <a class="nav-link" th:href="@{|http://localhost:9093/qcontents/summary_log?acc_no=${session.acc_no}|}" th:text="'실시간 요약'"></a>
           </li>
+          <span th:if="${session.acc_no != null}" style="font-size: 25px;">|</span>
+          <li class="nav-item" th:if="${session.acc_no != null}">
+            <a class="nav-link" th:href="@{|http://localhost:9093/qcontents/member_img_log?acc_no=${session.acc_no}|}" th:text="'실시간 이미지'"></a>
+          </li>
 				</ul>
 
 				<!-- right side -->
