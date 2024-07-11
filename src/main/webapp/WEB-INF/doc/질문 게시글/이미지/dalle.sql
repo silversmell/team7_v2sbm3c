@@ -104,3 +104,5 @@ DELETE FROM dalle;
 
 rollback;
 COMMIT;
+
+SELECT * FROM dalle;
