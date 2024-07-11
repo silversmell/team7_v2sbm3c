@@ -9,7 +9,7 @@ CREATE TABLE dalle(
   dalle_thumb           VARCHAR2(100) NOT NULL,
   dalle_size            INT DEFAULT 0 NOT NULL,
   ddate                 DATE          NOT NULL, -- 생성일
-  prompt                VARCHAR2(300) NOT NULL,
+  prompt                VARCHAR2(1000) NOT NULL,
   FOREIGN KEY (acc_no) REFERENCES account (acc_no)
 );
 

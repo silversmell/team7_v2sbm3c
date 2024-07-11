@@ -247,7 +247,6 @@ public class Qna_contentsCont {
     model.addAttribute("categoryVO", categoryVO);
 
     word = Tool.checkNull(word).trim();
-    
 
     HashMap<String, Object> map = new HashMap<>();
     map.put("cate_no", cate_no);
@@ -258,14 +257,14 @@ public class Qna_contentsCont {
     model.addAttribute("list", list);
     model.addAttribute("word", word);
 
-    // 이미지 리스트 가져오기
+ // 이미지 리스트 가져오기
     ArrayList<Qna_imageVO> allImages = this.qna_contentsProc.qna_list_all_image();
 
     // 각 질문글에 대한 첫 번째 이미지를 매핑
     HashMap<Integer, Qna_imageVO> imageMap = new HashMap<>();
     for (Qna_imageVO image : allImages) {
       if (!imageMap.containsKey(image.getQcon_no())) {
-        imageMap.put(image.getQcon_no(), image);
+        imageMap.put(image.getQcon_no(), image); // 첫 번째 이미지를 저장
       }
     }
 
@@ -321,77 +320,77 @@ public class Qna_contentsCont {
 
 	  
       if (this.accountProc.isMember(session)) {
-          Integer acc_no = (Integer) session.getAttribute("acc_no");
-          
-          // 카테고리 가져오기
-          CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
-          model.addAttribute("categoryVO", categoryVO);
+        Integer acc_no = (Integer) session.getAttribute("acc_no");
+        
+        // 카테고리 가져오기
+        CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
+        model.addAttribute("categoryVO", categoryVO);
 
-          // 질문 내용 가져오기
-          Qna_contentsVO qna_contentsVO = this.qna_contentsProc.qna_read(qcon_no);
-          model.addAttribute("qna_contentsVO", qna_contentsVO);
-          model.addAttribute("memberno" , qna_contentsVO.getAcc_no()); //질문글 작성자
-          model.addAttribute("acc_no",acc_no);
-         
-          // 질문 이미지 가져오기
-          ArrayList<Qna_imageVO> qna_imageVO = this.qna_contentsProc.qna_read_image(qcon_no);
-          model.addAttribute("qna_imageVO", qna_imageVO);
-          
-          // 댓글 수 가져오기
-          int comment_cnt = this.qna_contentsProc.qna_search_count_comment(qcon_no);
-          model.addAttribute("comment_cnt", comment_cnt);
-          
-          // 북마크 수 가져오기
-          int mark_cnt = this.qna_contentsProc.bookmark_count(qcon_no);
-          model.addAttribute("mark_cnt", mark_cnt);
+        // 질문 내용 가져오기
+        Qna_contentsVO qna_contentsVO = this.qna_contentsProc.qna_read(qcon_no);
+        model.addAttribute("qna_contentsVO", qna_contentsVO);
+        model.addAttribute("memberno" , qna_contentsVO.getAcc_no()); //질문글 작성자
+        model.addAttribute("acc_no",acc_no);
+       
+        // 질문 이미지 가져오기
+        ArrayList<Qna_imageVO> qna_imageVO = this.qna_contentsProc.qna_read_image(qcon_no);
+        model.addAttribute("qna_imageVO", qna_imageVO);
+        
+        // 댓글 수 가져오기
+        int comment_cnt = this.qna_contentsProc.qna_search_count_comment(qcon_no);
+        model.addAttribute("comment_cnt", comment_cnt);
+        
+        // 북마크 수 가져오기
+        int mark_cnt = this.qna_contentsProc.bookmark_count(qcon_no);
+        model.addAttribute("mark_cnt", mark_cnt);
 
-          HashMap<String, Object> map = new HashMap<>();
-          map.put("qcon_no", qcon_no);
-          map.put("acc_no", acc_no);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("qcon_no", qcon_no);
+        map.put("acc_no", acc_no);
 
-          // 북마크 상태 확인
-          if (this.qna_contentsProc.is_bookmarked(map).size() > 0) {
-              qna_contentsVO.setQcon_bookmark("Y");
-          } else {
-              qna_contentsVO.setQcon_bookmark("N");
-          }
-          
-          // 질문글 작성자
-          String user_name = this.qna_contentsProc.user_name(map);
-          
-          // 질문글 작성자 프로필 이미지
-          AccountVO acc_profile_img = this.qna_contentsProc.acc_profile_img(qcon_no);
+        // 북마크 상태 확인
+        if (this.qna_contentsProc.is_bookmarked(map).size() > 0) {
+            qna_contentsVO.setQcon_bookmark("Y");
+        } else {
+            qna_contentsVO.setQcon_bookmark("N");
+        }
+        
+        // 질문글 작성자
+        String user_name = this.qna_contentsProc.user_name(map);
+        
+        // 질문글 작성자 프로필 이미지
+        AccountVO acc_profile_img = this.qna_contentsProc.acc_profile_img(qcon_no);
 
-          // 모델에 필요한 정보 추가
-          model.addAttribute("acc_id", session.getAttribute("acc_id"));
-          model.addAttribute("acc_no", acc_no);
-          model.addAttribute("cate_no", cate_no);
-          model.addAttribute("qcon_no", qcon_no);
-          model.addAttribute("now_page", now_page);
-          model.addAttribute("user_name", user_name);
-          model.addAttribute("acc_profile_img", acc_profile_img);
-          model.addAttribute("dalle_origin", dalle_origin);
-          model.addAttribute("prompt", prompt);
+        // 모델에 필요한 정보 추가
+        model.addAttribute("acc_id", session.getAttribute("acc_id"));
+        model.addAttribute("acc_no", acc_no);
+        model.addAttribute("cate_no", cate_no);
+        model.addAttribute("qcon_no", qcon_no);
+        model.addAttribute("now_page", now_page);
+        model.addAttribute("user_name", user_name);
+        model.addAttribute("acc_profile_img", acc_profile_img);
+        model.addAttribute("dalle_origin", dalle_origin);
+        model.addAttribute("prompt", prompt);
 
-          // 조회수 업데이트 old ver.
-          // this.qnacontentsProc.qna_update_view(qcon_no);
+        // 조회수 업데이트 old ver.
+        // this.qnacontentsProc.qna_update_view(qcon_no);
 
-          // 현재 시간을 기준으로 조회 여부 확인
-          Long current_session = System.currentTimeMillis();
-          Long last_session = (Long) session.getAttribute("qna_last_view_time" + qcon_no);
+        // 현재 시간을 기준으로 조회 여부 확인
+        Long current_session = System.currentTimeMillis();
+        Long last_session = (Long) session.getAttribute("qna_last_view_time" + qcon_no);
 
-          // 만약 세션에 기록된 시간이 없거나, 마지막 조회 시간이 현재 시간보다 오래된 경우에만 조회수 증가
-          if (last_session == null || (current_session - last_session > 300000)) { // 300000 밀리초 = 5분
-            // 조회수 업데이트
-            this.qna_contentsProc.qna_update_view(qcon_no);
+        // 만약 세션에 기록된 시간이 없거나, 마지막 조회 시간이 현재 시간보다 오래된 경우에만 조회수 증가
+        if (last_session == null || (current_session - last_session > 300000)) { // 300000 밀리초 = 5분
+          // 조회수 업데이트
+          this.qna_contentsProc.qna_update_view(qcon_no);
 
-            // 세션에 마지막 조회 시간 기록
-            session.setAttribute("qna_last_view_time" + qcon_no, current_session);
-          }
+          // 세션에 마지막 조회 시간 기록
+          session.setAttribute("qna_last_view_time" + qcon_no, current_session);
+        }
 
-          return "qcontents/qna_read";
+        return "qcontents/qna_read";
       } else {
-          return "redirect:/account/login";
+        return "redirect:/account/login";
       }
   }
   
@@ -1233,27 +1232,27 @@ public class Qna_contentsCont {
     for (Qna_summaryVO qna_summaryVO : list) {
       JSONObject obj = new JSONObject();
       int acc_nos = qna_summaryVO.getAcc_no();
-      System.out.println("acc_no: " + acc_nos);
+      // System.out.println("acc_no: " + acc_nos);
       map.put("acc_no", acc_nos);
       obj.put("acc_no", acc_nos);
       
       String acc_id = qna_summaryVO.getAcc_id();
-      System.out.println("acc_id: "  + acc_id);
+      // System.out.println("acc_id: "  + acc_id);
       map.put("acc_id", acc_id);
       obj.put("acc_id", acc_id);
       
       String article = qna_summaryVO.getArticle();
-      System.out.println("article: "  + article);
+      // System.out.println("article: "  + article);
       map.put("article", article);
       obj.put("article", article);
       
       String response = qna_summaryVO.getResponse();
-      System.out.println("response: "  + response);
+      // System.out.println("response: "  + response);
       map.put("response", response);
       obj.put("response", response);
       
       String sdate = qna_summaryVO.getSdate();
-      System.out.println("sdate: "  + sdate);
+      // System.out.println("sdate: "  + sdate);
       map.put("sdate", sdate);
       obj.put("sdate", sdate);
       
