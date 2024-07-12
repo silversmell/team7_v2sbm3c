@@ -10,7 +10,7 @@
         });
         function loadData(){
          console.log("loadData 들어옴");
-        	let url='http://localhost:9095/api/notification/read/'+'[[${session.acc_no}]]';
+        	let url='http://localhost:9093/api/notification/read/'+'[[${session.acc_no}]]';
         	console.log(url);
         	fetch(url,{
         		"method":"GET"
