@@ -368,9 +368,10 @@ public class AdminCont {
 
 			session.setAttribute("adm_id", adminVO.getAdm_id());
 			session.setAttribute("adm_name", adminVO.getAdm_name());
+			session.setAttribute("adm_cate", adminVO.getCate_no());
 
 			if (adminVO.getAdm_grade() >= 1 && adminVO.getAdm_grade() <= 10) {
-				session.setAttribute("adm_grade", "admin"); // 관리자
+				session.setAttribute("adm_grade", "admin"); // 관리자(활동 가능 상태)
 			} else if (adminVO.getAdm_grade() >= 30 && adminVO.getAdm_grade() <= 39) {
 				session.setAttribute("adm_grade", "suspended"); // 정지 상태
 			} else if (adminVO.getAdm_grade() == 99) {

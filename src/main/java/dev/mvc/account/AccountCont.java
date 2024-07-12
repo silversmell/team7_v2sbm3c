@@ -1001,68 +1001,76 @@ public class AccountCont {
 	}
 
 	/**
-	 * 북마크 삭제
+	 * 북마크 삭제 
 	 * 
 	 * @param session
-	 * @param model
-	 * @param con_no
 	 * @param cate_no
+	 * @param con_no
 	 * @return
 	 */
-	@GetMapping("/deletemark/{con_no}")
+	@GetMapping("/deletemark")
 	@ResponseBody
-	public String deleteMark(HttpSession session,
-							 Model model,
-							 @PathVariable("con_no") int con_no,
-							 @RequestParam("cate_no") int cate_no) {
+	public Map<String, Object> deleteMark(HttpSession session,
+							 @RequestParam("cate_no") int cate_no,
+							 @RequestParam("con_no") int con_no) {
 
-		String acc_no = (String) session.getAttribute("acc_no");
-		Map<String, Object> map = new HashMap<>();
-		map.put("acc_no", acc_no);
-
-		if (cate_no == 1) {
-			map.put("scon_no", con_no);
-		} else if (cate_no == 2) {
-			map.put("qcon_no", con_no);
+		Integer acc_no = (Integer) session.getAttribute("acc_no");
+		Map<String, Object> response = new HashMap<>();
+		response.put("cnt", 0);
+		
+		if(acc_no != null) {
+	        Map<String, Object> map = new HashMap<>();
+	        map.put("acc_no", acc_no);
+	        
+			if (cate_no == 1) {
+				map.put("scon_no", con_no);
+				this.accountProc.deleteShareMark(map);
+			} else if (cate_no == 2) {
+				map.put("qcon_no", con_no);
+				this.accountProc.deleteQnaMark(map);
+			}
+			
+			response.put("cnt", 1);
 		}
-
-		this.accountProc.deleteMark(map);
-
-		model.addAttribute("cnt", 1);
-
-		return "account/my_bookmarks";
+		
+		return response;
 	}
 
+	
 	/**
 	 * 북마크 저장
 	 * 
 	 * @param session
-	 * @param con_no
 	 * @param cate_no
+	 * @param con_no
 	 * @return
 	 */
-	@GetMapping("/insertmark/{con_no}")
+	@GetMapping("/insertmark")
 	@ResponseBody
-	public String insertMark(HttpSession session,
-							 Model model,
-							 @PathVariable("con_no") int con_no,
-							 @RequestParam("cate_no") int cate_no) {
+	public Map<String, Object> insertMark(HttpSession session,
+							 @RequestParam("cate_no") int cate_no,
+							 @RequestParam("con_no") int con_no) {
 
-		String acc_no = (String) session.getAttribute("acc_no");
-		Map<String, Object> map = new HashMap<>();
-		map.put("acc_no", acc_no);
-
-		if (cate_no == 1) {
-			map.put("scon_no", con_no);
-		} else if (cate_no == 2) {
-			map.put("qcon_no", con_no);
+		Integer acc_no = (Integer) session.getAttribute("acc_no");
+		Map<String, Object> response = new HashMap<>();
+		response.put("cnt", 0);
+		
+		if(acc_no != null) {
+	        Map<String, Object> map = new HashMap<>();
+	        map.put("acc_no", acc_no);
+	        
+			if (cate_no == 1) {
+				map.put("scon_no", con_no);
+				this.accountProc.insertShareMark(map);
+			} else if (cate_no == 2) {
+				map.put("qcon_no", con_no);
+				this.accountProc.insertQnaMark(map);
+			}
+			
+			response.put("cnt", 1);
 		}
-
-		this.accountProc.insertMark(map);
-
-		model.addAttribute("cnt", 1);
-
-		return "account/my_bookmarks";
+		
+		return response;
 	}
-
+	
 }

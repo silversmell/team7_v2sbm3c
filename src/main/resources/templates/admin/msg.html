@@ -66,6 +66,20 @@
 					<div th:case="passwd_update_fail">
 						<span class="span_fail">비밀번호 변경에 실패하였습니다.</span><br>
 					</div>
+					
+					<!-- TipContents -->
+					<div th:case="permission_denied">
+						<span class="span_fail">글쓰기 권한이 없습니다.</span><br>
+					</div>
+					
+					<div th:case="check_upload_file_fail">
+						<span class="span_fail">이미지 파일이 아닙니다.</span><br>
+					</div>
+					
+					<div th:case="contents_upload_fail">
+						<span class="span_fail">글 등록에 실패하였습니다.</span><br>
+					</div>
+					
 
 
 					<!--
@@ -96,6 +110,9 @@
 				<li th:switch="${cnt}" class="li_none">
 					<div th:if="${code} == passwd_reset_success or ${code} == create_success" style="display: inline-block; margin-right: 5px;">
 						<button type="button" onclick="location.href='/account/login'" class="btn btn-secondary btn-sm">로그인</button>
+					</div>
+					<div th:if="${code} == permission_denied" style="display: inline-block; margin-right: 5px;">
+						<button type="button" onclick="location.href='/tcontents/list'" class="btn btn-secondary btn-sm">로그인</button>
 					</div>
 					<div th:case="0">
 						<button type="button" onclick="history.back()" class="btn btn-secondary btn-sm">다시 시도</button>

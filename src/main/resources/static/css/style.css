@@ -1,4 +1,4 @@
-  /* ver 2.4 2024_0520 */
+  /* ver 2.5 2024_0701 */
 
   /* 폰트 선언 */
 @font-face {
@@ -314,6 +314,14 @@
     border-left: none;
     text-align: left;
     border: 1px solid rgb(0, 0, 0); /* 경계선 색상 */
+  }
+  
+  .td_contents {
+  	border-top: none;
+  	border-right: none;
+  	border-bottom: none;
+  	border-left: none;
+  	padding: 10px !important;
   }
 
   .td_bs {
@@ -793,6 +801,7 @@ table, th, td {
     width: 95%;
 }
 
+<<<<<<< HEAD
 .right-panel {
     width: 48%;
     background-color: rgb(255, 255, 255);
@@ -828,3 +837,12 @@ table, th, td {
     background-color: rgb(228, 228, 228);
 }
         
+=======
+.contents_bottom {
+	 display: flex;
+	 justify-content: space-between;
+	 margin-left: 15px;
+	 margin-right: 15px;
+	 margin-bottom: 15px;
+}
+>>>>>>> 26876dd (팁 게시판 개발)

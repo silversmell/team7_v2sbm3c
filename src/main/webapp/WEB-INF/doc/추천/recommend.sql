@@ -74,7 +74,7 @@ WHERE r.acc_no = 9;
 
 
 -- 나의 추천글 목록
-SELECT DISTINCT sc.scon_no, sc.scon_title, sc.scon_contents, sc.scon_views, sc.mark, sc.scon_comment, sc.scon_date, sc.scon_priority
+SELECT DISTINCT sc.scon_no, sc.scon_title, sc.scon_contents, sc.scon_views, sc.scon_date, sc.scon_priority
 FROM recommend r
 JOIN contents_tag ct ON r.tag_no = ct.tag_no
 JOIN share_contents sc ON ct.scon_no = sc.scon_no

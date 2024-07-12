@@ -204,16 +204,28 @@ public class AccountProc implements AccountProcInter {
 		ArrayList<Qna_contentsVO> list = this.accountDAO.qnaMarks(acc_no);
 		return list;
 	}
-	
+
 	@Override
-	public int deleteMark(Map<String, Object> map) {
-		int cnt = this.accountDAO.deleteMark(map);
+	public int deleteShareMark(Map<String, Object> map) {
+		int cnt = this.accountDAO.deleteShareMark(map);
 		return cnt;
 	}
 
 	@Override
-	public int insertMark(Map<String, Object> map) {
-		int cnt = this.accountDAO.insertMark(map);
+	public int deleteQnaMark(Map<String, Object> map) {
+		int cnt = this.accountDAO.deleteQnaMark(map);
+		return cnt;
+	}
+
+	@Override
+	public int insertShareMark(Map<String, Object> map) {
+		int cnt = this.accountDAO.insertShareMark(map);
+		return cnt;
+	}
+
+	@Override
+	public int insertQnaMark(Map<String, Object> map) {
+		int cnt = this.accountDAO.insertQnaMark(map);
 		return cnt;
 	}
 
@@ -228,6 +240,5 @@ public class AccountProc implements AccountProcInter {
 	    int cnt = this.accountDAO.qconCmtCnt(qcon_no);
 	    return cnt;
 	}
-
 
 }

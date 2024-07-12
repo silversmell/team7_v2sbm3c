@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+
+<script>
+function send(){
+	  var fileInput = document.querySelector('input[type="file"]');
+	  let title_tag = document.getElementById("title");
+	  if(title_tag.value==' '){
+		  alert("제목을 입력해주세요");
+		  return false;
+	  }
+	   // 제목 길이 확인 (20자 이내)
+	    if (title_tag.value.trim().length > 20) {
+	        alert("제목은 20자 내외로 입력해주세요.");
+	        return false;
+	    }
+
+	  if(!fileInput.files || fileInput.files.length===0){
+		  alert("이미지를 선택하세요.");
+		  return false;
+	  }
+
+	 
+	  document.getElementById('tcon_frm').submit(); 
+	}
+	</script>
+  <div class='title_line'>
+
+   글 등록
+  </div>
+  
+  <aside class="aside_right">
+    <a href="javascript:location.reload();">새로고침</a>
+  </aside>
+  
+  <div class='menu_line'></div>
+  
+  <form name='tcon_frm'  id="tcon_frm" method='post' th:object="${tcontentsVO}" action='./create' enctype="multipart/form-data">
+  <input type="hidden" name="cate_no" th:value="${categoryVO.cate_no}"> <!-- cate_no 데이터 값 가져옴 -->
+
+    <div>
+       <label>제목</label>
+       <input type='text' name='tcon_title' value=' ' required="required" id="title"
+                 autofocus="autofocus" class="form-control" maxlength="20"  style='width: 100%;'>
+    </div>
+           <input type='hidden' name='adm_no' th:value="${adm_no}" required="required" 
+                 autofocus="autofocus" class="form-control" style='width: 100%;'>
+    <div>
+       <label>내용</label>
+       <textarea name='tcon_contents' required="required" class="form-control" rows="12" style='width: 100%;'></textarea>
+    </div>
+    <!--
+    <div>
+       <label>검색어</label>
+       <input type='text' name='word' value='오버랜딩,오지,탐험,일상탈피,힐링,내공,추진력,문제해결' required="required" 
+                 class="form-control" style='width: 100%;'>
+    </div>   
+    -->
+
+    <div>
+       <label>이미지</label>
+            <input type='file' class="form-control" name='img_mf' 
+                placeholder="파일 선택" multiple/>
+   </div>
+   
+   <div>
+      <label>Youtube 스크립트</label>
+      <textarea name='youtube' class="form-control" rows="12" style='width: 100%;' th:text="${tcontentsVO.youtube}"></textarea>
+   </div>
+
+    <!--
+    <div>
+       <label>패스워드</label>
+       <input type='password' name='passwd' value='1234' required="required" 
+                 class="form-control" style='width: 50%;'>
+    </div>   -->
+
+      
+    <div class="content_body_bottom">
+      <button type="button" onclick ="send();" class="btn btn-secondary btn-sm">등록</button>
+      <button type="button" th:attr="onclick=|location.href='./list_by_search?cate_no=${cate_no}'|" class="btn btn-secondary btn-sm">목록</button>
+    </div>
+  
+  </form>
+
+</div>
+
+
+  

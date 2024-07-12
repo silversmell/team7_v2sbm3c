@@ -5,8 +5,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 import dev.mvc.account.AccountVO;
+import jakarta.servlet.http.HttpSession;
 
 public interface AdminProcInter {
+	
+	/**
+	 * 로그인된 관리자 세션 확인
+	 * 
+	 * @param session
+	 * @return
+	 */
+	public boolean isAdmin(HttpSession session);
 
 	/**
 	 * 중복 아이디 검사

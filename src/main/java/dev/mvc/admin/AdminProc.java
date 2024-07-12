@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import dev.mvc.account.AccountVO;
 import dev.mvc.tool.Security;
+import jakarta.servlet.http.HttpSession;
 
 @Component("dev.mvc.admin.AdminProc")
 public class AdminProc implements AdminProcInter {
@@ -26,6 +27,18 @@ public class AdminProc implements AdminProcInter {
 
 	public AdminProc() {
 		System.out.println("-> AdminProc created.");
+	}
+	
+	@Override
+	public boolean isAdmin(HttpSession session) {
+		boolean sw = false;	// 로그아웃 상태로 초기화
+		String adm_grade = (String)session.getAttribute("adm_grade");
+		
+		if(adm_grade != null && adm_grade.equals("admin")) {
+			sw = true;	// 로그인 상태로 전환
+		}
+		
+		return sw;
 	}
 
 	@Override

@@ -33,6 +33,7 @@ import com.zaxxer.hikari.HikariDataSource;
 @MapperScan(basePackages= {"dev.mvc.issue.domain"}) 
 @MapperScan(basePackages= {"dev.mvc.issue"}) 
 @MapperScan(basePackages= {"dev.mvc.issue.employee"}) 
+@MapperScan(basePackages= {"dev.mvc.tip_contents"}) // tipContentsDAO interface를 찾는 위치
 
 
 public class DatabaseConfiguration {

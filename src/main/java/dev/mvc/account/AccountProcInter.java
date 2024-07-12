@@ -214,20 +214,36 @@ public interface AccountProcInter {
 	public ArrayList<Qna_contentsVO> qnaMarks(int acc_no);
 	
 	/** 
-	 * 북마크 삭제(공유, 질문)
+	 * 북마크 삭제(공유)
 	 * 
 	 * @param map
 	 * @return
 	 */
-	public int deleteMark(Map<String, Object> map);
+	public int deleteShareMark(Map<String, Object> map);
+	
+	/** 
+	 * 북마크 삭제(질문)
+	 * 
+	 * @param map
+	 * @return
+	 */
+	public int deleteQnaMark(Map<String, Object> map);
 	
 	/**
-	 * 북마크 저장(공유, 질문)
+	 * 북마크 저장(공유)
 	 * 
 	 * @param map
 	 * @return
 	 */
-	public int insertMark(Map<String, Object> map);
+	public int insertShareMark(Map<String, Object> map);
+	
+	/**
+	 * 북마크 저장(질문)
+	 * 
+	 * @param map
+	 * @return
+	 */
+	public int insertQnaMark(Map<String, Object> map);
 	
 	/**
 	 * 공유 게시글 댓글 수

@@ -115,6 +115,8 @@
 			<!-- 회원 메뉴 종료 -->
 
 			<!-- 관리자 메뉴 시작 -->
+			<a class="navbar-brand" href="/admin" th:if="${currentUrl != null and currentUrl.contains('admin')}">데스크 투어</a>
+
 			<div class="collapse navbar-collapse" id="navbarNavDropdown"
 				th:if="${currentUrl != null and currentUrl.contains('admin')}">
 

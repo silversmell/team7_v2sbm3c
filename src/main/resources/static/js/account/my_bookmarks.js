@@ -1,18 +1,20 @@
 /* my_bookmarks.html 참조 */
 
 function mark(element) {
-	let con_no = element.id
-	let cate_no = 0;
+	let hidden = element.closest('tr').querySelector('input[type="hidden"]');
+    let cate_no = hidden.getAttribute('data-cate-no');
+    
+    let con_no = element.id
 
-	let url;
+	let url = "";
 	let currentImg = element.src;
 
 	if (currentImg.endsWith("bookmark_on.png")) {
-		url = '/account/deletetmark/' + con_no + '?cate_no=' + cate_no;
+		url = `/account/deletemark?cate_no=${cate_no}&con_no=${con_no}`;
 	} else {
-		url = '/account/insertmark/' + con_no + '?cate_no=' + cate_no;
+		url = `/account/insertmark?cate_no=${cate_no}&con_no=${con_no}`;
 	}
-
+	
 	fetch(url, {
 		method: 'GET',
 	})

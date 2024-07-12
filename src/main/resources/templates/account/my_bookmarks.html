@@ -39,7 +39,7 @@
 			</div>
 		</div>
 		<div style="display:flex; justify-content: center;">
-			<table class="table table-striped" style='width: 80%; justify-content:center;'>
+			<table class="table table-striped" style='width: 90%; justify-content:center;'>
 				<colgroup>
 					<col style='width: 20%;' />
 					<col style='width: 80%;' />
@@ -55,7 +55,7 @@
 				<tbody>
 
 					<tr th:each="smark : ${share_marks}" data-type="share">
-						<input type="hidden" id="scon_no" name="scon_no" th:value="${smark.scon_no}">
+						<input type="hidden" id="scon_no" name="scon_no" th:value="${smark.scon_no}" data-cate-no="1">
 
 						<td class='td_basic'
 							style="vertical-align: middle; text-align: center; margin-bottom: 10px; padding: 0; overflow: hidden;">
@@ -76,62 +76,57 @@
 						</td>
 
 
-						<td class='td_basic'
-							style="vertical-align: middle; text-align: center; word-break: break-word; overflow: auto;">
-							<div style="flex-grow: 1; margin-bottom: 15px;">
-								<div style="cursor: pointer; margin-left: 5px; display: flex; justify-content: center;">
-									<div style="width: 260%; height: 150px; margin-bottom: 23px;">
+						<td class="td_contents" style="word-break: break-word;">
+							<div style="flex-grow: 1;">
+								<div
+									style="margin-left: 15px; margin-right: 15px; display: flex; justify-content: center;">
+									<div style="width: 100%; height: 150px; margin-bottom: 20px;">
 										<div style="display:flex; align-items: center; width: 100%; height: 100%;">
-											<div style="margin-bottom: 10px; width: 100%; height: 100%;">
+											<div style="width: 100%; height: 100%;">
 												<div th:attr="onclick=|location.href='/scontents/read?cate_no=1&scon_no=${smark.scon_no}'|"
-													style="cursor: pointer; width: 100%; height: 100%; text-align: left;">
+													style="width: 100%; height: 100%; text-align: left; overflow: hidden;">
 													<br>
-													<div style="font-weight: bold; font-size: larger; display: block; margin-bottom: 3px;"
+													<div style="font-weight: bold; font-size: larger; display: block; margin-bottom: 5px;"
 														th:text="${smark.scon_title}">
 													</div>
 													<div th:text="${smark.scon_date.substring(0, 16)}"
-													style="margin-bottom: 20px;"></div>
+														style="margin-bottom: 15px;"></div>
+
 													<div th:if="${smark.scon_contents.length() > 150 }"
 														th:text="|${smark.scon_contents.substring(0, 150)}...|"
-														style="display: block; height: 40px; margin-bottom: 5px;"></div>
+														style="display: block;"></div>
 													<div th:if="${smark.scon_contents.length() <= 150 }"
-														th:text="|${smark.scon_contents}|"
-														style="display: block; height: 40px; margin-bottom: 5px;"></div>
+														th:text="|${smark.scon_contents}|" style="display: block;">
+													</div>
 
 													<span id='acc_no' style="display:none;" value=""></span>
-													<br>
-
-													<div style="display: flex; justify-content: space-between;">
-														<div style="text-align: left;">
-															<img th:src="@{|/css/images/comment.png|}"
-																style="width: 20px; height: 20px;">
-															<label th:text="${sconComments[smark.scon_no]}">0</label>
-														</div>
-														<div style="text-align: right;">
-															<span>
-																<img src="/css/images/bookmark_on.png"
-																	th:id="${smark.scon_no}" class="icon"
-																	onclick="mark(this); event.stopPropagation();"
-																	style="width:24px; height: 24px;">
-															</span>
-														</div>
-													</div>
-													<br>
-
 
 												</div>
-
 											</div>
 										</div>
 									</div>
 								</div>
+								<div class="contents_bottom">
+									<div style="text-align: left;">
+										<img th:src="@{|/css/images/comment.png|}" style="width: 20px; height: 20px;">
+										<label th:text="${sconComments[smark.scon_no]}">0</label>
+									</div>
+									<div style="text-align: right;">
+										<span>
+											<img src="/css/images/bookmark_on.png" th:id="${smark.scon_no}" class="icon"
+												onclick="mark(this); event.stopPropagation();"
+												style="width:24px; height: 24px;">
+										</span>
+									</div>
+								</div>
 							</div>
+
 						</td>
 					</tr>
 
 					<!-- 질문 게시판 -->
 					<tr th:each="qmark : ${qna_marks}" data-type="qna">
-						<input type="hidden" id="qcon_no" name="qcon_no" th:value="${qmark.qcon_no}">
+						<input type="hidden" id="qcon_no" name="qcon_no" th:value="${qmark.qcon_no}" data-cate-no="1">
 
 						<td class='td_basic'
 							style="vertical-align: middle; text-align: center; margin-bottom: 10px; padding: 0; overflow: hidden;">
@@ -152,61 +147,54 @@
 						</td>
 
 
-						<td class='td_basic'
-							style="vertical-align: middle; text-align: center; word-break: break-word; overflow: auto;">
-							<div style="flex-grow: 1; margin-bottom: 15px;">
-								<div style="cursor: pointer; margin-left: 5px; display: flex; justify-content: center;">
-									<div style="width: 260%; height: 150px; margin-bottom: 23px;">
+						<td class="td_contents" style="word-break: break-word;">
+							<div style="flex-grow: 1;">
+								<div
+									style="margin-left: 15px; margin-right: 15px; display: flex; justify-content: center;">
+									<div style="width: 100%; height: 150px; margin-bottom: 20px;">
 										<div style="display:flex; align-items: center; width: 100%; height: 100%;">
-											<div style="margin-bottom: 10px; width: 100%; height: 100%;">
+											<div style="width: 100%; height: 100%;">
 												<div th:attr="onclick=|location.href='/qcontents/read?cate_no=2&qcon_no=${qmark.qcon_no}'|"
-													style="cursor: pointer; width: 100%; height: 100%; text-align: left;">
+													style="width: 100%; height: 100%; text-align: left; overflow: hidden;">
 													<br>
-													<div style="font-weight: bold; font-size: larger; display: block; margin-bottom: 3px;"
+													<div style="font-weight: bold; font-size: larger; display: block; margin-bottom: 5px;"
 														th:text="${qmark.qcon_name}">
 													</div>
 													<div th:text="${qmark.qcon_date.substring(0, 16)}"
-													style="margin-bottom: 20px;"></div>
+														style="margin-bottom: 15px;"></div>
+
 													<div th:if="${qmark.qcon_contents.length() > 150 }"
-														th:text="|${qmark.qcon_contents.substring(0, 150)}...|"
-														style="display: block; height: 40px; margin-bottom: 5px;"></div>
+														th:text="|${qmark.scon_contents.substring(0, 150)}...|"
+														style="display: block;"></div>
 													<div th:if="${qmark.qcon_contents.length() <= 150 }"
-														th:text="|${qmark.qcon_contents}|"
-														style="display: block; height: 40px; margin-bottom: 5px;"></div>
+														th:text="|${qmark.qcon_contents}|" style="display: block;">
+													</div>
 
 													<span id='acc_no' style="display:none;" value=""></span>
-													<br>
-
-													<div style="display: flex; justify-content: space-between;">
-														<div style="text-align: left;">
-															<img th:src="@{|/css/images/comment.png|}"
-																style="width: 20px; height: 20px;">
-															<label th:text="${qconComments[qmark.qcon_no]}">0</label>
-														</div>
-														<div style="text-align: right;">
-															<span>
-																<img src="/css/images/bookmark_on.png"
-																	th:id="${qmark.qcon_no}" class="icon"
-																	onclick="mark(this); event.stopPropagation();"
-																	style="width:24px; height: 24px;">
-															</span>
-														</div>
-													</div>
-													<br>
-
 
 												</div>
-
 											</div>
 										</div>
 									</div>
 								</div>
+								<div class="contents_bottom">
+									<div style="text-align: left;">
+										<img th:src="@{|/css/images/comment.png|}" style="width: 20px; height: 20px;">
+										<label th:text="${qconComments[qmark.qcon_no]}">0</label>
+									</div>
+									<div style="text-align: right;">
+										<span>
+											<img src="/css/images/bookmark_on.png" th:id="${qmark.qcon_no}" class="icon"
+												onclick="mark(this); event.stopPropagation();"
+												style="width:24px; height: 24px;">
+										</span>
+									</div>
+								</div>
 							</div>
+
 						</td>
 					</tr>
-
-
-
+					
 					<tr th:if="${share_count == 0} or ${qna_count == 0} ">
 						<td colspan="2" style="text-align: center;">게시글이 존재하지 않습니다.</td>
 					</tr>
