@@ -16,7 +16,7 @@
 		#{tcon_passwd}, #{word}, #{youtube})
 	</insert>
 
-	<!-- 카테고리별 검색 레코드 갯수 -->
+	<!-- 게시글 수 -->
 	<select id="list_count" resultType="int" parameterType="HashMap"> SELECT
 		COUNT(*) as cnt FROM tip_contents <choose>
 			<when test="word == null or word == ''"> <!-- 검색하지 않는 경우의 레코드 갯수 --> WHERE cate_no = 3 </when>
@@ -46,17 +46,6 @@
 			</otherwise>
 		</choose>
 		ORDER BY tcon_date ASC </select>
-
-
-	<!-- 게시글 수 -->
-	<select id="list_count" resultType="int"
-		parameterType="HashMap"> SELECT COUNT(*) as cnt FROM contents <choose>
-			<when test="word == null or word == ''"> <!-- 검색하지 않는 경우의 레코드 갯수 --> WHERE cateno=#{cateno} </when>
-			<otherwise> <!-- 검색하는 경우의 레코드 갯수 --> WHERE cateno=#{cateno} AND (UPPER(title) LIKE '%' ||
-		UPPER(#{word}) || '%' OR UPPER(content) LIKE '%' || UPPER(#{word}) ||
-		'%' OR UPPER(word) LIKE '%' || UPPER(#{word}) || '%') </otherwise>
-		</choose>
-	</select>
 
 	<!-- 팁 게시글 사진 가져오기 -->
 	<select id="tconImages" resultType="dev.mvc.tip_contents.TipContentsVO"
