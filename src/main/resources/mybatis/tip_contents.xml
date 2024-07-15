@@ -67,6 +67,13 @@
 		FROM tip_contents
 		WHERE tcon_no = #{tcon_no}
 	</select>
+	
+	<!-- 조회수 증가 -->
+	<update id="updateViews" parameterType="int">
+		UPDATE tip_contents
+		SET tcon_views = tcon_views + 1
+		WHERE tcon_no = #{tcon_no}
+	</update>
 
 	<!-- 좋아요 상태 확인 -->
 	<select id="isLiked" parameterType="HashMap" resultType="boolean">
@@ -89,6 +96,13 @@
 		WHERE acc_no = #{acc_no}
 		AND tcon_no = #{tcon_no}
 	</delete>
+	
+	<!-- 좋아요 수 -->
+	<select id="like_count" resultType="int" parameterType="int">
+		SELECT COUNT(*) as cnt
+		FROM tip_like
+		WHERE tcon_no = #{tcon_no}
+	</select>
 
 
 </mapper>

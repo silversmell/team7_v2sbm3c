@@ -57,6 +57,13 @@ public class TipContentsProc implements TipContentsProcInter {
 		TipContentsVO tcontentsVO = this.tcontentsDAO.read(tcon_no);
 		return tcontentsVO;
 	}
+	
+	@Override
+	public int updateViews(int tcon_no) {
+		int cnt = this.tcontentsDAO.updateViews(tcon_no);
+		return cnt;
+	}
+
 
 	@Override
 	public boolean isLiked(Map<String, Object> map) {
@@ -76,4 +83,10 @@ public class TipContentsProc implements TipContentsProcInter {
 		return cnt;
 	}
 
+	@Override
+	public int like_count(int tcon_no) {
+		int cnt = this.tcontentsDAO.like_count(tcon_no);
+		return cnt;
+	}
+	
 }

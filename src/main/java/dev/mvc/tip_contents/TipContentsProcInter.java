@@ -55,6 +55,14 @@ public interface TipContentsProcInter {
 	public TipContentsVO read(int tcon_no);
 	
 	/**
+	 * 조회수 증가 
+	 * 
+	 * @param tcon_no
+	 * @return
+	 */
+	public int updateViews(int tcon_no);
+	
+	/**
 	 * 좋아요 상태 확인
 	 * 
 	 * @param map
@@ -78,5 +86,12 @@ public interface TipContentsProcInter {
 	 */
 	public int deleteLike(Map<String, Object> map);
 	
+	/**
+	 * 좋아요 수
+	 * 
+	 * @param tcon_no
+	 * @return
+	 */
+	public int like_count(int tcon_no);
 	
 }

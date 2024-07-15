@@ -66,4 +66,9 @@ public class TipContentsVO {
 
 	/** 유튜브 링크 */
 	private String youtube = "";
+	
+	/** 좋아요 확인 */
+	private boolean isLiked;
+	/** 좋아요 수 */
+	private int likeCnt;
 }

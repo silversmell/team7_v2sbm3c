@@ -5,12 +5,12 @@
 	<script type="text/javascript" th:src="@{/js/tcontents/list.js}"></script>
 
 	<div class='title_line'>
-		<span th:if="${word != ''}" th:text="|> ${word} (${list_count} 건)|" class="title_line_text"></span>
+		<span></span>
 	</div>
 
 	<aside class="aside_right">
-		<span th:if="${session.grade == 'admin'}">
-			<a th:href="@{|/tcontents/create}">등록</a>
+		<span th:if="${session.acc_grade == 'admin'}">
+			<a href='./create'>등록</a>
 			<span class="menu_devide">│</span>
 		</span>
 
@@ -18,16 +18,13 @@
 		<span class='menu_divide'>│</span>
 	</aside>
 
-	<!-- /contents/list_search_component.html 파일의 list_search_fragment import -->
-	<div th:replace="~{tcontents/list_search_component::list_search_fragment}"></div>
-
 	<div class='menu_line'></div>
 
 	<!-- 갤러리 Layout  시작 -->
 
 	<div class="gallery-container">
 		<div class="gallery-item" th:if="${list.size() > 0}" th:each="tcontent, status:${list}"
-			th:attr="onclick=|location.href='/tcontents/read?tcon_no=${tcontent.tcon_no}&word=${word}&now_page=${now_page}'|">
+			th:attr="onclick=|location.href='/tcontents/read?tcon_no=${tcontent.tcon_no}'|">
 			<div class="gallery-item-img"
 				th:if="${tcontent.tcon_img.endsWith('jpg') or tcontent.tcon_img.endsWith('png')  or tcontent.tcon_img.endsWith('gif')}">
 				<img th:src="@{|/tcontents/storage/${tcontent.tcon_thumb_img}|}" style="width: 100%; height: 100%;">
@@ -56,9 +53,11 @@
 			
 			<div class="gallery-item-bottom">
 				<span>
-					<img th:src="${like_status.get(tcontent.tcon_no) ? '/css/images/like_on.png' : '/css/images/like_off.png'}"
+					<img th:src="${tcontent.isLiked ? '/css/images/like_on.png' : '/css/images/like_off.png'}"
 						th:id="${tcontent.tcon_no}" class="icon" onclick="like(this); event.stopPropagation();"
-						style="width:24px; height: 24px;">
+						th:if="${session.acc_no != null}">
+					<img src="/css/images/like_off.png" th:if="${session.acc_no == null}">
+					<label th:text="${tcontent.likeCnt}"></label>
 				</span>
 			</div>
 		</div>
@@ -67,11 +66,6 @@
 			<span>관련 글이 등록되지 않았습니다.</span>
 		</div>
 	</div> <!-- 갤러리 Layout  종료 -->
-
-
-	<!-- 페이지 버튼 목록 출력 시작 -->
-	<div class="bottom_menu" th:utext="${paging}"></div>
-	<!-- 페이지 버튼 목록 출력 종료 -->
 
 </div>
 

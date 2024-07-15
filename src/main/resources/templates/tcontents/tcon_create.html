@@ -49,15 +49,10 @@ function send(){
                  autofocus="autofocus" class="form-control" style='width: 100%;'>
     <div>
        <label>내용</label>
-       <textarea name='tcon_contents' required="required" class="form-control" rows="12" style='width: 100%;'></textarea>
+       <textarea name='tcon_contents' required="required" class="form-control" 
+	   			 style="width: 100%;" rows="12" cols="20" wrap="hard"></textarea>
     </div>
-    <!--
-    <div>
-       <label>검색어</label>
-       <input type='text' name='word' value='오버랜딩,오지,탐험,일상탈피,힐링,내공,추진력,문제해결' required="required" 
-                 class="form-control" style='width: 100%;'>
-    </div>   
-    -->
+    
 
     <div>
        <label>이미지</label>
@@ -80,7 +75,7 @@ function send(){
       
     <div class="content_body_bottom">
       <button type="button" onclick ="send();" class="btn btn-secondary btn-sm">등록</button>
-      <button type="button" th:attr="onclick=|location.href='./list_by_search?cate_no=${cate_no}'|" class="btn btn-secondary btn-sm">목록</button>
+      <button type="button" th:attr="onclick=|location.href='./list'|" class="btn btn-secondary btn-sm">목록</button>
     </div>
   
   </form>

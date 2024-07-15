@@ -1,13 +1,17 @@
-/* tcontents > list.html 참조 */
+/* tcontents > read.html 참조 */
 
 window.onload = () => {
-    let item_content = document.querySelectorAll('.gallery-item-content span');
+    let tcontent = document.getElementById("tcontent");
+    tcontent = tcontent.innerHTML;
     
-    item_content.forEach(span => {
-        let text = span.innerText;
-        text = text.replace(/<br\s*\/?>/gi, ' ');
-        span.innerText = text;
+    let content = tcontent.replace(/<br\s*\/?>/gi, '\n');
+    content = content.replace(/\n/g, '<br>');
+
+    // 연속된 공백을 &nbsp;로 변환
+    content = content.replace(/ {2,}/g, function(match) {
+        return match.replace(/ /g, '&nbsp;');
     });
+    tcontent.innerHTML = content;
 };
 
 

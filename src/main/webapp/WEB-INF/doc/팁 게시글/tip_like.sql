@@ -54,8 +54,6 @@ VALUES(LIKE_SEQ.nextval, 2, 12, sysdate);
 
 COMMIT;
 
-SELECT * FROM tip_like;
-
 -- 좋아요 삭제
 DELETE FROM tip_like
 WHERE acc_no = 2
@@ -64,6 +62,13 @@ AND tcon_no = 5;
 COMMIT;
 
 SELECT * FROM tip_like;
+
+-- 좋아요 수
+SELECT COUNT(*) as cnt
+FROM tip_like
+WHERE tcon_no = 9;
+
+
 
 
 

@@ -86,7 +86,14 @@ ORDER BY tcon_date ASC
 -- 삭제
 DELETE FROM tip_contents;
 
+-- 조회수 증가
+UPDATE tip_contents
+SET tcon_views = tcon_views + 1
+WHERE tcon_no = 5;
 
+select tcon_views from tip_contents where tcon_no = 5;
+
+COMMIT;
 
 
 
