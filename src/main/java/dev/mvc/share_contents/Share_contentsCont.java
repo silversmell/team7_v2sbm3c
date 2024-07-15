@@ -908,7 +908,7 @@ public class Share_contentsCont {
 	public String notice_delete(@RequestBody NotificationVO notice) {
 		System.out.println("notice_delete 들어옴");
 		JSONObject json = new JSONObject();
-		System.out.println("notice.id:" +notice.getId());
+		//System.out.println("notice.id:" +notice.getId());
 		int cnt = this.sconProc.id_delete(notice.getId());
 		if(cnt>0) {
 			System.out.println("알림삭제성공");

@@ -63,7 +63,7 @@
 						        .then((response) => response.json())
 						        .then((data)=>{
 						        	console.log(data['scmt_no']);
-						        	let url = 'http://localhost:9095/api/notification/comment/' + data['scmt_no'];
+						        	let url = 'http://localhost:9093/api/notification/comment/' + data['scmt_no'];
 						        	fetch(url, {
 						        	    method: "GET"
 						        	})
