@@ -2,69 +2,77 @@
 
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
 <div layout:fragment="content">
+	<script type="text/javascript" th:src="@{/js/tcontents/list.js}"></script>
 
-  <div class='title_line'>
-    <span th:if="${word != ''}" th:text="|> ${word} (${list_count} 건)|" class="title_line_text"></span>
-  </div>
+	<div class='title_line'>
+		<span th:if="${word != ''}" th:text="|> ${word} (${list_count} 건)|" class="title_line_text"></span>
+	</div>
 
-  <aside class="aside_right">
-    <span th:if="${session.grade == 'admin'}">
-      <a th:href="@{|/tcontents/create}">등록</a>
-      <span class="menu_devide">│</span>    
-    </span>
-    
-    <a href="javascript:location.reload();">새로고침</a>
-    <span class='menu_divide' >│</span>   
-  </aside> 
+	<aside class="aside_right">
+		<span th:if="${session.grade == 'admin'}">
+			<a th:href="@{|/tcontents/create}">등록</a>
+			<span class="menu_devide">│</span>
+		</span>
 
-  <!-- /contents/list_search_component.html 파일의 list_search_fragment import -->
-  <div th:replace="~{tcontents/list_search_component::list_search_fragment}"></div>
-     
-  <div class='menu_line'></div>
-       
-  <div style='width: 100%;'> <!-- 갤러리 Layout  시작 -->
-    <div th:if="${list.size() > 0}"  th:each="tcontentsVO, status:${list}" 
-         th:attr="onclick=|location.href='/tcontents/read?tcon_no=${tcontentsVO.tcon_no}&word=${word}&now_page=${now_page}'|"
-         style='width: 24%; height: 190px; float: left; margin: 0.5%; padding: 0.5%; background-color: #EEEFFF; text-align: left; cursor: pointer;'>
+		<a href="javascript:location.reload();">새로고침</a>
+		<span class='menu_divide'>│</span>
+	</aside>
 
-      <div th:if="${tcontentsVO.tcon_img.endsWith('jpg') or tcontentsVO.tcon_img.endsWith('png')  or tcontentsVO.tcon_img.endsWith('gif')}"
-             style="width: 100%; height: 100px;">
-        <img th:src="@{|/tcontents/storage/${tcontentsVO.tcon_thumb_img}|}" style="width: 100%; height: 100%;">
-      </div>
+	<!-- /contents/list_search_component.html 파일의 list_search_fragment import -->
+	<div th:replace="~{tcontents/list_search_component::list_search_fragment}"></div>
 
-      <div th:if="${((tcontentsVO.tcon_img.endsWith('jpg') or tcontentsVO.tcon_img.endsWith('png')  or tcontentsVO.tcon_img.endsWith('gif')) == false) and (tcontentsVO.tcon_img_size > 0)}"
-             style="width: 100%; height: 100px;">
-        <span th:text="${tcontentsVO.tcon_img}"></span>
-      </div>
+	<div class='menu_line'></div>
 
-      <div th:if="${tcontentsVO.tcon_img_size == 0}" style="width: 100%; height: 100px;">
-        <img src="/tcontents/images/none1.png" style="width: 100%; height: 100%;">
-      </div>
-      <div>
-        <span th:text="${tcontentsVO.tcon_title}" style="font-weight: bold;"></span><br>
-        <span th:if="${tcontentsVO.tcon_contents.length() > 80 }" 
-                  th:text="|${tcontentsVO.tcon_contents.substring(0, 80) }...|"></span>
-        <span th:if="${tcontentsVO.tcon_contents.length() <= 80 }" 
-                  th:text="|${tcontentsVO.tcon_contents}|"></span>
-      </div>
-      
-      <div style="width: 100%; text-align: right;">♡</div>
-      
-    </div>
-    
-    <div th:if="${list == null or list.size() == 0}" style="text-align: center; padding: 50px 0px;">
-      <span>관련 글이 등록되지 않았습니다.</span>
-    </div> 
-  </div>  <!-- 갤러리 Layout  종료 -->
-   
-  <!-- 페이지 버튼 목록 출력 시작 -->
-  <div class="bottom_menu" th:utext="${paging}"></div>
-  <!-- 페이지 버튼 목록 출력 종료 --> 
+	<!-- 갤러리 Layout  시작 -->
+
+	<div class="gallery-container">
+		<div class="gallery-item" th:if="${list.size() > 0}" th:each="tcontent, status:${list}"
+			th:attr="onclick=|location.href='/tcontents/read?tcon_no=${tcontent.tcon_no}&word=${word}&now_page=${now_page}'|">
+			<div class="gallery-item-img"
+				th:if="${tcontent.tcon_img.endsWith('jpg') or tcontent.tcon_img.endsWith('png')  or tcontent.tcon_img.endsWith('gif')}">
+				<img th:src="@{|/tcontents/storage/${tcontent.tcon_thumb_img}|}" style="width: 100%; height: 100%;">
+			</div>
+
+			<div th:if="${((tcontent.tcon_img.endsWith('jpg') or tcontent.tcon_img.endsWith('png')  or tcontent.tcon_img.endsWith('gif')) == false) and (tcontent.tcon_img_size > 0)}"
+				class="gallery-item-img">
+				<span th:text="${tcontent.tcon_img}"></span>
+			</div>
+
+			<div class="gallery-item-img" th:if="${tcontent.tcon_img_size == 0}">
+				<img src="/tcontents/images/none1.png" style="width: 100%; height: 100%;">
+			</div>
+			<div class="gallery-item-title">
+				<span th:text="${tcontent.tcon_title}"></span><br>
+
+			</div>
+			<div class="gallery-item-content">
+				<span th:if="${tcontent.tcon_contents.length() > 80 }"
+					th:text="|${tcontent.tcon_contents.substring(0, 80) }...|"
+					style="font-size: 12px;"></span>
+				<span th:if="${tcontent.tcon_contents.length() <= 80 }"
+					th:text="|${tcontent.tcon_contents}|"
+					style="font-size: 12px;"></span>
+			</div>
+			
+			<div class="gallery-item-bottom">
+				<span>
+					<img th:src="${like_status.get(tcontent.tcon_no) ? '/css/images/like_on.png' : '/css/images/like_off.png'}"
+						th:id="${tcontent.tcon_no}" class="icon" onclick="like(this); event.stopPropagation();"
+						style="width:24px; height: 24px;">
+				</span>
+			</div>
+		</div>
+
+		<div th:if="${list == null or list.size() == 0}" style="text-align: center; padding: 50px 0px;">
+			<span>관련 글이 등록되지 않았습니다.</span>
+		</div>
+	</div> <!-- 갤러리 Layout  종료 -->
+
+
+	<!-- 페이지 버튼 목록 출력 시작 -->
+	<div class="bottom_menu" th:utext="${paging}"></div>
+	<!-- 페이지 버튼 목록 출력 종료 -->
 
 </div>
+
 </html>
-
-
-
-
-

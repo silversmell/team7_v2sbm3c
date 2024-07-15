@@ -3,57 +3,53 @@
 <!-- SB가 자동으로 구현하여 연동하는 interface -->
 <mapper namespace="dev.mvc.tip_contents.TipContentsDAOInter"> <!-- SB가 자동으로 구현하여
 	연동하는 interface -->
-	
+
 	<!-- 글 등록 -->
 	<insert id="create" parameterType="dev.mvc.tip_contents.TipContentsVO">
-		INSERT INTO TIP_CONTENTS(tcon_no, cate_no, acc_no, tcon_title, tcon_contents, tcon_views, tcon_date,
-		tcon_img, tcon_saved_img, tcon_thumb_img, tcon_img_size, tcon_passwd, word, youtube)
-		VALUES(TIP_CONTENTS_SEQ.nextval, 3, #{acc_no}, #{tcon_title}, #{tcon_contents}, #{tcon_views}, sysdate,
-		#{tcon_img}, #{tcon_saved_img}, #{tcon_thumb_img}, #{tcon_img_size}, #{tcon_passwd}, #{word}, #{youtube})
+		INSERT INTO TIP_CONTENTS(tcon_no, cate_no, acc_no, tcon_title,
+		tcon_contents, tcon_views, tcon_date,
+		tcon_img, tcon_saved_img, tcon_thumb_img, tcon_img_size, tcon_passwd,
+		word, youtube)
+		VALUES(TIP_CONTENTS_SEQ.nextval, 3, #{acc_no}, #{tcon_title},
+		#{tcon_contents}, #{tcon_views}, sysdate,
+		#{tcon_img}, #{tcon_saved_img}, #{tcon_thumb_img}, #{tcon_img_size},
+		#{tcon_passwd}, #{word}, #{youtube})
 	</insert>
-	
+
 	<!-- 카테고리별 검색 레코드 갯수 -->
-	<select id="list_count" resultType="int" parameterType="HashMap">
-		SELECT COUNT(*) as cnt FROM tip_contents
-		<choose>
-			<when test="word == null or word == ''"> <!-- 검색하지 않는 경우의 레코드 갯수 -->
-				WHERE cate_no = 3
-			</when>
-			<otherwise> <!-- 검색하는 경우의 레코드 갯수 -->
-				WHERE cate_no = 3 AND (UPPER(tcon_title) LIKE '%' || UPPER(#{word}) || '%'
-								  OR UPPER(tcon_contents) LIKE '%' || UPPER(#{word}) || '%'
-								  OR UPPER(word) LIKE '%' || UPPER(#{word}) || '%')
-			</otherwise>
+	<select id="list_count" resultType="int" parameterType="HashMap"> SELECT
+		COUNT(*) as cnt FROM tip_contents <choose>
+			<when test="word == null or word == ''"> <!-- 검색하지 않는 경우의 레코드 갯수 --> WHERE cate_no = 3 </when>
+			<otherwise> <!-- 검색하는 경우의 레코드 갯수 --> WHERE cate_no = 3 AND (UPPER(tcon_title) LIKE '%' ||
+		UPPER(#{word}) || '%' OR UPPER(tcon_contents) LIKE '%' || UPPER(#{word})
+		|| '%' OR UPPER(word) LIKE '%' || UPPER(#{word}) || '%') </otherwise>
 		</choose>
 	</select>
-	
-	<!-- Youtube 등록, 수정, 삭제, HashMap: VO 클래스는 변수가 너무 많아서 메모리 낭비가 발생함으로,
-                       보통 3개 이하의 적은 변수만 전달하는 경우 HashMap 사용 권장 -->
+
+	<!-- Youtube -->
 	<update id="youtube" parameterType="HashMap">
 		UPDATE contents SET youtube=#{youtube} WHERE tcon_no=#{tcon_no}
 	</update>
 
-	<!-- 검색 목록 -->
-	<select id="list" resultType="dev.mvc.tip_contents.TipContentsVO" parameterType="HashMap">
-		SELECT tcon_no, cate_no, acc_no, tcon_title, tcon_contents, tcon_views, tcon_date,
-		tcon_img, tcon_saved_img, tcon_thumb_img, tcon_img_size, tcon_passwd, word, youtube
-			   		  FROM tip_contents
-		<choose>
-			<when test="word == null or word == ''"> <!-- 검색하지 않는 경우 -->
-			WHERE cate_no = 3
-			</when>
+	<!-- 글 목록 -->
+	<select id="list" resultType="dev.mvc.tip_contents.TipContentsVO"
+		parameterType="HashMap"> SELECT tcon_no, cate_no, acc_no, tcon_title,
+		tcon_contents, tcon_views, tcon_date, tcon_img, tcon_saved_img,
+		tcon_thumb_img, tcon_img_size, tcon_passwd, word, youtube FROM
+		tip_contents <choose>
+			<when test="word == null or word == ''"> <!-- 검색하지 않는 경우 --> WHERE cate_no = 3 </when>
 			<otherwise>
-				WHERE cate_no = 3 AND (UPPER(tcon_title) LIKE '%' || UPPER(#{word}) || '%'
-								  OR UPPER(tcon_contents) LIKE '%' || UPPER(#{word}) || '%'
-								  OR UPPER(word) LIKE '%' || UPPER(#{word}) || '%')
+				WHERE cate_no = 3 AND (UPPER(tcon_title) LIKE '%' ||
+		UPPER(#{word}) || '%'
+				OR UPPER(tcon_contents) LIKE '%' || UPPER(#{word}) || '%'
+				OR UPPER(word) LIKE '%' || UPPER(#{word}) || '%')
 			</otherwise>
 		</choose>
-			ORDER BY tcon_no DESC
-	</select>
-	
+		ORDER BY tcon_date ASC </select>
 
-	<!-- 카테고리별 검색 레코드 갯수 -->
-	<select id="list_by_cateno_search_count" resultType="int"
+
+	<!-- 게시글 수 -->
+	<select id="list_count" resultType="int"
 		parameterType="HashMap"> SELECT COUNT(*) as cnt FROM contents <choose>
 			<when test="word == null or word == ''"> <!-- 검색하지 않는 경우의 레코드 갯수 --> WHERE cateno=#{cateno} </when>
 			<otherwise> <!-- 검색하는 경우의 레코드 갯수 --> WHERE cateno=#{cateno} AND (UPPER(title) LIKE '%' ||
@@ -61,25 +57,49 @@
 		'%' OR UPPER(word) LIKE '%' || UPPER(#{word}) || '%') </otherwise>
 		</choose>
 	</select>
-	
+
 	<!-- 팁 게시글 사진 가져오기 -->
-	<select id="tconImages" resultType="dev.mvc.tip_contents.TipContentsVO" parameterType="int">
-		SELECT tcon_no, tcon_img, tcon_saved_img, tcon_thumb_img, tcon_img_size, tcon_date
+	<select id="tconImages" resultType="dev.mvc.tip_contents.TipContentsVO"
+		parameterType="int">
+		SELECT tcon_no, tcon_img, tcon_saved_img, tcon_thumb_img, tcon_img_size,
+		tcon_date
 		FROM tip_contents
 		WHERE tcon_no = #{tcon_no}
 		ORDER BY tcon_date ASC
 	</select>
-	
+
 	<!-- 조회 -->
 	<select id="read" resultType="dev.mvc.tip_contents.TipContentsVO"
 		parameterType="int">
-		SELECT tcon_no, cate_no, acc_no, tcon_title, tcon_contents, tcon_views, tcon_date,
-		tcon_img, tcon_saved_img, tcon_thumb_img, tcon_img_size, tcon_passwd, word, youtube
+		SELECT tcon_no, cate_no, acc_no, tcon_title, tcon_contents, tcon_views,
+		tcon_date,
+		tcon_img, tcon_saved_img, tcon_thumb_img, tcon_img_size, tcon_passwd,
+		word, youtube
 		FROM tip_contents
 		WHERE tcon_no = #{tcon_no}
 	</select>
-	
-	
-	
+
+	<!-- 좋아요 상태 확인 -->
+	<select id="isLiked" parameterType="HashMap" resultType="boolean">
+		SELECT
+		CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END AS is_liked
+		FROM tip_like
+		WHERE acc_no = #{acc_no}
+		AND tcon_no = #{tcon_no}
+	</select>
+
+	<!-- 좋아요 저장 -->
+	<insert id="insertLike" parameterType="HashMap">
+		INSERT INTO tip_like(like_no, acc_no, tcon_no, like_date)
+		VALUES(LIKE_SEQ.nextval, #{acc_no}, #{tcon_no}, sysdate)
+	</insert>
+
+	<!-- 좋아요 삭제 -->
+	<delete id="deleteLike" parameterType="HashMap">
+		DELETE FROM tip_like
+		WHERE acc_no = #{acc_no}
+		AND tcon_no = #{tcon_no}
+	</delete>
+
 
 </mapper>

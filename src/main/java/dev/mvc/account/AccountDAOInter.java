@@ -180,7 +180,6 @@ public interface AccountDAOInter {
 	 */
 	public ArrayList<Qna_imageVO> qnaImages(int qcon_no);
 	
-	
 	/**
 	 * 나의 북마크 목록(공유 게시글)
 	 * 

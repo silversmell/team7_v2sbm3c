@@ -2,6 +2,7 @@ package dev.mvc.tip_contents;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public interface TipContentsProcInter {
 
@@ -12,9 +13,9 @@ public interface TipContentsProcInter {
 	 * @return
 	 */
 	public int create(TipContentsVO tContentsVO);
-	
+
 	/**
-	 * youtube 등록, 수정, 삭제
+	 * youtube
 	 * 
 	 * @param youtube
 	 * @return 수정된 레코드 갯수
@@ -22,7 +23,7 @@ public interface TipContentsProcInter {
 	public int youtube(HashMap<String, Object> map);
 
 	/**
-	 * 카테고리별 검색된 레코드 갯수
+	 * 게시글 수
 	 * 
 	 * @param map
 	 * @return
@@ -30,7 +31,7 @@ public interface TipContentsProcInter {
 	public int list_count(HashMap<String, Object> map);
 
 	/**
-	 * 검색 목록
+	 * 글 목록
 	 * 
 	 * @param map
 	 * @return
@@ -52,4 +53,30 @@ public interface TipContentsProcInter {
 	 * @return
 	 */
 	public TipContentsVO read(int tcon_no);
+	
+	/**
+	 * 좋아요 상태 확인
+	 * 
+	 * @param map
+	 * @return
+	 */
+	public boolean isLiked(Map<String, Object> map);
+	
+	/**
+	 * 좋아요 저장
+	 * 
+	 * @param map
+	 * @return
+	 */
+	public int insertLike(Map<String, Object> map);
+	
+	/** 
+	 * 좋아요 삭제
+	 * 
+	 * @param map
+	 * @return
+	 */
+	public int deleteLike(Map<String, Object> map);
+	
+	
 }

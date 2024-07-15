@@ -1,6 +1,5 @@
 package dev.mvc.tip_contents;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -21,8 +21,6 @@ import dev.mvc.account.AccountProcInter;
 import dev.mvc.admin.AdminProcInter;
 import dev.mvc.category.CategoryProcInter;
 import dev.mvc.category.CategoryVO;
-import dev.mvc.share_contentsdto.Share_contentsVO;
-import dev.mvc.share_contentsdto.Share_imageVO;
 import dev.mvc.tool.Tool;
 import dev.mvc.tool.Upload;
 import jakarta.servlet.http.HttpServletRequest;
@@ -180,13 +178,15 @@ public class TipContentsCont {
 	}
 
 	/**
-	 * 목록 + 검색 + Grid
+	 * 갤러리형 목록 + 검색
 	 * 
 	 * @return
 	 */
 	@GetMapping(value = "/list")
 	public String list(HttpSession session, Model model, @RequestParam(name = "word", defaultValue = "") String word) {
 
+		Integer acc_no = (Integer) session.getAttribute("acc_no");
+		
 		CategoryVO categoryVO = this.categoryProc.cate_read(3);
 		model.addAttribute("categoryVO", categoryVO);
 
@@ -197,21 +197,18 @@ public class TipContentsCont {
 
 		ArrayList<TipContentsVO> list = this.tcontentsProc.list(map);
 		
-
-		String upDir = TipContents.getUploadDir();
-		// 각 게시글에 대한 이미지(이미지 존재 여부 확인)
-		Map<Integer, List<TipContentsVO>> tconImages = new HashMap<>();
-		for (TipContentsVO content : list) {
-			List<TipContentsVO> image = this.tcontentsProc.tconImages(content.getTcon_no());
-			tconImages.put(content.getTcon_no(), image);
-			
-			File file = new File(upDir + content.getTcon_thumb_img());
-			if (file.exists()) {
-			    System.out.println("Image file exists: " + file.getPath());
-			} else {
-			    System.out.println("Image file does not exist: " + file.getPath());
-			}
-		}
+	    Map<Integer, Boolean> like_status = new HashMap<>();
+	    if (acc_no != null) {
+	        for (TipContentsVO content : list) {
+	            Map<String, Object> likeMap = new HashMap<>();
+	            likeMap.put("acc_no", acc_no);
+	            likeMap.put("tcon_no", content.getTcon_no());
+	            boolean isLiked = this.tcontentsProc.isLiked(likeMap);
+	            like_status.put(content.getTcon_no(), isLiked);
+	        }
+	    }
+	    model.addAttribute("like_status", like_status);
+		
 		model.addAttribute("list", list);
 		//model.addAttribute("tconImages",tconImages);
 
@@ -254,6 +251,66 @@ public class TipContentsCont {
 		model.addAttribute("word", word);
 
 		return "tcontents/read";
+	}
+	
+	/**
+	 * 좋아요 저장
+	 * 
+	 * @param session
+	 * @param tcon_no
+	 * @return
+	 */
+	@GetMapping("/insertlike")
+	@ResponseBody
+	public Map<String, Object> insertLike(HttpSession session,
+							 @RequestParam("tcon_no") int tcon_no) {
+
+		Integer acc_no = (Integer) session.getAttribute("acc_no");
+		
+		Map<String, Object> response = new HashMap<>();
+		response.put("cnt", 0);
+		
+		if(acc_no != null) {
+	        Map<String, Object> map = new HashMap<>();
+	        map.put("acc_no", acc_no);
+			map.put("tcon_no", tcon_no);
+			
+			this.tcontentsProc.insertLike(map);
+			
+			response.put("cnt", 1);
+		}
+		
+		return response;
+	}
+	
+	/**
+	 * 좋아요 삭제
+	 * 
+	 * @param session
+	 * @param tcon_no
+	 * @return
+	 */
+	@GetMapping("/deletelike")
+	@ResponseBody
+	public Map<String, Object> deleteLike(HttpSession session,
+							 @RequestParam("tcon_no") int tcon_no) {
+
+		Integer acc_no = (Integer) session.getAttribute("acc_no");
+		
+		Map<String, Object> response = new HashMap<>();
+		response.put("cnt", 0);
+		
+		if(acc_no != null) {
+	        Map<String, Object> map = new HashMap<>();
+	        map.put("acc_no", acc_no);
+			map.put("tcon_no", tcon_no);
+			
+			this.tcontentsProc.deleteLike(map);
+			
+			response.put("cnt", 1);
+		}
+		
+		return response;
 	}
 
 }
