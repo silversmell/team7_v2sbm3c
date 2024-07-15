@@ -2,6 +2,7 @@ package dev.mvc.tip_contents;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -56,9 +57,36 @@ public class TipContentsProc implements TipContentsProcInter {
 		TipContentsVO tcontentsVO = this.tcontentsDAO.read(tcon_no);
 		return tcontentsVO;
 	}
+	
+	@Override
+	public int updateViews(int tcon_no) {
+		int cnt = this.tcontentsDAO.updateViews(tcon_no);
+		return cnt;
+	}
 
 
+	@Override
+	public boolean isLiked(Map<String, Object> map) {
+	    boolean check = this.tcontentsDAO.isLiked(map);
+		return check;
+	}
+	
+	@Override
+	public int insertLike(Map<String, Object> map) {
+		int cnt = this.tcontentsDAO.insertLike(map);
+		return cnt;
+	}
 
+	@Override
+	public int deleteLike(Map<String, Object> map) {
+		int cnt = this.tcontentsDAO.deleteLike(map);
+		return cnt;
+	}
 
-
+	@Override
+	public int like_count(int tcon_no) {
+		int cnt = this.tcontentsDAO.like_count(tcon_no);
+		return cnt;
+	}
+	
 }

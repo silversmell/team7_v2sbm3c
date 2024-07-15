@@ -1,6 +1,5 @@
 package dev.mvc.tip_contents;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,9 +10,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -21,8 +22,6 @@ import dev.mvc.account.AccountProcInter;
 import dev.mvc.admin.AdminProcInter;
 import dev.mvc.category.CategoryProcInter;
 import dev.mvc.category.CategoryVO;
-import dev.mvc.share_contentsdto.Share_contentsVO;
-import dev.mvc.share_contentsdto.Share_imageVO;
 import dev.mvc.tool.Tool;
 import dev.mvc.tool.Upload;
 import jakarta.servlet.http.HttpServletRequest;
@@ -167,6 +166,8 @@ public class TipContentsCont {
 	        tcontentsVO.setYoutube(youtube); // 변경된 youtube URL 설정
 	    }
 	    
+	    tcontentsVO.setTcon_contents(tcontentsVO.getTcon_contents().replace("\r\n", "<br>").replace("\n", "<br>"));
+	    
 	    int cnt = this.tcontentsProc.create(tcontentsVO);
 
 		if (cnt == 1) { // DB 등록 성공
@@ -180,13 +181,15 @@ public class TipContentsCont {
 	}
 
 	/**
-	 * 목록 + 검색 + Grid
+	 * 갤러리형 목록 + 검색
 	 * 
 	 * @return
 	 */
 	@GetMapping(value = "/list")
 	public String list(HttpSession session, Model model, @RequestParam(name = "word", defaultValue = "") String word) {
 
+		Integer acc_no = (Integer) session.getAttribute("acc_no");
+		
 		CategoryVO categoryVO = this.categoryProc.cate_read(3);
 		model.addAttribute("categoryVO", categoryVO);
 
@@ -197,21 +200,23 @@ public class TipContentsCont {
 
 		ArrayList<TipContentsVO> list = this.tcontentsProc.list(map);
 		
+	    if (acc_no != null) {
+	        for (TipContentsVO content : list) {
+	            Map<String, Object> likeMap = new HashMap<>();
+	            likeMap.put("acc_no", acc_no);
+	            likeMap.put("tcon_no", content.getTcon_no());
+	            
+	            boolean isLiked = this.tcontentsProc.isLiked(likeMap);
+	            content.setLiked(isLiked);
+	        }
+	    }
+	    
+        for (TipContentsVO content : list) {
+            int like_cnt = this.tcontentsProc.like_count(content.getTcon_no());
+            content.setLikeCnt(like_cnt);
+        }
 
-		String upDir = TipContents.getUploadDir();
-		// 각 게시글에 대한 이미지(이미지 존재 여부 확인)
-		Map<Integer, List<TipContentsVO>> tconImages = new HashMap<>();
-		for (TipContentsVO content : list) {
-			List<TipContentsVO> image = this.tcontentsProc.tconImages(content.getTcon_no());
-			tconImages.put(content.getTcon_no(), image);
-			
-			File file = new File(upDir + content.getTcon_thumb_img());
-			if (file.exists()) {
-			    System.out.println("Image file exists: " + file.getPath());
-			} else {
-			    System.out.println("Image file does not exist: " + file.getPath());
-			}
-		}
+		
 		model.addAttribute("list", list);
 		//model.addAttribute("tconImages",tconImages);
 
@@ -230,9 +235,12 @@ public class TipContentsCont {
 	 * @return
 	 */
 	@GetMapping(value = "/read")
-	public String read(Model model, int tcon_no, String word) {
+	public String read(HttpSession session, Model model, int tcon_no) {
+		
+		Integer acc_no = (Integer) session.getAttribute("acc_no");
+		
 		TipContentsVO tcontentsVO = this.tcontentsProc.read(tcon_no);
-
+		
 //	    String title = contentsVO.getTitle();
 //	    String content = contentsVO.getContent();
 		//
@@ -245,15 +253,89 @@ public class TipContentsCont {
 		long img_size = tcontentsVO.getTcon_img_size();
 		String img_size_label = Tool.unit(img_size);
 		tcontentsVO.setImg_size_label(img_size_label);
-
-		model.addAttribute("tcontentsVO", tcontentsVO);
+		
+		tcontentsVO.setTcon_date(tcontentsVO.getTcon_date().toString());
 
 		CategoryVO categoryVO = this.categoryProc.cate_read(tcontentsVO.getCate_no());
 		model.addAttribute("categoryVO", categoryVO);
+		
+		if (acc_no != null) {
+			Map<String, Object> likeMap = new HashMap<>();
+            likeMap.put("acc_no", acc_no);
+            likeMap.put("tcon_no", tcon_no);
+	        boolean isLiked = this.tcontentsProc.isLiked(likeMap);
+	        tcontentsVO.setLiked(isLiked);
+			
+	        int like_cnt = this.tcontentsProc.like_count(tcontentsVO.getTcon_no());
+	        tcontentsVO.setLikeCnt(like_cnt);
+		}
+		
+		// tcontentsVO.setTcon_contents(tcontentsVO.getTcon_contents().replace("<br>", "\r\n"));
+	
+		model.addAttribute("tcontentsVO", tcontentsVO);
+		this.tcontentsProc.updateViews(tcon_no); // 조회수 증가
+		
+		return "/tcontents/read";
+	}
+	
+	/**
+	 * 좋아요 저장
+	 * 
+	 * @param session
+	 * @param tcon_no
+	 * @return
+	 */
+	@GetMapping("/insertlike")
+	@ResponseBody
+	public Map<String, Object> insertLike(HttpSession session,
+							 @RequestParam("tcon_no") int tcon_no) {
 
-		model.addAttribute("word", word);
+		Integer acc_no = (Integer) session.getAttribute("acc_no");
+		
+		Map<String, Object> response = new HashMap<>();
+		response.put("cnt", 0);
+		
+		if(acc_no != null) {
+	        Map<String, Object> map = new HashMap<>();
+	        map.put("acc_no", acc_no);
+			map.put("tcon_no", tcon_no);
+			
+			this.tcontentsProc.insertLike(map);
+			
+			response.put("cnt", 1);
+		}
+		
+		return response;
+	}
+	
+	/**
+	 * 좋아요 삭제
+	 * 
+	 * @param session
+	 * @param tcon_no
+	 * @return
+	 */
+	@GetMapping("/deletelike")
+	@ResponseBody
+	public Map<String, Object> deleteLike(HttpSession session,
+							 @RequestParam("tcon_no") int tcon_no) {
 
-		return "tcontents/read";
+		Integer acc_no = (Integer) session.getAttribute("acc_no");
+		
+		Map<String, Object> response = new HashMap<>();
+		response.put("cnt", 0);
+		
+		if(acc_no != null) {
+	        Map<String, Object> map = new HashMap<>();
+	        map.put("acc_no", acc_no);
+			map.put("tcon_no", tcon_no);
+			
+			this.tcontentsProc.deleteLike(map);
+			
+			response.put("cnt", 1);
+		}
+		
+		return response;
 	}
 
 }

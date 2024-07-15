@@ -5,9 +5,18 @@
 <div layout:fragment="content">
 	<script type="text/javascript" th:src="@{/js/tcontents/read.js}"></script>
 
-	<a href="javascript:location.reload();">새로고침</a>
-	<span class='menu_divide'>│</span>
-	<a href='./list'>목록</a>
+	<div class='title_line'>
+		<span>&nbsp;</span>
+	</div>
+
+	<aside class="aside_right">
+		<a href='./list'>목록</a>
+		<span th:if="${session.acc_grade == 'admin'}">
+			<span class='menu_divide'>│</span>
+			<a href='./update'>수정</a>
+			<span class="menu_devide">│</span>
+			<a href='./delete'>삭제</a>
+		</span>
 	</aside>
 
 	<div class='menu_line'></div>
@@ -17,35 +26,53 @@
 			<li class="li_none">
 				<div style="width: 100%; word-break: break-all;">
 
-					<div
-						th:if="${tcontentsVO.tcon_img.endsWith('jpg') or tcontentsVO.tcon_img.endsWith('png')  or tcontentsVO.tcon_img.endsWith('gif')}">
-						<img th:src="@{|/tcontents/storage/${tcontentsVO.tcon_saved_img}|}"
-							style='width: 50%; float: left; margin-top: 0.5%; margin-right: 1%;'>
+					<div style="flex: 2; text-align: center;">
+						<span th:text="${tcontentsVO.tcon_title}" style="font-size:2em;font-weight: bold;"></span>
+
 					</div>
 
-					<span style="font-size: 1.5em; font-weight: bold;" th:text="${tcontentsVO.tcon_title}"></span>
-					<span style="font-size: 1em;" th:text="${tcontentsVO.tcon_date }"></span><br><br>
-					<div style="white-space: pre-wrap;"><span th:text="${tcontentsVO.tcon_contents}"></span></div>
+					<div style="text-align: right; margin-bottom: 25px;">
+						조회수 <span style="font-size: normal;" th:text="${tcontentsVO.tcon_views}"></span>
+						<span class='menu_divide'>│</span>
+						<span style="font-size: normal;" th:text="${tcontentsVO.tcon_date.substring(0, 19)}"></span>
+					</div>
+
+					<div class="fotorama-container"
+						style="display: flex; justify-content: center; align-items: center; width: 100%;">
+						<div class="fotorama" data-autoplay="5000" data-nav="thumbs" data-ratio="16/9"
+							style="width: 100%; max-width: 800px; max-height: 450px;">
+							<img th:src="@{|/contents/storage/${tcontentsVO.tcon_saved_img}|}"
+								th:if="${tcontentsVO.tcon_img.endsWith('jpg') or tcontentsVO.tcon_img.endsWith('png') or tcontentsVO.tcon_img.endsWith('gif')}"
+								style="width: 100%; height: auto; max-height: 450px;">
+						</div>
+					</div>
+
+
 				</div>
+
+				<div id="tcontent" style="white-space: pre; margin-top: 40px; margin-bottom: 30px;"
+					th:utext="${tcontentsVO.tcon_contents}"></div>
+
 			</li>
 
-			<li class="li_none" style="clear: both; padding-top: 10px; padding-bottom: 25px;"
+			<hr style="margin-top:15px; margin-bottom:25px;" th:if="${tcontentsVO.youtube.length() > 0}">
+
+			<li class="li_none" style="clear: both; padding-top: 10px; padding-bottom: 10px;"
 				th:if="${tcontentsVO.youtube.length() > 0}">
 				<div style='text-align: center; width:640px; margin: 0px auto;' th:utext="${tcontentsVO.youtube}">
 				</div>
 			</li>
 
-			<li class="li_none" th:text="|검색어(키워드): ${tcontentsVO.word}|">
-			</li>
+			<hr>
+			
+			<div class="like-area">
+				이 글이 도움이 되었나요?
+				<br>
+				<img th:src="${tcontentsVO.isLiked ? '/css/images/like_on.png' : '/css/images/like_off.png'}"
+					th:id="${tcontentsVO.tcon_no}" class="icon" onclick="like(this); event.stopPropagation();">
+				<span th:text="${tcontentsVO.likeCnt}"></span>
+			</div>
 
-			<li class="li_none" th:if="${tcontentsVO.tcon_img_size > 0}">
-				<div>
-					<!-- ServletRegister.java: registrationBean.addUrlMappings("/download"); -->
-					첨부 파일: <a
-						th:href='@{|/download?dir=/tcontents/storage&filename=${tcontentsVO.tcon_saved_img}&downname=${tcontentsVO.tcon_img}|}'
-						th:text='|${tcontentsVO.tcon_img}|'></a> <span th:text="|(${tcontentsVO.img_size_label})|"></span>
-				</div>
-			</li>
 		</ul>
 
 	</fieldset>
