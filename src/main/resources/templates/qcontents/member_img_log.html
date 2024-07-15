@@ -4,9 +4,9 @@
 <head>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
-    let img_data = []; // 요약 500건 저장
-    let img_now_page = 1; // 요약 현재 페이지
-    let items_per_page = 5; // 페이지당 출력할 레코드 수
+    let dalle_data = []; // 이미지 500건 저장
+    let dalle_now_page = 1; // 이미지 로그 현제 페이지
+    let items_per_page = 5; // 페이지당 출력 레코드 수
 
     window.onload = () => {
       member_img_logs();
@@ -14,8 +14,8 @@
       // 더보기 버튼 이벤트 처리
       document.getElementById('btn_add').addEventListener('click', () => {
         // 현재 페이지보다 레코드 갯수가 더 많은 경우만 실행
-        summary_now_page++;
-        `<hr size="10;" style="margin-top:1px; margin-bottom:1px;">` + display_logs(); // 요약 조회
+        dalle_now_page++;
+        `<hr size="10;" style="margin-top:1px; margin-bottom:1px;">` + display_logs(); // 이미지 로그 조회
       });
     };
     
@@ -23,20 +23,20 @@
     // 요약 로그 가져오는 함수
     function member_img_logs() {
       // 데이터를 서버에서 가져오는 fetch 요청
-      fetch(`/qcontents/member_img_logs`, {
+      fetch(`/qcontents/member_img_log`, {
         method: "POST",
         headers: {"Content-Type": "application/json"},
       })
       .then(response => response.json())
       .then(data => {
         if (data.res.length > 0) {
-          img_data = data.res;
+          dalle_data = data.res;
           display_logs(); // 이미지 조회
         } else {
           // alert('요약 기록이 없습니다.');
           document.getElementById('btn_add').style.display = 'none';
           let container = document.getElementById('else_result');
-          container.innerHTML = '요약 서비스 AI를 이용한 내역이 존재하지 않습니다.';
+          container.innerHTML = '이미지 생성 서비스 AI를 이용한 내역이 존재하지 않습니다.';
         }
       });
     }
@@ -44,31 +44,36 @@
     // 이미지 로그 조회
     function display_logs() {
       let container = document.getElementById('result');
-      let start_index = (img_now_page - 1) * items_per_page;
-      let end_index = img_now_page * items_per_page;
+      let start_index = (dalle_now_page - 1) * items_per_page;
+      let end_index = dalle_now_page * items_per_page;
       let logs = '';
     
-      for (let i = start_index; i < end_index && i < summary_data.length; i++) {
-        let log = img_data[i];
+      for (let i = start_index; i < end_index && i < dalle_data.length; i++) {
+        let log = dalle_data[i];
         let acc_id = log.acc_id;
         let acc_no = log.acc_no;
         let prompt = log.prompt;
-        let dalle_thumb = log.dalle_thumb;
+        let thumb = log.thumb;
         let ddate = log.ddate;
         let cnt = i + 1;
+        
+        // 현재 경로: C:\kd\ws_java\team7_v2sbm3c
+        // C:/kd/ws_python/openai/static 경로로 이미지 경로 설정
+        let thumb_path = `C:/kd/ws_python/openai/qcontents/${thumb}`;
     
         let log_index = `
           <div>
             [${cnt}번째 생성어] | 생성날짜: ${ddate} | 아이디: ${acc_id}<br>
             ${acc_id}님께서 만드신 이미지 생성어: <br><br>${prompt}<br>
             <br>
-            [${cnt}번째 결과] | 생성날짜: ${sdate} | 아이디: ${acc_id}<br>
-            ${acc_id}님이 받으신 생성어 이미지: <br><br>${dalle_thumb}<br>
+            [${cnt}번째 결과] | 생성날짜: ${ddate} | 아이디: ${acc_id}<br>
+            ${acc_id}님이 받으신 생성어 이미지: <br><br>
+            <img src="${thumb_path}" style="max-width: 100%; height: auto;"><br>
           </div>
         `;
     
-        // 마지막 레코드 행이 아니면 hr 태그 추가
-        if (i < end_index - 1 && i < img_data.length - 1) {
+        // 마지막 레코드 행이 아니면 hr 태그 추가  
+        if (i < end_index - 1 && i < dalle_data.length - 1) {
           log_index += '<br><hr size="10;" style="margin-top:1px; margin-bottom:1px;">';
         }
     
@@ -76,18 +81,18 @@
       }
     
       // 새로운 레코드 행이 출력되기 전에 <br><hr> 태그 추가
-      if (img_now_page > 1) {
+      if (dalle_now_page > 1) {
         logs = '<br><hr size="10;" style="margin-top:1px; margin-bottom:1px;">' + logs;
       }
     
-      if (img_now_page === 1) {
+      if (dalle_now_page === 1) {
         container.innerHTML = logs;
       } else {
         container.innerHTML += logs;
       }
     
       // 모든 데이터가 로드되면 더보기 버튼 숨기기
-      if (end_index >= img_data.length) {
+      if (end_index >= dalle_data.length) {
         document.getElementById('btn_add').style.display = 'none';
       } else {
         document.getElementById('btn_add').style.display = 'block'; // 더보기 버튼 보이기
@@ -111,16 +116,16 @@
 
             <div style='margin: 0px auto; width: 90%;'>
               <div id="result" style="text-align: left;">
-                <!-- 여기에 요약 로그가 실시간으로 추가됩니다 -->
+                <!-- 여기에 이미지 로그가 실시간으로 추가됩니다 -->
               </div>
               
               <div id="else_result" style="text-align: center;">
-                <!-- 요약 로그 데이터 존재하지 않는 경우 -->
+                <!-- 이미지 로그 데이터 존재하지 않는 경우 -->
               </div>
 
               <br />
               <div id='reply_list_btn' style='border: none'>
-                <button type='button' id='btn_add' style='width: 100%;'>더보기 ▽</button>
+                <button type='button' id='btn_add' style='width: 100%;'>더보기 ▽</button> <!-- 로그 더보기 버튼 -->
               </div>
             </div>
 

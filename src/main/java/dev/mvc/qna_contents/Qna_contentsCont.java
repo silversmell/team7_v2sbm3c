@@ -257,7 +257,7 @@ public class Qna_contentsCont {
     model.addAttribute("list", list);
     model.addAttribute("word", word);
 
- // 이미지 리스트 가져오기
+    // 이미지 리스트 가져오기
     ArrayList<Qna_imageVO> allImages = this.qna_contentsProc.qna_list_all_image();
 
     // 각 질문글에 대한 첫 번째 이미지를 매핑
@@ -1211,7 +1211,7 @@ public class Qna_contentsCont {
    * @return
    */
   @GetMapping(value="/summary_log") 
-  public String summary_log(Model model, @RequestParam(name = "acc_no") int acc_no) {
+  public String summary_log(HttpSession session, Model model, @RequestParam(name = "acc_no") int acc_no) {
     model.addAttribute("acc_no", acc_no);
     
     return "qcontents/summary_log";
@@ -1223,48 +1223,42 @@ public class Qna_contentsCont {
    */
   @PostMapping(value="/summary_log")
   @ResponseBody
-  public String summary_log_proc() {
-    HashMap<String, Object> map = new HashMap<>();
-    // 요약 로그 데이터를 데이터베이스에서 가져오는 로직
-    List<Qna_summaryVO> list = this.qna_contentsProc.get_summary_log(map);
-    
-    JSONArray array = new JSONArray();
-    for (Qna_summaryVO qna_summaryVO : list) {
-      JSONObject obj = new JSONObject();
-      int acc_nos = qna_summaryVO.getAcc_no();
-      // System.out.println("acc_no: " + acc_nos);
-      map.put("acc_no", acc_nos);
-      obj.put("acc_no", acc_nos);
+  public String summary_log_proc(HttpSession session, @RequestBody Qna_summaryVO qna_summaryVO) {
+      int session_acc_no = (int) session.getAttribute("acc_no");
+      System.out.println("-> session_acc_no: " + session_acc_no);
+      HashMap<String, Object> map = new HashMap<>();
+
+      ArrayList<Qna_summaryVO> list;
+
+      // 요청받은 acc_no가 -1이면 전체 로그 조회, 본인 acc_no와 같으면 본인 로그 조회
+      if (qna_summaryVO.getAcc_no() == -1) {
+          // 전체 로그 조회
+          list = this.qna_contentsProc.get_summary_logs(map);
+      } else {
+          // 본인 로그 조회
+          map.put("acc_no", session_acc_no);
+          list = this.qna_contentsProc.get_summary_log(map);
+      }
       
-      String acc_id = qna_summaryVO.getAcc_id();
-      // System.out.println("acc_id: "  + acc_id);
-      map.put("acc_id", acc_id);
-      obj.put("acc_id", acc_id);
+      JSONArray array = new JSONArray();
+      for (Qna_summaryVO qna_summaryVO1 : list) {
+          JSONObject obj = new JSONObject();
+          obj.put("acc_no", qna_summaryVO1.getAcc_no());
+          obj.put("acc_id", qna_summaryVO1.getAcc_id());
+          obj.put("article", qna_summaryVO1.getArticle());
+          obj.put("response", qna_summaryVO1.getResponse());
+          obj.put("sdate", qna_summaryVO1.getSdate());
+          array.put(obj);
+      }
       
-      String article = qna_summaryVO.getArticle();
-      // System.out.println("article: "  + article);
-      map.put("article", article);
-      obj.put("article", article);
+      JSONObject json = new JSONObject();
+      json.put("res", array);
       
-      String response = qna_summaryVO.getResponse();
-      // System.out.println("response: "  + response);
-      map.put("response", response);
-      obj.put("response", response);
-      
-      String sdate = qna_summaryVO.getSdate();
-      // System.out.println("sdate: "  + sdate);
-      map.put("sdate", sdate);
-      obj.put("sdate", sdate);
-      
-      array.put(obj);
-    }
-    
-    JSONObject json = new JSONObject();
-    json.put("res", array);
-    
-    return json.toString();
+      return json.toString();
   }
-  
+
+
+
   /**
    * 실시간 이미지 페이지
    *  http://localhost:9093/qcontents/member_img_log?acc_no=3
@@ -1275,6 +1269,55 @@ public class Qna_contentsCont {
     model.addAttribute("acc_no", acc_no);
     
     return "qcontents/member_img_log";
+  }
+  
+  /**
+   * 실시간 이미지 조회 처리
+   * @return
+   */
+  @PostMapping(value="/member_img_log")
+  @ResponseBody
+  public String member_img_log_proc() {
+    HashMap<String, Object> map = new HashMap<>();
+    // 이미지 로그 데이터를 데이터베이스에서 가져오는 로직
+    ArrayList<Qna_dalleVO> list = this.qna_contentsProc.get_img_log(map);
+    
+    JSONArray array = new JSONArray();
+    
+    for (Qna_dalleVO qna_dalleVO : list) {
+      JSONObject obj = new JSONObject();
+      int acc_nos = qna_dalleVO.getAcc_no();
+      // System.out.println("acc_no: " + acc_nos);
+      map.put("acc_no", acc_nos);
+      obj.put("acc_no", acc_nos);
+      
+      String acc_id = qna_dalleVO.getAcc_id();
+      // System.out.println("acc_id: "  + acc_id);
+      map.put("acc_id", acc_id);
+      obj.put("acc_id", acc_id);
+      
+      String prompt = qna_dalleVO.getPrompt();
+      // System.out.println("article: "  + article);
+      map.put("prompt", prompt);
+      obj.put("prompt", prompt);
+      
+      String thumb = qna_dalleVO.getDalle_thumb();
+      // System.out.println("response: "  + response);
+      map.put("thumb", thumb);
+      obj.put("thumb", thumb);
+      
+      String ddate = qna_dalleVO.getDdate();
+      // System.out.println("sdate: "  + sdate);
+      map.put("ddate", ddate);
+      obj.put("ddate", ddate);
+      
+      array.put(obj);
+    }
+    
+    JSONObject json = new JSONObject();
+    json.put("res", array);
+    
+    return json.toString();
   }
   
   

@@ -22,6 +22,9 @@ public class Qna_dalleVO {
   /* 회원 번호 */
   private int acc_no;
   
+  /* 회원 아이디 */
+  private String acc_id;
+  
   /* AI 이미지 원본 */
   private String dalle_origin;
   

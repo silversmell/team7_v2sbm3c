@@ -1,106 +1,130 @@
 <!DOCTYPE html>
-
 <html layout:decorate="~{layout}">
 <head>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
-    let summary_data = []; // 요약 500건 저장
-    let summary_now_page = 1; // 요약 현재 페이지
-    let items_per_page = 5; // 페이지당 출력할 레코드 수
+    document.addEventListener('DOMContentLoaded', function () {
+      let summary_data = []; // 요약 500건 저장
+      let summary_now_page = 1; // 요약 현재 페이지
+      let items_per_page = 5; // 페이지당 출력할 레코드 수
+      let option_no = 1; // 1: 본인, 2: 전체
 
-    window.onload = () => {
-      summary_logs();
-
-      // 더보기 버튼 이벤트 처리
-      document.getElementById('btn_add').addEventListener('click', () => {
-        // 현재 페이지보다 레코드 갯수가 더 많은 경우만 실행
-        summary_now_page++;
-        `<hr size="10;" style="margin-top:1px; margin-bottom:1px;">` + display_logs(); // 요약 조회
-      });
-    };
-
-    // 요약 로그 가져오는 함수
-    function summary_logs() {
-      // 데이터를 서버에서 가져오는 fetch 요청
-      fetch(`/qcontents/summary_log`, {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.res.length > 0) {
-          summary_data = data.res;
-          display_logs(); // 요약 조회
+      function changeType(option) {
+        if (option === 'me') {
+          option_no = 1; // 본인
         } else {
-          // alert('요약 기록이 없습니다.');
-          document.getElementById('btn_add').style.display = 'none';
-          let container = document.getElementById('else_result');
-          container.innerHTML = '요약 서비스 AI를 이용한 내역이 존재하지 않습니다.';
+          option_no = 2; // 전체
         }
-      });
-    }
+        summary_now_page = 1; // 페이지를 처음으로 되돌림
+        summary_logs(); // 필터링된 로그 조회
+      }
 
-    // 요약 로그 조회
-    function display_logs() {
-      let container = document.getElementById('result');
-      let start_index = (summary_now_page - 1) * items_per_page;
-      let end_index = summary_now_page * items_per_page;
-      let logs = '';
-    
-      for (let i = start_index; i < end_index && i < summary_data.length; i++) {
-        let log = summary_data[i];
-        let acc_id = log.acc_id;
-        let acc_no = log.acc_no;
-        let article = log.article;
-        let response = log.response;
-        let sdate = log.sdate;
-        let cnt = i + 1;
-    
-        let log_index = `
-          <div>
-            [${cnt}번째 요청] | 생성날짜: ${sdate} | 아이디: ${acc_id}<br>
-            ${acc_id}님께서 보내신 요청문: <br><br>${article}<br>
-            <br>
-            [${cnt}번째 응답] | 생성날짜: ${sdate} | 아이디: ${acc_id}<br>
-            ${acc_id}님이 받으신 응답문: <br><br>${response}<br>
-          </div>
-        `;
-    
-        // 마지막 레코드 행이 아니면 hr 태그 추가
-        if (i < end_index - 1 && i < summary_data.length - 1) {
-          log_index += '<br><hr size="10;" style="margin-top:1px; margin-bottom:1px;">';
+      function summary_logs() {
+        let option = option_no === 1 ? 'me' : 'all';
+        let acc_no = option === 'me' ? null : -1; // 'me'이면 null, 'all'이면 -1
+
+        // 데이터를 서버에서 가져오는 fetch 요청
+        fetch(`/qcontents/summary_log`, {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({ acc_no: acc_no, option: option })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.res.length > 0) {
+            summary_data = data.res;
+            display_logs(); // 요약 조회
+          } else {
+            document.getElementById('btn_add').style.display = 'none';
+            let container = document.getElementById('else_result');
+            container.innerHTML = '요약 서비스 AI를 이용한 내역이 존재하지 않습니다.';
+          }
+        });
+      }
+
+      function display_logs() {
+        let container = document.getElementById('result');
+        let start_index = (summary_now_page - 1) * items_per_page;
+        let end_index = summary_now_page * items_per_page;
+        let logs = '';
+
+        for (let i = start_index; i < end_index && i < summary_data.length; i++) {
+          let log = summary_data[i];
+          let acc_id = log.acc_id;
+          let acc_no = log.acc_no;
+          let article = log.article;
+          let response = log.response;
+          let sdate = log.sdate;
+          let cnt = i + 1;
+
+          let log_index = `
+            <div>
+              [${cnt}번째 요청] | 생성날짜: ${sdate} | 아이디: ${acc_id}<br>
+              ${acc_id}님께서 보내신 요청문: <br><br>${article}<br>
+              <br>
+              [${cnt}번째 응답] | 생성날짜: ${sdate} | 아이디: ${acc_id}<br>
+              ${acc_id}님이 받으신 응답문: <br><br>${response}<br>
+            </div>
+          `;
+
+          // 마지막 레코드 행이 아니면 hr 태그 추가
+          if (i < end_index - 1 && i < summary_data.length - 1) {
+            log_index += '<br><hr size="10;" style="margin-top:1px; margin-bottom:1px;">';
+          }
+
+          logs += log_index;
         }
-    
-        logs += log_index;
+
+        // 새로운 레코드 행이 출력되기 전에 <br><hr> 태그 추가
+        if (summary_now_page > 1) {
+          logs = '<br><hr size="10;" style="margin-top:1px; margin-bottom:1px;">' + logs;
+        }
+
+        if (summary_now_page === 1) {
+          container.innerHTML = logs;
+        } else {
+          container.innerHTML += logs;
+        }
+
+        // 모든 데이터가 로드되면 더보기 버튼 숨기기
+        if (end_index >= summary_data.length) {
+          document.getElementById('btn_add').style.display = 'none';
+        } else {
+          document.getElementById('btn_add').style.display = 'block'; // 더보기 버튼 보이기
+        }
       }
-    
-      // 새로운 레코드 행이 출력되기 전에 <br><hr> 태그 추가
-      if (summary_now_page > 1) {
-        logs = '<br><hr size="10;" style="margin-top:1px; margin-bottom:1px;">' + logs;
-      }
-    
-      if (summary_now_page === 1) {
-        container.innerHTML = logs;
-      } else {
-        container.innerHTML += logs;
-      }
-    
-      // 모든 데이터가 로드되면 더보기 버튼 숨기기
-      if (end_index >= summary_data.length) {
-        document.getElementById('btn_add').style.display = 'none';
-      } else {
-        document.getElementById('btn_add').style.display = 'block'; // 더보기 버튼 보이기
-      }
-    }
+
+      // 초기 로드 시 'me' 옵션으로 설정
+      changeType('me');
+
+      // 옵션 변경 이벤트 처리
+      document.getElementById('options').addEventListener('change', function () {
+        let option = this.value;
+        changeType(option);
+      });
+
+      // 더보기 버튼 클릭 이벤트 처리
+      document.getElementById('btn_add').addEventListener('click', function () {
+        summary_now_page++;
+        display_logs(); // 요약 조회
+      });
+    });
   </script>
 </head>
 
 <body>
-<div layout:fragment="content">
-  <div class='title_line'>실시간 요약 내역</div>
-  <div class='menu_line'></div>
-
-  <fieldset class="fieldset_basic">
+  <div layout:fragment="content">
+    <div class='title_line'>실시간 요약 내역</div>
+    
+    <div style="text-align: right; clear: both;">
+      <select id="options">
+        <option value="me">나</option>
+        <option value="all">전체</option>
+      </select>
+    </div>
+    <div class='menu_line'></div>
+    
+    <fieldset class="fieldset_basic">
     <ul>
       <div>
         <li class="li_none">
@@ -126,7 +150,7 @@
       </div>
     </ul>
   </fieldset>
-
-</div>
+  
+  </div>
 </body>
 </html>

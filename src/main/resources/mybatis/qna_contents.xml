@@ -473,12 +473,29 @@
       WHERE UPPER(prompt) LIKE '%' || UPPER(#{prompt}) || '%'
   </select>
 
-  <!-- 요약 로그 실시간 조회 -->
+  <!-- 실시간 요약 전체 로그 조회 -->
+  <select id="get_summary_logs" resultType="dev.mvc.qna_contents.Qna_summaryVO" parameterType="HashMap">
+    SELECT su.summary_no, su.acc_no, su.article, su.response, su.sdate, ac.acc_id
+    FROM summary su
+    INNER JOIN account ac ON su.acc_no = ac.acc_no
+    ORDER BY su.sdate ASC
+  </select>
+  
+  <!-- 실시간 요약 본인 로그 조회 -->
   <select id="get_summary_log" resultType="dev.mvc.qna_contents.Qna_summaryVO" parameterType="HashMap">
-      SELECT su.summary_no, ac.acc_no, su.article, su.response, su.sdate, ac.acc_id
-      FROM summary su
-      INNER JOIN account ac ON ac.acc_no = su.acc_no
-      ORDER BY sdate ASC
+    SELECT su.summary_no, su.acc_no, su.article, su.response, su.sdate, ac.acc_id
+    FROM summary su
+    INNER JOIN account ac ON su.acc_no = ac.acc_no
+    WHERE su.acc_no = #{acc_no}
+    ORDER BY su.sdate ASC
+  </select>
+    
+  <!-- 이미지 로그 실시간 조회 -->
+  <select id="get_img_log" resultType="dev.mvc.qna_contents.Qna_dalleVO" parameterType="HashMap">
+      SELECT da.dalle_no, ac.acc_no, da.prompt, da.dalle_thumb, da.ddate, ac.acc_id
+      FROM dalle da
+      INNER JOIN account ac ON ac.acc_no = da.acc_no
+      ORDER BY ddate ASC
   </select>
 
 

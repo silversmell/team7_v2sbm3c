@@ -106,3 +106,14 @@ rollback;
 COMMIT;
 
 SELECT * FROM dalle;
+
+-- 실시간 이미지 조회
+SELECT da.dalle_no, ac.acc_no, da.prompt, da.dalle_thumb, da.ddate, ac.acc_id
+FROM dalle da, account ac
+ORDER BY ddate ASC;
+
+-- 실시간 이미지 조회
+SELECT da.dalle_no, ac.acc_no, da.prompt, da.dalle_thumb, da.ddate, ac.acc_id
+FROM dalle da
+INNER JOIN account ac ON ac.acc_no = 3
+ORDER BY ddate ASC;
