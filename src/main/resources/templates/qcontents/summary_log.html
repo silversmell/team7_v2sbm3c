@@ -4,6 +4,15 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
+      
+      // 로그인 유무 확인
+      if ('[[${session.acc_no}]]' == '') {
+        alert('로그인이 필요합니다.');
+        
+        location.href = "/account/login";
+        return;
+      }
+      
       let summary_data = []; // 요약 500건 저장
       let summary_now_page = 1; // 요약 현재 페이지
       let items_per_page = 5; // 페이지당 출력할 레코드 수
