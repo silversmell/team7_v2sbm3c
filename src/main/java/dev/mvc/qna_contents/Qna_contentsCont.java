@@ -1256,9 +1256,7 @@ public class Qna_contentsCont {
       
       return json.toString();
   }
-
-
-
+  
   /**
    * 실시간 이미지 페이지
    *  http://localhost:9093/qcontents/member_img_log?acc_no=3
