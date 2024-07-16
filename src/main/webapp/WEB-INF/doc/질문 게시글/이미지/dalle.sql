@@ -107,13 +107,15 @@ COMMIT;
 
 SELECT * FROM dalle;
 
--- 실시간 이미지 조회
-SELECT da.dalle_no, ac.acc_no, da.prompt, da.dalle_thumb, da.ddate, ac.acc_id
-FROM dalle da, account ac
+-- 실시간 전체 이미지 조회
+SELECT da.dalle_no, da.acc_no, da.prompt, da.dalle_thumb, da.ddate, ac.acc_id
+FROM dalle da
+INNER JOIN account ac ON da.acc_no = ac.acc_no
 ORDER BY ddate ASC;
 
--- 실시간 이미지 조회
-SELECT da.dalle_no, ac.acc_no, da.prompt, da.dalle_thumb, da.ddate, ac.acc_id
+-- 실시간 본인 이미지 조회
+SELECT da.dalle_no, da.acc_no, da.prompt, da.dalle_thumb, da.ddate, ac.acc_id
 FROM dalle da
-INNER JOIN account ac ON ac.acc_no = 3
+INNER JOIN account ac ON da.acc_no = ac.acc_no
+WHERE da.acc_no = 3
 ORDER BY ddate ASC;

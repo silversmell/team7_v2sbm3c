@@ -558,6 +558,13 @@ public class Qna_contentsProc implements Qna_contentsProcInter {
   }
   
   @Override
+  public ArrayList<Qna_dalleVO> get_img_logs(HashMap<String, Object> map) {
+    ArrayList<Qna_dalleVO> list = this.qna_contentsDAO.get_img_logs(map);
+    
+    return list;
+  }
+  
+  @Override
   public ArrayList<Qna_dalleVO> get_img_log(HashMap<String, Object> map) {
     ArrayList<Qna_dalleVO> list = this.qna_contentsDAO.get_img_log(map);
     

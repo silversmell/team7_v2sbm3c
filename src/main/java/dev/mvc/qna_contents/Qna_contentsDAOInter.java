@@ -409,9 +409,15 @@ public interface Qna_contentsDAOInter {
    */
   public ArrayList<Qna_summaryVO> get_summary_log(HashMap <String, Object> map);
   
+  /**
+   * 전체 이미지 로그 실시간 조회
+   * @param map
+   * @return
+   */
+  public ArrayList<Qna_dalleVO> get_img_logs(HashMap <String, Object> map);
   
   /**
-   * 이미지 로그 실시간 조회
+   * 본인 이미지 로그 실시간 조회
    * @param map
    * @return
    */
