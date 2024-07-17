@@ -4,177 +4,165 @@
 <mapper namespace="dev.mvc.textmining.Tm_contentsDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
 
   <!-- 전체 목록 -->
-  <select id="qna_list_all" resultType="dev.mvc.qna_contents.Qna_contentsVO">
-    SELECT qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_bookcnt, qcon_comment, qcon_date, qcon_passwd
-    FROM qna_contents
-    ORDER BY qcon_no ASC
+  <select id="tm_list_all" resultType="dev.mvc.textmining.Tm_contentsVO">
+    SELECT tcon_no, cate_no, acc_no, tcon_name, tcon_contents, tcon_views, tcon_bookmark, tcon_bookcnt, tcon_comment, tcon_date
+    FROM tm_contents
+    ORDER BY tcon_no ASC
   </select>
   
   <!-- 등록 -->
-  <insert id="qna_create">
+  <insert id="tm_create">
     <!-- 등록후 Qna_contentsVO class의 qcon_no 컬럼에 PK return  -->
-    <selectKey keyProperty="qcon_no" resultType="int" order="BEFORE">
-      SELECT qna_contents_seq.nextval FROM dual
+    <selectKey keyProperty="tcon_no" resultType="int" order="BEFORE">
+      SELECT tm_contents_seq.nextval FROM dual
     </selectKey>
     
-    INSERT INTO QNA_CONTENTS(qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_bookcnt, qcon_date, qcon_passwd)
-    VALUES(#{qcon_no}, #{cate_no}, #{acc_no}, #{qcon_name}, #{qcon_contents}, 0, 'N', 0, sysdate, #{qcon_passwd})
+    INSERT INTO TM_CONTENTS(tcon_no, cate_no, acc_no, tcon_name, tcon_contents, tcon_views, tcon_bookmark, tcon_bookcnt, tcon_date)
+    VALUES(#{tcon_no}, #{cate_no}, #{acc_no}, #{tcon_name}, #{tcon_contents}, 0, 'N', 0, sysdate)
   </insert>
   
   <!-- 첨부 파일 등록 -->
-  <insert id="qna_attach_create" parameterType="dev.mvc.qna_contents.Qna_imageVO">
-    INSERT INTO QNA_IMAGE(file_no, qcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date)
-    VALUES(qna_image_seq.nextval, #{qcon_no}, #{file_origin_name}, #{file_upload_name}, #{file_thumb_name}, #{file_size}, sysdate)
+  <insert id="tm_attach_create" parameterType="dev.mvc.textmining.Tm_imageVO">
+    INSERT INTO TM_IMAGE(file_no, tcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date)
+    VALUES(tm_image_seq.nextval, #{tcon_no}, #{file_origin_name}, #{file_upload_name}, #{file_thumb_name}, #{file_size}, sysdate)
   </insert>
   
   <!-- 특정 글에 따른 목록 -->
-  <select id="list_by_qcon_no" resultType="dev.mvc.qna_contents.Qna_contentsVO">
-    SELECT qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_bookcnt, qcon_comment, qcon_date, qcon_passwd
-    FROM qna_contents
-    WHERE qcon_no=#{qcon_no}
+  <select id="list_by_tcon_no" resultType="dev.mvc.textmining.Tm_contentsVO">
+    SELECT tcon_no, cate_no, acc_no, tcon_name, tcon_contents, tcon_views, tcon_bookmark, tcon_bookcnt, tcon_comment, tcon_date
+    FROM tm_contents
+    WHERE tcon_no=#{tcon_no}
   </select>
   
   <!-- 전체 파일 목록 -->
-  <select id="qna_list_all_image" resultType="dev.mvc.qna_contents.Qna_imageVO">
-    SELECT file_no, qcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date
-    FROM qna_image
-    ORDER BY qcon_no DESC, file_no ASC
+  <select id="tm_list_all_image" resultType="dev.mvc.textmining.Tm_imageVO">
+    SELECT file_no, tcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date
+    FROM tm_image
+    ORDER BY tcon_no DESC, file_no ASC
   </select>
   
   <!-- 일반적인 조회 -->
-  <select id="qna_read" resultType="dev.mvc.qna_contents.Qna_contentsVO" parameterType="int">
-    SELECT qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_bookcnt, qcon_comment, qcon_date, qcon_passwd
-    FROM qna_contents
-    WHERE qcon_no= #{qcon_no}
+  <select id="tm_read" resultType="dev.mvc.textmining.Tm_contentsVO" parameterType="int">
+    SELECT tcon_no, cate_no, acc_no, tcon_name, tcon_contents, tcon_views, tcon_bookmark, tcon_bookcnt, tcon_comment, tcon_date
+    FROM tm_contents
+    WHERE tcon_no= #{tcon_no}
   </select> 
   
   <!-- 이미지 조회 -->
-  <select id="qna_read_image" resultType="dev.mvc.qna_contents.Qna_imageVO" parameterType="Integer">
-    SELECT file_no, qcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date
-    FROM qna_image
-    WHERE qcon_no=#{qcon_no}
+  <select id="tm_read_image" resultType="dev.mvc.textmining.Tm_contentsVO" parameterType="Integer">
+    SELECT file_no, tcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date
+    FROM tm_image
+    WHERE tcon_no=#{tcon_no}
   </select>
 
   <!-- 카테고리별 검색 목록 -->
-  <select id="list_by_qna_search" resultType="dev.mvc.qna_contents.Qna_contentsVO" parameterType="HashMap">
-    SELECT qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_bookcnt, qcon_comment, qcon_date, qcon_passwd, word
-    FROM qna_contents
+  <select id="list_by_qna_search" resultType="dev.mvc.textmining.Tm_contentsVO" parameterType="HashMap">
+    SELECT tcon_no, cate_no, acc_no, tcon_name, tcon_contents, tcon_views, tcon_bookmark, tcon_bookcnt, tcon_comment, tcon_date, word
+    FROM tm_contents
     <choose>
       <when test="word == null or word == ''"> <!-- 검색하지 않는 경우 -->
         WHERE cate_no=#{cate_no}
       </when>
       <otherwise> <!-- 검색하는 경우 -->
-        WHERE cate_no=#{cate_no} AND (UPPER(qcon_name) LIKE '%' || UPPER(#{word}) || '%' 
-                                                  OR UPPER(qcon_contents) LIKE '%' || UPPER(#{word}) || '%' 
+        WHERE cate_no=#{cate_no} AND (UPPER(tcon_name) LIKE '%' || UPPER(#{word}) || '%' 
+                                                  OR UPPER(tcon_contents) LIKE '%' || UPPER(#{word}) || '%' 
                                                   OR UPPER(word) LIKE '%' || UPPER(#{word}) || '%')
       </otherwise>
     </choose>
-    ORDER BY qcon_no DESC
+    ORDER BY tcon_no DESC
   </select>
 
   <!-- 카테고리별 검색 레코드 갯수 -->
-  <select id="list_by_qna_search_count" resultType="int" parameterType="HashMap">
+  <select id="list_by_tm_search_count" resultType="int" parameterType="HashMap">
     SELECT COUNT(*) as cnt
-    FROM qna_contents
+    FROM tm_contents
     <choose>
       <when test="word == null or word == ''"> <!-- 검색하지 않는 경우의 레코드 갯수 -->
         WHERE cate_no=#{cate_no}
       </when>
       <otherwise> <!-- 검색하는 경우의 레코드 갯수 -->
-        WHERE cate_no=#{cate_no} AND (UPPER(qcon_name) LIKE '%' || UPPER(#{word}) || '%' 
-                                                  OR UPPER(qcon_contents) LIKE '%' || UPPER(#{word}) || '%' 
+        WHERE cate_no=#{cate_no} AND (UPPER(tcon_name) LIKE '%' || UPPER(#{word}) || '%' 
+                                                  OR UPPER(tcon_contents) LIKE '%' || UPPER(#{word}) || '%' 
                                                   OR UPPER(word) LIKE '%' || UPPER(#{word}) || '%')
       </otherwise>
     </choose>
   </select>   
 
   <!-- 카테고리별 검색 + 페이징 목록 -->
-  <select id="list_by_qna_search_paging" resultType="dev.mvc.qna_contents.Qna_contentsVO" parameterType="HashMap">
-    SELECT qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_bookcnt, qcon_comment, qcon_date, qcon_passwd, r
+  <select id="list_by_tm_search_paging" resultType="dev.mvc.textmining.Tm_contentsVO" parameterType="HashMap">
+    SELECT tcon_no, cate_no, acc_no, tcon_name, tcon_contents, tcon_views, tcon_bookmark, tcon_bookcnt, tcon_comment, tcon_date, r
     FROM (
-              SELECT qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_bookcnt, qcon_comment, qcon_date, qcon_passwd, rownum as r
+              SELECT tcon_no, cate_no, acc_no, tcon_name, tcon_contents, tcon_views, tcon_bookmark, tcon_bookcnt, tcon_comment, tcon_date, rownum as r
               FROM (
-                        SELECT qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_bookcnt, qcon_comment, qcon_date, qcon_passwd
-                        FROM qna_contents
+                        SELECT tcon_no, cate_no, acc_no, tcon_name, tcon_contents, tcon_views, tcon_bookmark, tcon_bookcnt, tcon_comment, tcon_date
+                        FROM tm_contents
                         <choose>
                           <when test="word == null or word == ''"> <!-- 검색하지 않는 경우 -->
                             WHERE cate_no=#{cate_no}
                           </when>
                           <otherwise>
-                            WHERE cate_no=#{cate_no} AND (UPPER(qcon_name) LIKE '%' || UPPER(#{word}) || '%' 
-                                                                      OR UPPER(qcon_contents) LIKE '%' || UPPER(#{word}) || '%' 
+                            WHERE cate_no=#{cate_no} AND (UPPER(tcon_name) LIKE '%' || UPPER(#{word}) || '%' 
+                                                                      OR UPPER(tcon_contents) LIKE '%' || UPPER(#{word}) || '%' 
                                                                       OR UPPER(word) LIKE '%' || UPPER(#{word}) || '%')
                           </otherwise>
                         </choose>
-                        ORDER BY qcon_no DESC
+                        ORDER BY tcon_no DESC
                )
     )
     WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>
-     
-    <!-- 1 page: WHERE r >= 1 AND r <= 10; 
-          2 page: WHERE r >= 11 AND r <= 20;
-          3 page: WHERE r >= 21 AND r <= 30; -->
-  </select>
-  
-  
-   <!-- 패스워드 검사 -->
-  <select id="qna_password_check" resultType="int" parameterType="HashMap">
-    SELECT COUNT(*) as cnt 
-    FROM qna_contents
-    WHERE qcon_no = #{qcon_no} AND qcon_passwd=#{qcon_passwd}
   </select>
   
   <!-- 조회수 증가 -->
-  <update id="qna_update_view" parameterType="dev.mvc.qna_contents.Qna_contentsVO">
-    UPDATE qna_contents
-    SET qcon_views = qcon_views+1
-    WHERE qcon_no=#{qcon_no}
+  <update id="tm_update_view" parameterType="dev.mvc.textmining.Tm_contentsVO">
+    UPDATE tm_contents
+    SET tcon_views = tcon_views+1
+    WHERE tcon_no=#{tcon_no}
   </update>
   
   <!-- 글 수정 -->
-  <update id="qna_update_text" parameterType="dev.mvc.qna_contents.Qna_imageVO">
-    UPDATE qna_contents
-    SET qcon_name=#{qcon_name}, qcon_contents=#{qcon_contents}
-    WHERE qcon_no = #{qcon_no}
+  <update id="tm_update_text" parameterType="dev.mvc.textmining.Tm_imageVO">
+    UPDATE tm_contents
+    SET tcon_name=#{tcon_name}, tcon_contents=#{tcon_contents}
+    WHERE tcon_no = #{tcon_no}
   </update>
   
   <!-- 파일 수정 -->
-  <update id="qna_update_file" parameterType="dev.mvc.qna_contents.Qna_imageVO">
-    UPDATE qna_image
+  <update id="tm_update_file" parameterType="dev.mvc.textmining.Tm_imageVO">
+    UPDATE tm_image
     SET file_origin_name=#{file_origin_name}, file_upload_name=#{file_upload_name}, file_thumb_name=#{file_thumb_name},file_size=#{file_size}
     WHERE file_no=#{file_no} 
   </update>
   
   <!-- 이미지 수 -->
-  <select id="qna_search_count_image" resultType="int" parameterType="int">
-    SELECT file_no, qcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date
-    FROM qna_image
-    WHERE qcon_no=#{qcon_no}
+  <select id="tm_search_count_image" resultType="int" parameterType="int">
+    SELECT file_no, tcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date
+    FROM tm_image
+    WHERE tcon_no=#{tcon_no}
   </select>
   
   <!-- 파일 삭제 -->
-  <delete id="qna_delete_image" parameterType="int">
-    DELETE FROM qna_image
-    WHERE qcon_no=#{qcon_no}
+  <delete id="tm_delete_image" parameterType="int">
+    DELETE FROM tm_image
+    WHERE tcon_no=#{tcon_no}
   </delete>
   
    <!-- 글 삭제 -->
-  <delete id="qna_delete" parameterType="int">
-    DELETE FROM qna_contents
-    WHERE qcon_no=#{qcon_no}
+  <delete id="tm_delete" parameterType="int">
+    DELETE FROM tm_contents
+    WHERE tcon_no=#{tcon_no}
   </delete>
   
   <!-- FK cate_no 컬럼에 대응하는 필수 SQL -->
   <!-- 특정 카테고리에 속한 레코드 갯수를 리턴 -->
   <select id="count_by_cate_no" resultType="int" parameterType="int">
     SELECT COUNT(*) as cnt 
-    FROM qcon_no 
+    FROM tcon_no 
     WHERE cate_no=#{cate_no}
   </select>
   
   <!-- 특정 카테고리에 속한 모든 레코드 삭제 -->
   <delete id="delete_by_cate_no" parameterType="int">
-    DELETE FROM qcon_no
+    DELETE FROM tcon_no
     WHERE cate_no=#{cate_no}
   </delete>
 
@@ -182,117 +170,117 @@
   <!-- 특정 회원에 속한 레코드 갯수를 리턴 -->
   <select id="count_by_acc_no" resultType="int" parameterType="int">
     SELECT COUNT(*) as cnt 
-    FROM qcon_no 
+    FROM tcon_no 
     WHERE acc_no=#{acc_no}
   </select>
   
   <!-- 특정 회원에 속한 모든 레코드 삭제 -->
   <delete id="delete_by_acc_no" parameterType="int">
-    DELETE FROM qcon_no
+    DELETE FROM tcon_no
     WHERE acc_no=#{acc_no}
   </delete>
   
    <!-- 댓글 등록 -->
-  <insert id="qna_create_comment" parameterType="dev.mvc.qna_contents.Qna_commentVO">
-    INSERT INTO qna_comment(qcmt_no, acc_no, qcon_no, qcmt_contents, qcmt_date)
-    VALUES(qna_comment_seq.nextval, #{acc_no}, #{qcon_no}, #{qcmt_contents}, sysdate)
+  <insert id="tm_create_comment" parameterType="dev.mvc.textmining.Tm_commentVO">
+    INSERT INTO tm_comment(tcmt_no, acc_no, qcon_no, tcmt_contents, tcmt_date)
+    VALUES(tna_comment_seq.nextval, #{acc_no}, #{tcon_no}, #{tcmt_contents}, sysdate)
   </insert>
   
   <!-- 특정 글에 따른 댓글 목록 -->
-  <select id="list_by_qcmt_no_join" resultType="dev.mvc.qna_contents.Qna_Acc_commentVO" parameterType="int">
-     SELECT a.acc_id, qc.qcmt_no, qc.acc_no, qc.qcon_no, qc.qcmt_contents, qc.qcmt_date 
-     FROM account a, qna_comment qc 
-     WHERE (a.acc_no = qc.qcmt_no) AND qc.qcon_no=#{qc.qcon_no} 
-     ORDER BY qc.qcmt_no DESC
+  <select id="list_by_tcmt_no_join" resultType="dev.mvc.textmining.Tm_Acc_commentVO" parameterType="int">
+     SELECT a.acc_id, tm.tcmt_no, tm.acc_no, tm.tcon_no, tm.tcmt_contents, tm.tcmt_date 
+     FROM account a, tm_comment tm 
+     WHERE (a.acc_no = tm.tcmt_no) AND tm.tcon_no=#{tm.tcon_no} 
+     ORDER BY tm.tcmt_no DESC
   </select>
   
   <!-- 최신 댓글 500건 -->
-  <select id="list_by_qcmt_no_join_500"  resultType="dev.mvc.qna_contents.Qna_Acc_commentVO" parameterType="int">
-    SELECT acc_id, qcmt_no, qcon_no, acc_no, qcmt_contents, qcmt_date, r
+  <select id="list_by_tcmt_no_join_500"  resultType="dev.mvc.textmining.Tm_Acc_commentVO" parameterType="int">
+    SELECT acc_id, tcmt_no, tcon_no, acc_no, tcmt_contents, tcmt_date, r
     FROM (
-          SELECT acc_id, qcmt_no, qcon_no, acc_no, qcmt_contents, qcmt_date, rownum as r
+          SELECT acc_id, tcmt_no, tcon_no, acc_no, tcmt_contents, tcmt_date, rownum as r
           FROM (
                 SELECT  a.acc_id, 
-                         q.qcmt_no, q.qcon_no, q.acc_no, q.qcmt_contents, q.qcmt_date
-                FROM account a, qna_comment q      
-                WHERE (a.acc_no = q.acc_no) AND q.qcon_no=#{qcon_no}
-                ORDER BY q.qcmt_no DESC
+                         t.tcmt_no, t.tcon_no, t.acc_no, t.tcmt_contents, t.tcmt_date
+                FROM account a, tm_comment t
+                WHERE (a.acc_no = t.acc_no) AND t.tcon_no=#{tcon_no}
+                ORDER BY t.tcmt_no DESC
           )
     )
     WHERE r &lt;= 500
   </select>
   
   <!-- 작성 댓글 500건 -->
-  <select id="asc_list_by_qcmt_no_join_500"  resultType="dev.mvc.qna_contents.Qna_Acc_commentVO" parameterType="int">
-    SELECT acc_id, qcmt_no, qcon_no, acc_no, qcmt_contents, qcmt_date, r
+  <select id="asc_list_by_tcmt_no_join_500"  resultType="dev.mvc.textmining.Tm_Acc_commentVO" parameterType="int">
+    SELECT acc_id, tcmt_no, tcon_no, acc_no, tcmt_contents, tcmt_date, r
     FROM (
-          SELECT acc_id, qcmt_no, qcon_no, acc_no, qcmt_contents, qcmt_date, rownum as r
+          SELECT acc_id, tcmt_no, tcon_no, acc_no, tcmt_contents, tcmt_date, rownum as r
           FROM (
                 SELECT  a.acc_id, 
-                         q.qcmt_no, q.qcon_no, q.acc_no, q.qcmt_contents, q.qcmt_date
-                FROM account a, qna_comment q      
-                WHERE (a.acc_no = q.acc_no) AND q.qcon_no=#{qcon_no}
-                ORDER BY q.qcmt_no ASC
+                         t.tcmt_no, t.tcon_no, t.acc_no, t.qcmt_contents, t.tcmt_date
+                FROM account a, tm_comment t
+                WHERE (a.acc_no = t.acc_no) AND t.tcon_no=#{tcon_no}
+                ORDER BY t.tcmt_no DESC
           )
     )
     WHERE r &lt;= 500
   </select>
   
   <!-- 특정 글에 따른 댓글 -->
-  <select id="qna_read_comment" resultType="dev.mvc.qna_contents.Qna_commentVO" parameterType="int">
-    SELECT qcmt_no, qcon_no, acc_no, qcmt_contents, qcmt_date
-    FROM qna_comment
-    WHERE qcmt_no=#{qcmt_no}
+  <select id="tm_read_comment" resultType="dev.mvc.textmining.Tm_commentVO" parameterType="int">
+    SELECT tcmt_no, tcon_no, acc_no, tcmt_contents, tcmt_date
+    FROM tm_comment
+    WHERE tcmt_no=#{tcmt_no}
   </select>
   
   <!-- 댓글 수 -->
-  <select id="qna_search_count_comment" resultType="int" parameterType="int">
+  <select id="tm_search_count_comment" resultType="int" parameterType="int">
     SELECT count(*)
-    FROM qna_comment
-    WHERE qcon_no=#{qcon_no}
+    FROM tm_comment
+    WHERE tcon_no=#{tcon_no}
   </select>
   
  <!-- 댓글 수 증가 -->
- <update id="increaseReplycnt" parameterType="int">
-   UPDATE qna_contents
-   SET qcon_comment = qcon_comment + 1
-   WHERE qcon_no = #{qcon_no}
+ <update id="increase_reply_cnt" parameterType="int">
+   UPDATE tm_contents
+   SET tcon_comment = tcon_comment + 1
+   WHERE tcon_no = #{tcon_no}
  </update>
 
  <!-- 댓글 수 감소 -->
- <update id="decreaseReplycnt" parameterType="int">
-   UPDATE qna_contents
-   SET qcon_comment = qcon_comment - 1
-   WHERE qcon_no = #{qcon_no}
+ <update id="decrease_reply_cnt" parameterType="int">
+   UPDATE tm_contents
+   SET tcon_comment = tcon_comment - 1
+   WHERE tcon_no = #{tcon_no}
  </update>
    
   <!-- 댓글 수정 -->
-  <update id="qna_update_comment" parameterType="dev.mvc.qna_contents.Qna_commentVO">
-    UPDATE qna_comment SET qcmt_contents=#{qcmt_contents}
-    WHERE qcmt_no = #{qcmt_no}
+  <update id="tm_update_comment" parameterType="dev.mvc.textmining.Tm_commentVO">
+    UPDATE tm_comment SET tcmt_contents=#{tcmt_contents}
+    WHERE tcmt_no = #{tcmt_no}
   </update>
   
   <!-- 댓글 삭제 -->
-  <delete id="qna_delete_comment" parameterType="int">
-    DELETE FROM qna_comment 
-    WHERE qcmt_no = #{qcmt_no}
+  <delete id="tm_delete_comment" parameterType="int">
+    DELETE FROM tm_comment 
+    WHERE tcmt_no = #{tcmt_no}
   </delete>
   
   <!-- 특정 질문글 댓글 전체 삭제 -->
-  <delete id="all_qna_delete_comment" parameterType="int">
-    DELETE FROM qna_comment 
-    WHERE qcon_no = #{qcon_no}
+  <delete id="all_tm_delete_comment" parameterType="int">
+    DELETE FROM tm_comment 
+    WHERE tcon_no = #{tcon_no}
   </delete>
   
   <!-- 특정 질문글 북마크 갯수 확인 -->
   <select id="bookmark_count" parameterType="int">
     SELECT count(*)
-    FROM qna_mark
-    WHERE qcon_no=#{qcon_no}
+    FROM tm_mark
+    WHERE tcon_no=#{tcon_no}
   </select>
   
-  <!-- 특정 질문글 북마크하였는지 확인 -->
-  <select id="is_bookmarked" resultType="dev.mvc.qna_contents.Qna_markVO" parameterType="HashMap">
+  <!-- 특정 질문글 북마크하였는지 확인 --> <!-- 여기서부터 다시 시작해야 함 -->
+  <select id="is_bookmarked" resultType="dev.mvc.textmining.Qna_markVO" parameterType="HashMap">
     SELECT acc_no, qcon_no
     FROM qna_mark
     WHERE acc_no=#{acc_no} AND qcon_no=#{qcon_no} 
@@ -344,13 +332,13 @@
   </insert>
   
   <!-- 모든 대댓글 읽기 -->
-  <select id ="qna_read_recomment_all" resultType="dev.mvc.qna_contents.Qna_recommentVO">
+  <select id ="qna_read_recomment_all" resultType="dev.mvc.textmining.Qna_recommentVO">
     SELECT qrecmt_no, qcmt_no, qcon_no, qrecmt_contents, acc_no, qrecmt_date
     FROM qna_recomment
   </select>
   
   <!-- 해당 대댓글에 대한 질문글 보기 -->
-  <select id ="qna_read_recomment"  resultType="dev.mvc.qna_contents.Qna_recommentVO" parameterType="HashMap">
+  <select id ="qna_read_recomment"  resultType="dev.mvc.textmining.Qna_recommentVO" parameterType="HashMap">
     select qc.qrecmt_no, qc.qcmt_no, qc.qcon_no, qc.qrecmt_contents, ac.acc_no, qc.qrecmt_date, ac.acc_id
     from qna_recomment qc, account ac
     where qc.acc_no = ac.acc_no AND qc.qcmt_no = #{qcmt_no}
@@ -371,7 +359,7 @@
   </update>
 
   <!-- 대댓글 읽기 -->
-  <select id="read_recomment" parameterType="int" resultType="dev.mvc.qna_contents.Qna_recommentVO">
+  <select id="read_recomment" parameterType="int" resultType="dev.mvc.textmining.Qna_recommentVO">
     select qrecmt_no, qcmt_no, qcon_no, qrecmt_contents, acc_no, qrecmt_date
     from qna_recomment
     where qrecmt_no=#{qrecmt_no}
@@ -451,7 +439,7 @@
   </select>
   
   <!-- 선택한 답글의 회원 아이디 조회 -->
-  <select id="select_acc_id" resultType="dev.mvc.qna_contents.Qna_recommentVO" parameterType="int">
+  <select id="select_acc_id" resultType="dev.mvc.textmining.Qna_recommentVO" parameterType="int">
     SELECT ac.acc_no, ac.acc_id
     FROM qna_recomment qr
     INNER JOIN account ac ON qr.acc_no = ac.acc_no
@@ -466,47 +454,6 @@
     WHERE qcmt.qcmt_no = #{qcmt_no}
   </select>
   
-  <!-- 프롬포트 실시간 인기 생성어 -->
-  <select id="get_prompt" resultType="dev.mvc.qna_contents.Qna_dalleVO" parameterType="HashMap">
-      SELECT dalle_no, prompt, dalle_origin
-      FROM dalle
-      WHERE UPPER(prompt) LIKE '%' || UPPER(#{prompt}) || '%'
-  </select>
-
-  <!-- 실시간 요약 전체 로그 조회 -->
-  <select id="get_summary_logs" resultType="dev.mvc.qna_contents.Qna_summaryVO" parameterType="HashMap">
-    SELECT su.summary_no, su.acc_no, su.article, su.response, su.sdate, ac.acc_id
-    FROM summary su
-    INNER JOIN account ac ON su.acc_no = ac.acc_no
-    ORDER BY su.sdate ASC
-  </select>
-  
-  <!-- 실시간 요약 본인 로그 조회 -->
-  <select id="get_summary_log" resultType="dev.mvc.qna_contents.Qna_summaryVO" parameterType="HashMap">
-    SELECT su.summary_no, su.acc_no, su.article, su.response, su.sdate, ac.acc_id
-    FROM summary su
-    INNER JOIN account ac ON su.acc_no = ac.acc_no
-    WHERE su.acc_no = #{acc_no}
-    ORDER BY su.sdate ASC
-  </select>
-  
-  <!-- 실시간 이미지 로그 본인 조회 -->
-  <select id="get_img_logs" resultType="dev.mvc.qna_contents.Qna_dalleVO" parameterType="HashMap">
-    SELECT da.dalle_no, da.acc_no, da.prompt, da.dalle_thumb, da.ddate, ac.acc_id
-    FROM dalle da
-    INNER JOIN account ac ON da.acc_no = ac.acc_no
-    ORDER BY ddate ASC
-  </select>
-    
-  <!-- 실시간 이미지 로그 본인 조회 -->
-  <select id="get_img_log" resultType="dev.mvc.qna_contents.Qna_dalleVO" parameterType="HashMap">
-    SELECT da.dalle_no, da.acc_no, da.prompt, da.dalle_thumb, da.ddate, ac.acc_id
-    FROM dalle da
-    INNER JOIN account ac ON da.acc_no = ac.acc_no
-    WHERE da.acc_no = #{acc_no}
-    ORDER BY ddate ASC
-  </select>
-
 
 </mapper>
 

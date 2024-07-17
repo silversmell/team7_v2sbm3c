@@ -386,40 +386,6 @@ public interface Tm_contentsProcInter {
    * @return
    */
   public Tm_recommentVO select_acc_id(int qrecmt_no);
-  
-  /**
-   * 프롬포트 실시간 생성어 
-   * @param map
-   * @return
-   */
-  public ArrayList<Qna_dalleVO> get_prompt(HashMap <String, Object> map);
-  
-  /**
-   * 전체 요약 로그 실시간 조회
-   * @param map
-   * @return
-   */
-  public ArrayList<Qna_summaryVO> get_summary_logs(HashMap <String, Object> map);
-  
-  /**
-   * 본인 요약 로그 실시간 조회
-   * @param map
-   * @return
-   */
-  public ArrayList<Qna_summaryVO> get_summary_log(HashMap <String, Object> map);
-  
-  /**
-   * 전체 이미지 로그 실시간 조회
-   * @param map
-   * @return
-   */
-  public ArrayList<Qna_dalleVO> get_img_logs(HashMap <String, Object> map);
-  
-  /**
-   * 본인 이미지 로그 실시간 조회
-   * @param map
-   * @return
-   */
-  public ArrayList<Qna_dalleVO> get_img_log(HashMap <String, Object> map);
+
   
 }

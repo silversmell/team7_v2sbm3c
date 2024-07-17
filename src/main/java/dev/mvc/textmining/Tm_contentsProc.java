@@ -535,40 +535,9 @@ public class Tm_contentsProc implements Tm_contentsProcInter {
     
     return qna_recommentVO;
   }
+
+
   
-  @Override
-  public ArrayList<Qna_dalleVO> get_prompt(HashMap<String, Object> map) {
-    ArrayList<Qna_dalleVO> list = this.qna_contentsDAO.get_prompt(map);
-    
-    return list;
-  }
-  
-  @Override
-  public ArrayList<Qna_summaryVO> get_summary_logs(HashMap<String, Object> map) {
-    ArrayList<Qna_summaryVO> list = this.qna_contentsDAO.get_summary_logs(map);
-    
-    return list;
-  }
-  
-  @Override
-  public ArrayList<Qna_summaryVO> get_summary_log(HashMap<String, Object> map) {
-    ArrayList<Qna_summaryVO> list = this.qna_contentsDAO.get_summary_log(map);
-    
-    return list;
-  }
-  
-  @Override
-  public ArrayList<Qna_dalleVO> get_img_logs(HashMap<String, Object> map) {
-    ArrayList<Qna_dalleVO> list = this.qna_contentsDAO.get_img_logs(map);
-    
-    return list;
-  }
-  
-  @Override
-  public ArrayList<Qna_dalleVO> get_img_log(HashMap<String, Object> map) {
-    ArrayList<Qna_dalleVO> list = this.qna_contentsDAO.get_img_log(map);
-    
-    return list;
-  }
+ 
   
 }
