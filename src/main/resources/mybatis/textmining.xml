@@ -280,8 +280,172 @@
   </select>
   
  
-  <!-- 특정 질문글 북마크하였는지 확인 --> <!-- 여기서부터 다시 시작해야 함 -->
+  <!-- 특정 텍스트마이닝 북마크하였는지 확인 -->
+  <select id="is_bookmarked" resultType="dev.mvc.textmining.Tm_markVO" parameterType="HashMap">
+    SELECT acc_no, tcon_no
+    FROM tm_mark
+    WHERE acc_no=#{acc_no} AND tcon_no=#{tcon_no} 
+  </select>
   
+  <!-- 텍스트마이닝 북마크 등록 -->
+  <insert id="bookmark_create" parameterType="HashMap">
+    INSERT INTO tm_mark(tmark_no, acc_no, tcon_no)
+    VALUES(tm_mark_seq.nextval, #{acc_no}, #{tcon_no}) 
+  </insert>
+
+  <!-- 텍스트마이닝 북마크 삭제 -->
+  <delete id="bookmark_delete" parameterType="HashMap">
+    DELETE FROM tm_mark
+    WHERE acc_no=#{acc_no} AND tcon_no=#{tcon_no} 
+  </delete>
+  
+  <!-- 특정 텍스트마이닝 북마크 전체 삭제 -->
+  <delete id="all_bookmark_delete" parameterType="int">
+    DELETE FROM tm_mark 
+    WHERE tcon_no = #{tcon_no}
+  </delete>
+  
+  <!-- 텍스트마이닝 북마크 공개 -->
+  <update id="bookmark_y" parameterType="HashMap">
+    UPDATE tm_contents
+    SET tcon_bookmark='Y'
+    WHERE acc_no=#{acc_no} AND tcon_no=#{tcon_no} 
+  </update>
+
+  <!-- 텍스트마이닝 북마크 비공개 -->
+  <update id="bookmark_n" parameterType="HashMap">
+    UPDATE tm_contents
+    SET tcon_bookmark='N'
+    WHERE acc_no=#{acc_no} AND tcon_no=#{tcon_no} 
+  </update>
+  
+  <!-- 작성자 -->
+  <select id="user_name" resultType="String" parameterType="HashMap">
+    SELECT a.acc_id
+    FROM account a, tm_contents t
+    WHERE a.acc_no=t.acc_no AND t.tcon_no=#{tcon_no}
+  </select>
+  
+  <!-- 대댓글 작성 -->
+  <insert id="tm_create_recomment" parameterType="HashMap">
+    INSERT INTO tm_recomment(trecmt_no, tcmt_no, tcon_no, trecmt_contents, acc_no, trecmt_date)
+    VALUES(tm_recomment_seq.nextval, #{tcmt_no}, #{tcon_no}, #{trecmt_contents}, #{acc_no}, sysdate)
+  </insert>
+  
+  <!-- 모든 대댓글 읽기 -->
+  <select id ="tm_read_recomment_all" resultType="dev.mvc.textmining.Tm_recommentVO">
+    SELECT trecmt_no, tcmt_no, tcon_no, trecmt_contents, acc_no, trecmt_date
+    FROM tm_recomment
+  </select>
+  
+  <!-- 해당 대댓글에 대한 텍스트마이닝 보기 -->
+  <select id ="tm_read_recomment"  resultType="dev.mvc.textmining.Tm_recommentVO" parameterType="HashMap">
+    SELECT tm.trecmt_no, tm.tcmt_no, tm.tcon_no, tm.trecmt_contents, ac.acc_no, tm.trecmt_date, ac.acc_id
+    FROM tm_recomment tm, account ac
+    WHERE tm.acc_no = ac.acc_no AND tm.tcmt_no = #{tcmt_no}
+    ORDER BY trecmt_no asc
+  </select>
+  
+  <!-- 대댓글 삭제 -->
+  <delete id="delete_tcmtno_recomment" parameterType="int">
+    DELETE from tm_recomment
+    WHERE tcmt_no = #{tcmt_no}
+  </delete>
+
+  <!-- 특정 대댓글 수정 -->
+  <update id="tm_update_recomment" parameterType="HashMap">
+    update tm_recomment
+    set trecmt_contents =#{trecmt_contents}
+    where trecmt_no=#{trecmt_no}
+  </update>
+
+  <!-- 대댓글 읽기 -->
+  <select id="read_recomment" parameterType="int" resultType="dev.mvc.textmining.Tm_recommentVO">
+    select trecmt_no, tcmt_no, tcon_no, trecmt_contents, acc_no, trecmt_date
+    from tm_recomment
+    where trecmt_no=#{trecmt_no}
+  </select>
+
+  <!-- 특정 텍스트마이닝 전체 대댓글 삭제 -->
+  <delete id="tm_delete_recomment" parameterType="int">
+    delete from tm_recomment
+    where trecmt_no = #{trecmt_no}
+  </delete>
+  
+  <!-- 특정 텍스트마이닝 대댓글 전체 삭제 -->
+  <delete id="all_tm_delete_recomment" parameterType="int">
+    DELETE FROM tm_recomment 
+    WHERE tcon_no = #{tcon_no}
+  </delete>
+  
+  <!-- tcon_no에 따른 선택 삭제 -->
+  <delete id="delete_tconno" parameterType="list">
+    DELETE FROM tm_contents
+    WHERE tcon_no IN
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
+
+  <!-- tcon_no에 따른 이미지 삭제 -->
+  <delete id="delete_tconno_image" parameterType="list">
+    DELETE FROM tm_image
+    WHERE tcon_no IN
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
+
+  <!-- tcon_no에 따른 북마크 삭제 -->
+  <delete id="delete_tconno_bookmark" parameterType="list">
+    DELETE FROM tm_mark
+    WHERE tcon_no IN
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
+  
+  <!-- tcon_no에 따른 댓글 삭제 -->
+  <delete id="delete_tconno_comment" parameterType="list">
+    DELETE FROM tm_comment
+    WHERE tcon_no IN
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
+  
+  <!-- tcon_no에 따른 선택 대댓글 삭제 -->
+  <delete id="delete_tconno_recomment" parameterType="list">
+    delete from tm_recomment
+      where tcon_no in
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+        #{item}
+    </foreach>
+  </delete>
+  
+  <!-- 특정 댓글의 대댓글 수 -->
+  <select id="tm_search_count_recomment" resultType="int" parameterType="int">
+    SELECT count(*)
+    FROM tm_recomment
+    WHERE tcmt_no = #{tcmt_no}
+  </select>
+  
+  <!-- 글 작성자 프로필 이미지 -->
+  <select id = "acc_profile_img" resultType="dev.mvc.account.AccountVO" parameterType="int">
+    SELECT ac.acc_no, ac.acc_id, ac.acc_img, ac.acc_saved_img, ac.acc_thumb_img, acc_img_size
+    FROM tm_contents tc INNER JOIN account ac
+    ON tm.acc_no = ac.acc_no
+    WHERE tm.tcon_no=#{tcon_no}
+    ORDER BY tm.tcon_no desc
+  </select>
+  
+  <!-- 선택한 답글의 회원 아이디 조회 -->
+  <select id="select_acc_id" resultType="dev.mvc.textmining.Tm_recommentVO" parameterType="int">
+    SELECT ac.acc_no, ac.acc_id
+    FROM tm_recomment qr
+    INNER JOIN account ac ON tm.acc_no = ac.acc_no
+    WHERE tm.trecmt_no = #{trecmt_no}
+  </select>
 
 </mapper>
 

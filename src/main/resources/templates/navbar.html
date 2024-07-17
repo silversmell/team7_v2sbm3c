@@ -102,13 +102,13 @@
             
             <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
               <li class="nav-item" th:if="${session.acc_no != null}">
-                <a class="nav-link" th:href="@{|http://localhost:9093/analysis/textmining/dalle|}"
+                <a class="nav-link" th:href="@{|http://localhost:9093/textmining/tm_list_all?cate_no=5|}"
                   th:text="'Dalle AI'">
                 </a>
               </li>
               
               <li class="nav-item" th:if="${session.acc_no != null}">
-                <a class="nav-link" th:href="@{|http://localhost:9093/analysis/textmining/summary|}"
+                <a class="nav-link" th:href="@{|http://localhost:9093/textmining/tm_list_all?cate_no=5|}"
                   th:text="'Summary AI'">
                 </a>
               </li>

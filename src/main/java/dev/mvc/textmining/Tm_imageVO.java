@@ -7,15 +7,15 @@ import org.springframework.web.multipart.MultipartFile;
 import lombok.Getter;
 import lombok.Setter;
 
-//CREATE TABLE QNA_IMAGE(
+//CREATE TABLE TM_IMAGE(
 //    FILE_NO NUMBER(10) NOT NULL PRIMARY KEY,
-//    QCON_NO NUMBER(10), -- FK
-//    FILE_ORIGIN_NAME VARCHAR2(100) NOT NULL,
-//    FILE_UPLOAD_NAME VARCHAR2(100) NOT NULL,
-//    FILE_THUMB_NAME VARCHAR2(100) NOT NULL,
+//    TCON_NO NUMBER(10), -- FK
+//    FILE_ORIGIN_NAME VARCHAR2(100),
+//    FILE_UPLOAD_NAME VARCHAR2(100),
+//    FILE_THUMB_NAME VARCHAR2(100),
 //    FILE_SIZE INT DEFAULT 0 NOT NULL,
 //    FILE_DATE DATE NOT NULL,
-//  FOREIGN KEY (QCON_NO) REFERENCES QNA_CONTENTS (QCON_NO)
+//  FOREIGN KEY (TCON_NO) REFERENCES TM_CONTENTS (TCON_NO)
 //);
 
 @Getter @Setter
@@ -24,8 +24,7 @@ public class Tm_imageVO {
   /** 첨부파일 번호 */
   private Integer file_no;
   
-  /** 질문게시글 번호 */
-  private Integer qcon_no;
+  private Integer tcon_no;
   
   /** 원본 파일명 */
   private String file_origin_name="";

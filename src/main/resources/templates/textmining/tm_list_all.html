@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+
+  <div class='title_line'>전체 글 목록</div>
+
+  <aside class="aside_right">
+    <a th:href="@{|/textmining/tm_create?cate_no=5|}">등록</a>
+    <span class='menu_divide'>│</span>
+    <a href="javascript:location.reload();">새로고침</a>
+  </aside> 
+   
+  <div class='menu_line'></div>
+       
+  <table class="table table-striped" style='width: 100%;'>
+    <colgroup>
+      <col style='width: 10%;'/>
+      <col style='width: 90%;'/>
+    </colgroup>
+    <tr>
+      <th class='th_bs'>이미지</TH>
+      <th class='th_bs'>게시글</th>
+    </tr>
+  </table>
+   
+    <tr th:each="tm_contentsVO, status : ${list}"
+         th:attr="onclick=|location.href='/textmining/tm_read?tcon_no=${tm_contentsVO.tcon_no}&now_page=${now_page}'|"
+         style="cursor: pointer;">
+      <td class='td_left'>
+          <span th:text="${tm_contentsVO.tcon_name}" style="font-weight: bold;"></span>
+          <span th:text="|&nbsp;${tm_contentsVO.tcon_date.substring(0, 10)}|"></span><br>
+          <span th:if="${tm_contentsVO.tcon_contents.length() > 160}" 
+                th:text="|${tm_contentsVO.tcon_contents.substring(0, 160)}...|"></span>
+          <span th:if="${tm_contentsVO.tcon_contents.length() <= 160}" 
+                th:text="|${tm_contentsVO.tcon_contents}|"></span>
+        </td>
+    </tr>
+  </table>
+   
+  <div class='bottom_menu'>
+    <button type='button' onclick="location.reload();" class="btn btn-primary btn-sm">새로 고침</button>
+  </div>
+
+</div>
+</html>
+

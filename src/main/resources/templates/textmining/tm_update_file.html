@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<head>
+  <!-- Fotorama -->
+  <link href="/fotorama/fotorama.css" rel="stylesheet">
+  <script src="/fotorama/fotorama.js"></script>
+  <script>
+    function confirmUpdate(memberno, acc_no, qcon_no, now_page, cate_no) {
+      if (memberno != acc_no && acc_no > 3) {
+        alert("권한이 필요합니다.");
+        return false;
+      }
+      const url = `../qna_update_text/${memberno}?qcon_no=${qcon_no}&now_page=${now_page}&cate_no=${cate_no}`;
+      window.location.href = url;
+      return true;
+    }
+
+    function confirmDelete(memberno, acc_no, qcon_no, now_page, cate_no) {
+      console.log(acc_no);
+      if (memberno != acc_no && acc_no > 3) { //memberno가 acc_no 같지 않고 acc_no가 3보다 작을떄
+        alert("권한이 필요합니다.");
+        return false;
+      }
+      const url = `../qna_delete/${memberno}?qcon_no=${qcon_no}&now_page=${now_page}&cate_no=${cate_no}`;
+      window.location.href = url;
+      return true;
+    }
+  </script>
+</head>
+
+<div layout:fragment="content">
+  <div class='title_line'>
+    <span style="font-size: 20px;" th:text="${qna_contentsVO.qcon_name}" class="title_line_text"></span>
+    > 파일 수정
+  </div>
+  
+  <aside class="aside_right">
+    <a th:href="@{|/qcontents/qna_create?cate_no=2|}">등록</a>
+    <span class='menu_divide'>│</span>
+    <a href="#" th:attr="onclick=|return confirmDelete(${memberno}, '${acc_no}', ${qna_contentsVO.qcon_no}, ${now_page}, 2)|">삭제</a>
+    <!-- <a th:href="@{|/qcontents/qna_delete?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}&cate_no=2|}">삭제</a>   -->
+    <span class='menu_divide'>│</span>
+    <a href="#" th:attr="onclick=|return confirmUpdate(${memberno}, '${acc_no}', ${qna_contentsVO.qcon_no}, ${now_page}, 2)|">글 수정</a>
+    <!-- <a th:attr="@{|/qcontents/qna_update_text/${qna_contentsVO.acc_no}?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}&cate_no=2|}">글 수정</a>   -->
+    <span class='menu_divide'>│</span>
+    <a th:href="@{|/qcontents/qna_list_all?cate_no=2&now_page=${now_page}|}">전체 목록</a>   
+    <span class='menu_divide'>│</span>
+    <a href="javascript:history.back();">돌아가기</a> 
+    <span class='menu_divide'>│</span>
+    <a href="javascript:location.reload();">새로고침</a>
+  </aside>
+  
+  
+  <div class='menu_line'></div>
+  
+  <fieldset class="fieldset_basic">
+    <ul>
+      <li class="li_none">
+       <tr>  
+          <div class="fotorama" data-width="700" data-ratio="700/467" data-max-width="100%"
+                  style='width: 50%; float: left; margin-top: 0.5%; margin-right: 1%;'>
+                <img th:each="qimage, status:${qimage}" th:src="@{|/qcontents/storage/${qimage.file_upload_name}|}"
+                        th:if="${qimage.file_origin_name.endsWith('jpg') or qimage.file_origin_name.endsWith('png') or qimage.file_origin_name.endsWith('gif')}">
+          </div>
+        </tr>
+
+        <div style='text-align: left; margin-top: 1%; width: 47%; float: left;'>
+          <span style='font-size: 1.5em;' th:text="${qna_contentsVO.qcon_name}"></span>
+          <br>
+          <form name='frm' method='POST' action='/qcontents/qna_update_file' enctype="multipart/form-data">
+          <input type="hidden" name="qcon_no" th:value="${qna_contentsVO.qcon_no }">
+          <input type="hidden" name="cate_no" th:value="${categoryVO.cate_no}"> <!-- cate_no 데이터 값 가져옴 -->
+          <input type="hidden" name="now_page" th:value="${now_page}">
+                
+            <br><br> 
+            변경 이미지 선택<br>  
+            <div>
+               <input type='file' class="form-control" name='fnamesMF' placeholder="파일 선택" style='width: 50%;' multiple="multiple"/>
+            </div>
+            <br>
+            
+            <div>
+              <label>패스워드</label>
+              <input type='password' name='qcon_passwd' th:value='1234' required="required" class="form-control"
+                style='width: 50%;'>
+            </div>
+            
+            <div style='margin-top: 20px; clear: both;'>  
+              <button type="submit" class="btn btn-info btn-sm">파일 변경 처리</button>
+              <button type="button" onclick="history.back();" class="btn btn-info btn-sm">취소</button>
+            </div>
+            
+          </form>
+        </div>
+      </li>
+    </ul>
+  </fieldset>  
+
+</div>
+
+</html>
+
+  

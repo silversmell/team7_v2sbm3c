@@ -13,19 +13,18 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
-//CREATE TABLE QNA_CONTENTS(
-//    QCON_NO NUMBER(10) NOT NULL PRIMARY KEY,
+//CREATE TABLE TM_CONTENTS(
+//    TCON_NO NUMBER(10) NOT NULL PRIMARY KEY,
 //    CATE_NO NUMBER(10),     -- FK
 //    ACC_NO NUMBER(10),      -- FK
-//    QCON_NAME VARCHAR2(100) NOT NULL,
-//    QCON_CONTENTS VARCHAR2(3000),
-//    QCON_VIEWS NUMBER(7) DEFAULT 0 NOT NULL,
-//    QCON_BOOKCNT NUMBER(7) DEFAULT 0 NOT NULL,
-//    QCON_COMMENT NUMBER(7) DEFAULT 0 NOT NULL,
-//    QCON_DATE DATE NOT NULL,
+//    TCON_NAME VARCHAR2(100) NOT NULL,
+//    TCON_CONTENTS VARCHAR2(3000),
+//    TCON_VIEWS NUMBER(7) DEFAULT 0 NOT NULL,
+//    TCON_BOOKCNT NUMBER(7) DEFAULT 0 NOT NULL,
+//        TCON_BOOKMARK CHAR(1) DEFAULT 'N' NOT NULL,
+//    TCON_COMMENT NUMBER(7) DEFAULT 0 NOT NULL,
+//    TCON_DATE DATE NOT NULL,
 //        WORD VARCHAR2(30)             NULL,
-//        QCON_PASSWD  VARCHAR2(30)          NOT NULL,
-//        QCON_BOOKMARK CHAR(1) DEFAULT 'N',
 //  FOREIGN KEY (CATE_NO) REFERENCES CATEGORY (CATE_NO),
 //  FOREIGN KEY (ACC_NO) REFERENCES ACCOUNT (ACC_NO)
 //);
@@ -34,7 +33,7 @@ import lombok.Setter;
 public class Tm_contentsVO {
 
   /** 질문 게시글 번호 */
-  private Integer qcon_no;
+  private Integer tcon_no;
   
   /** 카테고리 번호 */
   private Integer cate_no;
@@ -43,35 +42,33 @@ public class Tm_contentsVO {
   private Integer acc_no;
   
   /** 질문 게시글 제목 */
-  @NotEmpty(message="질문게시글 제목은 필수입력 항목입니다.")
-  @Size(min=1, max=30, message="질문게시글 제목의 입력글자 수는 최소 1자에서 최대 30자(한글 10자) 가능합니다.")
-  private String qcon_name="";
+  @NotEmpty(message="텍스트마이닝 제목은 필수입력 항목입니다.")
+  @Size(min=1, max=30, message="텍스트마이닝 제목의 입력글자 수는 최소 1자에서 최대 30자(한글 10자) 가능합니다.")
+  private String tcon_name="";
   
   /** 질문 게시글 내용 */
-  @NotEmpty(message = "질문게시글 내용은 필수입력 항목입니다.")
-  @Size(min=1, max=3000, message="질문게시글 내용의 입력글자 수는 최소 1자에서 최대 3000자(한글 1000자) 가능합니다.")
-  private String qcon_contents="";
+  @NotEmpty(message = "텍스트마이닝 내용은 필수입력 항목입니다.")
+  @Size(min=1, max=3000, message="텍스트마이닝 내용의 입력글자 수는 최소 1자에서 최대 3000자(한글 1000자) 가능합니다.")
+  private String tcon_contents="";
   
   /** 질문 게시글 조회수 */
-  private Integer qcon_views=0;
+  private Integer tcon_views=0;
   
   /** 질문 게시글 북마크 수 */
-  private Integer qcon_bookcnt;
+  private Integer tcon_bookcnt;
   
   /** 질문 게시글 댓글 수 */
-  private Integer qcon_comment;
+  private Integer tcon_comment;
   
   /** 질문 게시글 북마크 */
-  private String qcon_bookmark="N";
+  private String tcon_bookmark="N";
   
   /** 질문 게시글 등록일 */
-  private String qcon_date = "";
+  private String tcon_date = "";
   
   /** 질문게시글 검색어 */
   private String word="";
-  
-  /** 비밀번호 */
-  private String qcon_passwd="";
+
   
   
 }

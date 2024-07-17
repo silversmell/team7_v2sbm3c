@@ -11,17 +11,17 @@ public class Tm_Acc_commentVO {
   private String acc_id = "";
   
   /** 댓글 번호 */
-  private int qcmt_no;
+  private int tcmt_no;
   
   /** 글 번호 */
-  private int qcon_no;
+  private int tcon_no;
   
   /** 회원 번호 */
   private int acc_no;
   
   /** 내용 */
-  private String qcmt_contents;
+  private String tcmt_contents;
   
   /** 등록일 */
-  private String qcmt_date;
+  private String tcmt_date;
 }

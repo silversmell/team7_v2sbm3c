@@ -99,10 +99,10 @@ public class Tm_contentsCont {
     // System.out.println("list_all 생성");
     
     if (this.accountProc.isMember(session)) {
-      ArrayList<Tm_contentsVO> list = this.tm_contentsProc.qna_list_all();
+      ArrayList<Tm_contentsVO> list = this.tm_contentsProc.tm_list_all();
       model.addAttribute("list", list);
       
-      return "qcontents/qna_list_all";
+      return "textmining/tm_list_all";
     } else { // 관리자 아닐 경우
       return "redirect:/account/login";
     }
@@ -111,23 +111,23 @@ public class Tm_contentsCont {
   
   /**
    * 질문글 등록 폼
-   * http://localhost:9093/qcontents/qna_create?cate_no=2
+   * http://localhost:9093/textmining/tm_create?cate_no=5
    * @param model
    * @param cate_no
    * @return
    */
-  @GetMapping(value="/qna_create")
-  public String qna_create(Model model, int cate_no, HttpSession session, Tm_contentsVO qna_contentsVO) {
+  @GetMapping(value="/tm_create")
+  public String tm_create(Model model, int cate_no, HttpSession session, Tm_contentsVO tm_contentsVO) {
     
     if (this.accountProc.isMember(session)) {
       // 카테고리 가져오기
       CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
       model.addAttribute("categoryVO", categoryVO);
       
-      model.addAttribute("qna_contentsVO", qna_contentsVO);
+      model.addAttribute("tm_contentsVO", tm_contentsVO);
       model.addAttribute("acc_no", session.getAttribute("acc_no")); 
       
-      return "qcontents/qna_create"; // /templates/qcontents/create.html
+      return "textmining/tm_create"; // /templates/textmining/tm_create.html
     } else {
       return "redirect:/account/login";  // /account/login.html
     }
@@ -143,32 +143,32 @@ public class Tm_contentsCont {
    * @param ra
    * @return
    */
-  @PostMapping(value = "/qna_create")
-  public String qna_create(Model model, HttpServletRequest request, HttpSession session, RedirectAttributes ra,
-      Tm_imageVO qna_imageVO, Tm_contentsVO qna_contentsVO) {
+  @PostMapping(value = "/tm_create")
+  public String tm_create(Model model, HttpServletRequest request, HttpSession session, RedirectAttributes ra,
+      Tm_imageVO tm_imageVO, Tm_contentsVO tm_contentsVO) {
 
     // 질문글 등록 전 출력
-    System.out.println("-> [레코드 등록 전] qcon_no: " + qna_contentsVO.getQcon_no());
-    System.out.println("-> [레코드 등록 전] file_no: " + qna_imageVO.getFile_no());
+    System.out.println("-> [레코드 등록 전] tcon_no: " + tm_contentsVO.getTcon_no());
+    System.out.println("-> [레코드 등록 전] file_no: " + tm_imageVO.getFile_no());
 
     // 카테고리 번호 가져오기
-    int cate_no = qna_contentsVO.getCate_no(); // 부모글 번호
+    int cate_no = tm_contentsVO.getCate_no(); // 부모글 번호
 
     int acc_no = (int) session.getAttribute("acc_no"); // memberno FK
-    qna_contentsVO.setAcc_no(acc_no);
+    tm_contentsVO.setAcc_no(acc_no);
 
     // 질문글 등록 처리
-    int cnt = this.tm_contentsProc.qna_create(qna_contentsVO);
+    int cnt = this.tm_contentsProc.tm_create(tm_contentsVO);
 
     // 질문글 등록 성공 여부 확인
     if (cnt == 1) { // 질문글 등록 성공
       System.out.println("등록 성공");
-      System.out.println("-> cate_no: " + qna_contentsVO.getCate_no());
-      this.categoryProc.cnt_plus(qna_contentsVO.getCate_no()); // 관련 글 수 증가
+      System.out.println("-> cate_no: " + tm_contentsVO.getCate_no());
+      this.categoryProc.cnt_plus(tm_contentsVO.getCate_no()); // 관련 글 수 증가
 
       // 새로 등록된 질문글 번호 가져오기
-      int qcon_no = qna_contentsVO.getQcon_no();
-      System.out.println("-> [레코드 등록 후] qcon_no: " + qcon_no);
+      int tcon_no = tm_contentsVO.getTcon_no();
+      System.out.println("-> [레코드 등록 후] qcon_no: " + tcon_no);
 
       // ---------------------------------------------------------------
       // 파일 전송 코드 시작
@@ -176,7 +176,7 @@ public class Tm_contentsCont {
       String upDir = Tcontents.getUploadDir(); // 파일을 업로드할 폴더 준비
 
       // 전송 파일이 없어서도 fnamesMF 객체가 생성됨.
-      List<MultipartFile> fnamesMF = qna_imageVO.getFnamesMF();
+      List<MultipartFile> fnamesMF = tm_imageVO.getFnamesMF();
 
       int count = fnamesMF.size(); // 전송 파일 갯수
 
@@ -194,14 +194,14 @@ public class Tm_contentsCont {
 
             // 개별 파일에 대한 Qna_imageVO 객체 생성
             Tm_imageVO imageVO = new Tm_imageVO();
-            imageVO.setQcon_no(qcon_no);
+            imageVO.setTcon_no(tcon_no);
             imageVO.setFile_origin_name(file_origin_name);
             imageVO.setFile_upload_name(file_upload_name);
             imageVO.setFile_thumb_name(file_thumb_name);
             imageVO.setFile_size(file_size);
 
             // 이미지 파일 등록 처리
-            this.tm_contentsProc.qna_attach_create(imageVO);
+            this.tm_contentsProc.tm_attach_create(imageVO);
           }
         }
       }
@@ -211,16 +211,16 @@ public class Tm_contentsCont {
 
       // 질문글 등록 성공했을 때
       ra.addAttribute("cate_no", cate_no);
-      ra.addAttribute("qcon_no", qcon_no);
+      ra.addAttribute("tcon_no", tcon_no);
       ra.addAttribute("acc_no", acc_no);
 
-      return "redirect:/qcontents/qna_list_all";
+      return "redirect:/textmining/tm_list_all";
     } else { // 질문글 등록 실패
-      System.out.println("질문글 등록 실패");
+      System.out.println("텍스트마이닝 등록 실패");
 
-      ra.addFlashAttribute("code", "qna_create_fail"); // 등록 실패
+      ra.addFlashAttribute("code", "tm_create_fail"); // 등록 실패
       ra.addFlashAttribute("cnt", 0); // cnt: 0, 질문글 등록 실패
-      ra.addFlashAttribute("url", "/qcontents/msg"); // /templates/qcontents/msg.html
+      ra.addFlashAttribute("url", "/textmining/msg"); // /templates/qcontents/msg.html
 
       return "redirect:/account/login";
     }
@@ -237,8 +237,8 @@ public class Tm_contentsCont {
    * @param now_page
    * @return
    */
-  @GetMapping(value = "/qna_list_all")
-  public String list_by_qna_search_paging(Model model, HttpSession session, int cate_no,
+  @GetMapping(value = "/tm_list_all")
+  public String list_by_tm_search_paging(Model model, HttpSession session, int cate_no,
                                                     @RequestParam(name = "word", defaultValue = "") String word,
                                                     @RequestParam(name = "now_page", defaultValue = "1") int now_page) {
 
@@ -253,36 +253,36 @@ public class Tm_contentsCont {
     map.put("word", word);
     map.put("now_page", now_page);
 
-    ArrayList<Tm_contentsVO> list = this.tm_contentsProc.list_by_qna_search_paging(map);
+    ArrayList<Tm_contentsVO> list = this.tm_contentsProc.list_by_tm_search_paging(map);
     model.addAttribute("list", list);
     model.addAttribute("word", word);
 
     // 이미지 리스트 가져오기
-    ArrayList<Tm_imageVO> allImages = this.tm_contentsProc.qna_list_all_image();
+    ArrayList<Tm_imageVO> allImages = this.tm_contentsProc.tm_list_all_image();
 
     // 각 질문글에 대한 첫 번째 이미지를 매핑
     HashMap<Integer, Tm_imageVO> imageMap = new HashMap<>();
     for (Tm_imageVO image : allImages) {
-      if (!imageMap.containsKey(image.getQcon_no())) {
-        imageMap.put(image.getQcon_no(), image); // 첫 번째 이미지를 저장
+      if (!imageMap.containsKey(image.getTcon_no())) {
+        imageMap.put(image.getTcon_no(), image); // 첫 번째 이미지를 저장
       }
     }
 
     // 필터링된 이미지 리스트
     ArrayList<Tm_imageVO> filteredImages = new ArrayList<>();
-    for (Tm_contentsVO qnaContents : list) {
-      if (imageMap.containsKey(qnaContents.getQcon_no())) {
-        filteredImages.add(imageMap.get(qnaContents.getQcon_no()));
+    for (Tm_contentsVO tm_ContentsVO : list) {
+      if (imageMap.containsKey(tm_ContentsVO.getTcon_no())) {
+        filteredImages.add(imageMap.get(tm_ContentsVO.getTcon_no()));
       } else {
         filteredImages.add(null); // 이미지가 없는 경우
       }
     }
 
-    model.addAttribute("qna_imageVO", filteredImages);
+    model.addAttribute("tm_imageVO", filteredImages);
 
     // 페이징
-    int search_count = this.tm_contentsProc.list_by_qna_search_count(map);
-    String paging = this.tm_contentsProc.pagingBox(cate_no, now_page, word, "/qcontents/qna_list_all", search_count,
+    int search_count = this.tm_contentsProc.list_by_tm_search_count(map);
+    String paging = this.tm_contentsProc.pagingBox(cate_no, now_page, word, "/textmining/tm_list_all", search_count,
         Tcontents.RECORD_PER_PAGE, Tcontents.PAGE_PER_BLOCK);
     model.addAttribute("paging", paging);
     model.addAttribute("now_page", now_page);
@@ -293,13 +293,13 @@ public class Tm_contentsCont {
     model.addAttribute("no", no);
 
     // 댓글 수 조회 및 저장
-    for (Tm_contentsVO qna_contentsVO : list) {
-      int qcon_no = qna_contentsVO.getQcon_no();
-      int comment_cnt = this.tm_contentsProc.qna_search_count_comment(qcon_no);
-      qna_contentsVO.setQcon_comment(comment_cnt);
+    for (Tm_contentsVO tm_contentsVO : list) {
+      int tcon_no = tm_contentsVO.getTcon_no();
+      int comment_cnt = this.tm_contentsProc.tm_search_count_comment(tcon_no);
+      tm_contentsVO.setTcon_comment(comment_cnt);
     }
     
-    return "qcontents/list_by_qna_search_paging"; // /templates/qcontents/list_by_qna_search_paging.html
+    return "textmining/list_by_tm_search_paging"; // /templates/qcontents/list_by_qna_search_paging.html
   }
   
   /**
@@ -310,13 +310,11 @@ public class Tm_contentsCont {
    * @param qcon_no
    * @return
    */
-  @GetMapping(value = "/qna_read")
-  public String qna_read(Model model, HttpSession session,
+  @GetMapping(value = "/tm_read")
+  public String tm_read(Model model, HttpSession session,
                          @RequestParam(name = "cate_no", defaultValue = "2") int cate_no, 
-                         @RequestParam(name = "qcon_no") int qcon_no,
-                         @RequestParam(name = "now_page") int now_page,
-                         @RequestParam(name = "dalle_origin", required = false) String dalle_origin,
-                         @RequestParam(name = "prompt", required = false) String prompt) {
+                         @RequestParam(name = "tcon_no") int tcon_no,
+                         @RequestParam(name = "now_page") int now_page) {
 
 	  
       if (this.accountProc.isMember(session)) {
@@ -327,68 +325,66 @@ public class Tm_contentsCont {
         model.addAttribute("categoryVO", categoryVO);
 
         // 질문 내용 가져오기
-        Tm_contentsVO qna_contentsVO = this.tm_contentsProc.qna_read(qcon_no);
-        model.addAttribute("qna_contentsVO", qna_contentsVO);
-        model.addAttribute("memberno" , qna_contentsVO.getAcc_no()); //질문글 작성자
+        Tm_contentsVO tm_contentsVO = this.tm_contentsProc.tm_read(tcon_no);
+        model.addAttribute("tm_contentsVO", tm_contentsVO);
+        model.addAttribute("memberno" , tm_contentsVO.getAcc_no()); //질문글 작성자
         model.addAttribute("acc_no",acc_no);
        
         // 질문 이미지 가져오기
-        ArrayList<Tm_imageVO> qna_imageVO = this.tm_contentsProc.qna_read_image(qcon_no);
-        model.addAttribute("qna_imageVO", qna_imageVO);
+        ArrayList<Tm_imageVO> tm_imageVO = this.tm_contentsProc.tm_read_image(tcon_no);
+        model.addAttribute("tm_imageVO", tm_imageVO);
         
         // 댓글 수 가져오기
-        int comment_cnt = this.tm_contentsProc.qna_search_count_comment(qcon_no);
+        int comment_cnt = this.tm_contentsProc.tm_search_count_comment(tcon_no);
         model.addAttribute("comment_cnt", comment_cnt);
         
         // 북마크 수 가져오기
-        int mark_cnt = this.tm_contentsProc.bookmark_count(qcon_no);
+        int mark_cnt = this.tm_contentsProc.bookmark_count(tcon_no);
         model.addAttribute("mark_cnt", mark_cnt);
 
         HashMap<String, Object> map = new HashMap<>();
-        map.put("qcon_no", qcon_no);
+        map.put("tcon_no", tcon_no);
         map.put("acc_no", acc_no);
 
         // 북마크 상태 확인
         if (this.tm_contentsProc.is_bookmarked(map).size() > 0) {
-            qna_contentsVO.setQcon_bookmark("Y");
+            tm_contentsVO.setTcon_bookmark("Y");
         } else {
-            qna_contentsVO.setQcon_bookmark("N");
+            tm_contentsVO.setTcon_bookmark("N");
         }
         
         // 질문글 작성자
         String user_name = this.tm_contentsProc.user_name(map);
         
         // 질문글 작성자 프로필 이미지
-        AccountVO acc_profile_img = this.tm_contentsProc.acc_profile_img(qcon_no);
+        AccountVO acc_profile_img = this.tm_contentsProc.acc_profile_img(tcon_no);
 
         // 모델에 필요한 정보 추가
         model.addAttribute("acc_id", session.getAttribute("acc_id"));
         model.addAttribute("acc_no", acc_no);
         model.addAttribute("cate_no", cate_no);
-        model.addAttribute("qcon_no", qcon_no);
+        model.addAttribute("tcon_no", tcon_no);
         model.addAttribute("now_page", now_page);
         model.addAttribute("user_name", user_name);
         model.addAttribute("acc_profile_img", acc_profile_img);
-        model.addAttribute("dalle_origin", dalle_origin);
-        model.addAttribute("prompt", prompt);
 
         // 조회수 업데이트 old ver.
         // this.qnacontentsProc.qna_update_view(qcon_no);
 
         // 현재 시간을 기준으로 조회 여부 확인
         Long current_session = System.currentTimeMillis();
-        Long last_session = (Long) session.getAttribute("qna_last_view_time" + qcon_no);
+        Long last_session = (Long) session.getAttribute("tm_last_view_time" + tcon_no);
 
         // 만약 세션에 기록된 시간이 없거나, 마지막 조회 시간이 현재 시간보다 오래된 경우에만 조회수 증가
         if (last_session == null || (current_session - last_session > 300000)) { // 300000 밀리초 = 5분
           // 조회수 업데이트
-          this.tm_contentsProc.qna_update_view(qcon_no);
+          this.tm_contentsProc.tm_update_view(tcon_no);
 
           // 세션에 마지막 조회 시간 기록
-          session.setAttribute("qna_last_view_time" + qcon_no, current_session);
+          session.setAttribute("tm_last_view_time" + tcon_no, current_session);
         }
 
-        return "qcontents/qna_read";
+        return "textmining/tm_read";
       } else {
         return "redirect:/account/login";
       }
@@ -401,10 +397,10 @@ public class Tm_contentsCont {
    * @param qcon_no
    * @return
    */
-  @GetMapping(value="/qna_update_text/{memberno}")
-  public String qna_update_text(HttpSession session, Model model, RedirectAttributes ra,
+  @GetMapping(value="/tm_update_text/{memberno}")
+  public String tm_update_text(HttpSession session, Model model, RedirectAttributes ra,
 		  						              @PathVariable("memberno") int memberno,
-                                @RequestParam(name="qcon_no") int qcon_no,
+                                @RequestParam(name="tcon_no") int tcon_no,
                                 @RequestParam(name="cate_no") int cate_no,
                                 @RequestParam(name="now_page") int now_page) {
 
@@ -416,16 +412,16 @@ public class Tm_contentsCont {
           model.addAttribute("categoryVO", categoryVO);
 
           // 질문글 가져오기
-          Tm_contentsVO qna_contentsVO = this.tm_contentsProc.qna_read(qcon_no);
-          model.addAttribute("qna_contentsVO", qna_contentsVO);
+          Tm_contentsVO tm_contentsVO = this.tm_contentsProc.tm_read(tcon_no);
+          model.addAttribute("tm_contentsVO", tm_contentsVO);
 
           // 필요한 데이터 모델에 추가
-          model.addAttribute("qcon_no", qcon_no);
+          model.addAttribute("tcon_no", tcon_no);
           model.addAttribute("word", "word"); 
           model.addAttribute("now_page", now_page);
           model.addAttribute("acc_no", acc_no);
 
-          return "qcontents/qna_update_text"; // 슬래시로 시작하도록
+          return "textmining/tm_update_text"; // 슬래시로 시작하도록
       } else { // 권한이 없는 경우
         ra.addAttribute("url", "/account/login_cookie_need");
         return "redirect:/account/login"; // 로그인 페이지로 이동
@@ -441,38 +437,30 @@ public class Tm_contentsCont {
    * @param qcon_no
    * @return
    */
-  @PostMapping(value="/qna_update_text")
-  public String qna_update_text(HttpSession session, Model model, 
+  @PostMapping(value="/tm_update_text")
+  public String tm_update_text(HttpSession session, Model model, 
                                         RedirectAttributes ra, 
-                                        Tm_contentsVO qna_contentsVO,
+                                        Tm_contentsVO tm_contentsVO,
                                         String search_word, int now_page,
-                                        int cate_no, int qcon_no) {
+                                        int cate_no, int tcon_no) {
     
     
 
-      int cnt = this.tm_contentsProc.qna_update_text(qna_contentsVO);
+      int cnt = this.tm_contentsProc.tm_update_text(tm_contentsVO);
       
       HashMap<String, Object> map = new HashMap<String, Object>();
-      map.put("qcon_no", qna_contentsVO.getQcon_no());
-      map.put("qcon_passwd", qna_contentsVO.getQcon_passwd());
+      map.put("qcon_no", tm_contentsVO.getTcon_no());
       
-      if (this.tm_contentsProc.qna_password_check(map) == 1) { // 패스워드 일치
-        this.tm_contentsProc.qna_update_text(qna_contentsVO);
-        
-        ra.addFlashAttribute("cnt", 1);
-        ra.addAttribute("cate_no", cate_no);
-        ra.addAttribute("qcon_no", qcon_no);
-        ra.addAttribute("now_page", now_page);
-        ra.addAttribute("word", search_word);
-        ra.addAttribute("acc_no", session.getAttribute("acc_no"));
-        
-        return "redirect:/qcontents/qna_read";
-      } else { // 패스워드 불일치
-        ra.addFlashAttribute("code", "passwd_fail");
-        ra.addFlashAttribute("cnt", 0);
-        ra.addAttribute("url", "/qcontents/msg"); // msg.html, redirect parameter 적용
-        return "redirect:/qcontents/msg";  // @GetMapping(value="/msg")
-      }
+      this.tm_contentsProc.tm_update_text(tm_contentsVO);
+      
+      ra.addFlashAttribute("cnt", 1);
+      ra.addAttribute("cate_no", cate_no);
+      ra.addAttribute("tcon_no", tcon_no);
+      ra.addAttribute("now_page", now_page);
+      ra.addAttribute("word", search_word);
+      ra.addAttribute("acc_no", session.getAttribute("acc_no"));
+      
+      return "redirect:/textmining/tm_read";
   }
   
   /**
@@ -484,36 +472,36 @@ public class Tm_contentsCont {
    * @param now_page
    * @return
    */
-  @GetMapping(value="/qna_update_file/{memberno}")
-  public String qna_update_file(HttpSession session, RedirectAttributes ra, Model model,
-		  							  @PathVariable("memberno") int memberno,
+  @GetMapping(value="/tm_update_file/{memberno}")
+  public String tm_update_file(HttpSession session, RedirectAttributes ra, Model model,
+		  							                  @PathVariable("memberno") int memberno,
                                       @RequestParam(name="cate_no", defaultValue = "2") int cate_no, 
-                                      int qcon_no, int now_page) {
+                                      int tcon_no, int now_page) {
     
     System.out.println("-> acc_no: " + session.getAttribute("acc_no"));
 
-    if (accountProc.isMemberAdmin(session) || memberno ==(int)session.getAttribute("acc_no")) { // 관리자, 회원으로 로그인한 경우
+    if (accountProc.isMemberAdmin(session) || memberno == (int)session.getAttribute("acc_no")) { // 관리자, 회원으로 로그인한 경우
       // 카테고리 가져오기
       CategoryVO categoryVO = this.categoryProc.cate_read(cate_no); // 카테고리 읽어옴
       model.addAttribute("categoryVO", categoryVO);
       
       // 질문글 가져오기
-      Tm_contentsVO qna_contentsVO = this.tm_contentsProc.qna_read(qcon_no);
-      model.addAttribute("qna_contentsVO", qna_contentsVO);
+      Tm_contentsVO tm_contentsVO = this.tm_contentsProc.tm_read(tcon_no);
+      model.addAttribute("tm_contentsVO", tm_contentsVO);
       
-      ArrayList<Tm_imageVO> qimage = this.tm_contentsProc.qna_read_image(qcon_no);
-      for (int i = 1; i < qimage.size(); i++) {
-        long size = qimage.get(i).getFile_size();
+      ArrayList<Tm_imageVO> timage = this.tm_contentsProc.tm_read_image(tcon_no);
+      for (int i = 1; i < timage.size(); i++) {
+        long size = timage.get(i).getFile_size();
         String silze_label = Tool.unit(size);
-        qimage.get(i).setFlabel(silze_label);
+        timage.get(i).setFlabel(silze_label);
       }
-      model.addAttribute("qimage", qimage);
+      model.addAttribute("timage", timage);
       
       model.addAttribute("now_page", now_page);
       model.addAttribute("cate_no", cate_no);
-      model.addAttribute("qcon_no", qcon_no);
+      model.addAttribute("tcon_no", tcon_no);
       
-      return "qcontents/qna_update_file";
+      return "textmining/tm_update_file";
     } else {  // 로그인 실패 한 경우      
       ra.addAttribute("url", "/account/login_cookie_need"); // /templates/account/login_cookie_need.html
       return "redirect:/account/login";  // /account/login.html
@@ -530,29 +518,27 @@ public class Tm_contentsCont {
    * @param qcon_no
    * @return
    */
-  @PostMapping(value="qna_update_file")
-  public String qna_update_file(HttpSession session, Model model, RedirectAttributes ra,
+  @PostMapping(value="tm_update_file")
+  public String tm_update_file(HttpSession session, Model model, RedirectAttributes ra,
                                         List<MultipartFile> fnamesMF,
-                                        Tm_contentsVO qna_contentsVO,
-                                        int cate_no, int qcon_no, int now_page) {
+                                        Tm_contentsVO tm_contentsVO,
+                                        int cate_no, int tcon_no, int now_page) {
     
     model.addAttribute("cate_no", cate_no);
-    model.addAttribute("qcon_no", qcon_no);
+    model.addAttribute("tcon_no", tcon_no);
     
     HashMap<String, Object> map = new HashMap<String, Object>();
-    map.put("qcon_no", qna_contentsVO.getQcon_no());
-    map.put("qcon_passwd", qna_contentsVO.getQcon_passwd());
+    map.put("tcon_no", tm_contentsVO.getTcon_no());
     
-    if (this.tm_contentsProc.qna_password_check(map) == 1) { // 패스워드 일치
       // 삭제할 파일 정보를 읽어옴, 기존에 등록된 레코드 저장용
-      ArrayList<Tm_imageVO> qimage_old = this.tm_contentsProc.qna_read_image(qcon_no);
+      ArrayList<Tm_imageVO> timage_old = this.tm_contentsProc.tm_read_image(tcon_no);
       
-      for (Tm_imageVO qimage: qimage_old) {
+      for (Tm_imageVO timage: timage_old) {
         // -------------------------------------------------------------------
         // 파일 삭제 시작
         // -------------------------------------------------------------------
-        String file_upload_name = qimage.getFile_upload_name();
-        String file_thumb_name = qimage.getFile_thumb_name();
+        String file_upload_name = timage.getFile_upload_name();
+        String file_thumb_name = timage.getFile_thumb_name();
         
         String upDir = Tcontents.getUploadDir();
         Tool.deleteFile(upDir, file_upload_name);
@@ -564,14 +550,14 @@ public class Tm_contentsCont {
       // -------------------------------------------------------------------
       // 파일 전송 시작
       // -------------------------------------------------------------------
-      Tm_imageVO qna_imageVO = new Tm_imageVO();
+      Tm_imageVO tm_imageVO = new Tm_imageVO();
       String upDir = Tcontents.getUploadDir(); // 업로드할 폴더
       String file_origin_name = "";
       String file_upload_name = "";
       String file_thumb_name = "";
       
       long file_size = 0;
-      qna_imageVO.setFnamesMF(fnamesMF);
+      tm_imageVO.setFnamesMF(fnamesMF);
       int count = fnamesMF.size();
       System.out.println("-> count: " + count);
 
@@ -590,22 +576,22 @@ public class Tm_contentsCont {
           
           // System.out.println("-> cnt1: " + cnt1 + ", image_list_old.size(): " +
           // image_list_old.size());
-          if (qimage_old.size() <= cnt1) { // 수정할 이미지 갯수가 원래 이미지 갯수보다 많을 경우
-            qna_imageVO.setQcon_no(qcon_no);
-            qna_imageVO.setFile_origin_name(file_origin_name);
-            qna_imageVO.setFile_thumb_name(file_thumb_name);
-            qna_imageVO.setFile_upload_name(file_upload_name);
-            qna_imageVO.setFile_size(count);
+          if (timage_old.size() <= cnt1) { // 수정할 이미지 갯수가 원래 이미지 갯수보다 많을 경우
+            tm_imageVO.setTcon_no(tcon_no);
+            tm_imageVO.setFile_origin_name(file_origin_name);
+            tm_imageVO.setFile_thumb_name(file_thumb_name);
+            tm_imageVO.setFile_upload_name(file_upload_name);
+            tm_imageVO.setFile_size(count);
 
-            int image_cnt = this.tm_contentsProc.qna_attach_create(qna_imageVO);
+            int image_cnt = this.tm_contentsProc.tm_attach_create(tm_imageVO);
             // System.out.println("image 수정 중 create 완료");
           } else {
-            qna_imageVO.setFile_no(qimage_old.get(cnt1).getFile_no());
-            qna_imageVO.setFile_origin_name(file_origin_name);
-            qna_imageVO.setFile_thumb_name(file_thumb_name);
-            qna_imageVO.setFile_upload_name(file_upload_name);
-            qna_imageVO.setFile_size(count);
-            int image_cnt = this.tm_contentsProc.qna_update_file(qna_imageVO);
+            tm_imageVO.setFile_no(timage_old.get(cnt1).getFile_no());
+            tm_imageVO.setFile_origin_name(file_origin_name);
+            tm_imageVO.setFile_thumb_name(file_thumb_name);
+            tm_imageVO.setFile_upload_name(file_upload_name);
+            tm_imageVO.setFile_size(count);
+            int image_cnt = this.tm_contentsProc.tm_update_file(tm_imageVO);
             System.out.println("-> image_cnt: " + image_cnt);
           }
           cnt1++;
@@ -614,16 +600,10 @@ public class Tm_contentsCont {
       }
       
       ra.addAttribute("cate_no", cate_no);
-      ra.addAttribute("qcon_no", qcon_no);
+      ra.addAttribute("tcon_no", tcon_no);
       ra.addAttribute("now_page", now_page);
       
-      return "redirect:/qcontents/qna_read";
-    } else { // 패스워드 불일치
-      ra.addFlashAttribute("code", "passwd_fail");
-      ra.addFlashAttribute("cnt", 0);
-      ra.addAttribute("url", "/qcontents/msg"); // msg.html, redirect parameter 적용
-      return "redirect:/qcontents/msg";  // @GetMapping(value="/msg")
-    }
+      return "redirect:/textmining/tm_read";
     
   }
   
@@ -633,13 +613,13 @@ public class Tm_contentsCont {
    * @param qcon_no
    * @return
    */
-  @GetMapping(value="/qna_delete/{memberno}")
-  public String qna_delete(HttpSession session, 
+  @GetMapping(value="/tm_delete/{memberno}")
+  public String tm_delete(HttpSession session, 
                                   Model model, 
                                   RedirectAttributes ra,
                                   @PathVariable("memberno") int memberno,
                                   @RequestParam(name="cate_no", defaultValue = "2") int cate_no, 
-                                  int qcon_no, int now_page) {
+                                  int tcon_no, int now_page) {
     
     System.out.println("-> acc_no: " + session.getAttribute("acc_no"));
 
@@ -652,10 +632,10 @@ public class Tm_contentsCont {
       model.addAttribute("categoryVO", categoryVO);
       
       // 질문글 가져오기
-      Tm_contentsVO qna_contentsVO = this.tm_contentsProc.qna_read(qcon_no);
-      model.addAttribute("qna_contentsVO", qna_contentsVO);
+      Tm_contentsVO tm_contentsVO = this.tm_contentsProc.tm_read(tcon_no);
+      model.addAttribute("tm_contentsVO", tm_contentsVO);
       
-      return "qcontents/qna_delete";
+      return "textmining/tm_delete";
     } else {
       ra.addAttribute("url", "/account/login_cookie_need"); // /templates/account/login_cookie_need.html
       return "redirect:/account/login";  // /account/login.html
@@ -670,51 +650,51 @@ public class Tm_contentsCont {
    * @param ra
    * @return
    */
-  @PostMapping(value="/qna_delete")
-  public String qna_delete(RedirectAttributes ra, 
-                                  int qcon_no, int cate_no, int now_page) {
+  @PostMapping(value="/tm_delete")
+  public String tm_delete(RedirectAttributes ra, 
+                                  int tcon_no, int cate_no, int now_page) {
     
 //	  System.out.println("-> qcon_no:" + qcon_no);
-	  ArrayList<Tm_contentsVO> list = this.tm_contentsProc.list_by_qcon_no(qcon_no); //회원정보 불러오기 위함.
+	  ArrayList<Tm_contentsVO> list = this.tm_contentsProc.list_by_tcon_no(tcon_no); //회원정보 불러오기 위함.
 	  
-	  Tm_contentsVO qna_contentsVO = this.tm_contentsProc.qna_read(qcon_no);
+	  Tm_contentsVO tm_contentsVO = this.tm_contentsProc.tm_read(tcon_no);
 	  
 	  int acc_no = list.get(0).getAcc_no(); //댓글 삭제 parameter 값에 넣을 회원번호
 	  
 	  HashMap<String,Object> map = new HashMap<String,Object>();
-	  map.put("qcon_no", qcon_no);
+	  map.put("tcon_no", tcon_no);
 	  map.put("acc_no", acc_no);
 	  
-	  int all_bookmark_delete = this.tm_contentsProc.all_bookmark_delete(qcon_no); // 북마크 삭제
+	  int all_bookmark_delete = this.tm_contentsProc.all_bookmark_delete(tcon_no); // 북마크 삭제
 	  if (all_bookmark_delete > 0) {
 	    System.out.println("북마크 삭제 성공");
 	  }
 	  
-	  int cnt_image = this.tm_contentsProc.qna_delete_image(qcon_no); //이미지 삭제
+	  int cnt_image = this.tm_contentsProc.tm_delete_image(tcon_no); //이미지 삭제
 	  if(cnt_image>0) {
 		  System.out.println("이미지 삭제 성공");
 	  }
 	  
-    int cnt_recomments = this.tm_contentsProc.all_qna_delete_recomment(qcon_no);
+    int cnt_recomments = this.tm_contentsProc.all_tm_delete_recomment(tcon_no);
     if (cnt_recomments > 0) {
       System.out.println("답글 삭제 성공");
     }
 	  
-    int cnt_comments = this.tm_contentsProc.all_qna_delete_comment(qcon_no);
+    int cnt_comments = this.tm_contentsProc.all_tm_delete_comment(tcon_no);
     if (cnt_comments > 0) {
       System.out.println("댓글 삭제 성공");
     }
     
-	  int cnt_contents = this.tm_contentsProc.qna_delete(qcon_no); //글삭제
+	  int cnt_contents = this.tm_contentsProc.tm_delete(tcon_no); //글삭제
 	  if(cnt_contents>0) {
 		  System.out.println("글 삭제 성공");
-		  this.categoryProc.cnt_minus(qna_contentsVO.getCate_no()); // 관련 글 수 감소
+		  this.categoryProc.cnt_minus(tm_contentsVO.getCate_no()); // 관련 글 수 감소
 	  }
 	  
 	  ra.addAttribute("cate_no",cate_no);
 	  ra.addAttribute("now_page", now_page);
 	  
-	  return "redirect:/qcontents/qna_list_all";
+	  return "redirect:/textmining/tm_list_all";
   }
   
   /**
@@ -723,18 +703,18 @@ public class Tm_contentsCont {
    * @param session
    * @return
    */
-  @PostMapping(value="/qna_create_comment")
+  @PostMapping(value="/tm_create_comment")
   @ResponseBody
-  public String qna_create_comment(@RequestBody Tm_commentVO qna_commentVO, HttpSession session) {
+  public String tm_create_comment(@RequestBody Tm_commentVO tm_commentVO, HttpSession session) {
     
-    System.out.println("-> 수신 데이터:" + qna_commentVO.toString());
+    System.out.println("-> 수신 데이터:" + tm_commentVO.toString());
     
     int acc_no = (int)session.getAttribute("acc_no");
-    qna_commentVO.setAcc_no(acc_no);
+    tm_commentVO.setAcc_no(acc_no);
     
     System.out.println("-> acc_no: " + acc_no);
     
-    int cnt = this.tm_contentsProc.qna_create_comment(qna_commentVO);
+    int cnt = this.tm_contentsProc.tm_create_comment(tm_commentVO);
     
     JSONObject json = new JSONObject();
     json.put("res", cnt);
@@ -747,10 +727,10 @@ public class Tm_contentsCont {
    * @param qconno
    * @return
    */
-  @GetMapping(value="/list_by_qcmt_no_join")
+  @GetMapping(value="/list_by_tcmt_no_join")
   @ResponseBody
-  public String list_by_qcmt_no_join(int qcon_no) {
-    List<Tm_Acc_commentVO> list = tm_contentsProc.list_by_qcmt_no_join_500(qcon_no);
+  public String list_by_tcmt_no_join(int tcon_no) {
+    List<Tm_Acc_commentVO> list = tm_contentsProc.list_by_tcmt_no_join_500(tcon_no);
     
     JSONObject obj = new JSONObject();
     obj.put("res", list);
@@ -763,10 +743,10 @@ public class Tm_contentsCont {
    * @param qconno
    * @return
    */
-  @GetMapping(value="/asc_list_by_qcmt_no_join")
+  @GetMapping(value="/asc_list_by_tcmt_no_join")
   @ResponseBody
-  public String asc_list_by_qcmt_no_join(int qcon_no) {
-    List<Tm_Acc_commentVO> list = tm_contentsProc.asc_list_by_qcmt_no_join_500(qcon_no);
+  public String asc_list_by_tcmt_no_join(int tcon_no) {
+    List<Tm_Acc_commentVO> list = tm_contentsProc.asc_list_by_tcmt_no_join_500(tcon_no);
     
     JSONObject obj = new JSONObject();
     obj.put("res", list);
@@ -779,17 +759,17 @@ public class Tm_contentsCont {
    * @param qcmt_no
    * @return
    */
-  @GetMapping(value="/qna_read_comment", produces ="application/json")
+  @GetMapping(value="/tm_read_comment", produces ="application/json")
   @ResponseBody
-  public String qna_read_comment(int qcmt_no) {
-    Tm_commentVO qna_commentVO = this.tm_contentsProc.qna_read_comment(qcmt_no);
+  public String tm_read_comment(int tcmt_no) {
+    Tm_commentVO tm_commentVO = this.tm_contentsProc.tm_read_comment(tcmt_no);
     
     JSONObject row = new JSONObject();
-    row.put("qcmt_no", qna_commentVO.getQcmt_no());
-    row.put("acc_no", qna_commentVO.getAcc_no());
-    row.put("qcon_no", qna_commentVO.getQcon_no());
-    row.put("qcmt_contents", qna_commentVO.getQcmt_contents());
-    row.put("qcmt_date", qna_commentVO.getQcmt_date());
+    row.put("qcmt_no", tm_commentVO.getTcmt_no());
+    row.put("acc_no", tm_commentVO.getAcc_no());
+    row.put("qcon_no", tm_commentVO.getTcon_no());
+    row.put("qcmt_contents", tm_commentVO.getTcmt_contents());
+    row.put("qcmt_date", tm_commentVO.getTcmt_date());
     
     JSONObject obj = new JSONObject();
     obj.put("res", row);
@@ -803,16 +783,16 @@ public class Tm_contentsCont {
    * @param qna_commentVO
    * @return
    */
-  @PostMapping(value="/qna_update_comment")
+  @PostMapping(value="/tm_update_comment")
   @ResponseBody
-  public String qna_update_comment(HttpSession session, @RequestBody Tm_commentVO qna_commentVO) {
-    System.out.println("-> 수정할 수신 댓글: " + qna_commentVO.toString());
+  public String tm_update_comment(HttpSession session, @RequestBody Tm_commentVO tm_commentVO) {
+    System.out.println("-> 수정할 수신 댓글: " + tm_commentVO.toString());
     
     int acc_no = (int)session.getAttribute("acc_no");
     
     int cnt = 0;
-    if (acc_no == qna_commentVO.getAcc_no()) { // 회원 자신이 쓴 댓글만 수정 가능
-      cnt = this.tm_contentsProc.qna_update_comment(qna_commentVO);
+    if (acc_no == tm_commentVO.getAcc_no()) { // 회원 자신이 쓴 댓글만 수정 가능
+      cnt = this.tm_contentsProc.tm_update_comment(tm_commentVO);
     }
     
     JSONObject json = new JSONObject();
@@ -827,16 +807,16 @@ public class Tm_contentsCont {
    * @param qna_commentVO
    * @return
    */
-  @PostMapping(value="/qna_delete_comment")
+  @PostMapping(value="/tm_delete_comment")
   @ResponseBody
-  public String qna_delete_comment(HttpSession session, @RequestBody Tm_commentVO qna_commentVO) {
+  public String tm_delete_comment(HttpSession session, @RequestBody Tm_commentVO tm_commentVO) {
     int acc_no = (int)session.getAttribute("acc_no");
     
-    if (acc_no == qna_commentVO.getAcc_no()) { // 회원 자신이 쓴 댓글만 삭제 가능
+    if (acc_no == tm_commentVO.getAcc_no()) { // 회원 자신이 쓴 댓글만 삭제 가능
       JSONObject json = new JSONObject();
       
-      int comment = this.tm_contentsProc.delete_qcmtno_recomment(qna_commentVO.getQcmt_no()); // 전체 답글 삭제
-      int cnt = this.tm_contentsProc.qna_delete_comment(qna_commentVO.getQcmt_no());
+      int comment = this.tm_contentsProc.delete_tcmtno_recomment(tm_commentVO.getTcmt_no()); // 전체 답글 삭제
+      int cnt = this.tm_contentsProc.tm_delete_comment(tm_commentVO.getTcmt_no());
       
       json.put("res", cnt);
       
@@ -850,30 +830,17 @@ public class Tm_contentsCont {
   }
   
   /**
-   * 이미지 생성 AI
-   * http://localhost:9093/qcontents/member_img
-   * @param session
-   * @return
-   */
-  @GetMapping(value="/member_img")
-  // @ResponseBody : post 메서드에서만 사용.
-  public String member_img(HttpSession session) {
-    
-    return "qcontents/member_img";
-  }
-  
-  /**
    * 북마크 등록
    * @param session
    * @param ra
    * @param qcon_no
    * @return
    */
-  @GetMapping(value="/bookmark_create/{qcon_no}", produces = "application/json")
+  @GetMapping(value="/bookmark_create/{tcon_no}", produces = "application/json")
   @ResponseBody
   public String bookmark_create(HttpSession session, 
                                           RedirectAttributes ra,
-                                          @PathVariable("qcon_no") Integer qcon_no,int acc_no,int cate_no) {
+                                          @PathVariable("tcon_no") Integer tcon_no,int acc_no,int cate_no) {
 
     JSONObject obj = new JSONObject();
 
@@ -881,7 +848,7 @@ public class Tm_contentsCont {
       //Integer acc_no = (Integer) session.getAttribute("acc_no");
 
       HashMap<String, Object> map = new HashMap<>();
-      map.put("qcon_no", qcon_no);
+      map.put("tcon_no", tcon_no);
       map.put("acc_no", acc_no);
 
       
@@ -891,7 +858,6 @@ public class Tm_contentsCont {
       int cnt = this.tm_contentsProc.bookmark_create(map);
 
       System.out.println("북마크 등록 성공");
-      // System.out.println("=> qcon_no: " + qcon_no);
       int cnt1 = this.tm_contentsProc.bookmark_y(map); // 북마크 공개
       if(cnt1>0) {
     	  System.out.println("북마크 공개 성공");
@@ -913,12 +879,11 @@ public class Tm_contentsCont {
    * @param qcon_no
    * @return
    */
-  @GetMapping(value="/bookmark_delete/{qcon_no}", produces = "application/json")
+  @GetMapping(value="/bookmark_delete/{tcon_no}", produces = "application/json")
   @ResponseBody
   public String bookmark_delete(HttpSession session,
                                           RedirectAttributes ra,
-                                          Tm_contentsVO qna_contentsVO,
-                                          @PathVariable("qcon_no") Integer qcon_no,int acc_no,int cate_no) {
+                                          @PathVariable("tcon_no") Integer tcon_no,int acc_no,int cate_no) {
     System.out.println("북마크 등록 들어옴");
     JSONObject obj = new JSONObject();
     
@@ -926,10 +891,10 @@ public class Tm_contentsCont {
       //Integer acc_no = (Integer) session.getAttribute("acc_no");
 
       HashMap<String, Object> map = new HashMap<>();
-      map.put("qcon_no", qcon_no);
+      map.put("tcon_no", tcon_no);
       map.put("acc_no", acc_no);
       
-      System.out.println(qcon_no);
+      System.out.println(tcon_no);
       System.out.println(acc_no);
       
       List<Tm_markVO> list = tm_contentsProc.is_bookmarked(map);
@@ -955,35 +920,35 @@ public class Tm_contentsCont {
    * @param session
    * @return
    */
-  @PostMapping(value = "/qna_select_delete")
+  @PostMapping(value = "/tm_select_delete")
   @ResponseBody
   public String select_delete(@RequestBody Map<String, Object> map, HttpSession session) {
     JSONObject obj = new JSONObject();
     int cnt = 0;
     if (this.accountProc.isMemberAdmin(session)) {
-      List<Integer> qconNoList = (List<Integer>) map.get("qcon_nos");
+      List<Integer> tconno_List = (List<Integer>) map.get("tcon_nos");
       int cate_no = (int) map.get("cate_no");
 
-      int recomment = this.tm_contentsProc.delete_qconno_recomment(qconNoList);
+      int recomment = this.tm_contentsProc.delete_tconno_recomment(tconno_List);
       if(recomment > 0) {
         System.out.println("답글 삭제 성공");
       }
       
       // 댓글 삭제
-      int comment = this.tm_contentsProc.delete_qconno_comment(qconNoList);
+      int comment = this.tm_contentsProc.delete_tconno_comment(tconno_List);
 
       // 이미지 삭제
-      int image = this.tm_contentsProc.delete_qconno_image(qconNoList);
+      int image = this.tm_contentsProc.delete_tconno_image(tconno_List);
 
       // 북마크 삭제
-      int bookmark = this.tm_contentsProc.delete_qconno_bookmark(qconNoList);
+      int bookmark = this.tm_contentsProc.delete_tconno_bookmark(tconno_List);
       if (bookmark > 0) {
         System.out.println("북마크 삭제 성공");
       }
 
       // 선택 삭제
-      cnt = this.tm_contentsProc.delete_qconno(qconNoList);
-      for (int i = 0; i < qconNoList.size(); i++) {
+      cnt = this.tm_contentsProc.delete_tconno(tconno_List);
+      for (int i = 0; i < tconno_List.size(); i++) {
         this.categoryProc.cnt_minus(cate_no);
       }
 
@@ -1000,17 +965,17 @@ public class Tm_contentsCont {
    * @param qna_recommentVO
    * @return
    */
-  @PostMapping(value="/qna_create_recomment")
+  @PostMapping(value="/tm_create_recomment")
   @ResponseBody
-  public String qna_create_recomment(@RequestBody Tm_recommentVO qna_recommentVO) {
+  public String tm_create_recomment(@RequestBody Tm_recommentVO tm_recommentVO) {
     
     HashMap<String, Object> map = new HashMap<>();
-    map.put("qrecmt_contents", qna_recommentVO.getQrecmt_contents());
-    map.put("qcon_no", qna_recommentVO.getQcon_no());
-    map.put("qcmt_no", qna_recommentVO.getQcmt_no());
-    map.put("acc_no", qna_recommentVO.getAcc_no());
+    map.put("trecmt_contents", tm_recommentVO.getTrecmt_contents());
+    map.put("tcon_no", tm_recommentVO.getTcon_no());
+    map.put("tcmt_no", tm_recommentVO.getTcmt_no());
+    map.put("acc_no", tm_recommentVO.getAcc_no());
     
-    int cnt = this.tm_contentsProc.qna_create_recomment(map);
+    int cnt = this.tm_contentsProc.tm_create_recomment(map);
     
     JSONObject obj = new JSONObject();
     obj.put("cnt", cnt);
@@ -1023,19 +988,19 @@ public class Tm_contentsCont {
     * @param qcmt_no
     * @return
     */
-  @GetMapping(value="/qna_read_recomment")
+  @GetMapping(value="/tm_read_recomment")
   @ResponseBody
-  public String qna_read_recomment(int qcmt_no) {
+  public String tm_read_recomment(int tcmt_no) {
     HashMap<String, Object> map = new HashMap<>();
-    map.put("qcmt_no", qcmt_no);
+    map.put("tcmt_no", tcmt_no);
     
-    ArrayList<Tm_recommentVO> list = this.tm_contentsProc.qna_read_recomment(map);
+    ArrayList<Tm_recommentVO> list = this.tm_contentsProc.tm_read_recomment(map);
     
     if(list.size() > 0) {
       System.out.println("답글 조회 성공");
     }
     for(Tm_recommentVO vo : list) {
-      System.out.println("-> 답글 :" + vo.getQrecmt_contents());
+      System.out.println("-> 답글 :" + vo.getTrecmt_contents());
       System.out.println("-> acc_no:" + vo.getAcc_no());
       System.out.println("-> acc_id:" + vo.getAcc_id());
     }
@@ -1072,17 +1037,17 @@ public class Tm_contentsCont {
    */
   @GetMapping(value="/read_recomment")
   @ResponseBody
-  public String read_recomment(int qrecmt_no) {
-    System.out.println("-> qrecmt_no: " + qrecmt_no);
+  public String read_recomment(int trecmt_no) {
+    System.out.println("-> trecmt_no: " + trecmt_no);
     
-    Tm_recommentVO qna_recomment = this.tm_contentsProc.read_recomment(qrecmt_no);
+    Tm_recommentVO tm_recomment = this.tm_contentsProc.read_recomment(trecmt_no);
     
     JSONObject row = new JSONObject();
-    row.put("qrecomt_no", qna_recomment.getQrecmt_no());
-    row.put("qcmt_no", qna_recomment.getQcmt_no());
-    row.put("qcon_no", qna_recomment.getQcon_no());
-    row.put("qrecmt_contents", qna_recomment.getQrecmt_contents());
-    row.put("qrecmt_date", qna_recomment.getQrecmt_date());
+    row.put("qrecomt_no", tm_recomment.getTrecmt_no());
+    row.put("qcmt_no", tm_recomment.getTcmt_no());
+    row.put("qcon_no", tm_recomment.getTcon_no());
+    row.put("qrecmt_contents", tm_recomment.getTrecmt_contents());
+    row.put("qrecmt_date", tm_recomment.getTrecmt_date());
 
     JSONObject obj = new JSONObject();
     obj.put("res", row);
@@ -1096,18 +1061,18 @@ public class Tm_contentsCont {
    * @param session
    * @return
    */
-  @PostMapping(value="/qna_update_recomment")
+  @PostMapping(value="/tm_update_recomment")
   @ResponseBody
-  public String qna_update_recomment(@RequestBody Tm_recommentVO qna_recommentVO, HttpSession session) {
-    System.out.println("답글 수정 회원번호: " + qna_recommentVO.getAcc_no());
+  public String tm_update_recomment(@RequestBody Tm_recommentVO tm_recommentVO, HttpSession session) {
+    System.out.println("답글 수정 회원번호: " + tm_recommentVO.getAcc_no());
 
-    if (qna_recommentVO.getAcc_no() == (int)session.getAttribute("acc_no")) {
+    if (tm_recommentVO.getAcc_no() == (int)session.getAttribute("acc_no")) {
       System.out.println("답글 작성한 회원과 동일합니다.");
 
       HashMap<String,Object> map = new HashMap<>();
-      map.put("qrecmt_no", qna_recommentVO.getQrecmt_no());
-      map.put("qrecmt_contents", qna_recommentVO.getQrecmt_contents());
-      int cnt = this.tm_contentsProc.qna_update_recomment(map);
+      map.put("trecmt_no", tm_recommentVO.getTrecmt_no());
+      map.put("trecmt_contents", tm_recommentVO.getTrecmt_contents());
+      int cnt = this.tm_contentsProc.tm_update_recomment(map);
 
       JSONObject obj = new JSONObject();
       obj.put("res", cnt);
@@ -1127,18 +1092,18 @@ public class Tm_contentsCont {
    * @param session
    * @return
    */
-  @PostMapping(value="/qna_delete_recomment")
+  @PostMapping(value="/tm_delete_recomment")
   @ResponseBody
-  public String qna_delete_recomment(@RequestBody Tm_recommentVO qna_recommentVO, HttpSession session) {
+  public String tm_delete_recomment(@RequestBody Tm_recommentVO tm_recommentVO, HttpSession session) {
     JSONObject obj = new JSONObject();
-    if (qna_recommentVO.getAcc_no() == (int)session.getAttribute("acc_no")) {
+    if (tm_recommentVO.getAcc_no() == (int)session.getAttribute("acc_no")) {
         System.out.println("답글 작성한 회원과 동일합니다.");
         
-        Tm_recommentVO vo = this.tm_contentsProc.read_recomment(qna_recommentVO.getQrecmt_no());
-        obj.put("qcmt_no", vo.getQcmt_no());
+        Tm_recommentVO vo = this.tm_contentsProc.read_recomment(tm_recommentVO.getTrecmt_no());
+        obj.put("tcmt_no", vo.getTcmt_no());
         // System.out.println("-> qcmt_no: " + vo.getQcmt_no());
         
-        int cnt = this.tm_contentsProc.qna_delete_recomment(qna_recommentVO.getQrecmt_no());
+        int cnt = this.tm_contentsProc.tm_delete_recomment(tm_recommentVO.getTrecmt_no());
         obj.put("res", cnt);
     } else {
         obj.put("res", 0);

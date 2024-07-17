@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<head>
+  <script>
+  function confirmUpdate(memberno, acc_no, qcon_no, now_page, cate_no) {
+    if (memberno != acc_no && acc_no > 3) {
+      alert("권한이 필요합니다.");
+      return false;
+    }
+    const url = `../qna_update_text/${memberno}?qcon_no=${qcon_no}&now_page=${now_page}&cate_no=${cate_no}`;
+    window.location.href = url;
+    return true;
+  }
+
+  function confirmFile(memberno, acc_no, qcon_no, now_page, cate_no) {
+    if (memberno != acc_no && acc_no > 3) {
+      alert("권한이 필요합니다.");
+      return false;
+    }
+    const url = `../qna_update_file/${memberno}?qcon_no=${qcon_no}&now_page=${now_page}&cate_no=${cate_no}`;
+    window.location.href = url;
+    return true;
+  }
+
+  </script>
+</head>
+
+<div layout:fragment="content">
+  <div class='title_line'>
+    <span style="font-size: 20px;" th:text="${qna_contentsVO.qcon_name}" class="title_line_text"></span > 
+      > 삭제
+   </div>
+   
+   <aside class="aside_right">
+    <a th:href="@{|/qcontents/qna_create?cate_no=2|}">등록</a>
+    <span class='menu_divide'>│</span>
+    
+    <a href="#" th:attr="onclick=|return confirmUpdate(${memberno}, '${acc_no}', ${qna_contentsVO.qcon_no}, ${now_page}, 2)|">글 수정</a>
+    <!-- <a th:attr="@{|/qcontents/qna_update_text/${qna_contentsVO.acc_no}?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}&cate_no=2|}">글 수정</a>   -->
+    <span class='menu_divide'>│</span>
+     <a href="#" th:attr="onclick=|return confirmFile(${memberno}, '${acc_no}', ${qna_contentsVO.qcon_no}, ${now_page}, 2)|">파일 수정</a>
+    <!--<a th:href="@{|/qcontents/qna_update_file/${qna_contentsVO.acc_no}?qcon_no=${qna_contentsVO.qcon_no}&now_page=${now_page}|}">파일 수정</a>   -->
+    <span class='menu_divide'>│</span>
+    <a th:href="@{|/qcontents/qna_list_all?cate_no=2&now_page=${now_page}|}">전체 목록</a>   
+    <span class='menu_divide'>│</span>
+    <a href="javascript:history.back();">돌아가기</a> 
+    <span class='menu_divide'>│</span>
+    <a href="javascript:location.reload();">새로고침</a>
+  </aside>
+  <div class='menu_line'></div>
+  
+  <fieldset class="fieldset_basic">
+    <ul>
+
+        <div style='text-align: left; width: 100%; float: left;'>
+          <br>
+          <form name='frm' method='POST' action='/qcontents/qna_delete'>
+            <input type="hidden" name="qcon_no" th:value="${qna_contentsVO.qcon_no}">
+            <input type="hidden" name="cate_no" th:value="${qna_contentsVO.cate_no}"> <!-- cate_no 데이터 값 가져옴 -->
+            <input type="hidden" name="now_page" th:value="${now_page}">
+            <div th:each="qna_contentsVO : ${qna_contentsVO}">
+              <span style='font-size: 1.5em;' th:text="${qna_contentsVO.qcon_name}"></span>
+                    
+               <br> 
+               <div style='margin-top: 20px; clear: both;'>
+                 <span style="color: #FF0000; font-weight: bold;" >삭제를 진행 하시겠습니까? 삭제하시면 복구 할 수 없습니다.</span>
+                 <br><br><br>
+                 <div style="text-align: left;" class="content_body_bottom">
+                   <button type="submit" class="btn btn-info btn-sm">삭제</button>
+                   <button type="button" onclick="history.back();" class="btn btn-info btn-sm">취소</button>
+                 </div>
+              </div>
+              </div>  
+          </form>
+        </div>
+    </ul>
+  </fieldset>  
+
+</html>
+
+  

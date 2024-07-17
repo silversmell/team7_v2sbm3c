@@ -45,3 +45,7 @@ CREATE SEQUENCE TM_CONTENTS_SEQ
 commit;
 SELECT * FROM tm_contents;
 
+
+-- 등록
+INSERT INTO tm_contents(tcon_no, cate_no, acc_no, tcon_name, tcon_contents, tcon_views, tcon_bookmark, tcon_bookcnt, tcon_date, word)
+VALUES(TM_CONTENTS_SEQ.nextval, 5, 3, '달리 데이터마이닝', '데이터 텍스트마이닝 어려워용', 0, 'N', 0, sysdate, '텍스트마이닝');

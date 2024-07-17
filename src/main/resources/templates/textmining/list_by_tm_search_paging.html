@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}"> <!-- layout.html 상속 -->
+<head>
+  <link href="/css/style.css" rel="stylesheet" type="text/css">
+
+  <script th:inline="javascript">
+    let search_word = /*[[${word}]]*/ '';
+    document.addEventListener('DOMContentLoaded', function() {
+      hightlight_search_word(search_word);
+    });
+
+    // 검색 단어 하이라이트
+    function hightlight_search_word(search_word) {
+      if (search_word && search_word.trim() !== '') {
+        let titles = document.querySelectorAll('.tcon_name'); // 제목을 포함한 요소 선택
+
+        titles.forEach(function(title) {
+          let text = title.textContent; // 제목 텍스트 가져오기
+          let lower_text = text.toLowerCase();
+          let lower_search_word = search_word.toLowerCase();
+          let index = lower_text.indexOf(lower_search_word); // 검색어가 포함된 위치 찾기
+
+          if (index !== -1) {
+            let hightlight_text = text.substring(0, index) +
+            '<span style="color: red; font-weight: bold;">' +
+            text.substring(index, index + search_word.length) +
+            '</span>' +
+            text.substring(index + search_word.length); // 검색어 부분 강조 처리
+
+            title.innerHTML = hightlight_text; // 강조된 텍스트로 제목 업데이트
+          }
+        });
+      }
+    }
+
+    // 체크박스 전체 선택
+    function whole_delete() {
+      let checkboxes = document.querySelectorAll('Input[name="tcon_no"]');
+      let allchecked = true;
+
+      checkboxes.forEach(checkbox => {
+        if (!checkbox.checked) {
+          allchecked = false;
+          return;
+        }
+      });
+
+      checkboxes.forEach(checkbox => {
+        checkbox.checked = !allchecked;
+      });
+      
+      // 전체 선택 상태에서 카테고리 관련 자료수 감소
+      if (allchecked) {
+        checkboxes.forEach(checkbox => {
+          if (checkbox.checked) {
+            this.categoryProc.cnt_minus(tm_contentsVO.getCate_no());
+          }
+        });
+      }
+    }
+
+    // 선택된 체크박스 삭제
+    function select_delete() {
+      let checkboxes = document.querySelectorAll('input[name="tcon_no"]:checked');
+      let tcon_nos = [];
+
+      // 선택된 체크박스 유무 체크
+      if (checkboxes.length === 0) {
+        alert('선택된 글이 없습니다. 삭제하고자 하는 글을 선택하세요.');
+        return;
+      }
+
+      checkboxes.forEach((checkbox) => {
+        tcon_nos.push(parseInt(checkbox.value));  // 값은 문자열이므로 숫자로 변환
+      });
+
+      let mention = confirm("삭제하시면 복구할 수 없습니다. 정말 삭제하시겠습니까?");
+      if (mention) {
+        fetch('/textmining/tm_select_delete', {
+          method: 'POST',
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({"tcon_nos": tcon_nos, "cate_no": 2})
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.cnt == 0) {
+            alert("관리자 권한이 필요합니다.");
+            return;
+          }
+          if (data.cnt > 0) {
+            console.log('삭제 성공');
+            window.location.reload();
+            
+            // 선택된 체크박스 수만큼 카테고리 관련 자료수 감소
+            checkboxes.forEach((checkbox) => {
+              this.categoryProc.cnt_minus(tm_contentsVO.getCate_no());
+            });
+          } else {
+            console.log('삭제 실패');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+      }
+    }
+  </script>
+</head>
+
+<body>
+<div layout:fragment="content">
+  <div class='title_line'>
+    <span style="font-size: 20px;" th:text="${categoryVO.cate_name}" class="title_line_text"></span>
+  </div>
+
+  <aside class="aside_right">
+    <a th:href="@{|/textmining/tm_create?cate_no=${categoryVO.cate_no}|}">등록</a>
+    <span class="menu_devide">│</span>
+    <a href="javascript:location.reload();">새로고침</a>
+  </aside>
+
+  <!-- /contents/list_search_component.html 파일의 list_search_fragment import -->
+  <div th:replace="~{tcontents/list_search_component::list_search_fragment}"></div>
+
+  <div class='menu_line'></div>
+
+  <div style="text-align: right; margin-bottom: 10px; width: 95%;" th:if="${session.acc_grade=='admin'}" class="btn_group">
+    <button type="button" onclick="whole_delete()" class="button_2">전체선택</button>
+    <button type="button" onclick="select_delete()" class="button_2">삭제</button>
+  </div>
+
+  <table class="table table-striped" style='width: 90%; margin: 0 auto;'>
+    <colgroup>
+      <col style='width: 20%;'/>
+      <col style='width: 80%;'/>
+    </colgroup>
+
+    <thead>
+    <tr>
+      <th class='th_bs' style="background-color: #35C5F0; color: white; font-weight: normal;">이미지</th>
+      <th class='th_bs' style="background-color: #35C5F0; color: white; font-weight: normal;">게시글</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:if="${list.size() > 0}" th:each="tm_contentsVO, status : ${list}">
+      <td class='td_basic' style="vertical-align: middle; text-align: center; margin-bottom: 10px;">
+        <div th:if="${session.acc_grade=='admin'}">
+          <input type="checkbox" id="tcon_no" name="tcon_no" th:value="${tm_contentsVO.tcon_no}" style="margin-right: 5px; cursor: pointer; margin-top: 10px;">
+        </div>
+        <div th:if="${#lists.size(tm_imageVO) > status.index and tm_imageVO[status.index] != null and tm_imageVO[status.index].file_thumb_name != null}">
+          <img th:src="@{|/textmining/storage/${tm_imageVO[status.index].file_thumb_name}|}"
+            style="width: 120px; height: 90px; border-radius: 15%;">
+        </div>
+        <div th:unless="${#lists.size(tm_imageVO) > status.index and tm_imageVO[status.index] != null and tm_imageVO[status.index].file_thumb_name != null}"
+          style="width: 120px; height: 90px; background-color: transparent;">
+        </div>
+      </td>
+
+      <td class='td_basic' style="position: relative; cursor: pointer; vertical-align: middle; text-align: left;"
+          th:attr="onclick=|location.href='/textmining/tm_read?tcon_no=${tm_contentsVO.tcon_no}&now_page=${now_page}'|">
+        <div style="margin-bottom: 20px; margin-top:10px;">
+          <div style="width: 100%; height: 100%; margin-bottom: 23px;">
+            <div style="display: flex; align-items: center; width: 100%; height: 100%;">
+              <div style="margin-bottom: 13px; width: 100%; height: 100%; margin-top: 30px; margin-bottom: 0px auto;">
+                <span class="tcon_name" th:text="${tm_contentsVO.tcon_name}" style="font-weight: bold;"></span>
+                | <span th:text="${tm_contentsVO.tcon_date.substring(0, 10)}"></span><br><br>
+
+                <span th:if="${tm_contentsVO.tcon_contents.length() > 160}"
+                      th:text="|${tm_contentsVO.tcon_contents.substring(0, 160)}...|"></span>
+                <span th:if="${tm_contentsVO.tcon_contents.length() <= 160}"
+                      th:text="|${tm_contentsVO.tcon_contents}|"></span>
+
+                <span id='acc_no' style="display:none;" value=""></span><br>
+                <div style="position: absolute; bottom: 0px auto; right: 0; margin-right: 10px; text-align: right; margin-top: 15px;">
+                  <span style="font-size: 1em;" th:text="|조회수 ${tm_contentsVO.tcon_views}|"></span>
+                  <span style="font-size: 1em;">
+                    <img src="/css/images/comment.png" id="comment" class="icon" alt="댓글"
+                         style="width: 20px; height: 20px;">
+                    <span th:text="${tm_contentsVO.tcon_comment}"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+
+    <!-- 리스트가 비어있을 때 -->
+    <tr th:if="${list.size() == 0}">
+      <td colspan="2" style="text-align: center;">관련된 글이 없습니다.</td>
+    </tr>
+    </tbody>
+  </table>
+
+  <!-- 페이지 버튼 목록 출력 시작 -->
+  <div class="bottom_menu" th:utext="${paging}"></div>
+  <!-- 페이지 버튼 목록 출력 종료 -->
+
+</div>
+</body>
+</html>
