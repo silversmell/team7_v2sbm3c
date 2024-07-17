@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -95,80 +94,58 @@ public class TipContentsCont {
 
 	@PostMapping(value = "/create")
 	public String create(HttpServletRequest request, HttpSession session, RedirectAttributes ra, Model model,
-			List<MultipartFile> fnamesMF, TipContentsVO tcontentsVO) {
+			List<MultipartFile> img_mf, TipContentsVO tcontentsVO) {
 
-		// ------------------------------------------------------------------------------
-		// 파일 전송 코드 시작
-		/**
-		 * private MultipartFile img_mf = null; //업로드 이미지 파일 private String
-		 * img_size_label = ""; //메인 이미지 크기 단위, 파일 크기
-		 * 
-		 * private String tcon_img = ""; //이미지 private String tcon_saved_img = ""; //저장된
-		 * 이미지 private String tcon_thumb_img = ""; // thumb 이미지 private long
-		 * tcon_img_size = 0; // 이미지 크기
-		 */
-		// --------------------------------------------------
-		// ----------------------------
-		String img = ""; // 원본 파일명
-		String saved_img = ""; // 저장된 파일명
-		String thumb_img = ""; // preview image(thumb)
+		String upDir = TipContents.getUploadDir();
+		StringBuilder tcon_img_sb = new StringBuilder();
+		StringBuilder tcon_saved_img_sb = new StringBuilder();
+		StringBuilder tcon_thumb_img_sb = new StringBuilder();
+		long total_img_size = 0;
 
-		String upDir = TipContents.getUploadDir(); // 파일을 업로드할 폴더
-		System.out.println("-> upDir: " + upDir);
+		for (MultipartFile mf : img_mf) {
+			if (mf != null && !mf.isEmpty()) {
+				String img = mf.getOriginalFilename();
+				long img_size = mf.getSize();
 
-		// 전송 파일이 없어도 file1MF 객체가 생성
-		MultipartFile mf = tcontentsVO.getImg_mf();
+				if (img_size > 0 && Tool.isImage(img)) {
+					String saved_img = Upload.saveFileSpring(mf, upDir);
+					String thumb_img = Tool.preview(upDir, saved_img, 200, 150);
 
-		if (mf != null && !mf.isEmpty()) {
-			img = mf.getOriginalFilename(); // 원본 파일명 산출
-			System.out.println("-> 원본 파일명: " + img);
+					if (tcon_img_sb.length() > 0)
+						tcon_img_sb.append(";");
+					if (tcon_saved_img_sb.length() > 0)
+						tcon_saved_img_sb.append(";");
+					if (tcon_thumb_img_sb.length() > 0)
+						tcon_thumb_img_sb.append(";");
 
-			long img_size = mf.getSize(); // 파일 크기
-			if (img_size > 0) { // 파일 크기 체크, 파일을 올리는 경우
-				if (Tool.isImage(img)) { // 업로드 가능한 이미지 파일인지 검사
-					/* 파일 저장 후 업로드된 파일명 리턴 */
-					saved_img = Upload.saveFileSpring(mf, upDir);
-					thumb_img = Tool.preview(upDir, saved_img, 200, 150);
+					tcon_img_sb.append(img);
+					tcon_saved_img_sb.append(saved_img);
+					tcon_thumb_img_sb.append(thumb_img);
 
-					tcontentsVO.setTcon_img(img); // 순수 원본 파일명
-					tcontentsVO.setTcon_saved_img(saved_img); // 저장된 파일명(파일명 중복 처리)
-					tcontentsVO.setTcon_thumb_img(thumb_img); // 원본이미지 축소판
-					tcontentsVO.setTcon_img_size(img_size); // 파일 크기
-
-					// 저장된 파일 경로 로그 출력
-					String fullSavedPath = upDir + saved_img;
-					System.out.println("---> Full saved img path: " + fullSavedPath);
-				} else { // 전송 못하는 파일 형식
-					ra.addFlashAttribute("code", "check_upload_file_fail"); // 업로드 할 수 없는 파일
-					ra.addFlashAttribute("cnt", 0); // 업로드 실패
-					ra.addFlashAttribute("url", "/admin/msg"); // msg.html, redirect parameter 적용
-					return "redirect:/admin/msg"; // Post -> Get - param...
+					total_img_size += img_size;
 				}
-			} else { // 글만 등록하는 경우
-				System.out.println("-> 글만 등록");
 			}
-		} else { // 파일이 없는 경우
-			System.out.println("-> No file uploaded or empty file");
 		}
 
-		// ------------------------------------------------------------------------------
-		// 파일 전송 코드 종료
-		// ------------------------------------------------------------------------------
+		tcontentsVO.setTcon_img(tcon_img_sb.toString());
+		tcontentsVO.setTcon_saved_img(tcon_saved_img_sb.toString());
+		tcontentsVO.setTcon_thumb_img(tcon_thumb_img_sb.toString());
+		tcontentsVO.setTcon_img_size(total_img_size);
 
 		int acc_no = (int) session.getAttribute("acc_no");
 		tcontentsVO.setAcc_no(acc_no);
-		
-	    // YouTube URL 처리
-	    String youtube = tcontentsVO.getYoutube();
 
-	    if (youtube != null && youtube.trim().length() > 0) { // 삭제 중인지 확인, 삭제가 아니면 youtube 크기 변경
-	        youtube = Tool.youtubeResize(youtube, 640); // youtube 영상의 크기를 width 기준 640 px로 변경
-	        tcontentsVO.setYoutube(youtube); // 변경된 youtube URL 설정
-	    }
-	    
-	    tcontentsVO.setTcon_contents(tcontentsVO.getTcon_contents().replace("\r\n", "<br>").replace("\n", "<br>"));
-	    
-	    int cnt = this.tcontentsProc.create(tcontentsVO);
+		// YouTube URL 처리
+		String youtube = tcontentsVO.getYoutube();
+
+		if (youtube != null && youtube.trim().length() > 0) { // 삭제 중인지 확인, 삭제가 아니면 youtube 크기 변경
+			youtube = Tool.youtubeResize(youtube, 640); // youtube 영상의 크기를 width 기준 640 px로 변경
+			tcontentsVO.setYoutube(youtube); // 변경된 youtube URL 설정
+		}
+
+		tcontentsVO.setTcon_contents(tcontentsVO.getTcon_contents().replace("\r\n", "<br>").replace("\n", "<br>"));
+
+		int cnt = this.tcontentsProc.create(tcontentsVO);
 
 		if (cnt == 1) { // DB 등록 성공
 			return "redirect:/tcontents/list";
@@ -189,7 +166,7 @@ public class TipContentsCont {
 	public String list(HttpSession session, Model model, @RequestParam(name = "word", defaultValue = "") String word) {
 
 		Integer acc_no = (Integer) session.getAttribute("acc_no");
-		
+
 		CategoryVO categoryVO = this.categoryProc.cate_read(3);
 		model.addAttribute("categoryVO", categoryVO);
 
@@ -199,26 +176,25 @@ public class TipContentsCont {
 		map.put("word", word);
 
 		ArrayList<TipContentsVO> list = this.tcontentsProc.list(map);
-		
-	    if (acc_no != null) {
-	        for (TipContentsVO content : list) {
-	            Map<String, Object> likeMap = new HashMap<>();
-	            likeMap.put("acc_no", acc_no);
-	            likeMap.put("tcon_no", content.getTcon_no());
-	            
-	            boolean isLiked = this.tcontentsProc.isLiked(likeMap);
-	            content.setLiked(isLiked);
-	        }
-	    }
-	    
-        for (TipContentsVO content : list) {
-            int like_cnt = this.tcontentsProc.like_count(content.getTcon_no());
-            content.setLikeCnt(like_cnt);
-        }
 
-		
+		if (acc_no != null) {
+			for (TipContentsVO content : list) {
+				Map<String, Object> likeMap = new HashMap<>();
+				likeMap.put("acc_no", acc_no);
+				likeMap.put("tcon_no", content.getTcon_no());
+
+				boolean isLiked = this.tcontentsProc.isLiked(likeMap);
+				content.setLiked(isLiked);
+			}
+		}
+
+		for (TipContentsVO content : list) {
+			int like_cnt = this.tcontentsProc.like_count(content.getTcon_no());
+			content.setLikeCnt(like_cnt);
+		}
+
 		model.addAttribute("list", list);
-		//model.addAttribute("tconImages",tconImages);
+		// model.addAttribute("tconImages",tconImages);
 
 		// System.out.println("-> size: " + list.size());
 		model.addAttribute("word", word);
@@ -236,11 +212,11 @@ public class TipContentsCont {
 	 */
 	@GetMapping(value = "/read")
 	public String read(HttpSession session, Model model, int tcon_no) {
-		
+
 		Integer acc_no = (Integer) session.getAttribute("acc_no");
-		
+
 		TipContentsVO tcontentsVO = this.tcontentsProc.read(tcon_no);
-		
+
 //	    String title = contentsVO.getTitle();
 //	    String content = contentsVO.getContent();
 		//
@@ -248,36 +224,174 @@ public class TipContentsCont {
 //	    content = Tool.convertChar(content); 
 		//
 //	    contentsVO.setTitle(title);
-//	    contentsVO.setContent(content);  
-
-		long img_size = tcontentsVO.getTcon_img_size();
-		String img_size_label = Tool.unit(img_size);
-		tcontentsVO.setImg_size_label(img_size_label);
+//	    contentsVO.setContent(content);
 		
+		// String img_size_label = Tool.unit(img_size); // 필요에 따라 크기 단위를 변환하여 사용
+		// tcontentsVO.setImg_size_label(img_size_label);
+
 		tcontentsVO.setTcon_date(tcontentsVO.getTcon_date().toString());
 
 		CategoryVO categoryVO = this.categoryProc.cate_read(tcontentsVO.getCate_no());
 		model.addAttribute("categoryVO", categoryVO);
-		
+
 		if (acc_no != null) {
 			Map<String, Object> likeMap = new HashMap<>();
-            likeMap.put("acc_no", acc_no);
-            likeMap.put("tcon_no", tcon_no);
-	        boolean isLiked = this.tcontentsProc.isLiked(likeMap);
-	        tcontentsVO.setLiked(isLiked);
-			
-	        int like_cnt = this.tcontentsProc.like_count(tcontentsVO.getTcon_no());
-	        tcontentsVO.setLikeCnt(like_cnt);
+			likeMap.put("acc_no", acc_no);
+			likeMap.put("tcon_no", tcon_no);
+			boolean isLiked = this.tcontentsProc.isLiked(likeMap);
+			tcontentsVO.setLiked(isLiked);
+
+			int like_cnt = this.tcontentsProc.like_count(tcontentsVO.getTcon_no());
+			tcontentsVO.setLikeCnt(like_cnt);
 		}
-		
-		// tcontentsVO.setTcon_contents(tcontentsVO.getTcon_contents().replace("<br>", "\r\n"));
-	
+
 		model.addAttribute("tcontentsVO", tcontentsVO);
 		this.tcontentsProc.updateViews(tcon_no); // 조회수 증가
-		
+
 		return "/tcontents/read";
 	}
-	
+
+	/**
+	 * 글 수정 폼
+	 * 
+	 * @param session
+	 * @param model
+	 * @param tcon_no
+	 * @return
+	 */
+	@GetMapping(value = "/update")
+	public String update(HttpSession session, Model model, int tcon_no) {
+		Integer acc_no = (Integer) session.getAttribute("acc_no");
+
+		if ((acc_no != 0) && acc_no == session.getAttribute("acc_no")) {
+			TipContentsVO tcontentsVO = this.tcontentsProc.read(tcon_no);
+			tcontentsVO.setTcon_contents(tcontentsVO.getTcon_contents().replace("<br>", "\n"));
+			model.addAttribute("tcontentsVO", tcontentsVO);
+		} else { // acc_no가 session 값과 다름
+			model.addAttribute("code", "diff_acc");
+		}
+
+		return "tcontents/update"; // /templates/account/create.html
+	}
+
+	/**
+	 * 글 수정 처리 
+	 * 
+	 * @param session
+	 * @param model
+	 * @param tcon_no
+	 * @param tcon_title
+	 * @param tcon_contents
+	 * @param youtube
+	 * @param img_mf
+	 * @return
+	 */
+	@PostMapping("/update")
+	public String update(HttpSession session, Model model, int tcon_no, String tcon_title, String tcon_contents,
+			String youtube, List<MultipartFile> img_mf) {
+
+		TipContentsVO tcontentsVO = this.tcontentsProc.read(tcon_no);
+		model.addAttribute("tcontentsVO", tcontentsVO);
+
+		tcontentsVO.setTcon_title(tcon_title);
+		tcontentsVO.setTcon_contents(tcon_contents.replace("\r\n", "<br>").replace("\n", "<br>"));
+
+	    if (!youtube.equals(tcontentsVO.getYoutube())) {
+	        youtube = Tool.youtubeResize(youtube, 640);
+	        tcontentsVO.setYoutube(youtube);
+	    }
+
+		if (img_mf != null && !img_mf.isEmpty() && img_mf.get(0).getSize() > 0) {
+			String upDir = TipContents.getUploadDir();
+			StringBuilder tcon_img_sb = new StringBuilder();
+			StringBuilder tcon_saved_img_sb = new StringBuilder();
+			StringBuilder tcon_thumb_img_sb = new StringBuilder();
+			long total_img_size = 0;
+
+			for (MultipartFile mf : img_mf) {
+				if (mf != null && !mf.isEmpty()) {
+					String img = mf.getOriginalFilename();
+					long img_size = mf.getSize();
+
+					if (img_size > 0 && Tool.isImage(img)) {
+						String saved_img = Upload.saveFileSpring(mf, upDir);
+						String thumb_img = Tool.preview(upDir, saved_img, 200, 150);
+
+						if (tcon_img_sb.length() > 0)
+							tcon_img_sb.append(";");
+						if (tcon_saved_img_sb.length() > 0)
+							tcon_saved_img_sb.append(";");
+						if (tcon_thumb_img_sb.length() > 0)
+							tcon_thumb_img_sb.append(";");
+
+						tcon_img_sb.append(img);
+						tcon_saved_img_sb.append(saved_img);
+						tcon_thumb_img_sb.append(thumb_img);
+
+						total_img_size += img_size;
+					}
+				}
+			}
+
+			tcontentsVO.setTcon_img(tcon_img_sb.toString());
+			tcontentsVO.setTcon_saved_img(tcon_saved_img_sb.toString());
+			tcontentsVO.setTcon_thumb_img(tcon_thumb_img_sb.toString());
+			tcontentsVO.setTcon_img_size(total_img_size);
+		}
+
+		int cnt = this.tcontentsProc.update(tcontentsVO);
+		
+		if (cnt > 0) {
+			return "redirect:/tcontents/read?tcon_no=" + tcon_no;
+		} else {
+			model.addAttribute("code", "update_fail");
+			return "tcontents/msg";
+		}
+	}
+
+	/**
+	 * 글 삭제 폼
+	 * 
+	 * @param session
+	 * @param model
+	 * @param tcon_no
+	 * @return
+	 */
+	@GetMapping(value = "/delete")
+	public String delete(HttpSession session, Model model, int tcon_no) {
+
+		if (this.accountProc.isMemberAdmin(session)) {
+			TipContentsVO tcontentsVO = this.tcontentsProc.read(tcon_no);
+			model.addAttribute("tcontentsVO", tcontentsVO);
+			return "tcontents/delete";
+		} else {
+			model.addAttribute("code", "permission_denied");
+			return "tcontents/msg";
+		}
+	}
+
+	/**
+	 * 글 삭제 처리
+	 * 
+	 * @param tcon_no
+	 * @return
+	 */
+	@PostMapping(value = "/delete")
+	public String delete(int tcon_no) {
+		TipContentsVO tcontentsVO = this.tcontentsProc.read(tcon_no);
+
+		String tcon_saved_img = tcontentsVO.getTcon_saved_img();
+		String tcon_thumb_img = tcontentsVO.getTcon_thumb_img();
+
+		String upDir = TipContents.getUploadDir();
+		Tool.deleteFile(upDir, tcon_saved_img);
+		Tool.deleteFile(upDir, tcon_thumb_img);
+
+		this.tcontentsProc.delete(tcon_no);
+
+		return "redirect:/tcontents/list";
+	}
+
 	/**
 	 * 좋아요 저장
 	 * 
@@ -287,27 +401,26 @@ public class TipContentsCont {
 	 */
 	@GetMapping("/insertlike")
 	@ResponseBody
-	public Map<String, Object> insertLike(HttpSession session,
-							 @RequestParam("tcon_no") int tcon_no) {
+	public Map<String, Object> insertLike(HttpSession session, @RequestParam("tcon_no") int tcon_no) {
 
 		Integer acc_no = (Integer) session.getAttribute("acc_no");
-		
+
 		Map<String, Object> response = new HashMap<>();
 		response.put("cnt", 0);
-		
-		if(acc_no != null) {
-	        Map<String, Object> map = new HashMap<>();
-	        map.put("acc_no", acc_no);
+
+		if (acc_no != null) {
+			Map<String, Object> map = new HashMap<>();
+			map.put("acc_no", acc_no);
 			map.put("tcon_no", tcon_no);
-			
+
 			this.tcontentsProc.insertLike(map);
-			
+
 			response.put("cnt", 1);
 		}
-		
+
 		return response;
 	}
-	
+
 	/**
 	 * 좋아요 삭제
 	 * 
@@ -317,24 +430,23 @@ public class TipContentsCont {
 	 */
 	@GetMapping("/deletelike")
 	@ResponseBody
-	public Map<String, Object> deleteLike(HttpSession session,
-							 @RequestParam("tcon_no") int tcon_no) {
+	public Map<String, Object> deleteLike(HttpSession session, @RequestParam("tcon_no") int tcon_no) {
 
 		Integer acc_no = (Integer) session.getAttribute("acc_no");
-		
+
 		Map<String, Object> response = new HashMap<>();
 		response.put("cnt", 0);
-		
-		if(acc_no != null) {
-	        Map<String, Object> map = new HashMap<>();
-	        map.put("acc_no", acc_no);
+
+		if (acc_no != null) {
+			Map<String, Object> map = new HashMap<>();
+			map.put("acc_no", acc_no);
 			map.put("tcon_no", tcon_no);
-			
+
 			this.tcontentsProc.deleteLike(map);
-			
+
 			response.put("cnt", 1);
 		}
-		
+
 		return response;
 	}
 

@@ -1,5 +1,8 @@
 package dev.mvc.tip_contents;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.Getter;
@@ -47,7 +50,8 @@ public class TipContentsVO {
 	private String tcon_date = "";
 	
 	/** 업로드 이미지 파일 */
-	private MultipartFile img_mf = null;
+	//private MultipartFile img_mf = null;
+	private List<MultipartFile> img_mf = new ArrayList<>();
 	/** 메인 이미지 크기 단위, 파일 크기 */
 	private String img_size_label = "";
 	/** 이미지 */
@@ -61,8 +65,6 @@ public class TipContentsVO {
 	
 	/** 비밀번호 */
 	private String tcon_passwd = "";
-	/** 검색어 */
-	private String word = "";
 
 	/** 유튜브 링크 */
 	private String youtube = "";

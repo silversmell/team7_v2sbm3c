@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+
+	<div class='title_line'>
+		<span th:text="${tcontentsVO.tcon_title}" class="title_line_text"></span>
+		> 삭제
+	</div>
+
+	<div class='menu_line'></div>
+
+	<fieldset class="fieldset_basic">
+		<ul>
+			<div style='text-align: left; width: 47%; float: left;'>
+				<span style='font-size: 1.5em;' th:text="${tcontentsVO.tcon_title}"></span>
+				<br>
+				<form name='delete_frm' method='POST' action='./delete'>
+					<input type="hidden" id="tcon_no" name="tcon_no" th:value="${tcontentsVO.tcon_no}">
+					<br>
+					<div style='margin-top: 20px; clear: both;'>
+						<span style="color: #FF0000; font-weight: bold;">삭제를 진행 하시겠습니까? 삭제하시면 복구 할 수 없습니다.</span>
+						<br><br><br>
+						<button type="submit" class="btn btn-secondary btn-sm">삭제</button>
+						<button type="button" onclick="history.back();" class="btn btn-secondary btn-sm">취소</button>
+					</div>
+				</form>
+			</div>
+			</li>
+		</ul>
+	</fieldset>
+
+</div>
+
+</html>

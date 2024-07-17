@@ -1,19 +1,19 @@
 <link href="/css/style.css" rel="Stylesheet" type="text/css">
 <script>
-    function openRecom() {
-      let acc_no = '[[${session.acc_no}]]';
+	function openRecom() {
+		let acc_no = '[[${session.acc_no}]]';
 
-      var url = 'http://192.168.12.157:5000/recom?acc_no=' + acc_no; // 배포할 때 AWS IP로 변경
-      var win = window.open(url, '추천 받기', 'width=1000px, height=1000px');
+		var url = 'http://192.168.12.157:5000/recom?acc_no=' + acc_no; // 배포할 때 AWS IP로 변경
+		var win = window.open(url, '추천 받기', 'width=1000px, height=1000px');
 
-      var x = (screen.width - 450) / 2;
-      var y = (screen.heigth - 450) / 2;
+		var x = (screen.width - 450) / 2;
+		var y = (screen.heigth - 450) / 2;
 
-      win.moveTo(x, y);
-    }
-    
+		win.moveTo(x, y);
+	}
+
 </script>
-  
+
 <div th:fragment="navbarFragment">
 	<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
 		<div class="container-fluid">
@@ -24,8 +24,12 @@
 				aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
+<<<<<<< HEAD
 			
 			<!-- 회원 페이지 메뉴 시작 -->
+=======
+
+>>>>>>> 888e52d (팁 게시글 조회, 수정, 삭제 개발)
 			<div class="collapse navbar-collapse" id="navbarNavDropdown" th:if="${!(currentUrl.contains('admin'))}">
 			
 			  <!-- left side bar start -->
@@ -37,6 +41,7 @@
 					 </a>
 					</li>
 
+<<<<<<< HEAD
           <!-- 공지사항 -->
           <li class="nav-item">
             <a class="nav-link" th:href="@{|http://192.168.12.160:3000/issue/find_all|}" th:text="공지사항"></a>
@@ -137,6 +142,91 @@
           </li>
 			</ul>
 			<!-- left side bar end -->
+=======
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{|/scontents/list_by_search?cate_no=1|}" th:text="공유게시판"></a>
+					</li>
+					<span style="font-size: 25px;">|</span>
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{|http://localhost:9093/qcontents/qna_list_all?cate_no=2|}"
+							th:text="질문게시판"></a>
+					</li>
+					<span style="font-size: 25px;">|</span>
+					<li class="nav-item">
+						<a class="nav-link" href="tcontents/list" th:text="팁게시판"></a>
+					</li>
+					<span style="font-size: 25px;">|</span>
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{|/scontents/rank?cate_no=4|}" th:text="랭킹게시판"></a>
+					</li>
+					<span style="font-size: 25px;">|</span>
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{|http://192.168.12.160:3000/issue/find_all|}" th:text="공지사항"></a>
+					</li>
+					<span th:if="${session.acc_no != null}" style="font-size: 25px;">|</span>
+					<li class="nav-item" th:if="${session.acc_no != null}">
+						<a class="nav-link" href="/recommend/list" th:text="추천글"></a>
+					</li>
+					<span th:if="${session.acc_no != null}" style="font-size: 25px;">|</span>
+					<li class="nav-item" th:if="${session.acc_no != null}">
+						<a class="nav-link" th:href="@{|/scontents/notice/${session.acc_no}|}" th:text="알림"></a>
+					</li>
+					<span th:if="${session.acc_no != null}" style="font-size: 25px;">|</span>
+					<li class="nav-item" th:if="${session.acc_no != null}">
+						<a class="nav-link"
+							th:href="@{|http://localhost:9093/qcontents/summary_log?acc_no=${session.acc_no}|}"
+							th:text="'실시간 요약'"></a>
+					</li>
+					<span th:if="${session.acc_no != null}" style="font-size: 25px;">|</span>
+					<li class="nav-item" th:if="${session.acc_no != null}">
+						<a class="nav-link"
+							th:href="@{|http://localhost:9093/qcontents/member_img_log?acc_no=${session.acc_no}|}"
+							th:text="'실시간 이미지'"></a>
+					</li>
+				</ul>
+
+				<!-- right side -->
+				<ul class="navbar-nav ms-auto">
+					<li class="nav-item" style="float: right;">
+						<span th:if="${session.acc_no == null}">
+							<a class="nav-link" href="/account/login" th:text="@{|로그인|}"
+								style="display: inline-block; margin-right: 5px;"></a>
+							<a class="nav-link" href="/account/create" th:text="@{|회원 가입|}"
+								style="display: inline-block;"></a>
+							<a class="nav-link" href="/admin" th:text="@{|관리자|}" style="display: inline-block;"></a>
+						</span>
+						<span th:if="${session.acc_no != null}">
+							<a class="nav-link" href="/account/logout" th:text="@{|${session.acc_id} 로그아웃|}"
+								style="display: inline-block;"></a>
+							<a class="nav-link" th:href="@{|/account/mypage|}"
+								style="display: inline-block;">마이페이지</a>
+							<a class="nav-link" th:href="@{|/account/read?acc_no=${session.acc_no}|}"
+								style="display: inline-block;">회원 정보 조회(목록용)</a>
+						</span>
+
+
+						<span th:if="${session.acc_no != null}">
+							<a class="nav-link" href="javascript: openRecom();" style="display: inline-block;">
+								추천 받기
+							</a>
+						</span>
+						<span th:if="${session.acc_no != null}">
+							<a class="nav-link" th:href="@{|http://192.168.12.159:9093/qcontents/summary|}"
+								th:text="@{|요약 서비스 AI|}" style="display: inline-block;"></a>
+						</span>
+						<span th:if="${session.acc_no != null}">
+							<!-- <button type="button"
+  							th:attr="onclick=|location.href='http://192.168.12.159:9093/qcontents/member_img'|">
+  							<img src="/css/images/dalleAI.png" class="icon" alt="달리AI"
+  								style="width: 100%; height: 30px;">
+  								</button> -->
+							<a class="nav-link" th:href="@{|http://192.168.12.159:9093/qcontents/member_img|}"
+								th:text="@{|이미지 생성 서비스 AI|}" style="display: inline-block;"></a>
+
+						</span>
+					</li>
+				</ul>
+>>>>>>> 888e52d (팁 게시글 조회, 수정, 삭제 개발)
 
 			<!-- right side start -->
 			<ul class="navbar-nav ms-auto">
@@ -164,7 +254,8 @@
 			
 
 			<!-- 관리자 메뉴 시작 -->
-			<a class="navbar-brand" href="/admin" th:if="${currentUrl != null and currentUrl.contains('admin')}">데스크 투어</a>
+			<a class="navbar-brand" href="/admin" th:if="${currentUrl != null and currentUrl.contains('admin')}">데스크
+				투어</a>
 
 			<div class="collapse navbar-collapse" id="navbarNavDropdown"
 				th:if="${currentUrl != null and currentUrl.contains('admin')}">
@@ -180,9 +271,11 @@
 							<li class="nav-item"><a class="nav-link" th:href="@{|/category/cate_list_search|}">카테고리 전체
 									목록</a></li>
 							<li class="nav-item"><a class="nav-link" href="#">전체 글 목록</a></li>
-							<li class="nav-item"><a class="nav-link" th:href="@{|/scontents/list_by_search?cate_no=1|}">공유글
+							<li class="nav-item"><a class="nav-link"
+									th:href="@{|/scontents/list_by_search?cate_no=1|}">공유글
 									전체 목록</a></li>
-							<li class="nav-item"><a class="nav-link" th:href="@{|/qcontents/qna_list_all?cate_no=2||}">질문글 전체
+							<li class="nav-item"><a class="nav-link"
+									th:href="@{|/qcontents/qna_list_all?cate_no=2||}">질문글 전체
 									목록</a></li>
 						</ul>
 					</li>
@@ -231,4 +324,9 @@
 			<!-- 관리자 메뉴 종료 -->
 			
 	</nav>
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 888e52d (팁 게시글 조회, 수정, 삭제 개발)
 </div>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<div layout:fragment="content">
+	<div class='title_line'>
+		<span th:text="${tcontentsVO.tcon_title}" class="title_line_text"></span>
+		> 글 수정
+	</div>
+
+	<aside class="aside_right">
+		<a th:href="@{|./create?cate_no=1|}">등록</a>
+		<span class='menu_divide'>│</span>
+		<a href="javascript:location.reload();">새로고침</a>
+	</aside>
+
+	<div class='menu_line'></div>
+
+	<form name='update_frm' method='post' th:object="${tcontentsVO}" action='/tcontents/update'
+		enctype="multipart/form-data">
+		<input type="hidden" name="tcon_no" th:value="${tcontentsVO.tcon_no }">
+
+		<fieldset class="fieldset_basic">
+			<div style="width: 80%; margin: 0 auto;">
+
+				<span>기존 이미지</span>
+				<div class="image-grid">
+					<th:block th:with="imgs=${tcontentsVO.tcon_saved_img.split(';')}">
+						<th:block th:each="img : ${imgs}">
+							<div class="image-container">
+								<img class="aspect-ratio" th:src="@{|/contents/storage/${img}|}" />
+							</div>
+						</th:block>
+					</th:block>
+				</div>
+				<hr>
+
+				
+				<div style="width: 30%; display: inline-block;">
+					<span>변경 이미지 선택</span>
+					<input type='file' class="form-control" name='img_mf' style="width: 100%; margin-top: 5px; float: left;"
+						placeholder="파일 선택" multiple />
+				</div>
+
+				<hr>
+
+				<span>제목</span>
+				<div style="margin-top: 5px;">
+					<input type='text' name='tcon_title' th:value='${tcontentsVO.tcon_title}' required="required"
+						autofocus="autofocus" class="form-control" style='width: 100%;'>
+				</div>
+
+				<hr>
+
+				<span>내용</span>
+				<div style="margin-top: 5px;">
+					<textarea name='tcon_contents' required="required" class="form-control" rows="12"
+						style='width: 100%;' th:text='${tcontentsVO.tcon_contents}'></textarea>
+				</div>
+
+				<hr>
+
+				<span>Youtube 스크립트</span>
+				<div style="width: 100%; margin-top: 5px;">
+					<textarea name='youtube' class="form-control" rows="12"
+						th:text="${tcontentsVO.youtube}"></textarea>
+				</div>
+
+				<hr>
+
+				<div class="content_body_bottom" style="background-color: #EAEAEA;">
+					<button type="submit" class="btn btn-secondary btn-sm">저장</button>
+					<button type="button" th:attr="onclick=|location.href='./ist_all?scon_no=${scon_no}'|"
+						class="btn btn-secondary btn-sm">목록</button>
+				</div>
+
+			</div>
+		</fieldset>
+
+
+	</form>
+
+</div>
+</html>

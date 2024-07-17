@@ -61,6 +61,22 @@ public interface TipContentsProcInter {
 	 * @return
 	 */
 	public int updateViews(int tcon_no);
+
+	/**
+	 * 글 수정 
+	 * 
+	 * @param tcontentsVO
+	 * @return
+	 */
+	public int update(TipContentsVO tcontentsVO);
+	
+	/**
+	 * 게시글 삭제
+	 * 
+	 * @param tcon_no
+	 * @return
+	 */
+	public int delete(int tcon_no);
 	
 	/**
 	 * 좋아요 상태 확인

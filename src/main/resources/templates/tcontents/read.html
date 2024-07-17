@@ -13,9 +13,9 @@
 		<a href='./list'>목록</a>
 		<span th:if="${session.acc_grade == 'admin'}">
 			<span class='menu_divide'>│</span>
-			<a href='./update'>수정</a>
+			<a th:href="@{|/tcontents/update?tcon_no=${tcontentsVO.tcon_no}|}">수정</a>
 			<span class="menu_devide">│</span>
-			<a href='./delete'>삭제</a>
+			<a th:href="@{|/tcontents/delete?tcon_no=${tcontentsVO.tcon_no}|}">삭제</a>
 		</span>
 	</aside>
 
@@ -31,27 +31,31 @@
 
 					</div>
 
-					<div style="text-align: right; margin-bottom: 25px;">
+					<div style="text-align: right; margin-top: 15px; margin-bottom: 25px;">
 						조회수 <span style="font-size: normal;" th:text="${tcontentsVO.tcon_views}"></span>
 						<span class='menu_divide'>│</span>
 						<span style="font-size: normal;" th:text="${tcontentsVO.tcon_date.substring(0, 19)}"></span>
 					</div>
-
-					<div class="fotorama-container"
-						style="display: flex; justify-content: center; align-items: center; width: 100%;">
-						<div class="fotorama" data-autoplay="5000" data-nav="thumbs" data-ratio="16/9"
-							style="width: 100%; max-width: 800px; max-height: 450px;">
-							<img th:src="@{|/contents/storage/${tcontentsVO.tcon_saved_img}|}"
-								th:if="${tcontentsVO.tcon_img.endsWith('jpg') or tcontentsVO.tcon_img.endsWith('png') or tcontentsVO.tcon_img.endsWith('gif')}"
-								style="width: 100%; height: auto; max-height: 450px;">
-						</div>
+					
+					<div class="fotorama" data-autoplay="5000" data-nav="thumbs" data-ratio="16/9"
+					    style='display: flex; justify-content: center; align-items: center; width: 80%; margin: 0 auto;'>
+					    <th:block th:with="imgs=${tcontentsVO.tcon_saved_img.split(';')}">
+					        <th:block th:each="img : ${imgs}">
+					            <img th:src="@{|/contents/storage/${img}|}" 
+					                style="width: 100%; height: auto; max-width: 600px; max-height: 400px;">
+					        </th:block>
+					    </th:block>
 					</div>
-
+					
+					<br><br>
+					
+					<div id="tcontent" style="white-space: pre-wrap; width: 80%; margin: 0 auto;"
+						th:utext="${tcontentsVO.tcon_contents}">
+					</div>
+					
+					<br>
 
 				</div>
-
-				<div id="tcontent" style="white-space: pre; margin-top: 40px; margin-bottom: 30px;"
-					th:utext="${tcontentsVO.tcon_contents}"></div>
 
 			</li>
 
@@ -60,11 +64,12 @@
 			<li class="li_none" style="clear: both; padding-top: 10px; padding-bottom: 10px;"
 				th:if="${tcontentsVO.youtube.length() > 0}">
 				<div style='text-align: center; width:640px; margin: 0px auto;' th:utext="${tcontentsVO.youtube}">
+					
 				</div>
 			</li>
 
 			<hr>
-			
+
 			<div class="like-area">
 				이 글이 도움이 되었나요?
 				<br>
