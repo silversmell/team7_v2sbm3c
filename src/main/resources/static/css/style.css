@@ -946,7 +946,7 @@
   	font-size: 18px;
   	color: #777777;
   }
-  
+
   .like-area span {
   	color: #777777;
   }
@@ -961,22 +961,78 @@
   	padding: 50px 0;
   }
 
-  .fotorama-container {
+  .image-grid {
+  	width: 50%;
   	display: flex;
-  	justify-content: center;
-  	align-items: center;
-  	width: 100%;
-  	max-width: 800px;
-  	max-height: 450px;
-  	margin: 0 auto;
+  	flex-wrap: wrap;
+  	justify-content: flex-start
   }
 
-  .fotorama img {
+  .image-container {
+  	width: calc(33.333% - 10px);
+  	margin-top: 10px;
+  	margin-right: 7px;
+  	box-sizing: border-box;
+  	position: relative;
+  }
+
+  .image-container img {
   	width: 100%;
   	height: auto;
+<<<<<<< HEAD
   	max-height: 450px;
   }
   
   .rank_img:hover {    
     filter: brightness(0.5);
   }
+=======
+  	object-fit: cover;
+  }
+
+  .aspect-ratio {
+  	aspect-ratio: 1 / 1;
+  	width: 100%;
+  	display: block;
+  }
+
+  .nopic {
+  	width: 100px;
+  	height: 100px;
+  }
+
+  .profile-label {
+  	color: #35C5F0;
+  	font-size: 16px;
+  	margin-bottom: 15px;
+  }
+
+  .form-group-horizontal {
+  	display: flex;
+  	align-items: center;
+  }
+
+  .form-group-horizontal button {
+	display: inline-block;
+  	margin-left: 10px;
+  	margin-right: 10px;
+  }
+
+  .form-group {
+  	display: flex;
+  	align-items: self-start;
+  	margin-bottom: 10px;
+  }
+
+  .form-group label {
+  	flex: 0 0 100px;
+  	text-align: left;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group button,
+  .form-group span {
+  	flex: 1;
+  }
+>>>>>>> cf6086e (회원 조회 수정)

@@ -41,7 +41,14 @@
 		FROM admin
 		WHERE adm_id = #{adm_id}
 	</select>
-
+	
+	<!-- 관리자 정보 수정(관리자 목록, 마이페이지) -->
+	<update id="update" parameterType="dev.mvc.admin.AdminVO">
+		UPDATE admin
+		SET cate_no=#{cate_no}, adm_name=#{adm_name}, adm_email=#{adm_email}, adm_tel=#{acc_tel}
+		WHERE adm_no=#{adm_no}
+	</update>
+	
 	<!-- 로그인 -->
 	<select id="login" resultType="int" parameterType="HashMap">
 		SELECT COUNT(adm_no) as cnt
@@ -204,6 +211,22 @@
 		ORDER BY acc_date
 	</select>
 	
+	<!-- 회원 정보 조회(회원 목록) -->
+	<select id="accRead" resultType="dev.mvc.account.AccountVO" parameterType="int">
+		SELECT acc_no, acc_id, acc_pw, acc_name, acc_tel, acc_age, acc_date,
+		acc_grade,
+		acc_img, acc_saved_img, acc_thumb_img, acc_img_size
+		FROM account
+		WHERE acc_no = #{acc_no}
+	</select>
+	
+	<!-- 회원 정보 수정(회원 목록) -->
+	<update id="accUpdate" parameterType="dev.mvc.account.AccountVO">
+		UPDATE account
+		SET acc_name=#{acc_name}, acc_tel=#{acc_tel}, acc_age=#{acc_age}
+		WHERE acc_no=#{acc_no}
+	</update>
+
 	<!-- 회원 로그 목록 -->
 	<select id="accLogList" resultMap="accLogResultMap">
 		SELECT l.acc_log_no, a.acc_no, a.acc_id, l.acc_log_ip, l.acc_log_time

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+
+<div layout:fragment="content">
+	<script type="text/javascript" th:src="@{/js/account/read.js}"></script>
+
+	<div class="title_line">마이페이지<span
+			th:text="@{|${accountVO.acc_name} (${accountVO.acc_id})|}"></span></div>
+	<aside class="aside_right">
+		<a href="javascript:location.reload();">새로고침</a>
+		<span class='menu_divide'>│</span>
+		<a href="#">로그인 내역</a>
+		<span class='menu_divide'>│</span>
+		<a href="#">회원 탈퇴</a>
+		<span th:if="${session.acc_no == accountVO.acc_no}" class='menu_divide'>│</span>
+		<a th:if="${session.acc_no == accountVO.acc_no}" href='./mycontents'>내가 쓴 글</a>
+		<span th:if="${session.acc_no == accountVO.acc_no}" class='menu_divide'>│</span>
+		<a th:if="${session.acc_no == accountVO.acc_no}" href='./mybookmarks'>나의 북마크</a>
+	</aside>
+
+	<div class='menu_line'></div>
+
+	<div style="width: 60%; margin: 0px auto ">
+
+		<form name="pic_update_frm" id="pic_update_frm" th:object="${accountVO}" method="post" 
+			action="/account/updatePic" onsubmit="return checkImg()" enctype="multipart/form-data">
+			<input type="hidden" name="acc_no" th:value="${accountVO.acc_no}">
+			<div>
+				<span style="font-size: 18px;">프로필 사진</span> <!-- 업로드 방식으로 변경 예정 -->
+				<div th:if="${accountVO.acc_img.endsWith('jpg') or accountVO.acc_img.endsWith('png')}" style="width: 100%;">
+					<img th:src="@{|/contents/storage/${accountVO.acc_thumb_img}|}" style="width: 20%;">
+				</div>
+				<div th:unless="${accountVO.acc_img.endsWith('jpg') or accountVO.acc_img.endsWith('png')}" style="width: 100%;">
+					<img class="nopic" src="/admin/images/nopic.png">
+				</div>
+				<input type="file" class="form-control" name="acc_img_mf" id="acc_img_mf" value="" placeholder="파일 선택">
+				<span id='acc_img_msg'></span>
+				<button type="submit" class="btn btn-secondary btn-sm">저장</button>
+			</div>
+		</form>
+
+
+		<form name="update_frm" id="update_frm" th:object="${accountVO}" method="post" action="/account/update">
+			<input type="hidden" name="acc_no" th:value="${accountVO.acc_no}">
+			<input type="hidden" id="my_acc_name" th:value="${accountVO.acc_name}">
+			
+			<span style="font-size: 18px;">필수 정보</span>
+
+			<div class="form-group" style="margin-top: 10px;">
+				<label for="acc_id">아이디</label>
+				<input type="text" name="acc_id" id="acc_id" th:value="${accountVO.acc_id}" readonly
+					class="form-control form-control-sm" style="width: 30%;">
+			</div>
+
+			<div class="form-group">
+				<label for="acc_name">이름</label>
+				<input type='text' name='acc_name' id='acc_name' th:value='${accountVO.acc_name}' required="required"
+					class="form-control form-control-sm" style="width: 30%;">
+				<button type="button" id="btn_checkName" onclick="checkName()" class="btn btn-primary btn-sm"
+					style="margin-top: 4px; margin-left: 10px;">중복확인</button>
+				<span id='acc_name_msg'></span>
+			</div>
+
+			<div class="form-group" style="margin-bottom: 10px;">
+				<label for="acc_pw">패스워드</label>
+				<button type="button" onclick="location.href='/account/update_passwd'"
+					class="btn btn-primary btn-sm">비밀번호 변경</button>
+			</div>
+
+			<hr>
+
+			<span style="font-size: 18px;">선택 정보</span>
+
+			<div class="form-group" style="margin-top: 10px;">
+				<label for="acc_tel">전화번호</label>
+				<span style="font-size: small;"> 예) 010-XXXX-XXXX</span>
+				<input type='text' name='acc_tel' id='acc_tel' th:value='${accountVO.acc_tel}' required="required"
+					placeholder="-" class="form-control form-control-sm" style="width: 30%;">
+			</div>
+
+			<div class="form-group">
+				<label for="acc_age">연령대</label>
+				<select name="acc_age" id="acc_age" class="form-control form-control-sm" style="width: 30%;"
+					required="required">
+					<option value="" disabled selected hidden>-</option>
+					<option value="10대" th:selected="${accountVO.acc_age == '10대'}">10대</option>
+					<option value="20대" th:selected="${accountVO.acc_age == '20대'}">20대</option>
+					<option value="30대" th:selected="${accountVO.acc_age == '30대'}">30대</option>
+					<option value="40대" th:selected="${accountVO.acc_age == '40대'}">40대</option>
+					<option value="50대" th:selected="${accountVO.acc_age == '50대'}">50대</option>
+				</select>
+			</div>
+
+			<hr>
+
+			<!-- 해시태그 -->
+			<span style="font-size: 18px;">나의 취향</span>
+			<div class="form-group">
+				<div class="hashtag-flex-container">
+					<th:block th:each="tag_code : ${tag_codes}">
+						<fieldset>
+							<legend th:text="${tag_code}" style="color: lightgray;"></legend>
+							<th:block th:each="hashtag : ${hashtag_list}">
+								<!-- tag_code가 현재 반복 중인 tag_code와 같은 경우에만 해당하는 해시태그를 출력 -->
+								<th:block th:if="${hashtag.tag_code == tag_code}">
+									<label class="hashtag-checkbox">
+										<!-- name 속성을 변경하여 선택된 체크박스들이 서버로 전송되도록 함 -->
+										<input type="checkbox" name="selected_hashtags" th:value="${hashtag.tag_no}"
+											th:checked="${selected_tags.contains(hashtag.tag_name)}">
+										<span th:text="${hashtag.tag_name}"></span>
+									</label>
+								</th:block>
+							</th:block>
+						</fieldset>
+					</th:block>
+				</div>
+			</div>
+			<span id="hashtag_msg"></span>
+
+			<div class="content_body_bottom">
+				<button type="button" onclick="send();" class="btn btn-secondary btn-sm">저장</button>
+				<button type="button" onclick="history.back();" class="btn btn-secondary btn-sm">취소</button>
+			</div>
+
+		</form>
+	</div>
+
+</div>
+
+</html>

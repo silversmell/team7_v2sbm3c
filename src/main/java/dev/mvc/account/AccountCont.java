@@ -267,48 +267,6 @@ public class AccountCont {
 	}
 	
 	/**
-	 * 회원 정보 조회(회원 목록, 마이페이지)
-	 * 
-	 * @param model
-	 * @param acc_no
-	 * @return
-	 */
-	@GetMapping(value = "/read")
-	public String read(HttpSession session, Model model, int acc_no) {
-
-		AccountVO accountVO = this.accountProc.read(acc_no);
-
-		/* 프로필 사진 불러오기 */
-		long acc_img_size = accountVO.getAcc_img_size();
-		String img_size_label = Tool.unit(acc_img_size);
-		accountVO.setImg_size_label(img_size_label);
-
-		model.addAttribute("accountVO", accountVO);
-
-		/* 해시태그 폼 */
-		List<HashtagVO> hashtag_list = this.accountProc.hashtagList(); // 해시태그 목록 조회
-		model.addAttribute("hashtag_list", hashtag_list); // 모델에 해시태그 목록 추가
-
-		String[] tagCodeList = this.accountProc.tagCodeList().split(",");
-		List<String> tag_codes = Arrays.asList(tagCodeList);
-		model.addAttribute("tag_codes", tag_codes);
-
-		/* 회원가입 시 선택한 해시태그들 */
-		String selectedTagsStr = this.accountProc.selectedTags(acc_no);
-		List<String> selected_tags;
-
-		if (selectedTagsStr != null) {
-			String[] selectedTags = selectedTagsStr.split(",");
-			selected_tags = Arrays.asList(selectedTags);
-		} else {
-			selected_tags = new ArrayList<>(); // 선택한 해시태그가 없을 경우 빈 리스트로 초기화
-		}
-		model.addAttribute("selected_tags", selected_tags);
-
-		return "account/read";
-	}
-
-	/**
 	 * 로그인 폼 (쿠키 기반)
 	 * 
 	 * @param request
@@ -444,12 +402,57 @@ public class AccountCont {
 		session.invalidate(); // 모든 세션 변수 삭제
 		return "redirect:/";
 	}
+	
+	/**
+	 * 마이페이지
+	 * 
+	 * @param model
+	 * @param acc_no
+	 * @return
+	 */
+	@GetMapping(value = "/mypage")
+	public String mypage(HttpSession session, Model model) {
+
+		int acc_no = (int) session.getAttribute("acc_no");
+		AccountVO accountVO = this.accountProc.read(acc_no);
+
+		/* 프로필 사진 불러오기 */
+		long acc_img_size = accountVO.getAcc_img_size();
+		String img_size_label = Tool.unit(acc_img_size);
+		accountVO.setImg_size_label(img_size_label);
+
+		model.addAttribute("accountVO", accountVO);
+
+		/* 해시태그 폼 */
+		List<HashtagVO> hashtag_list = this.accountProc.hashtagList(); // 해시태그 목록 조회
+		model.addAttribute("hashtag_list", hashtag_list); // 모델에 해시태그 목록 추가
+
+		String[] tagCodeList = this.accountProc.tagCodeList().split(",");
+		List<String> tag_codes = Arrays.asList(tagCodeList);
+		model.addAttribute("tag_codes", tag_codes);
+
+		/* 회원가입 시 선택한 해시태그들 */
+		String selectedTagsStr = this.accountProc.selectedTags(acc_no);
+		List<String> selected_tags;
+
+		if (selectedTagsStr != null) {
+			String[] selectedTags = selectedTagsStr.split(",");
+			selected_tags = Arrays.asList(selectedTags);
+		} else {
+			selected_tags = new ArrayList<>(); // 선택한 해시태그가 없을 경우 빈 리스트로 초기화
+		}
+		model.addAttribute("selected_tags", selected_tags);
+
+		return "account/mypage";
+	}
 
 	/**
-	 * 회원 정보 수정(회원 목록, 마이페이지)
+	 * 회원 정보 수정(마이페이지)
 	 * 
 	 * @param model
 	 * @param accountVO
+	 * @param recommendVO
+	 * @param selected_hashtags
 	 * @return
 	 */
 	@PostMapping(value = "/update")

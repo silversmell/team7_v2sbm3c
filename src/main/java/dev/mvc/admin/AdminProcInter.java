@@ -150,6 +150,22 @@ public interface AdminProcInter {
 	 * @return
 	 */
 	public ArrayList<AccountVO> accSearchList(Map<String, Object> map);
+	
+	/**
+	 * 회원 정보 조회
+	 * 
+	 * @param acc_no
+	 * @return
+	 */
+	public AccountVO accRead(int acc_no);
+	
+	/**
+	 * 회원 정보 수정
+	 * 
+	 * @param accountVO
+	 * @return
+	 */
+	public int accUpdate(AccountVO accountVO);
 
 	/**
 	 * 회원 로그 전체 조회

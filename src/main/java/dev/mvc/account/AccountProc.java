@@ -83,6 +83,12 @@ public class AccountProc implements AccountProcInter {
 	}
 	
 	@Override
+	public AccountVO mypage(int acc_no) {
+		AccountVO accountVO = this.accountDAO.read(acc_no);
+		return accountVO;
+	}
+	
+	@Override
 	public AccountVO readById(String acc_id) {
 		AccountVO accountVO = this.accountDAO.readById(acc_id);
 		return accountVO;
@@ -240,5 +246,7 @@ public class AccountProc implements AccountProcInter {
 	    int cnt = this.accountDAO.qconCmtCnt(qcon_no);
 	    return cnt;
 	}
+
+
 
 }

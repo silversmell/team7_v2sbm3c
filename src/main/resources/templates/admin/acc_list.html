@@ -70,8 +70,8 @@
 				<div th:if="${accountVO.acc_grade >= 30 and accountVO.acc_grade <= 39}"><img src='/admin/images/pause.png' title="정지 회원" class="icon_acc"></div>
 				<div th:if="${accountVO.acc_grade == 99}"><img src='/admin/images/withdrawn.png' title="탈퇴 회원" class="icon_acc"></div>
 			</td>
-			<td class='td_basic'><a th:href="@{|./read?acc_no=${accountVO.acc_no}|}" th:text="${accountVO.acc_id}"></a></td>
-			<td class='td_basic'><a th:href="@{|./read?acc_no=${accountVO.acc_no}|}" th:text="${accountVO.acc_name}"></a></td>
+			<td class='td_basic'><a th:href="@{|./acc_read?acc_no=${accountVO.acc_no}|}" th:text="${accountVO.acc_id}"></a></td>
+			<td class='td_basic'><a th:href="@{|./acc_read?acc_no=${accountVO.acc_no}|}" th:text="${accountVO.acc_name}"></a></td>
 			<td class='td_basic' th:text="${accountVO.acc_date.substring(0, 10)}"></td>
 			<td class='td_basic'>
 			  <a th:href="@{|./read?acc_no=${accountVO.acc_no}|}"><img src='/account/images/update.png' title='수정' class="icon"></a>

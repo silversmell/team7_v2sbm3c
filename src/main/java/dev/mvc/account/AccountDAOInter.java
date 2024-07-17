@@ -61,12 +61,20 @@ public interface AccountDAOInter {
 	public int insertRecommend(RecommendVO recommendVO);
 
 	/**
-	 * 회원 정보 조회(회원 목록, 마이페이지)
+	 * 회원 정보 조회
 	 * 
 	 * @param acc_no
 	 * @return
 	 */
 	public AccountVO read(int acc_no);
+	
+	/**
+	 * 마이페이지
+	 * 
+	 * @param acc_no
+	 * @return
+	 */
+	public AccountVO mypage(int acc_no);
 
 	/**
 	 * 아이디로 회원 정보 조회(로그인, 비밀번호 찾기)
@@ -101,7 +109,7 @@ public interface AccountDAOInter {
 	public String selectedTags(int acc_no);
 
 	/**
-	 * 회원 정보 수정(회원 목록, 마이페이지)
+	 * 회원 정보 수정(마이페이지)
 	 * 
 	 * @param accountVO
 	 * @return

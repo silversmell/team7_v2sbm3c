@@ -2,6 +2,7 @@ package dev.mvc.admin;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,9 +22,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import dev.mvc.account.AccountProc;
+import dev.mvc.account.AccountProcInter;
 import dev.mvc.account.AccountVO;
 import dev.mvc.category.CategoryProcInter;
 import dev.mvc.category.CategoryVO;
+import dev.mvc.recommend.HashtagVO;
+import dev.mvc.recommend.RecommendVO;
 import dev.mvc.tool.MailTool;
 import dev.mvc.tool.Security;
 import dev.mvc.tool.Tool;
@@ -42,6 +46,10 @@ public class AdminCont {
 	@Autowired
 	@Qualifier("dev.mvc.category.CategoryProc")
 	private CategoryProcInter categoryProc;
+	
+	@Autowired
+	@Qualifier("dev.mvc.account.AccountProc")
+	private AccountProcInter accountProc;
 
 	@Autowired
 	Security security;
@@ -628,6 +636,79 @@ public class AdminCont {
 
 		return "admin/acc_list";
 	}
+	
+	/**
+	 * 회원 정보 조회
+	 * 
+	 * @param model
+	 * @param acc_no
+	 * @return
+	 */
+	@GetMapping(value = "/acc_read")
+	public String accRead(HttpSession session, Model model, int acc_no) {
+
+		AccountVO accountVO = this.adminProc.accRead(acc_no);
+
+		/* 프로필 사진 불러오기 */
+		long acc_img_size = accountVO.getAcc_img_size();
+		String img_size_label = Tool.unit(acc_img_size);
+		accountVO.setImg_size_label(img_size_label);
+
+		model.addAttribute("accountVO", accountVO);
+		System.out.println("aaaaaa ----- " + accountVO.getAcc_tel());
+
+		/* 해시태그 폼 */
+		List<HashtagVO> hashtag_list = this.accountProc.hashtagList(); // 해시태그 목록 조회
+		model.addAttribute("hashtag_list", hashtag_list); // 모델에 해시태그 목록 추가
+
+		String[] tagCodeList = this.accountProc.tagCodeList().split(",");
+		List<String> tag_codes = Arrays.asList(tagCodeList);
+		model.addAttribute("tag_codes", tag_codes);
+
+		/* 회원가입 시 선택한 해시태그들 */
+		String selectedTagsStr = this.accountProc.selectedTags(acc_no);
+		List<String> selected_tags;
+
+		if (selectedTagsStr != null) {
+			String[] selectedTags = selectedTagsStr.split(",");
+			selected_tags = Arrays.asList(selectedTags);
+		} else {
+			selected_tags = new ArrayList<>(); // 선택한 해시태그가 없을 경우 빈 리스트로 초기화
+		}
+		model.addAttribute("selected_tags", selected_tags);
+
+		return "admin/acc_read";
+	}
+	
+	/**
+	 * 회원 정보 수정
+	 * 
+	 * @param model
+	 * @param accountVO
+	 * @return
+	 */
+	@PostMapping(value = "/acc_update")
+	public String accUpdate(Model model, AccountVO accountVO) {
+
+		int checkName_cnt = this.accountProc.checkName(accountVO.getAcc_name());
+		if (checkName_cnt <= 1) {
+			int cnt = this.adminProc.accUpdate(accountVO);
+			if (cnt == 1) { // 수정 성공
+
+				model.addAttribute("code", "update_success");
+				model.addAttribute("cnt", cnt);
+			} else {
+				model.addAttribute("code", "update_fail");
+				model.addAttribute("cnt", cnt);
+			}
+		} else {
+			model.addAttribute("code", "duplicate_name");
+			model.addAttribute("cnt", 0);
+		}
+
+		return "account/msg";
+	}
+	
 
 	/**
 	 * 회원 로그 목록 (검색 + 페이징)

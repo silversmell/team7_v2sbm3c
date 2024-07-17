@@ -62,12 +62,20 @@ public interface AccountProcInter {
 	public int insertRecommend(RecommendVO recommendVO);
 
 	/**
-	 * 회원 정보 조회(회원 목록, 마이페이지)
+	 * 회원 정보 조회
 	 * 
 	 * @param acc_no
 	 * @return
 	 */
 	public AccountVO read(int acc_no);
+	
+	/**
+	 * 마이페이지
+	 * 
+	 * @param acc_no
+	 * @return
+	 */
+	public AccountVO mypage(int acc_no);
 
 	/**
 	 * 아이디로 회원 정보 조회(로그인, 비밀번호 찾기)

@@ -286,6 +286,18 @@ public class AdminProc implements AdminProcInter {
 	}
 	
 	@Override
+	public AccountVO accRead(int acc_no) {
+		AccountVO accountVO = this.adminDAO.accRead(acc_no);
+		return accountVO;
+	}
+	
+	@Override
+	public int accUpdate(AccountVO accountVO) {
+		int cnt = this.adminDAO.accUpdate(accountVO);
+		return cnt;
+	}
+	
+	@Override
 	public ArrayList<Map<String, Object>> accLogList() {
 		ArrayList<Map<String, Object>> list = this.adminDAO.accLogList();
 		return list;
@@ -340,5 +352,9 @@ public class AdminProc implements AdminProcInter {
 		ArrayList<Map<String, Object>> list = this.adminDAO.accPagingList(map);
 		return list;
 	}
+
+
+
+
 	
 }
