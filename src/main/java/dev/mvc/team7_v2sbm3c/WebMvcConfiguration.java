@@ -8,6 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import dev.mvc.account.PicUpload;
 import dev.mvc.qna_contents.Qcontents;
 import dev.mvc.share_contents.Contents;
+import dev.mvc.textmining.Tcontents;
 import dev.mvc.tip_contents.TipContents;
 import dev.mvc.tool.Tool;
 
@@ -41,6 +42,9 @@ public class WebMvcConfiguration implements WebMvcConfigurer{
         // 인식되는 경로: http://localhost:9093/tcontents/storage;
         registry.addResourceHandler("/tcontents/storage/**").addResourceLocations("file:///" +  TipContents.getUploadDir());
 
+        // 인식되는 경로: http://localhost:9093/textmining/dalle;
+        registry.addResourceHandler("/textmining/storage/**").addResourceLocations("file:///" +  Tcontents.getUploadDir());
+        
     }
     
     @Override

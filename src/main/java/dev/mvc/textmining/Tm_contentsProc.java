@@ -15,7 +15,7 @@ import dev.mvc.tool.Security;
 import dev.mvc.tool.Tool;
 
 
-@Service("dev.mvc.qna_contents.Qna_contentsProc")
+@Service("dev.mvc.textmining.Tm_contentsProc")
 public class Tm_contentsProc implements Tm_contentsProcInter {
   
   @Autowired
