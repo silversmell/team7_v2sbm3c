@@ -23,8 +23,8 @@ import com.zaxxer.hikari.HikariDataSource;
 @MapperScan(basePackages= {"dev.mvc.share_contents"}) // DAO interface를 찾는 위치
 @MapperScan(basePackages= {"dev.mvc.category"}) // categoryDAO interface를 찾는 위치
 @MapperScan(basePackages= {"dev.mvc.account"}) // accountDAO interface를 찾는 위치
-@MapperScan(basePackages= {"dev.mvc.qna_contents"})
-@MapperScan(basePackages= {"dev.mvc.reply"})// qna_contentsDAO interface를 찾는 위치
+@MapperScan(basePackages= {"dev.mvc.qna_contents"}) // qna_contentsDAO interface를 찾는 위치
+@MapperScan(basePackages= {"dev.mvc.reply"})
 @MapperScan(basePackages= {"dev.mvc.admin"})
 @MapperScan(basePackages= {"dev.mvc.rank"})
 @MapperScan(basePackages= {"dev.mvc.re_comment"}) 
@@ -34,6 +34,7 @@ import com.zaxxer.hikari.HikariDataSource;
 @MapperScan(basePackages= {"dev.mvc.issue"}) 
 @MapperScan(basePackages= {"dev.mvc.issue.employee"}) 
 @MapperScan(basePackages= {"dev.mvc.tip_contents"}) // tipContentsDAO interface를 찾는 위치
+@MapperScan(basePackages= {"dev.mvc.textmining.tm_contents"}) // tm_contentsDAO interface를 찾는 위치
 
 
 public class DatabaseConfiguration {

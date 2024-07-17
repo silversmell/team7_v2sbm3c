@@ -1,0 +1,512 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.mvc.textmining.Tm_contentsDAOInter"> <!-- SB가 자동으로 구현하여 연동하는 interface -->
+
+  <!-- 전체 목록 -->
+  <select id="qna_list_all" resultType="dev.mvc.qna_contents.Qna_contentsVO">
+    SELECT qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_bookcnt, qcon_comment, qcon_date, qcon_passwd
+    FROM qna_contents
+    ORDER BY qcon_no ASC
+  </select>
+  
+  <!-- 등록 -->
+  <insert id="qna_create">
+    <!-- 등록후 Qna_contentsVO class의 qcon_no 컬럼에 PK return  -->
+    <selectKey keyProperty="qcon_no" resultType="int" order="BEFORE">
+      SELECT qna_contents_seq.nextval FROM dual
+    </selectKey>
+    
+    INSERT INTO QNA_CONTENTS(qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_bookcnt, qcon_date, qcon_passwd)
+    VALUES(#{qcon_no}, #{cate_no}, #{acc_no}, #{qcon_name}, #{qcon_contents}, 0, 'N', 0, sysdate, #{qcon_passwd})
+  </insert>
+  
+  <!-- 첨부 파일 등록 -->
+  <insert id="qna_attach_create" parameterType="dev.mvc.qna_contents.Qna_imageVO">
+    INSERT INTO QNA_IMAGE(file_no, qcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date)
+    VALUES(qna_image_seq.nextval, #{qcon_no}, #{file_origin_name}, #{file_upload_name}, #{file_thumb_name}, #{file_size}, sysdate)
+  </insert>
+  
+  <!-- 특정 글에 따른 목록 -->
+  <select id="list_by_qcon_no" resultType="dev.mvc.qna_contents.Qna_contentsVO">
+    SELECT qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_bookcnt, qcon_comment, qcon_date, qcon_passwd
+    FROM qna_contents
+    WHERE qcon_no=#{qcon_no}
+  </select>
+  
+  <!-- 전체 파일 목록 -->
+  <select id="qna_list_all_image" resultType="dev.mvc.qna_contents.Qna_imageVO">
+    SELECT file_no, qcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date
+    FROM qna_image
+    ORDER BY qcon_no DESC, file_no ASC
+  </select>
+  
+  <!-- 일반적인 조회 -->
+  <select id="qna_read" resultType="dev.mvc.qna_contents.Qna_contentsVO" parameterType="int">
+    SELECT qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_bookcnt, qcon_comment, qcon_date, qcon_passwd
+    FROM qna_contents
+    WHERE qcon_no= #{qcon_no}
+  </select> 
+  
+  <!-- 이미지 조회 -->
+  <select id="qna_read_image" resultType="dev.mvc.qna_contents.Qna_imageVO" parameterType="Integer">
+    SELECT file_no, qcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date
+    FROM qna_image
+    WHERE qcon_no=#{qcon_no}
+  </select>
+
+  <!-- 카테고리별 검색 목록 -->
+  <select id="list_by_qna_search" resultType="dev.mvc.qna_contents.Qna_contentsVO" parameterType="HashMap">
+    SELECT qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_bookcnt, qcon_comment, qcon_date, qcon_passwd, word
+    FROM qna_contents
+    <choose>
+      <when test="word == null or word == ''"> <!-- 검색하지 않는 경우 -->
+        WHERE cate_no=#{cate_no}
+      </when>
+      <otherwise> <!-- 검색하는 경우 -->
+        WHERE cate_no=#{cate_no} AND (UPPER(qcon_name) LIKE '%' || UPPER(#{word}) || '%' 
+                                                  OR UPPER(qcon_contents) LIKE '%' || UPPER(#{word}) || '%' 
+                                                  OR UPPER(word) LIKE '%' || UPPER(#{word}) || '%')
+      </otherwise>
+    </choose>
+    ORDER BY qcon_no DESC
+  </select>
+
+  <!-- 카테고리별 검색 레코드 갯수 -->
+  <select id="list_by_qna_search_count" resultType="int" parameterType="HashMap">
+    SELECT COUNT(*) as cnt
+    FROM qna_contents
+    <choose>
+      <when test="word == null or word == ''"> <!-- 검색하지 않는 경우의 레코드 갯수 -->
+        WHERE cate_no=#{cate_no}
+      </when>
+      <otherwise> <!-- 검색하는 경우의 레코드 갯수 -->
+        WHERE cate_no=#{cate_no} AND (UPPER(qcon_name) LIKE '%' || UPPER(#{word}) || '%' 
+                                                  OR UPPER(qcon_contents) LIKE '%' || UPPER(#{word}) || '%' 
+                                                  OR UPPER(word) LIKE '%' || UPPER(#{word}) || '%')
+      </otherwise>
+    </choose>
+  </select>   
+
+  <!-- 카테고리별 검색 + 페이징 목록 -->
+  <select id="list_by_qna_search_paging" resultType="dev.mvc.qna_contents.Qna_contentsVO" parameterType="HashMap">
+    SELECT qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_bookcnt, qcon_comment, qcon_date, qcon_passwd, r
+    FROM (
+              SELECT qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_bookcnt, qcon_comment, qcon_date, qcon_passwd, rownum as r
+              FROM (
+                        SELECT qcon_no, cate_no, acc_no, qcon_name, qcon_contents, qcon_views, qcon_bookmark, qcon_bookcnt, qcon_comment, qcon_date, qcon_passwd
+                        FROM qna_contents
+                        <choose>
+                          <when test="word == null or word == ''"> <!-- 검색하지 않는 경우 -->
+                            WHERE cate_no=#{cate_no}
+                          </when>
+                          <otherwise>
+                            WHERE cate_no=#{cate_no} AND (UPPER(qcon_name) LIKE '%' || UPPER(#{word}) || '%' 
+                                                                      OR UPPER(qcon_contents) LIKE '%' || UPPER(#{word}) || '%' 
+                                                                      OR UPPER(word) LIKE '%' || UPPER(#{word}) || '%')
+                          </otherwise>
+                        </choose>
+                        ORDER BY qcon_no DESC
+               )
+    )
+    WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>
+     
+    <!-- 1 page: WHERE r >= 1 AND r <= 10; 
+          2 page: WHERE r >= 11 AND r <= 20;
+          3 page: WHERE r >= 21 AND r <= 30; -->
+  </select>
+  
+  
+   <!-- 패스워드 검사 -->
+  <select id="qna_password_check" resultType="int" parameterType="HashMap">
+    SELECT COUNT(*) as cnt 
+    FROM qna_contents
+    WHERE qcon_no = #{qcon_no} AND qcon_passwd=#{qcon_passwd}
+  </select>
+  
+  <!-- 조회수 증가 -->
+  <update id="qna_update_view" parameterType="dev.mvc.qna_contents.Qna_contentsVO">
+    UPDATE qna_contents
+    SET qcon_views = qcon_views+1
+    WHERE qcon_no=#{qcon_no}
+  </update>
+  
+  <!-- 글 수정 -->
+  <update id="qna_update_text" parameterType="dev.mvc.qna_contents.Qna_imageVO">
+    UPDATE qna_contents
+    SET qcon_name=#{qcon_name}, qcon_contents=#{qcon_contents}
+    WHERE qcon_no = #{qcon_no}
+  </update>
+  
+  <!-- 파일 수정 -->
+  <update id="qna_update_file" parameterType="dev.mvc.qna_contents.Qna_imageVO">
+    UPDATE qna_image
+    SET file_origin_name=#{file_origin_name}, file_upload_name=#{file_upload_name}, file_thumb_name=#{file_thumb_name},file_size=#{file_size}
+    WHERE file_no=#{file_no} 
+  </update>
+  
+  <!-- 이미지 수 -->
+  <select id="qna_search_count_image" resultType="int" parameterType="int">
+    SELECT file_no, qcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date
+    FROM qna_image
+    WHERE qcon_no=#{qcon_no}
+  </select>
+  
+  <!-- 파일 삭제 -->
+  <delete id="qna_delete_image" parameterType="int">
+    DELETE FROM qna_image
+    WHERE qcon_no=#{qcon_no}
+  </delete>
+  
+   <!-- 글 삭제 -->
+  <delete id="qna_delete" parameterType="int">
+    DELETE FROM qna_contents
+    WHERE qcon_no=#{qcon_no}
+  </delete>
+  
+  <!-- FK cate_no 컬럼에 대응하는 필수 SQL -->
+  <!-- 특정 카테고리에 속한 레코드 갯수를 리턴 -->
+  <select id="count_by_cate_no" resultType="int" parameterType="int">
+    SELECT COUNT(*) as cnt 
+    FROM qcon_no 
+    WHERE cate_no=#{cate_no}
+  </select>
+  
+  <!-- 특정 카테고리에 속한 모든 레코드 삭제 -->
+  <delete id="delete_by_cate_no" parameterType="int">
+    DELETE FROM qcon_no
+    WHERE cate_no=#{cate_no}
+  </delete>
+
+  <!-- FK acc_no 컬럼에 대응하는 필수 SQL -->
+  <!-- 특정 회원에 속한 레코드 갯수를 리턴 -->
+  <select id="count_by_acc_no" resultType="int" parameterType="int">
+    SELECT COUNT(*) as cnt 
+    FROM qcon_no 
+    WHERE acc_no=#{acc_no}
+  </select>
+  
+  <!-- 특정 회원에 속한 모든 레코드 삭제 -->
+  <delete id="delete_by_acc_no" parameterType="int">
+    DELETE FROM qcon_no
+    WHERE acc_no=#{acc_no}
+  </delete>
+  
+   <!-- 댓글 등록 -->
+  <insert id="qna_create_comment" parameterType="dev.mvc.qna_contents.Qna_commentVO">
+    INSERT INTO qna_comment(qcmt_no, acc_no, qcon_no, qcmt_contents, qcmt_date)
+    VALUES(qna_comment_seq.nextval, #{acc_no}, #{qcon_no}, #{qcmt_contents}, sysdate)
+  </insert>
+  
+  <!-- 특정 글에 따른 댓글 목록 -->
+  <select id="list_by_qcmt_no_join" resultType="dev.mvc.qna_contents.Qna_Acc_commentVO" parameterType="int">
+     SELECT a.acc_id, qc.qcmt_no, qc.acc_no, qc.qcon_no, qc.qcmt_contents, qc.qcmt_date 
+     FROM account a, qna_comment qc 
+     WHERE (a.acc_no = qc.qcmt_no) AND qc.qcon_no=#{qc.qcon_no} 
+     ORDER BY qc.qcmt_no DESC
+  </select>
+  
+  <!-- 최신 댓글 500건 -->
+  <select id="list_by_qcmt_no_join_500"  resultType="dev.mvc.qna_contents.Qna_Acc_commentVO" parameterType="int">
+    SELECT acc_id, qcmt_no, qcon_no, acc_no, qcmt_contents, qcmt_date, r
+    FROM (
+          SELECT acc_id, qcmt_no, qcon_no, acc_no, qcmt_contents, qcmt_date, rownum as r
+          FROM (
+                SELECT  a.acc_id, 
+                         q.qcmt_no, q.qcon_no, q.acc_no, q.qcmt_contents, q.qcmt_date
+                FROM account a, qna_comment q      
+                WHERE (a.acc_no = q.acc_no) AND q.qcon_no=#{qcon_no}
+                ORDER BY q.qcmt_no DESC
+          )
+    )
+    WHERE r &lt;= 500
+  </select>
+  
+  <!-- 작성 댓글 500건 -->
+  <select id="asc_list_by_qcmt_no_join_500"  resultType="dev.mvc.qna_contents.Qna_Acc_commentVO" parameterType="int">
+    SELECT acc_id, qcmt_no, qcon_no, acc_no, qcmt_contents, qcmt_date, r
+    FROM (
+          SELECT acc_id, qcmt_no, qcon_no, acc_no, qcmt_contents, qcmt_date, rownum as r
+          FROM (
+                SELECT  a.acc_id, 
+                         q.qcmt_no, q.qcon_no, q.acc_no, q.qcmt_contents, q.qcmt_date
+                FROM account a, qna_comment q      
+                WHERE (a.acc_no = q.acc_no) AND q.qcon_no=#{qcon_no}
+                ORDER BY q.qcmt_no ASC
+          )
+    )
+    WHERE r &lt;= 500
+  </select>
+  
+  <!-- 특정 글에 따른 댓글 -->
+  <select id="qna_read_comment" resultType="dev.mvc.qna_contents.Qna_commentVO" parameterType="int">
+    SELECT qcmt_no, qcon_no, acc_no, qcmt_contents, qcmt_date
+    FROM qna_comment
+    WHERE qcmt_no=#{qcmt_no}
+  </select>
+  
+  <!-- 댓글 수 -->
+  <select id="qna_search_count_comment" resultType="int" parameterType="int">
+    SELECT count(*)
+    FROM qna_comment
+    WHERE qcon_no=#{qcon_no}
+  </select>
+  
+ <!-- 댓글 수 증가 -->
+ <update id="increaseReplycnt" parameterType="int">
+   UPDATE qna_contents
+   SET qcon_comment = qcon_comment + 1
+   WHERE qcon_no = #{qcon_no}
+ </update>
+
+ <!-- 댓글 수 감소 -->
+ <update id="decreaseReplycnt" parameterType="int">
+   UPDATE qna_contents
+   SET qcon_comment = qcon_comment - 1
+   WHERE qcon_no = #{qcon_no}
+ </update>
+   
+  <!-- 댓글 수정 -->
+  <update id="qna_update_comment" parameterType="dev.mvc.qna_contents.Qna_commentVO">
+    UPDATE qna_comment SET qcmt_contents=#{qcmt_contents}
+    WHERE qcmt_no = #{qcmt_no}
+  </update>
+  
+  <!-- 댓글 삭제 -->
+  <delete id="qna_delete_comment" parameterType="int">
+    DELETE FROM qna_comment 
+    WHERE qcmt_no = #{qcmt_no}
+  </delete>
+  
+  <!-- 특정 질문글 댓글 전체 삭제 -->
+  <delete id="all_qna_delete_comment" parameterType="int">
+    DELETE FROM qna_comment 
+    WHERE qcon_no = #{qcon_no}
+  </delete>
+  
+  <!-- 특정 질문글 북마크 갯수 확인 -->
+  <select id="bookmark_count" parameterType="int">
+    SELECT count(*)
+    FROM qna_mark
+    WHERE qcon_no=#{qcon_no}
+  </select>
+  
+  <!-- 특정 질문글 북마크하였는지 확인 -->
+  <select id="is_bookmarked" resultType="dev.mvc.qna_contents.Qna_markVO" parameterType="HashMap">
+    SELECT acc_no, qcon_no
+    FROM qna_mark
+    WHERE acc_no=#{acc_no} AND qcon_no=#{qcon_no} 
+  </select>
+  
+  <!-- 질문글 북마크 등록 -->
+  <insert id="bookmark_create" parameterType="HashMap">
+    INSERT INTO qna_mark(qmark_no, acc_no, qcon_no)
+    VALUES(qna_mark_seq.nextval, #{acc_no}, #{qcon_no}) 
+  </insert>
+
+  <!-- 질문글 북마크 삭제 -->
+  <delete id="bookmark_delete" parameterType="HashMap">
+    DELETE FROM qna_mark
+    WHERE acc_no=#{acc_no} AND qcon_no=#{qcon_no} 
+  </delete>
+  
+  <!-- 특정 질문글 북마크 전체 삭제 -->
+  <delete id="all_bookmark_delete" parameterType="int">
+    DELETE FROM qna_mark 
+    WHERE qcon_no = #{qcon_no}
+  </delete>
+  
+  <!-- 질문글 북마크 공개 -->
+  <update id="bookmark_y" parameterType="HashMap">
+    UPDATE qna_contents
+    SET qcon_bookmark='Y'
+    WHERE acc_no=#{acc_no} AND qcon_no=#{qcon_no} 
+  </update>
+
+  <!-- 질문글 북마크 비공개 -->
+  <update id="bookmark_n" parameterType="HashMap">
+    UPDATE qna_contents
+    SET qcon_bookmark='N'
+    WHERE acc_no=#{acc_no} AND qcon_no=#{qcon_no} 
+  </update>
+  
+  <!-- 작성자 -->
+  <select id="user_name" resultType="String" parameterType="HashMap">
+    SELECT a.acc_id
+    FROM account a, qna_contents q 
+    WHERE a.acc_no=q.acc_no AND q.qcon_no=#{qcon_no}
+  </select>
+  
+  <!-- 대댓글 작성 -->
+  <insert id="qna_create_recomment" parameterType="HashMap">
+    INSERT INTO qna_recomment(qrecmt_no, qcmt_no, qcon_no, qrecmt_contents, acc_no, qrecmt_date)
+    VALUES(qna_recomment_seq.nextval, #{qcmt_no}, #{qcon_no}, #{qrecmt_contents}, #{acc_no}, sysdate)
+  </insert>
+  
+  <!-- 모든 대댓글 읽기 -->
+  <select id ="qna_read_recomment_all" resultType="dev.mvc.qna_contents.Qna_recommentVO">
+    SELECT qrecmt_no, qcmt_no, qcon_no, qrecmt_contents, acc_no, qrecmt_date
+    FROM qna_recomment
+  </select>
+  
+  <!-- 해당 대댓글에 대한 질문글 보기 -->
+  <select id ="qna_read_recomment"  resultType="dev.mvc.qna_contents.Qna_recommentVO" parameterType="HashMap">
+    select qc.qrecmt_no, qc.qcmt_no, qc.qcon_no, qc.qrecmt_contents, ac.acc_no, qc.qrecmt_date, ac.acc_id
+    from qna_recomment qc, account ac
+    where qc.acc_no = ac.acc_no AND qc.qcmt_no = #{qcmt_no}
+    ORDER BY qrecmt_no asc
+  </select>
+  
+  <!-- 대댓글 삭제 -->
+  <delete id="delete_qcmtno_recomment" parameterType="int">
+    delete from qna_recomment
+    where qcmt_no = #{qcmt_no}
+  </delete>
+
+  <!-- 특정 대댓글 수정 -->
+  <update id="qna_update_recomment" parameterType="HashMap">
+    update qna_recomment
+    set qrecmt_contents =#{qrecmt_contents}
+    where qrecmt_no=#{qrecmt_no}
+  </update>
+
+  <!-- 대댓글 읽기 -->
+  <select id="read_recomment" parameterType="int" resultType="dev.mvc.qna_contents.Qna_recommentVO">
+    select qrecmt_no, qcmt_no, qcon_no, qrecmt_contents, acc_no, qrecmt_date
+    from qna_recomment
+    where qrecmt_no=#{qrecmt_no}
+  </select>
+
+  <!-- 특정 질문글 전체 대댓글 삭제 -->
+  <delete id="qna_delete_recomment" parameterType="int">
+    delete from qna_recomment
+    where qrecmt_no = #{qrecmt_no}
+  </delete>
+  
+  <!-- 특정 질문글 대댓글 전체 삭제 -->
+  <delete id="all_qna_delete_recomment" parameterType="int">
+    DELETE FROM qna_recomment 
+    WHERE qcon_no = #{qcon_no}
+  </delete>
+  
+  <!-- qcon_no에 따른 선택 삭제 -->
+  <delete id="delete_qconno" parameterType="list">
+    DELETE FROM qna_contents
+    WHERE qcon_no IN
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
+
+  <!-- qcon_no에 따른 이미지 삭제 -->
+  <delete id="delete_qconno_image" parameterType="list">
+    DELETE FROM qna_image
+    WHERE qcon_no IN
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
+
+  <!-- qcon_no에 따른 북마크 삭제 -->
+  <delete id="delete_qconno_bookmark" parameterType="list">
+    DELETE FROM qna_mark
+    WHERE qcon_no IN
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
+  
+  <!-- qcon_no에 따른 댓글 삭제 -->
+  <delete id="delete_qconno_comment" parameterType="list">
+    DELETE FROM qna_comment
+    WHERE qcon_no IN
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
+  
+  <!-- qcon_no에 따른 선택 대댓글 삭제 -->
+  <delete id="delete_qconno_recomment" parameterType="list">
+    delete from qna_recomment
+      where qcon_no in
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+        #{item}
+    </foreach>
+  </delete>
+  
+  <!-- 특정 댓글의 대댓글 수 -->
+  <select id="qna_search_count_recomment" resultType="int" parameterType="int">
+    SELECT count(*)
+    FROM qna_recomment
+    WHERE qcmt_no = #{qcmt_no}
+  </select>
+  
+  <!-- 글 작성자 프로필 이미지 -->
+  <select id = "acc_profile_img" resultType="dev.mvc.account.AccountVO" parameterType="int">
+    SELECT ac.acc_no, ac.acc_id, ac.acc_img, ac.acc_saved_img, ac.acc_thumb_img, acc_img_size
+    FROM qna_contents qc INNER JOIN account ac
+    ON qc.acc_no = ac.acc_no
+    WHERE qc.qcon_no=#{qcon_no}
+    ORDER BY qc.qcon_no desc
+  </select>
+  
+  <!-- 선택한 답글의 회원 아이디 조회 -->
+  <select id="select_acc_id" resultType="dev.mvc.qna_contents.Qna_recommentVO" parameterType="int">
+    SELECT ac.acc_no, ac.acc_id
+    FROM qna_recomment qr
+    INNER JOIN account ac ON qr.acc_no = ac.acc_no
+    WHERE qr.qrecmt_no = #{qrecmt_no}
+  </select>
+
+  <!-- 댓글 작성자 프로필 이미지 -->
+  <select id="acc_profile_img_by_qcmt_no" resultType="dev.mvc.account.AccountVO" parameterType="int">
+    SELECT ac.acc_no, ac.acc_id, ac.acc_img, ac.acc_saved_img, ac.acc_thumb_img, ac.acc_img_size
+    FROM qna_comment qcmt INNER JOIN account ac
+    ON qcmt.acc_no = ac.acc_no
+    WHERE qcmt.qcmt_no = #{qcmt_no}
+  </select>
+  
+  <!-- 프롬포트 실시간 인기 생성어 -->
+  <select id="get_prompt" resultType="dev.mvc.qna_contents.Qna_dalleVO" parameterType="HashMap">
+      SELECT dalle_no, prompt, dalle_origin
+      FROM dalle
+      WHERE UPPER(prompt) LIKE '%' || UPPER(#{prompt}) || '%'
+  </select>
+
+  <!-- 실시간 요약 전체 로그 조회 -->
+  <select id="get_summary_logs" resultType="dev.mvc.qna_contents.Qna_summaryVO" parameterType="HashMap">
+    SELECT su.summary_no, su.acc_no, su.article, su.response, su.sdate, ac.acc_id
+    FROM summary su
+    INNER JOIN account ac ON su.acc_no = ac.acc_no
+    ORDER BY su.sdate ASC
+  </select>
+  
+  <!-- 실시간 요약 본인 로그 조회 -->
+  <select id="get_summary_log" resultType="dev.mvc.qna_contents.Qna_summaryVO" parameterType="HashMap">
+    SELECT su.summary_no, su.acc_no, su.article, su.response, su.sdate, ac.acc_id
+    FROM summary su
+    INNER JOIN account ac ON su.acc_no = ac.acc_no
+    WHERE su.acc_no = #{acc_no}
+    ORDER BY su.sdate ASC
+  </select>
+  
+  <!-- 실시간 이미지 로그 본인 조회 -->
+  <select id="get_img_logs" resultType="dev.mvc.qna_contents.Qna_dalleVO" parameterType="HashMap">
+    SELECT da.dalle_no, da.acc_no, da.prompt, da.dalle_thumb, da.ddate, ac.acc_id
+    FROM dalle da
+    INNER JOIN account ac ON da.acc_no = ac.acc_no
+    ORDER BY ddate ASC
+  </select>
+    
+  <!-- 실시간 이미지 로그 본인 조회 -->
+  <select id="get_img_log" resultType="dev.mvc.qna_contents.Qna_dalleVO" parameterType="HashMap">
+    SELECT da.dalle_no, da.acc_no, da.prompt, da.dalle_thumb, da.ddate, ac.acc_id
+    FROM dalle da
+    INNER JOIN account ac ON da.acc_no = ac.acc_no
+    WHERE da.acc_no = #{acc_no}
+    ORDER BY ddate ASC
+  </select>
+
+
+</mapper>
+

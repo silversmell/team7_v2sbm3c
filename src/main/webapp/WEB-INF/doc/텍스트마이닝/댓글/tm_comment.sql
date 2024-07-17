@@ -1,0 +1,34 @@
+/**********************************/
+/* Table Name: 텍스트마이닝 댓글 */
+/**********************************/
+DROP TABLE TM_COMMENT;
+
+CREATE TABLE TM_COMMENT(
+		TCMT_NO NUMBER(10) NOT NULL PRIMARY KEY,
+		ACC_NO NUMBER(10),  -- FK
+		TCON_NO NUMBER(10), -- FK
+		TCMT_CONTENTS VARCHAR2(300) NOT NULL,
+		TCMT_DATE DATE NOT NULL,
+  FOREIGN KEY (TCON_NO) REFERENCES TM_CONTENTS (TCON_NO),
+  FOREIGN KEY (ACC_NO) REFERENCES ACCOUNT (ACC_NO)
+);
+
+COMMENT ON TABLE TM_COMMENT is '텍스트마이닝 댓글';
+COMMENT ON COLUMN TM_COMMENT.TCMT_NO is '댓글 번호';
+COMMENT ON COLUMN TM_COMMENT.ACC_NO is '회원 번호';
+COMMENT ON COLUMN TM_COMMENT.TCON_NO is '텍스트마이닝 번호';
+COMMENT ON COLUMN TM_COMMENT.TCMT_CONTENTS is '내용';
+COMMENT ON COLUMN TM_COMMENT.TCMT_DATE is '등록일';
+
+
+DROP SEQUENCE TM_COMMENT_SEQ;
+
+CREATE SEQUENCE TM_COMMENT_SEQ
+  START WITH 1              -- 시작 번호
+  INCREMENT BY 1            -- 증가값
+  MAXVALUE 9999999999       -- 최대값: 9999999999 --> NUMBER(10) 대응
+  CACHE 2                   -- 2번은 메모리에서만 계산
+  NOCYCLE;                  -- 다시 1부터 생성되는 것을 방지
+
+commit;
+SELECT * FROM tm_comment;
