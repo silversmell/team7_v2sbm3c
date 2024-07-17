@@ -57,7 +57,7 @@ public class Tm_contentsCont {
   private CategoryProcInter categoryProc;
   
   @Autowired
-  @Qualifier("dev.mvc.qna_contents.Qna_contentsProc")
+  @Qualifier("dev.mvc.textmining.Tm_contentsProc")
   private Tm_contentsProc tm_contentsProc;
 
   @Autowired

@@ -19,49 +19,49 @@ import dev.mvc.tool.Tool;
 public class Tm_contentsProc implements Tm_contentsProcInter {
   
   @Autowired
-  private Tm_contentsDAOInter qna_contentsDAO;
+  private Tm_contentsDAOInter tm_contentsDAO;
   
   @Autowired
   Security security;
 
   @Override
   public int qna_create(Tm_contentsVO qna_contentsVO) {
-    int cnt = this.qna_contentsDAO.qna_create(qna_contentsVO);
+    int cnt = this.tm_contentsDAO.qna_create(qna_contentsVO);
     
     return cnt;
   }
 
   @Override
   public ArrayList<Tm_contentsVO> qna_list_all() {
-    ArrayList<Tm_contentsVO> list = this.qna_contentsDAO.qna_list_all();
+    ArrayList<Tm_contentsVO> list = this.tm_contentsDAO.qna_list_all();
     
     return list;
   }
 
   @Override
   public ArrayList<Tm_contentsVO> list_by_qcon_no(int qcon_no) {
-    ArrayList<Tm_contentsVO> list = this.qna_contentsDAO.list_by_qcon_no(qcon_no);
+    ArrayList<Tm_contentsVO> list = this.tm_contentsDAO.list_by_qcon_no(qcon_no);
     
     return list;
   }
 
   @Override
   public Tm_contentsVO qna_read(int qcon_no) {
-    Tm_contentsVO qna_contentsVO = this.qna_contentsDAO.qna_read(qcon_no);
+    Tm_contentsVO qna_contentsVO = this.tm_contentsDAO.qna_read(qcon_no);
     
     return qna_contentsVO;
   }
 
   @Override
   public ArrayList<Tm_contentsVO> list_by_qna_search(HashMap<String, Object> map) {
-    ArrayList<Tm_contentsVO> list = this.qna_contentsDAO.list_by_qna_search(map);
+    ArrayList<Tm_contentsVO> list = this.tm_contentsDAO.list_by_qna_search(map);
     
     return list;
   }
 
   @Override
   public int list_by_qna_search_count(HashMap<String, Object> map) {
-    int cnt = this.qna_contentsDAO.list_by_qna_search_count(map);
+    int cnt = this.tm_contentsDAO.list_by_qna_search_count(map);
     
     return cnt;
   }
@@ -100,7 +100,7 @@ public class Tm_contentsProc implements Tm_contentsProcInter {
     map.put("start_num", start_num);
     map.put("end_num", end_num);
 
-    ArrayList<Tm_contentsVO> list = this.qna_contentsDAO.list_by_qna_search_paging(map);
+    ArrayList<Tm_contentsVO> list = this.tm_contentsDAO.list_by_qna_search_paging(map);
 
     return list;
   }
@@ -217,90 +217,90 @@ public class Tm_contentsProc implements Tm_contentsProcInter {
     qcon_passwd = this.security.aesEncode(qcon_passwd);
     hashMap.put("passwd", qcon_passwd);
     
-    int cnt = this.qna_contentsDAO.qna_password_check(hashMap);
+    int cnt = this.tm_contentsDAO.qna_password_check(hashMap);
     return cnt;
   }
   
   @Override
   public int qna_update_view(int qcon_no) {
-    int cnt = this.qna_contentsDAO.qna_update_view(qcon_no);
+    int cnt = this.tm_contentsDAO.qna_update_view(qcon_no);
     
     return cnt;
   }
 
   @Override
   public int qna_update_text(Tm_contentsVO qna_contentsVO) {
-    int cnt = this.qna_contentsDAO.qna_update_text(qna_contentsVO);
+    int cnt = this.tm_contentsDAO.qna_update_text(qna_contentsVO);
     
     return cnt;
   }
 
   @Override
   public int qna_delete(int qcon_no) {
-    int cnt = this.qna_contentsDAO.qna_delete(qcon_no);
+    int cnt = this.tm_contentsDAO.qna_delete(qcon_no);
     
     return cnt;
   }
 
   @Override
   public int qna_attach_create(Tm_imageVO qna_imageVO) {
-    int cnt = this.qna_contentsDAO.qna_attach_create(qna_imageVO);
+    int cnt = this.tm_contentsDAO.qna_attach_create(qna_imageVO);
     
     return cnt;
   }
 
   @Override
   public ArrayList<Tm_imageVO> qna_list_all_image() {
-    ArrayList<Tm_imageVO> list = this.qna_contentsDAO.qna_list_all_image();
+    ArrayList<Tm_imageVO> list = this.tm_contentsDAO.qna_list_all_image();
     
     return list;
   }
 
   @Override
   public ArrayList<Tm_imageVO> qna_read_image(int qcon_no) {
-    ArrayList<Tm_imageVO> list = this. qna_contentsDAO.qna_read_image(qcon_no);
+    ArrayList<Tm_imageVO> list = this. tm_contentsDAO.qna_read_image(qcon_no);
     
     return list;
   }
   
   @Override
   public int qna_update_file(Tm_imageVO qna_imageVO) {
-    int cnt = this.qna_contentsDAO.qna_update_file(qna_imageVO);
+    int cnt = this.tm_contentsDAO.qna_update_file(qna_imageVO);
     
     return cnt;
   }
 
   @Override
   public int qna_delete_image(int qcon_no) {
-    int cnt = this.qna_contentsDAO.qna_delete_image(qcon_no);
+    int cnt = this.tm_contentsDAO.qna_delete_image(qcon_no);
     
     return cnt;
   }
 
   @Override
   public int qna_search_count_image(int qcon_no) {
-    int cnt = this.qna_contentsDAO.qna_search_count_image(qcon_no);
+    int cnt = this.tm_contentsDAO.qna_search_count_image(qcon_no);
     
     return cnt;
   }
 
   @Override
   public int qna_create_comment(Tm_commentVO qna_commentVO) {
-    int cnt = this.qna_contentsDAO.qna_create_comment(qna_commentVO);
+    int cnt = this.tm_contentsDAO.qna_create_comment(qna_commentVO);
     
     return cnt;
   }
 
   @Override
   public ArrayList<Tm_commentVO> qna_list_all_comment() {
-    ArrayList<Tm_commentVO> list = this.qna_contentsDAO.qna_list_all_comment();
+    ArrayList<Tm_commentVO> list = this.tm_contentsDAO.qna_list_all_comment();
     
     return list;
   }
 
   @Override
   public List<Tm_Acc_commentVO> list_by_qcmt_no_join(int qcon_no) {
-    List<Tm_Acc_commentVO> list = this.qna_contentsDAO.list_by_qcmt_no_join(qcon_no);
+    List<Tm_Acc_commentVO> list = this.tm_contentsDAO.list_by_qcmt_no_join(qcon_no);
     String qcmt_contents = "";
     
     // 특수문자 변경
@@ -315,223 +315,223 @@ public class Tm_contentsProc implements Tm_contentsProcInter {
   
   @Override
   public List<Tm_Acc_commentVO> list_by_qcmt_no_join_500(int qcon_no) {
-    List<Tm_Acc_commentVO> list = this.qna_contentsDAO.list_by_qcmt_no_join_500(qcon_no);
+    List<Tm_Acc_commentVO> list = this.tm_contentsDAO.list_by_qcmt_no_join_500(qcon_no);
     
     return list;
   }
   
   @Override
   public List<Tm_Acc_commentVO> asc_list_by_qcmt_no_join_500(int qcon_no) {
-    List<Tm_Acc_commentVO> list = this.qna_contentsDAO.asc_list_by_qcmt_no_join_500(qcon_no);
+    List<Tm_Acc_commentVO> list = this.tm_contentsDAO.asc_list_by_qcmt_no_join_500(qcon_no);
     
     return list;
   }
 
   @Override
   public Tm_commentVO qna_read_comment(int qcmt_no) {
-    Tm_commentVO qna_commentVO = this.qna_contentsDAO.qna_read_comment(qcmt_no);
+    Tm_commentVO qna_commentVO = this.tm_contentsDAO.qna_read_comment(qcmt_no);
     
     return qna_commentVO;
   }
   
   @Override
   public int qna_search_count_comment(int qcon_no) {
-    int cnt = this.qna_contentsDAO.qna_search_count_comment(qcon_no);
+    int cnt = this.tm_contentsDAO.qna_search_count_comment(qcon_no);
     
     return cnt;
   }
   
   @Override
   public int qna_update_comment(Tm_commentVO qna_commentVO) {
-    int cnt = this.qna_contentsDAO.qna_update_comment(qna_commentVO);
+    int cnt = this.tm_contentsDAO.qna_update_comment(qna_commentVO);
     
     return cnt;
   }
 
   @Override
   public int qna_delete_comment(int qcmt_no) {
-  	int cnt = this.qna_contentsDAO.qna_delete_comment(qcmt_no);
+  	int cnt = this.tm_contentsDAO.qna_delete_comment(qcmt_no);
   	
   	return cnt;
   }
   
   @Override
   public int all_qna_delete_comment(int qcon_no) {
-    int cnt = this.qna_contentsDAO.all_qna_delete_comment(qcon_no);
+    int cnt = this.tm_contentsDAO.all_qna_delete_comment(qcon_no);
     
     return cnt;
   }
 
   @Override
   public int bookmark_count(int qcon_no) {
-    int cnt = this.qna_contentsDAO.bookmark_count(qcon_no);
+    int cnt = this.tm_contentsDAO.bookmark_count(qcon_no);
     
     return cnt;
   }
 
   @Override
   public ArrayList<Tm_markVO> is_bookmarked(HashMap<String, Object> map) {
-    ArrayList<Tm_markVO> list = this.qna_contentsDAO.is_bookmarked(map);
+    ArrayList<Tm_markVO> list = this.tm_contentsDAO.is_bookmarked(map);
     
     return list;
   }
 
   @Override
   public int bookmark_create(HashMap<String, Object> map) {
-    int cnt = this.qna_contentsDAO.bookmark_create(map);
+    int cnt = this.tm_contentsDAO.bookmark_create(map);
     
     return cnt;
   }
 
   @Override
   public int bookmark_delete(HashMap<String, Object> map) {
-    int cnt = this.qna_contentsDAO.bookmark_delete(map);
+    int cnt = this.tm_contentsDAO.bookmark_delete(map);
     
     return cnt;
   }
 
   @Override
   public int all_bookmark_delete(int qcon_no) {
-    int cnt = this.qna_contentsDAO.all_bookmark_delete(qcon_no);
+    int cnt = this.tm_contentsDAO.all_bookmark_delete(qcon_no);
     
     return cnt;
   }
 
   @Override
   public int bookmark_y(HashMap<String, Object> map) {
-    int cnt = this.qna_contentsDAO.bookmark_y(map);
+    int cnt = this.tm_contentsDAO.bookmark_y(map);
     
     return cnt;
   }
 
   @Override
   public int bookmark_n(HashMap<String, Object> map) {
-    int cnt = this.qna_contentsDAO.bookmark_n(map);
+    int cnt = this.tm_contentsDAO.bookmark_n(map);
     
     return cnt;
   }
 
   @Override
   public String user_name(HashMap<String, Object> map) {
-    String user_name = this.qna_contentsDAO.user_name(map);
+    String user_name = this.tm_contentsDAO.user_name(map);
     
     return user_name;
   }
 
   @Override
   public int delete_qconno(List<Integer> qcon_no) {
-    int cnt = this.qna_contentsDAO.delete_qconno(qcon_no);
+    int cnt = this.tm_contentsDAO.delete_qconno(qcon_no);
     
     return cnt;
   }
 
   @Override
   public int delete_qconno_image(List<Integer> qcon_no) {
-    int cnt = this.qna_contentsDAO.delete_qconno_image(qcon_no);
+    int cnt = this.tm_contentsDAO.delete_qconno_image(qcon_no);
     
     return cnt;
   }
 
   @Override
   public int delete_qconno_bookmark(List<Integer> qcon_no) {
-    int cnt = this.qna_contentsDAO.delete_qconno_bookmark(qcon_no);
+    int cnt = this.tm_contentsDAO.delete_qconno_bookmark(qcon_no);
     
     return cnt;
   }
 
   @Override
   public int delete_qconno_comment(List<Integer> qcon_no) {
-    int cnt = this.qna_contentsDAO.delete_qconno_comment(qcon_no);
+    int cnt = this.tm_contentsDAO.delete_qconno_comment(qcon_no);
     
     return cnt;
   }
 
   @Override
   public int delete_qconno_recomment(List<Integer> qcon_no) {
-    int cnt = this.qna_contentsDAO.delete_qconno_recomment(qcon_no);
+    int cnt = this.tm_contentsDAO.delete_qconno_recomment(qcon_no);
     
     return cnt;
   }
 
   @Override
   public int qna_create_recomment(HashMap<String, Object> map) {
-    int cnt = this.qna_contentsDAO.qna_create_recomment(map);
+    int cnt = this.tm_contentsDAO.qna_create_recomment(map);
     return cnt;
   }
 
   @Override
   public ArrayList<Tm_recommentVO> qna_read_recomment_all() {
-    ArrayList<Tm_recommentVO> list = this.qna_contentsDAO.qna_read_recomment_all();
+    ArrayList<Tm_recommentVO> list = this.tm_contentsDAO.qna_read_recomment_all();
     
     return list;
   }
 
   @Override
   public ArrayList<Tm_recommentVO> qna_read_recomment(HashMap<String, Object> map) {
-    ArrayList<Tm_recommentVO> list = this.qna_contentsDAO.qna_read_recomment(map);
+    ArrayList<Tm_recommentVO> list = this.tm_contentsDAO.qna_read_recomment(map);
     
     return list;
   }
 
   @Override
   public int delete_qcmtno_recomment(int qcmt_no) {
-    int cnt = this.qna_contentsDAO.delete_qcmtno_recomment(qcmt_no);
+    int cnt = this.tm_contentsDAO.delete_qcmtno_recomment(qcmt_no);
     
     return cnt;
   }
 
   @Override
   public int qna_update_recomment(HashMap<String, Object> map) {
-    int cnt = this.qna_contentsDAO.qna_update_recomment(map);
+    int cnt = this.tm_contentsDAO.qna_update_recomment(map);
     
     return cnt;
   }
 
   @Override
   public Tm_recommentVO read_recomment(int qcmt_no) {
-    Tm_recommentVO qna_recommentVO = this.qna_contentsDAO.read_recomment(qcmt_no);
+    Tm_recommentVO qna_recommentVO = this.tm_contentsDAO.read_recomment(qcmt_no);
     
     return qna_recommentVO;
   }
 
   @Override
   public int qna_delete_recomment(int qrecmt_no) {
-    int cnt = this.qna_contentsDAO.qna_delete_recomment(qrecmt_no);
+    int cnt = this.tm_contentsDAO.qna_delete_recomment(qrecmt_no);
     
     return cnt;
   }
   
   @Override
   public int all_qna_delete_recomment(int qcon_no) {
-    int cnt = this.qna_contentsDAO.all_qna_delete_recomment(qcon_no);
+    int cnt = this.tm_contentsDAO.all_qna_delete_recomment(qcon_no);
     
     return cnt;
   }
   
   @Override
   public int  qna_search_count_recomment(int qcmt_no) {
-    int cnt = this.qna_contentsDAO.qna_search_count_recomment(qcmt_no);
+    int cnt = this.tm_contentsDAO.qna_search_count_recomment(qcmt_no);
     
     return cnt;
   }
 
   @Override
   public AccountVO acc_profile_img(int qcon_no) {
-    AccountVO accountVO = this.qna_contentsDAO.acc_profile_img(qcon_no);
+    AccountVO accountVO = this.tm_contentsDAO.acc_profile_img(qcon_no);
     
     return accountVO;
   }
   
   @Override
   public AccountVO acc_profile_img_by_qcmt_no(int qcmt_no) {
-    AccountVO accountVO = this.qna_contentsDAO.acc_profile_img_by_qcmt_no(qcmt_no);
+    AccountVO accountVO = this.tm_contentsDAO.acc_profile_img_by_qcmt_no(qcmt_no);
     
     return accountVO;
   }
 
   @Override
   public Tm_recommentVO select_acc_id(int qrecmt_no) {
-    Tm_recommentVO qna_recommentVO = this.qna_contentsDAO.select_acc_id(qrecmt_no);
+    Tm_recommentVO qna_recommentVO = this.tm_contentsDAO.select_acc_id(qrecmt_no);
     
     return qna_recommentVO;
   }
