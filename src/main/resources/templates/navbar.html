@@ -103,13 +103,13 @@
             <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
               <li class="nav-item" th:if="${session.acc_no != null}">
                 <a class="nav-link" th:href="@{|http://localhost:9093/qcontents/summary_log?acc_no=${session.acc_no}|}"
-                  th:text="'실시간 요약'">
+                  th:text="'요약 로그'">
                 </a>
               </li>
               
               <li class="nav-item" th:if="${session.acc_no != null}">
                 <a class="nav-link" th:href="@{|http://localhost:9093/qcontents/member_img_log?acc_no=${session.acc_no}|}"
-                  th:text="'실시간 이미지'">
+                  th:text="'이미지 로그'">
                 </a>
               </li>
             </ul>
