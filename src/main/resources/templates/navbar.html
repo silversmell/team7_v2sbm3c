@@ -37,7 +37,7 @@
 					 </a>
 					</li>
 
-          <!-- 회원 카테고리 메뉴 -->
+          <!-- 공지사항 -->
           <li class="nav-item">
             <a class="nav-link" th:href="@{|http://192.168.12.160:3000/issue/find_all|}" th:text="공지사항"></a>
           </li>
@@ -117,30 +117,29 @@
 			</ul>
 			<!-- left side bar end -->
 
-				<!-- right side start -->
-				<ul class="navbar-nav ms-auto">
-					<li class="nav-item" style="float: right;">
-						<span th:if="${session.acc_no == null}">
-							<a class="nav-link" href="/account/login" th:text="로그인" style="display: inline-block;"></a>
-							<a class="nav-link" href="/account/create" th:text="'회원 가입'" style="display: inline-block;"></a>
-							<a class="nav-link" href="/admin" th:text="관리자" style="display: inline-block;"></a>
-						</span>
-						<span th:if="${session.acc_no != null}">
-							<a class="nav-link" href="/account/logout" th:text="@{|${session.acc_id} 로그아웃|}"
-								style="display: inline-block;"></a>
-							<a class="nav-link" th:href="@{|/account/read?acc_no=${session.acc_no}|}"
-								style="display: inline-block;">마이페이지</a>
-							<button type="button" th:attr="onclick=|location.href='http://localhost:9093/scontents/notice/${session.acc_no}'|" style="border: none;">
-                <img src="/css/images/on_alarm.png" class="bar_icon" title="댓글 알림">
-              </button>
-						</span>
-					</li>
-				</ul>
-				<!-- right side end -->
+			<!-- right side start -->
+			<ul class="navbar-nav ms-auto">
+				<li class="nav-item" style="float: right;">
+					<span th:if="${session.acc_no == null}">
+						<a class="nav-link" href="/account/login" th:text="로그인" style="display: inline-block;"></a>
+						<a class="nav-link" href="/account/create" th:text="'회원 가입'" style="display: inline-block;"></a>
+						<a class="nav-link" href="/admin" th:text="관리자" style="display: inline-block;"></a>
+					</span>
+					<span th:if="${session.acc_no != null}">
+						<a class="nav-link" href="/account/logout" th:text="@{|${session.acc_id} 로그아웃|}"
+							style="display: inline-block;"></a>
+						<a class="nav-link" th:href="@{|/account/read?acc_no=${session.acc_no}|}"
+							style="display: inline-block;">마이페이지</a>
+						<button type="button" th:attr="onclick=|location.href='http://localhost:9093/scontents/notice/${session.acc_no}'|" style="border: none;">
+              <img src="/css/images/on_alarm.png" class="bar_icon" title="댓글 알림">
+            </button>
+					</span>
+				</li>
+			</ul>
+			<!-- right side end -->
 
-			</div>
-			<!-- 회원 페이지 메뉴 종료 -->
-			
+		</div>
+		<!-- 회원 페이지 메뉴 종료 -->
 			
 
 			<!-- 관리자 메뉴 시작 -->
