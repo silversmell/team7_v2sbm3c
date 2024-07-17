@@ -24,234 +24,188 @@
 				aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
-<<<<<<< HEAD
 			
 			<!-- 회원 페이지 메뉴 시작 -->
-=======
-
->>>>>>> 888e52d (팁 게시글 조회, 수정, 삭제 개발)
 			<div class="collapse navbar-collapse" id="navbarNavDropdown" th:if="${!(currentUrl.contains('admin'))}">
-			
-			  <!-- left side bar start -->
+
+				<!-- left side bar start -->
 				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-					<li class="nav-item dropdown" th:each="categoryVOMenu: ${menu}" aria-labelledby="navbarDropdownMenuLink">
-						<a class="nav-link dropdown-toggle" 
-						    th:href="@{|/scontents/list_by_search?cate_no=${categoryVO.cate_no}|}" role="button"
-							 th:text="${categoryVOMenu.cate_name}">
-					 </a>
+					<li class="nav-item dropdown" th:each="categoryVOMenu: ${menu}"
+						aria-labelledby="navbarDropdownMenuLink">
+						<a class="nav-link dropdown-toggle"
+							th:href="@{|/scontents/list_by_search?cate_no=${categoryVO.cate_no}|}" role="button"
+							th:text="${categoryVOMenu.cate_name}">
+						</a>
 					</li>
 
-<<<<<<< HEAD
-          <!-- 공지사항 -->
-          <li class="nav-item">
-            <a class="nav-link" th:href="@{|http://192.168.12.160:3000/issue/find_all|}" th:text="공지사항"></a>
-          </li>
-          
-          <!-- 커뮤니티 -->
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown"
-              aria-expanded="false" th:text="커뮤니티">
-            </a>
-            
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <li class="nav-item">
-                <a class="nav-link" th:href="@{|/scontents/rank?cate_no=4|}" th:text="'랭킹 게시판'"></a>
-              </li>
-              
-              <li class="nav-item">
-                <a class="nav-link" th:href="@{|/scontents/list_by_search?cate_no=1|}" th:text="'공유 게시판'"></a>
-              </li>
-            
-              <li class="nav-item">
-                <a class="nav-link" th:href="@{|http://localhost:9093/qcontents/qna_list_all?cate_no=2|}" th:text="'질문 게시판'"></a>
-              </li>
-              
-              <li class="nav-item">
-                <a class="nav-link" href="#" th:text="TIP"></a>
-              </li>
-            </ul>
-          </li>
-          
-          <!-- AI -->
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown"
-              aria-expanded="false" th:if="${session.acc_no != null}" th:text="'AI 서비스'">
-            </a>
-            
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <li class="nav-item" th:if="${session.acc_no != null}">
-                <a class="nav-link" href="javascript: openRecom();" style="display: inline-block;">
-                  추천 받기
-                </a>
-              </li>
-          
-              <li class="nav-item" th:if="${session.acc_no != null}">
-                <a class="nav-link" th:href="@{|http://192.168.12.159:9093/qcontents/summary|}" th:text="요약하기"
-                  style="display: inline-block;">
-                </a>
-              </li>
-              
-              <li class="nav-item" th:if="${session.acc_no != null}">
-                <a class="nav-link" th:href="@{|http://192.168.12.159:9093/qcontents/member_img|}" th:text="'이미지 만들기'"
-                    style="display: inline-block;">
-                </a>
-              </li>
-            </ul>
-         </li>
-         
-         <!-- 텍스트 마이닝 -->
-         <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown"
-              aria-expanded="false" th:if="${session.acc_no != null}" th:text="'텍스트 마이닝'">
-            </a>
-            
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <li class="nav-item" th:if="${session.acc_no != null}">
-                <a class="nav-link" th:href="@{|http://localhost:9093/textmining/tm_list_all?cate_no=5|}"
-                  th:text="'Dalle AI'">
-                </a>
-              </li>
-              
-              <li class="nav-item" th:if="${session.acc_no != null}">
-                <a class="nav-link" th:href="@{|http://localhost:9093/textmining/tm_list_all?cate_no=5|}"
-                  th:text="'Summary AI'">
-                </a>
-              </li>
-            </ul>
-          </li>
-
-         <!-- 실시간 -->
-         <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown"
-              aria-expanded="false" th:if="${session.acc_no != null}" th:text="실시간">
-            </a>
-            
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <li class="nav-item" th:if="${session.acc_no != null}">
-                <a class="nav-link" th:href="@{|http://localhost:9093/qcontents/summary_log?acc_no=${session.acc_no}|}"
-                  th:text="'요약 로그'">
-                </a>
-              </li>
-              
-              <li class="nav-item" th:if="${session.acc_no != null}">
-                <a class="nav-link" th:href="@{|http://localhost:9093/qcontents/member_img_log?acc_no=${session.acc_no}|}"
-                  th:text="'이미지 로그'">
-                </a>
-              </li>
-            </ul>
-          </li>
-			</ul>
-			<!-- left side bar end -->
-=======
-					<li class="nav-item">
-						<a class="nav-link" th:href="@{|/scontents/list_by_search?cate_no=1|}" th:text="공유게시판"></a>
-					</li>
-					<span style="font-size: 25px;">|</span>
-					<li class="nav-item">
-						<a class="nav-link" th:href="@{|http://localhost:9093/qcontents/qna_list_all?cate_no=2|}"
-							th:text="질문게시판"></a>
-					</li>
-					<span style="font-size: 25px;">|</span>
-					<li class="nav-item">
-						<a class="nav-link" href="tcontents/list" th:text="팁게시판"></a>
-					</li>
-					<span style="font-size: 25px;">|</span>
-					<li class="nav-item">
-						<a class="nav-link" th:href="@{|/scontents/rank?cate_no=4|}" th:text="랭킹게시판"></a>
-					</li>
-					<span style="font-size: 25px;">|</span>
+					<!-- 공지사항 -->
 					<li class="nav-item">
 						<a class="nav-link" th:href="@{|http://192.168.12.160:3000/issue/find_all|}" th:text="공지사항"></a>
 					</li>
-					<span th:if="${session.acc_no != null}" style="font-size: 25px;">|</span>
-					<li class="nav-item" th:if="${session.acc_no != null}">
-						<a class="nav-link" href="/recommend/list" th:text="추천글"></a>
+
+					<!-- 팁 -->
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{|/tcontents/list|}" th:text="TIP"></a>
 					</li>
-					<span th:if="${session.acc_no != null}" style="font-size: 25px;">|</span>
-					<li class="nav-item" th:if="${session.acc_no != null}">
-						<a class="nav-link" th:href="@{|/scontents/notice/${session.acc_no}|}" th:text="알림"></a>
+
+					<!-- 커뮤니티 -->
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+							data-bs-toggle="dropdown" aria-expanded="false" th:text="커뮤니티">
+						</a>
+
+						<ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+							<li class="nav-item">
+								<a class="nav-link" th:href="@{|/scontents/rank?cate_no=4|}" th:text="'랭킹글'"></a>
+							</li>
+
+							<li class="nav-item">
+								<a class="nav-link" th:href="@{|/recommend/list|}" th:text="'추천글'"></a>
+							</li>
+
+							<li class="nav-item">
+								<a class="nav-link" th:href="@{|/scontents/list_by_search?cate_no=1|}"
+									th:text="'공유 게시판'"></a>
+							</li>
+
+							<li class="nav-item">
+								<a class="nav-link" th:href="@{|/qcontents/qna_list_all?cate_no=2|}"
+									th:text="'질문 게시판'"></a>
+							</li>
+						</ul>
 					</li>
-					<span th:if="${session.acc_no != null}" style="font-size: 25px;">|</span>
-					<li class="nav-item" th:if="${session.acc_no != null}">
-						<a class="nav-link"
-							th:href="@{|http://localhost:9093/qcontents/summary_log?acc_no=${session.acc_no}|}"
-							th:text="'실시간 요약'"></a>
+
+					<!-- AI -->
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+							data-bs-toggle="dropdown" aria-expanded="false" th:if="${session.acc_no != null}"
+							th:text="'AI 서비스'">
+						</a>
+
+						<ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+							<li class="nav-item" th:if="${session.acc_no != null}">
+								<a class="nav-link" href="javascript: openRecom();" style="display: inline-block;">
+									나의 취향 찾기
+								</a>
+							</li>
+
+							<li class="nav-item" th:if="${session.acc_no != null}">
+								<a class="nav-link" th:href="@{|http://192.168.12.159:9093/qcontents/summary|}"
+									th:text="요약하기" style="display: inline-block;">
+								</a>
+							</li>
+
+							<li class="nav-item" th:if="${session.acc_no != null}">
+								<a class="nav-link" th:href="@{|http://192.168.12.159:9093/qcontents/member_img|}"
+									th:text="'이미지 만들기'" style="display: inline-block;">
+								</a>
+							</li>
+						</ul>
 					</li>
-					<span th:if="${session.acc_no != null}" style="font-size: 25px;">|</span>
-					<li class="nav-item" th:if="${session.acc_no != null}">
-						<a class="nav-link"
-							th:href="@{|http://localhost:9093/qcontents/member_img_log?acc_no=${session.acc_no}|}"
-							th:text="'실시간 이미지'"></a>
+
+					<!-- 텍스트 마이닝 -->
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+							data-bs-toggle="dropdown" aria-expanded="false" th:if="${session.acc_no != null}"
+							th:text="'텍스트 마이닝'">
+						</a>
+
+						<ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+							<li class="nav-item" th:if="${session.acc_no != null}">
+								<a class="nav-link"
+									th:href="@{|http://localhost:9093/textmining/tm_list_all?cate_no=5|}"
+									th:text="'Dalle AI'">
+								</a>
+							</li>
+
+							<li class="nav-item" th:if="${session.acc_no != null}">
+								<a class="nav-link"
+									th:href="@{|http://localhost:9093/textmining/tm_list_all?cate_no=5|}"
+									th:text="'Summary AI'">
+								</a>
+							</li>
+						</ul>
+					</li>
+
+					<!-- 실시간 -->
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+							data-bs-toggle="dropdown" aria-expanded="false" th:if="${session.acc_no != null}"
+							th:text="실시간">
+						</a>
+
+						<ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+							<li class="nav-item" th:if="${session.acc_no != null}">
+								<a class="nav-link"
+									th:href="@{|http://localhost:9093/qcontents/summary_log?acc_no=${session.acc_no}|}"
+									th:text="'요약 로그'">
+								</a>
+							</li>
+
+							<li class="nav-item" th:if="${session.acc_no != null}">
+								<a class="nav-link"
+									th:href="@{|http://localhost:9093/qcontents/member_img_log?acc_no=${session.acc_no}|}"
+									th:text="'이미지 로그'">
+								</a>
+							</li>
+						</ul>
 					</li>
 				</ul>
+				<!-- left side bar end -->
 
-				<!-- right side -->
+
+				<!-- right side start -->
 				<ul class="navbar-nav ms-auto">
 					<li class="nav-item" style="float: right;">
 						<span th:if="${session.acc_no == null}">
-							<a class="nav-link" href="/account/login" th:text="@{|로그인|}"
-								style="display: inline-block; margin-right: 5px;"></a>
-							<a class="nav-link" href="/account/create" th:text="@{|회원 가입|}"
+							<a class="nav-link" href="/account/login" th:text="로그인" style="display: inline-block;"></a>
+							<a class="nav-link" href="/account/create" th:text="'회원 가입'"
 								style="display: inline-block;"></a>
-							<a class="nav-link" href="/admin" th:text="@{|관리자|}" style="display: inline-block;"></a>
+							<a class="nav-link" href="/admin" th:text="관리자" style="display: inline-block;"></a>
 						</span>
 						<span th:if="${session.acc_no != null}">
-							<a class="nav-link" href="/account/logout" th:text="@{|${session.acc_id} 로그아웃|}"
+							<a class="nav-link" href="/account/logout" th:text="@{|${session.acc_id}님&nbsp;&nbsp;로그아웃|}"
 								style="display: inline-block;"></a>
-							<a class="nav-link" th:href="@{|/account/mypage|}"
-								style="display: inline-block;">마이페이지</a>
-							<a class="nav-link" th:href="@{|/account/read?acc_no=${session.acc_no}|}"
-								style="display: inline-block;">회원 정보 조회(목록용)</a>
-						</span>
-
-
-						<span th:if="${session.acc_no != null}">
-							<a class="nav-link" href="javascript: openRecom();" style="display: inline-block;">
-								추천 받기
-							</a>
-						</span>
-						<span th:if="${session.acc_no != null}">
-							<a class="nav-link" th:href="@{|http://192.168.12.159:9093/qcontents/summary|}"
-								th:text="@{|요약 서비스 AI|}" style="display: inline-block;"></a>
-						</span>
-						<span th:if="${session.acc_no != null}">
-							<!-- <button type="button"
-  							th:attr="onclick=|location.href='http://192.168.12.159:9093/qcontents/member_img'|">
-  							<img src="/css/images/dalleAI.png" class="icon" alt="달리AI"
-  								style="width: 100%; height: 30px;">
-  								</button> -->
-							<a class="nav-link" th:href="@{|http://192.168.12.159:9093/qcontents/member_img|}"
-								th:text="@{|이미지 생성 서비스 AI|}" style="display: inline-block;"></a>
-
 						</span>
 					</li>
+
+					<!-- 마이페이지 -->
+					<li class="nav-item dropdown" th:if="${session.acc_no != null}">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+							data-bs-toggle="dropdown" aria-expanded="false" th:text="마이페이지">
+						</a>
+
+						<ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+							<li class="nav-item">
+								<a class="nav-link" th:href="@{|/account/mypage|}"
+									style="display: inline-block;">마이페이지</a>
+							</li>
+
+							<li class="nav-item">
+								<a class="nav-link" th:href="@{|/account/mycontents|}">내가 쓴 글</a>
+							</li>
+
+							<li class="nav-item">
+								<a class="nav-link" th:href="@{|/account/mybookmarks|}">나의 북마크</a>
+							</li>
+						</ul>
+					</li>
+
+					<!-- 알림 -->
+					<li th:if="${session.acc_no != null}">
+						<button type="button"
+							th:attr="onclick=|location.href='http://localhost:9093/scontents/notice/${session.acc_no}'|"
+							style="border: none;">
+							<img src="/css/images/on_alarm.png" class="bar_icon" title="댓글 알림">
+						</button>
+					</li>
+
 				</ul>
->>>>>>> 888e52d (팁 게시글 조회, 수정, 삭제 개발)
+				<!-- right side end -->
 
-			<!-- right side start -->
-			<ul class="navbar-nav ms-auto">
-				<li class="nav-item" style="float: right;">
-					<span th:if="${session.acc_no == null}">
-						<a class="nav-link" href="/account/login" th:text="로그인" style="display: inline-block;"></a>
-						<a class="nav-link" href="/account/create" th:text="'회원 가입'" style="display: inline-block;"></a>
-						<a class="nav-link" href="/admin" th:text="관리자" style="display: inline-block;"></a>
-					</span>
-					<span th:if="${session.acc_no != null}">
-						<a class="nav-link" href="/account/logout" th:text="@{|${session.acc_id} 로그아웃|}"
-							style="display: inline-block;"></a>
-						<a class="nav-link" th:href="@{|/account/read?acc_no=${session.acc_no}|}"
-							style="display: inline-block;">마이페이지</a>
-						<button type="button" th:attr="onclick=|location.href='http://localhost:9093/scontents/notice/${session.acc_no}'|" style="border: none;">
-              <img src="/css/images/on_alarm.png" class="bar_icon" title="댓글 알림">
-            </button>
-					</span>
-				</li>
-			</ul>
-			<!-- right side end -->
+			</div>
+			<!-- 회원 페이지 메뉴 종료 -->
 
-		</div>
-		<!-- 회원 페이지 메뉴 종료 -->
-			
 
 			<!-- 관리자 메뉴 시작 -->
 			<a class="navbar-brand" href="/admin" th:if="${currentUrl != null and currentUrl.contains('admin')}">데스크
@@ -268,9 +222,8 @@
 						</a>
 
 						<ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-							<li class="nav-item"><a class="nav-link" th:href="@{|/category/cate_list_search|}">카테고리 전체
+							<li class="nav-item"><a class="nav-link" th:href="@{|/admin/cate_list_search|}">카테고리 전체
 									목록</a></li>
-							<li class="nav-item"><a class="nav-link" href="#">전체 글 목록</a></li>
 							<li class="nav-item"><a class="nav-link"
 									th:href="@{|/scontents/list_by_search?cate_no=1|}">공유글
 									전체 목록</a></li>
@@ -315,18 +268,14 @@
 						<span th:if="${session.adm_no != null}">
 							<a class="nav-link" th:href="@{|/admin/read?adm_no=${session.adm_no}|}"
 								style="display: inline-block;">마이페이지</a>
-							<a class="nav-link" th:href="@{|/admin/logout|}" th:text="@{|${session.adm_id} 로그아웃|}"
+							<a class="nav-link" th:href="@{|/admin/logout|}" th:text="@{|${session.adm_id}님&nbsp;&nbsp;로그아웃|}"
 								style="display: inline-block;"></a>
 						</span>
 					</li>
 				</ul>
+
 			</div>
 			<!-- 관리자 메뉴 종료 -->
-			
+
 	</nav>
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 888e52d (팁 게시글 조회, 수정, 삭제 개발)
 </div>

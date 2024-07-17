@@ -19,7 +19,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 
-@RequestMapping("/category")
+@RequestMapping("/admin")
 @Controller
 public class CategoryCont {
 

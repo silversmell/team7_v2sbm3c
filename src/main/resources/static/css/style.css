@@ -1,4 +1,4 @@
-  /* ver 2.5 2024_0715 */
+  /* ver 2.5 2024_0718 */
 
   /* 폰트 선언 */
   @font-face {
@@ -612,7 +612,7 @@
 
   /* 드롭다운 메뉴 스타일 */
   .dropdown-menu {
-  	min-width: 117px;
+  	min-width: 120px;
   }
 
   .container_main {
@@ -979,14 +979,11 @@
   .image-container img {
   	width: 100%;
   	height: auto;
-<<<<<<< HEAD
   	max-height: 450px;
   }
   
   .rank_img:hover {    
     filter: brightness(0.5);
-  }
-=======
   	object-fit: cover;
   }
 
@@ -1035,4 +1032,3 @@
   .form-group span {
   	flex: 1;
   }
->>>>>>> cf6086e (회원 조회 수정)
