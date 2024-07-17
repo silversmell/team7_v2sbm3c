@@ -12,7 +12,7 @@
           style="cursor: pointer;">
           <div
             th:if="${share_imageVO.file_origin_name.endsWith('jpg') or share_imageVO.file_origin_name.endsWith('png') or share_imageVO.file_origin_name.endsWith('gif')}">
-            <img th:src="@{|/contents/storage/${share_imageVO.file_thumb_name}|}">
+            <img th:src="@{|/contents/storage/${share_imageVO.file_thumb_name}|}" class="rank_img">
           </div>
           <div
             th:if="${((share_imageVO.file_origin_name.endsWith('jpg') or share_imageVO.file_origin_name.endsWith('png') or share_imageVO.file_origin_name.endsWith('gif')) == false) and (share_imageVO.file_size > 0)}">
