@@ -70,14 +70,9 @@
 
 						<ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 							<li class="nav-item" th:if="${session.acc_no != null}">
-<<<<<<< HEAD
-								<a class="nav-link" th:href="@{|/recommend/desk?acc_no=${session.acc_no}|}" style="display: inline-block;">
-									나의 취향 찾기
-=======
 								<a class="nav-link"
 									th:href="@{|http://192.168.12.157:5000/recommend/desk?acc_no=${session.acc_no}|}"
 									th:text="'나의 취향 찾기'" style="display: inline-block;">
->>>>>>> a03d24c (회원 정보 조회 및 마이페이지 수정)
 								</a>
 							</li>
 
@@ -116,7 +111,7 @@
 									th:text="'Summary AI'">
 								</a>
 							</li>
-							
+
 							<!-- 
              <li class="nav-item" th:if="${session.acc_no != null}">
                 <a class="nav-link"
@@ -178,8 +173,8 @@
 
 						<ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 							<li class="nav-item">
-								<a class="nav-link" th:href="@{|/account/mypage|}"
-									style="display: inline-block;">회원 정보</a>
+								<a class="nav-link" th:href="@{|/account/mypage|}" style="display: inline-block;">회원
+									정보</a>
 							</li>
 
 							<li class="nav-item">
@@ -216,22 +211,9 @@
 				th:if="${currentUrl != null and currentUrl.contains('admin')}">
 
 				<ul class="navbar-nav me-auto mb-2 mb-lg-0" th:if="${session.adm_no != null}">
-					<li class="nav-item dropdown">
-						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
-							data-bs-toggle="dropdown" aria-expanded="false">
-							전체 목록 조회
-						</a>
 
-						<ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-							<li class="nav-item"><a class="nav-link" th:href="@{|/admin/cate_list_search|}">카테고리 전체
-									목록</a></li>
-							<li class="nav-item"><a class="nav-link"
-									th:href="@{|/scontents/list_by_search?cate_no=1|}">공유글
-									전체 목록</a></li>
-							<li class="nav-item"><a class="nav-link"
-									th:href="@{|/qcontents/qna_list_all?cate_no=2||}">질문글 전체
-									목록</a></li>
-						</ul>
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{|/admin/cate_list_search|}">카테고리 전체 목록</a>
 					</li>
 
 					<li class="nav-item dropdown">
