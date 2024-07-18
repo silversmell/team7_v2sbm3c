@@ -29,4 +29,11 @@ public interface RecommendProcInter {
 	 * @return
 	 */
 	public ArrayList<HashtagVO> selectedTags(int acc_no);
+	
+	/**
+	 * 랜덤으로 게시글 가져오기
+	 * 
+	 * @return
+	 */
+	public ArrayList<Share_contentsVO> random_list();
 }

@@ -30,5 +30,18 @@
 		JOIN account a ON a.acc_no = r.acc_no
 		WHERE r.acc_no = #{acc_no}
 	</select>
+	
+	<!-- 랜덤으로 게시글 가져오기 -->
+	<select id="random_list"
+	        resultType="dev.mvc.share_contentsdto.Share_contentsVO">
+		SELECT scon_no, scon_title, scon_contents, scon_views, scon_bookmark, scon_date, scon_priority
+		FROM (
+		    SELECT scon_no, scon_title, scon_contents, scon_views, scon_bookmark, scon_date, scon_priority
+		    FROM share_contents
+		    ORDER BY DBMS_RANDOM.RANDOM()
+		)
+		WHERE ROWNUM &lt;= 6
+	</select>
+
 
 </mapper>

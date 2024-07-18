@@ -35,5 +35,11 @@ public class RecommendProc implements RecommendProcInter {
 		ArrayList<HashtagVO> hashtags = this.recommendDAO.selectedTags(acc_no);
 		return hashtags;
 	}
+
+	@Override
+	public ArrayList<Share_contentsVO> random_list() {
+		ArrayList<Share_contentsVO> list = this.recommendDAO.random_list();
+		return list;
+	}
 	
 }

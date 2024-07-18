@@ -104,12 +104,12 @@
   }
 
   .content-bottom {
-	margin-left: 35px;
+  	margin-left: 35px;
   	margin-bottom: 20px;
   	margin-right: 25px;
   	text-align: right;
   }
-  
+
   .bottom_menu {
   	text-align: center;
   	margin: 10px auto;
@@ -548,9 +548,9 @@
   	float: left;
   	font-size: 1.5em;
   }
-  
+
   .mark_icon {
-	width: 24px;
+  	width: 24px;
   }
 
   .icon {
@@ -803,7 +803,6 @@
   	display: flex;
   	align-items: center;
   	justify-content: center;
-  	overflow: hidden;
   	width: 80%;
   	height: 110px;
   	/* 이미지 크기를 줄이기 위해 높이를 줄임 */
@@ -833,10 +832,8 @@
   }
 
   .right-panel {
-  	width: 48%;
+  	width: 60%;
   	background-color: rgb(255, 255, 255);
-  	overflow: hidden;
-  	/* 내용이 넘칠 때 대비 */
   	border: none 10px;
   	padding: 20px;
   }
@@ -994,7 +991,12 @@
   	max-height: 450px;
   }
 
-  .rank_img:hover {
+  .index_img {
+  	border-radius: 15%;
+  }
+
+  .index_img:hover {
+	transform: scale(1.05);
   	filter: brightness(0.5);
   	object-fit: cover;
   }
@@ -1064,4 +1066,3 @@
   	height: 40px;
   	text-align: right;
   }
-  

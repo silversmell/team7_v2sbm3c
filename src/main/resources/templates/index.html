@@ -2,17 +2,17 @@
 <html layout:decorate="~{layout}"> <!-- layout.html 상속 -->
 <div layout:fragment="content" style="margin: 20px auto; text-align: center; display: flex; justify-content: space-between;">
   <!-- 왼쪽 영역 -->
-  <div style="width: 48%; background-color: rgb(255, 255, 255); padding: 20px; margin-left: 20px;">
+  <div style="width: 50%; background-color: rgb(255, 255, 255); padding: 20px; margin-left: 20px;">
     <div class="container">
       <h2>랭킹 글</h2>
       <hr style="margin-bottom: 20px;">
       <div class="grid-container">
-        <div th:each="share_imageVO, status:${list_image}" class="grid-item"
+        <div th:each="share_imageVO, status:${ranking_image}" class="grid-item"
           th:attr="onclick=|location.href='/scontents/read?cate_no=1&scon_no=${share_imageVO.scon_no}'|"
           style="cursor: pointer;">
           <div
             th:if="${share_imageVO.file_origin_name.endsWith('jpg') or share_imageVO.file_origin_name.endsWith('png') or share_imageVO.file_origin_name.endsWith('gif')}">
-            <img th:src="@{|/contents/storage/${share_imageVO.file_thumb_name}|}" class="rank_img">
+            <img th:src="@{|/contents/storage/${share_imageVO.file_thumb_name}|}" class="index_img">
           </div>
           <div
             th:if="${((share_imageVO.file_origin_name.endsWith('jpg') or share_imageVO.file_origin_name.endsWith('png') or share_imageVO.file_origin_name.endsWith('gif')) == false) and (share_imageVO.file_size > 0)}">
@@ -32,7 +32,20 @@
     <div class="container">
       <h2>추천 글</h2>
       <hr style="margin-bottom: 20px;">
-      <p>관리자만 작성 가능한 게시글입니다.</p>
+	  <div class="grid-container">
+	    <div th:each="share_imageVO, status:${recom_image}" class="grid-item"
+	      th:attr="onclick=|location.href='/scontents/read?cate_no=1&scon_no=${share_imageVO.scon_no}'|"
+	      style="cursor: pointer;">
+	      <div
+	        th:if="${share_imageVO.file_origin_name.endsWith('jpg') or share_imageVO.file_origin_name.endsWith('png') or share_imageVO.file_origin_name.endsWith('gif')}">
+	        <img th:src="@{|/contents/storage/${share_imageVO.file_thumb_name}|}" class="index_img">
+	      </div>
+	      <div
+	        th:if="${((share_imageVO.file_origin_name.endsWith('jpg') or share_imageVO.file_origin_name.endsWith('png') or share_imageVO.file_origin_name.endsWith('gif')) == false) and (share_imageVO.file_size > 0)}">
+	        <span th:text="${share_imageVO.file_origin_name}"></span>
+	      </div>
+	    </div>
+	  </div>
     </div>
   </div>
   
