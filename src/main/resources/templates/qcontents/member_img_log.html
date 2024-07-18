@@ -73,7 +73,7 @@
           
           // 이미지 경로 수정 (서버의 static 경로에 맞춰 설정)
           // 앞에서 20자 추출
-          let thumb_path = `http://192.168.12.159:5000/${thumb}`;
+          let thumb_path = `http://192.168.12.159:9093/openai/member/storage/${thumb}`; // http://192.168.12.159:9093/openai/member/storage/20240718191253_313.jpg
           console.log('thumb_path: ' + thumb_path);
           
           let log_index = `
