@@ -17,7 +17,6 @@ CREATE TABLE TIP_CONTENTS(
 		TCON_SAVED_IMG                		VARCHAR2(100)		 NULL ,
 		TCON_THUMB_IMG                		VARCHAR2(100)		 NULL ,
 		TCON_IMG_SIZE                 		NUMBER(38)		 NULL ,
-        TCON_PASSWD                         VARCHAR2(30)    NOT NULL,
 		YOUTUBE                       		VARCHAR2(1000)		 NULL ,
   FOREIGN KEY (CATE_NO) REFERENCES CATEGORY (CATE_NO),
   FOREIGN KEY (ACC_NO) REFERENCES ACCOUNT (ACC_NO)
@@ -35,7 +34,6 @@ COMMENT ON COLUMN TIP_CONTENTS.TCON_IMG is '이미지';
 COMMENT ON COLUMN TIP_CONTENTS.TCON_SAVED_IMG is '저장된이미지';
 COMMENT ON COLUMN TIP_CONTENTS.TCON_THUMB_IMG is 'THUMB이미지';
 COMMENT ON COLUMN TIP_CONTENTS.TCON_IMG_SIZE is '이미지크기';
-COMMENT ON COLUMN TIP_CONTENTS.TCON_PASSWD is '비밀번호';
 COMMENT ON COLUMN TIP_CONTENTS.YOUTUBE is '유튜브링크';
 
 --------------------------------------------------------------------------------
@@ -53,11 +51,11 @@ COMMIT;
 --------------------------------------------------------------------------------
 
 -- 등록
-INSERT INTO TIP_CONTENTS(tcon_no, cate_no, acc_no, tcon_title, tcon_contents, tcon_views, tcon_date, tcon_img, tcon_saved_img, tcon_thumb_img, tcon_img_size, tcon_passwd)
-VALUES(TIP_CONTENTS_SEQ.nextval, 3, 2, '제목1', '내용1', 0, sysdate, '이미지', '저장된 이미지', 'thumb 이미지', 1000, '1111', '검색어1, 검색어2');
+INSERT INTO TIP_CONTENTS(tcon_no, cate_no, acc_no, tcon_title, tcon_contents, tcon_views, tcon_date, tcon_img, tcon_saved_img, tcon_thumb_img, tcon_img_size)
+VALUES(TIP_CONTENTS_SEQ.nextval, 3, 2, '제목1', '내용1', 0, sysdate, '이미지', '저장된 이미지', 'thumb 이미지', 1000, '1111');
 
-INSERT INTO TIP_CONTENTS(tcon_no, cate_no, acc_no, tcon_title, tcon_contents, tcon_views, tcon_date, tcon_img, tcon_saved_img, tcon_thumb_img, tcon_img_size, tcon_passwd)
-VALUES(TIP_CONTENTS_SEQ.nextval, 3, 2, '제목2', '내용2', 0, sysdate, '이미지', '저장된 이미지', 'thumb 이미지', 1000, '1111', '검색어1, 검색어2');
+INSERT INTO TIP_CONTENTS(tcon_no, cate_no, acc_no, tcon_title, tcon_contents, tcon_views, tcon_date, tcon_img, tcon_saved_img, tcon_thumb_img, tcon_img_size)
+VALUES(TIP_CONTENTS_SEQ.nextval, 3, 2, '제목2', '내용2', 0, sysdate, '이미지', '저장된 이미지', 'thumb 이미지', 1000, '1111',);
 
 COMMIT;
 
@@ -66,7 +64,7 @@ SELECT tcon_no, cate_no, acc_no, tcon_title, tcon_contents, tcon_views, tcon_dat
 FROM tip_contents
 ORDER BY tcon_no;
 
-SELECT tcon_no, cate_no, acc_no, tcon_title, tcon_contents, tcon_views, tcon_date, tcon_img, tcon_saved_img, tcon_thumb_img, tcon_img_size, tcon_passwd
+SELECT tcon_no, cate_no, acc_no, tcon_title, tcon_contents, tcon_views, tcon_date, tcon_img, tcon_saved_img, tcon_thumb_img, tcon_img_size
 FROM tip_contents
 ORDER BY tcon_no;
 

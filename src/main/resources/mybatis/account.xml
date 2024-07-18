@@ -149,14 +149,24 @@
 	<!-- 회원 탈퇴(사용자, 마이페이지) -->
 
 
-	<!-- 내가 쓴 게시글 목록 -->
-	<select id="myContents"
+	<!-- 내가 쓴 공유 게시글 -->
+	<select id="myScontents"
 		resultType="dev.mvc.share_contentsdto.Share_contentsVO"
 		parameterType="int">
-		SELECT scon_no, scon_title, scon_contents, scon_date
+		SELECT scon_no, scon_title, scon_contents, scon_date, scon_views
 		FROM share_contents
 		WHERE acc_no = #{acc_no}
 		ORDER BY scon_date ASC
+	</select>
+	
+	<!-- 내가 쓴 질문 게시글 -->
+	<select id="myQcontents"
+		resultType="dev.mvc.qna_contents.Qna_contentsVO"
+		parameterType="int">
+		SELECT qcon_no, qcon_name, qcon_contents, qcon_date, qcon_views
+		FROM qna_contents
+		WHERE acc_no = #{acc_no}
+		ORDER BY qcon_date ASC
 	</select>
 
 	<!-- 공유 게시글 사진 가져오기 -->

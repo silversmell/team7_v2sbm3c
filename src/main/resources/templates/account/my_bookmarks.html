@@ -22,10 +22,6 @@
 
 	<aside class="aside_right">
 		<a href="javascript:location.reload();">새로고침</a>
-		<span class='menu_divide'>│</span>
-		<a href='./create'>회원 가입</a>
-		<span class='menu_divide'>│</span>
-		<a href='./list'>목록</a>
 	</aside>
 
 	<!-- /account/cate_select_component.html 파일의 cate_select_fragment import -->
@@ -39,7 +35,7 @@
 			</div>
 		</div>
 		<div style="display:flex; justify-content: center;">
-			<table class="table table-striped" style='width: 90%; justify-content:center;'>
+			<table class="table table-striped" style='width: 80%; justify-content:center;'>
 				<colgroup>
 					<col style='width: 20%;' />
 					<col style='width: 80%;' />
@@ -53,12 +49,13 @@
 				</thead>
 
 				<tbody>
-
+					<!-- 공유 게시판 -->
 					<tr th:each="smark : ${share_marks}" data-type="share">
 						<input type="hidden" id="scon_no" name="scon_no" th:value="${smark.scon_no}" data-cate-no="1">
 
 						<td class='td_basic'
 							style="vertical-align: middle; text-align: center; margin-bottom: 10px; padding: 0; overflow: hidden;">
+
 							<div th:if="${shareImages.containsKey(smark.scon_no)}"
 								style="display: flex; justify-content: center; overflow: hidden; margin: 0 auto; width: 180px; height: 100px;">
 								<div class="horizontal-container"
@@ -78,16 +75,20 @@
 
 						<td class="td_contents" style="word-break: break-word;">
 							<div style="flex-grow: 1;">
+
 								<div
 									style="margin-left: 15px; margin-right: 15px; display: flex; justify-content: center;">
 									<div style="width: 100%; height: 150px; margin-bottom: 20px;">
 										<div style="display:flex; align-items: center; width: 100%; height: 100%;">
-											<div style="width: 100%; height: 100%;">
+											<div style="width: 100%; height: 100%; margin-left: 20px;">
 												<div th:attr="onclick=|location.href='/scontents/read?cate_no=1&scon_no=${smark.scon_no}'|"
 													style="width: 100%; height: 100%; text-align: left; overflow: hidden;">
 													<br>
-													<div style="font-weight: bold; font-size: larger; display: block; margin-bottom: 5px;"
-														th:text="${smark.scon_title}">
+													<div class="title-image-container">
+														<div class="title" th:text="${smark.scon_title}"></div>
+														<img src="/css/images/bookmark_on.png" th:id="${smark.scon_no}"
+															class="mark_icon"
+															onclick="mark(this); event.stopPropagation();">
 													</div>
 													<div th:text="${smark.scon_date.substring(0, 16)}"
 														style="margin-bottom: 15px;"></div>
@@ -106,19 +107,24 @@
 										</div>
 									</div>
 								</div>
-								<div class="contents_bottom">
-									<div style="text-align: left;">
-										<img th:src="@{|/css/images/comment.png|}" style="width: 20px; height: 20px;">
-										<label th:text="${sconComments[smark.scon_no]}">0</label>
+
+								<div class="content-bottom" style="display: flex; justify-content: flex-end; gap: 5px;">
+									<div>
+										<span>조회수
+											<label th:text="${smark.scon_views}"></label>
+										</span>
 									</div>
-									<div style="text-align: right;">
+									<div>
 										<span>
-											<img src="/css/images/bookmark_on.png" th:id="${smark.scon_no}" class="icon"
-												onclick="mark(this); event.stopPropagation();"
-												style="width:24px; height: 24px;">
+											<img th:src="@{|/css/images/comment.png|}"
+												style="width: 20px; height: 20px;">
+											<label th:text="${sconComments[smark.scon_no]}">0</label>
 										</span>
 									</div>
 								</div>
+
+
+
 							</div>
 
 						</td>
@@ -130,6 +136,7 @@
 
 						<td class='td_basic'
 							style="vertical-align: middle; text-align: center; margin-bottom: 10px; padding: 0; overflow: hidden;">
+
 							<div th:if="${qnaImages.containsKey(qmark.qcon_no)}"
 								style="display: flex; justify-content: center; overflow: hidden; margin: 0 auto; width: 180px; height: 100px;">
 								<div class="horizontal-container"
@@ -153,18 +160,21 @@
 									style="margin-left: 15px; margin-right: 15px; display: flex; justify-content: center;">
 									<div style="width: 100%; height: 150px; margin-bottom: 20px;">
 										<div style="display:flex; align-items: center; width: 100%; height: 100%;">
-											<div style="width: 100%; height: 100%;">
-												<div th:attr="onclick=|location.href='/qcontents/read?cate_no=2&qcon_no=${qmark.qcon_no}'|"
+											<div style="width: 100%; height: 100%; margin-left: 20px;">
+												<div th:attr="onclick=|location.href='/qcontents/qna_read?qcon_no=${qmark.qcon_no}&now_page=1'|"
 													style="width: 100%; height: 100%; text-align: left; overflow: hidden;">
 													<br>
-													<div style="font-weight: bold; font-size: larger; display: block; margin-bottom: 5px;"
-														th:text="${qmark.qcon_name}">
+													<div class="title-image-container">
+														<div class="title" th:text="${qmark.qcon_name}"></div>
+														<img src="/css/images/bookmark_on.png" th:id="${qmark.qcon_no}"
+															class="mark_icon"
+															onclick="mark(this); event.stopPropagation();">
 													</div>
 													<div th:text="${qmark.qcon_date.substring(0, 16)}"
 														style="margin-bottom: 15px;"></div>
 
 													<div th:if="${qmark.qcon_contents.length() > 150 }"
-														th:text="|${qmark.scon_contents.substring(0, 150)}...|"
+														th:text="|${qmark.qcon_contents.substring(0, 150)}...|"
 														style="display: block;"></div>
 													<div th:if="${qmark.qcon_contents.length() <= 150 }"
 														th:text="|${qmark.qcon_contents}|" style="display: block;">
@@ -177,24 +187,23 @@
 										</div>
 									</div>
 								</div>
-								<div class="contents_bottom">
-									<div style="text-align: left;">
-										<img th:src="@{|/css/images/comment.png|}" style="width: 20px; height: 20px;">
-										<label th:text="${qconComments[qmark.qcon_no]}">0</label>
+
+								<div class="content-bottom" style="display: flex; justify-content: flex-end; gap: 5px;">
+									<div>
+										<span>조회수
+											<label th:text="${qmark.qcon_views}"></label>
+										</span>
 									</div>
-									<div style="text-align: right;">
+									<div>
 										<span>
-											<img src="/css/images/bookmark_on.png" th:id="${qmark.qcon_no}" class="icon"
-												onclick="mark(this); event.stopPropagation();"
-												style="width:24px; height: 24px;">
+											<img th:src="@{|/css/images/comment.png|}"
+												style="width: 20px; height: 20px;">
+											<label th:text="${qconComments[qmark.qcon_no]}">0</label>
 										</span>
 									</div>
 								</div>
-							</div>
+							</div>			</tr>
 
-						</td>
-					</tr>
-					
 					<tr th:if="${share_count == 0} or ${qna_count == 0} ">
 						<td colspan="2" style="text-align: center;">게시글이 존재하지 않습니다.</td>
 					</tr>

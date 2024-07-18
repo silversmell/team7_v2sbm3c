@@ -2,113 +2,227 @@
 <html layout:decorate="~{layout}">
 <div layout:fragment="content">
 	<script type="text/javascript" th:src="@{/js/recommend/list.js}"></script>
+	<script type="text/javascript" th:src="@{/js/account/my_contents.js}"></script>
 
 	<style>
-		/* td 요소에 대해 수직 정렬을 설정합니다. */
-		td {
-			vertical-align: top;
-			/* 상단에 정렬합니다. 필요에 따라 middle 등으로 변경 가능합니다. */
+		.table {
+			width: 100%;
+			table-layout: fixed;
 		}
-
-		/* td 안의 div 요소에 대해 수직 정렬을 해제합니다. */
 	</style>
 
 	<div id="code" th:attr="data-code=${code}" style="display: none;"></div>
 
-	<div class='title_line'>
-		<span th:text="| 내가 쓴 글 (${count} 건)|" class="title_line_text"></span>
+	<div class='title_line' id="share_title" style="display: block;">작성한 글
+		<span th:text="| (공유 게시판 ${share_count} 건)|" class="title_line_text"></span>
+	</div>
+	<div class='title_line' id="qna_title" style="display: none;">작성한 글
+		<span th:text="| (질문 게시판 ${qna_count} 건)|" class="title_line_text"></span>
 	</div>
 
 	<aside class="aside_right">
 		<a href="javascript:location.reload();">새로고침</a>
 	</aside>
 
-	<div th:replace="~{recommend/list_component::list_fragment}"></div>
+	<!-- /account/cate_select_component.html 파일의 cate_select_fragment import -->
+	<div th:replace="~{account/cate_select_component::cate_select_fragment}"></div>
 
 	<div class='menu_line'></div>
-	<div style="display: flex; justify-content: space-between; ">
-		<div style="display: flex; margin-left:78px;">
 
+	<div style="text-align: right; clear: both;">
+		<div style="display: flex; justify-content: space-between; ">
+			<div style="display: flex; margin-left:78px;">
+			</div>
 		</div>
+		<div style="display:flex; justify-content: center;">
+			<table class="table table-striped" style='width: 80%; justify-content:center;'>
+				<colgroup>
+					<col style='width: 20%;' />
+					<col style='width: 80%;' />
+				</colgroup>
 
-	</div>
-	<div style="display:flex; justify-content: center;">
-		<table class="table table-striped" style='width: 90%; justify-content:center;'>
-			<colgroup>
-				<col style='width: 20%;' />
-				<col style='width: 70%;' />
-				<col style='width: 10%;' />
-			</colgroup>
+				<thead>
+					<tr>
+						<th class="th_bs">이미지</th>
+						<th class="th_bs">내용</th>
+					</tr>
+				</thead>
 
-			<thead>
-				<tr>
-					<th class="th_bs"> </th>
-					<th class="th_bs">내용</th>
-					<th class="th_bs"> </th>
-				</tr>
-			</thead>
+				<tbody>
+					<!-- 공유 게시판 -->
+					<tr th:each="scontent : ${scontents}" data-type="share">
+						<input type="hidden" id="scon_no" name="scon_no" th:value="${scontent.scon_no}"
+							data-cate-no="1">
 
-			<tbody>
-				<tr th:each="scontentsVO : ${list}">
-					<td class='td_basic' style="vertical-align: middle; text-align: center; margin-bottom: 10px;">
-						<div th:if="${shareImages.containsKey(scontentsVO.scon_no)}"
-							style="margin-bottom: 15px; display: flex; justify-content: center;">
-							<div class="horizontal-container"
-								style="margin-bottom: 10px; display: flex; align-items: center;">
-								<div th:each="image, images : ${shareImages[scontentsVO.scon_no]}"
-									th:if="${images.index == 0}" style="margin-right: 5px;">
-									<div th:if="${image.file_origin_name.endsWith('jpg') or image.file_origin_name.endsWith('png') or image.file_origin_name.endsWith('gif')}"
-										style="width: 180px; height: 100px; overflow: hidden;">
-										<img th:src="@{|/contents/storage/${image.file_thumb_name}|}"
-											style="width: 100%; height: 100%; object-fit: cover;">
+						<td class='td_basic'
+							style="vertical-align: middle; text-align: center; margin-bottom: 10px; padding: 0; overflow: hidden;">
+
+							<div th:if="${shareImages.containsKey(scontent.scon_no)}"
+								style="display: flex; justify-content: center; overflow: hidden; margin: 0 auto; width: 180px; height: 100px;">
+								<div class="horizontal-container"
+									style="margin-bottom: 10px; display: flex; align-items: center;">
+									<div th:each="image, images : ${shareImages[scontent.scon_no]}"
+										th:if="${images.index == 0}" style="margin-right: 5px;">
+										<div th:if="${image.file_origin_name.endsWith('jpg') or image.file_origin_name.endsWith('png') or image.file_origin_name.endsWith('gif')}"
+											style="width: 180px; height: 100px; overflow: hidden;">
+											<img th:src="@{|/contents/storage/${image.file_thumb_name}|}"
+												style="width: 100%; height: 100%; object-fit: cover;">
+										</div>
 									</div>
 								</div>
 							</div>
-						</div>
-					</td>
-					
-					<td class='td_basic' style="vertical-align: middle; text-align: center;">
-						<div style="margin-bottom: 20px; margin-top:10px;">
-							<div style="cursor: pointer; margin-left: 5px; display: flex; justify-content: center;">
-								<div style="width: 260%; height: 102px; margin-bottom: 23px;">
-									<div style="display:flex; align-items: center; width: 100%; height: 100%;">
-										<div style="margin-bottom: 13px; width: 100%; height: 100%;">
-											<div class='td_basic'
-												th:attr="onclick=|location.href='/scontents/read?cate_no=1&scon_no=${scontentsVO.scon_no}'|"
-												style="cursor: pointer; margin-top: 10px; margin-bottom: 60px; width: 100%; height: 100%;">
-												<br>제목:<span th:text="${scontentsVO.scon_title}"
-													style="font-weight: bold;"></span><br>
-												<span th:if="${scontentsVO.scon_contents.length() > 160 }"
-													th:text="|${scontentsVO.scon_contents.substring(0, 100)}...|"></span>
-												<span th:if="${scontentsVO.scon_contents.length() <= 160 }"
-													th:text="|${scontentsVO.scon_contents}|"></span>
+						</td>
 
-												<span id='acc_no' style="display:none;" value=""></span>
 
-												<br>
-												<div style="margin-left: auto; text-align: right; margin-right: 10px;">
-													조회수: <span th:text="${scontentsVO.scon_views}"></span>
+						<td class="td_contents" style="word-break: break-word;">
+							<div style="flex-grow: 1;">
+
+								<div
+									style="margin-left: 15px; margin-right: 15px; display: flex; justify-content: center;">
+									<div style="width: 100%; height: 150px; margin-bottom: 20px;">
+										<div style="display:flex; align-items: center; width: 100%; height: 100%;">
+											<div style="width: 100%; height: 100%; margin-left: 20px;">
+												<div th:attr="onclick=|location.href='/scontents/read?cate_no=1&scon_no=${scontent.scon_no}'|"
+													style="width: 100%; height: 100%; text-align: left; overflow: hidden;">
+													<br>
+													<div class="title-image-container">
+														<div class="title" th:text="${scontent.scon_title}"></div>
+													</div>
+													<div th:text="${scontent.scon_date.substring(0, 16)}"
+														style="margin-bottom: 15px;"></div>
+
+													<div th:if="${scontent.scon_contents.length() > 150 }"
+														th:text="|${scontent.scon_contents.substring(0, 150)}...|"
+														style="display: block;"></div>
+													<div th:if="${scontent.scon_contents.length() <= 150 }"
+														th:text="|${scontent.scon_contents}|" style="display: block;">
+													</div>
+
+													<span id='acc_no' style="display:none;" value=""></span>
+
 												</div>
 											</div>
 										</div>
 									</div>
 								</div>
+
+								<div class="content-bottom" style="display: flex; justify-content: space-between;">
+									<div style="display: flex; gap: 5px;">
+										<div>
+											<span>조회수
+												<label th:text="${scontent.scon_views}"></label>
+											</span>
+										</div>
+										<div>
+											<span>
+												<img th:src="@{|/css/images/comment.png|}"
+													style="width: 20px; height: 20px;">
+												<label th:text="${sconComments[scontent.scon_no]}">0</label>
+											</span>
+										</div>
+									</div>
+									<div style="display: flex; gap: 5px;">
+										<a a th:href="@{|/account/updatemc?scon_no=${scontent.scon_no}&cate_no=1|}"
+											style="margin-right: 5px;">수정</a>
+										<a
+											th:href="@{|/scontents/delete/${acc_no}?scon_no=${scontent.scon_no}&cate_no=1|}">삭제</a>
+									</div>
+								</div>
 							</div>
-						</div>
-					</td>
-					
-					<td class='td_basic' style="vertical-align: middle; text-align: center; margin-bottom: 10px;">
-						<a th:href="@{|/account/updatemc?scon_no=${scontentsVO.scon_no}&cate_no=1|}"><img src='/account/images/update.png' title='수정' class="icon"></a>
-						<a th:href="@{|/scontents/delete/${acc_no}?scon_no=${scontentsVO.scon_no}&cate_no=1|}"><img src='/account/images/delete.png' title='삭제' class="icon"></a>
-					</td>
+						</td>
+					</tr>
 
-				</tr>
+					<!-- 질문 게시판 -->
+					<tr th:each="qcontent : ${qcontents}" data-type="qna">
+						<input type="hidden" id="qcon_no" name="qcon_no" th:value="${qcontent.qcon_no}"
+							data-cate-no="1">
 
-				<tr th:if="${count == 0}">
-					<td colspan="2" style="text-align: center;">게시글이 존재하지 않습니다.</td>
-				</tr>
-			</tbody>
-		</table>
+						<td class='td_basic'
+							style="vertical-align: middle; text-align: center; margin-bottom: 10px; padding: 0; overflow: hidden;">
+
+							<div th:if="${qnaImages.containsKey(qcontent.qcon_no)}"
+								style="display: flex; justify-content: center; overflow: hidden; margin: 0 auto; width: 180px; height: 100px;">
+								<div class="horizontal-container"
+									style="margin-bottom: 10px; display: flex; align-items: center;">
+									<div th:each="image, images : ${qnaImages[qcontent.qcon_no]}"
+										th:if="${images.index == 0}" style="margin-right: 5px;">
+										<div th:if="${image.file_origin_name.endsWith('jpg') or image.file_origin_name.endsWith('png') or image.file_origin_name.endsWith('gif')}"
+											style="width: 180px; height: 100px; overflow: hidden;">
+											<img th:src="@{|/contents/storage/${image.file_thumb_name}|}"
+												style="width: 100%; height: 100%; object-fit: cover;">
+										</div>
+									</div>
+								</div>
+							</div>
+						</td>
+
+
+						<td class="td_contents" style="word-break: break-word;">
+							<div style="flex-grow: 1;">
+								<div
+									style="margin-left: 15px; margin-right: 15px; display: flex; justify-content: center;">
+									<div style="width: 100%; height: 150px; margin-bottom: 20px;">
+										<div style="display:flex; align-items: center; width: 100%; height: 100%;">
+											<div style="width: 100%; height: 100%; margin-left: 20px;">
+												<div th:attr="onclick=|location.href='/qcontents/qna_read?qcon_no=${qcontent.qcon_no}&now_page=1'|"
+													style="width: 100%; height: 100%; text-align: left; overflow: hidden;">
+													<br>
+													<div class="title-image-container">
+														<div class="title" th:text="${qcontent.qcon_name}"></div>
+													</div>
+													<div th:text="${qcontent.qcon_date.substring(0, 16)}"
+														style="margin-bottom: 15px;"></div>
+
+													<div th:if="${qcontent.qcon_contents.length() > 150 }"
+														th:text="|${qcontent.qcon_contents.substring(0, 150)}...|"
+														style="display: block;"></div>
+													<div th:if="${qcontent.qcon_contents.length() <= 150 }"
+														th:text="|${qcontent.qcon_contents}|" style="display: block;">
+													</div>
+
+													<span id='acc_no' style="display:none;" value=""></span>
+
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="content-bottom" style="display: flex; justify-content: space-between;">
+									<div style="display: flex; gap: 5px;">
+										<div>
+											<span>조회수
+												<label th:text="${qcontent.qcon_views}"></label>
+											</span>
+										</div>
+										<div>
+											<span>
+												<img th:src="@{|/css/images/comment.png|}"
+													style="width: 20px; height: 20px;">
+												<label th:text="${qconComments[qcontent.qcon_no]}">0</label>
+											</span>
+										</div>
+									</div>
+									<div style="display: flex; gap: 5px;">
+										<a a th:href="@{|/account/updatemc?qcon_no=${qcontent.qcon_no}&cate_no=1|}"
+											style="margin-right: 5px;">수정</a>
+										<a
+											th:href="@{|/qcontents/qna_delete/${acc_no}?qcon_no=${qcontent.qcon_no}&now_page=1&cate_no=2|}">삭제</a>
+									</div>
+								</div>
+							</div>
+						</td>
+					</tr>
+
+					<tr th:if="${share_count == 0} or ${qna_count == 0} ">
+						<td colspan="2" style="text-align: center;">게시글이 존재하지 않습니다.</td>
+					</tr>
+
+
+				</tbody>
+			</table>
+
+		</div>
 	</div>
 
 </div>

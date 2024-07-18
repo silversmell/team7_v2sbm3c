@@ -182,8 +182,14 @@ public class AccountProc implements AccountProcInter {
 	}
 
 	@Override
-	public ArrayList<Share_contentsVO> myContents(int acc_no) {
-		ArrayList<Share_contentsVO> list = this.accountDAO.myContents(acc_no);
+	public ArrayList<Share_contentsVO> myScontents(int acc_no) {
+		ArrayList<Share_contentsVO> list = this.accountDAO.myScontents(acc_no);
+		return list;
+	}
+	
+	@Override
+	public ArrayList<Qna_contentsVO> myQcontents(int acc_no) {
+		ArrayList<Qna_contentsVO> list = this.accountDAO.myQcontents(acc_no);
 		return list;
 	}
 

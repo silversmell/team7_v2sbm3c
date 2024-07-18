@@ -1,10 +1,51 @@
 /* my_bookmarks.html 참조 */
 
+document.addEventListener('DOMContentLoaded', function() {
+	let share_marks = document.querySelectorAll('tr[data-type="share"]');
+	let qna_marks = document.querySelectorAll('tr[data-type="qna"]');
+	let share_title = document.getElementById("share_title");
+	let qna_title = document.getElementById("qna_title");
+	let cate_no = 1;
+
+	function changeType(selectedType) {
+		if (selectedType === 'share') {
+			share_marks.forEach(function(mark) {
+				mark.style.display = '';
+			});
+			qna_marks.forEach(function(mark) {
+				mark.style.display = 'none';
+			});
+			share_title.style.display = '';
+			qna_title.style.display = 'none';
+			cate_no = 1;
+		} else {
+			share_marks.forEach(function(mark) {
+				mark.style.display = 'none';
+			});
+			qna_marks.forEach(function(mark) {
+				mark.style.display = '';
+			});
+			share_title.style.display = 'none';
+			qna_title.style.display = '';
+			cate_no = 2;
+		}
+		window.cate_no = cate_no;
+	}
+
+	document.getElementById('contentsType').addEventListener('change', function() {
+		let selectedType = this.value;
+		changeType(selectedType);
+	});
+
+	changeType('share');
+});
+
+
 function mark(element) {
 	let hidden = element.closest('tr').querySelector('input[type="hidden"]');
-    let cate_no = hidden.getAttribute('data-cate-no');
-    
-    let con_no = element.id
+	let cate_no = hidden.getAttribute('data-cate-no');
+
+	let con_no = element.id
 
 	let url = "";
 	let currentImg = element.src;
@@ -14,7 +55,7 @@ function mark(element) {
 	} else {
 		url = `/account/insertmark?cate_no=${cate_no}&con_no=${con_no}`;
 	}
-	
+
 	fetch(url, {
 		method: 'GET',
 	})

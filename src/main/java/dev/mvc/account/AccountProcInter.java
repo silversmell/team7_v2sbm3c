@@ -182,12 +182,20 @@ public interface AccountProcInter {
 	public int delete(int acc_no);
 
 	/**
-	 * 내가 쓴 게시글
+	 * 내가 쓴 공유 게시글
 	 * 
 	 * @param acc_no
 	 * @return
 	 */
-	public ArrayList<Share_contentsVO> myContents(int acc_no);
+	public ArrayList<Share_contentsVO> myScontents(int acc_no);
+	
+	/**
+	 * 내가 쓴 질문 게시글
+	 * 
+	 * @param acc_no
+	 * @return
+	 */
+	public ArrayList<Qna_contentsVO> myQcontents(int acc_no);
 
 	/**
 	 * 공유 게시글 사진 가져오기

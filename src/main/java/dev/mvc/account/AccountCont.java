@@ -754,22 +754,59 @@ public class AccountCont {
 	@GetMapping("/mycontents")
 	public String myContents(HttpSession session, Model model) {
 		Integer acc_no = (Integer) session.getAttribute("acc_no");
-		System.out.println("account/mycontents session ==> acc_no: " + acc_no);
+		System.out.println("내가 쓴 게시글 세션 아이디 : " + acc_no);
 
 		if (acc_no != null) {
-			ArrayList<Share_contentsVO> list = this.accountProc.myContents(acc_no);
+			ArrayList<Share_contentsVO> scontents = this.accountProc.myScontents(acc_no);
+			ArrayList<Qna_contentsVO> qcontents = this.accountProc.myQcontents(acc_no);
+
+			int i = 0;
+			for (Share_contentsVO content : scontents) {
+				System.out.println("공유 게시글 ---> " + i + "번: " + content.getScon_title());
+				i++;
+			}
+
+			int j = 0;
+			for (Qna_contentsVO content : qcontents) {
+				System.out.println("질문 게시글 ---> " + j + "번: " + content.getQcon_name());
+				j++;
+			}
 
 			// 각 게시글에 대한 이미지
 			Map<Integer, List<Share_imageVO>> shareImages = new HashMap<>();
-			for (Share_contentsVO content : list) {
+			for (Share_contentsVO content : scontents) {
 				List<Share_imageVO> image = this.accountProc.shareImages(content.getScon_no());
 				shareImages.put(content.getScon_no(), image);
 			}
+			Map<Integer, List<Qna_imageVO>> qnaImages = new HashMap<>();
+			for (Qna_contentsVO content : qcontents) {
+				List<Qna_imageVO> image = this.accountProc.qnaImages(content.getQcon_no());
+				qnaImages.put(content.getQcon_no(), image);
+			}
+
+			// 각 게시글에 대한 댓글 수
+			int scon_comment = 0;
+			Map<Integer, Integer> sconComments = new HashMap<>();
+			for (Share_contentsVO content : scontents) {
+				scon_comment = this.accountProc.sconCmtCnt(content.getScon_no());
+				sconComments.put(content.getScon_no(), scon_comment);
+			}
+			int qcon_comment = 0;
+			Map<Integer, Integer> qconComments = new HashMap<>();
+			for (Qna_contentsVO content : qcontents) {
+				qcon_comment = this.accountProc.qconCmtCnt(content.getQcon_no());
+				qconComments.put(content.getQcon_no(), qcon_comment);
+			}
 
 			model.addAttribute("acc_no", acc_no);
-			model.addAttribute("list", list);
+			model.addAttribute("scontents", scontents);
 			model.addAttribute("shareImages", shareImages);
-			model.addAttribute("count", list.size());
+			model.addAttribute("sconComments", sconComments);
+			model.addAttribute("share_count", scontents.size());
+			model.addAttribute("qcontents", qcontents);
+			model.addAttribute("qnaImages", qnaImages);
+			model.addAttribute("qconComments", qconComments);
+			model.addAttribute("qna_count", qcontents.size());
 
 		} else {
 			model.addAttribute("code", "login_need");
