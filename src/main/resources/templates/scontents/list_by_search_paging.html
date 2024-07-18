@@ -181,14 +181,14 @@
         <tr th:if="${list_image.size() == 0}">
             <td colspan="2" style="text-align: center;">관련된 이미지가 없습니다.</td>
         </tr>
+        </table>
+          <div class="bottom_menu" th:utext="${paging}"></div>
+          <!-- 페이지 버튼 목록 출력 종료 -->
+        </div>
     </tbody>
-</table>
+
 </div>
 
 
-	<!-- 페이지 버튼 목록 출력 시작 -->
-	<div class="bottom_menu" th:utext="${paging}"></div>
-	<!-- 페이지 버튼 목록 출력 종료 -->
-</div>
 
 </html>
