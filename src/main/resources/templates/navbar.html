@@ -179,7 +179,7 @@
 					</li>
 
 					<!-- 마이페이지 -->
-					<li class="nav-item dropdown" th:if="${session.acc_no != null}">
+					<li class="nav-item dropdown" style="float: right;" th:if="${session.acc_no != null}">
 						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
 							data-bs-toggle="dropdown" aria-expanded="false" th:text="마이페이지">
 						</a>
@@ -199,16 +199,15 @@
 							</li>
 						</ul>
 					</li>
-
-					<!-- 알림 -->
-					<li th:if="${session.acc_no != null}">
-						<button type="button"
-							th:attr="onclick=|location.href='http://localhost:9093/scontents/notice/${session.acc_no}'|"
-							style="border: none;">
-							<img src="/css/images/on_alarm.png" class="bar_icon" title="댓글 알림">
-						</button>
-					</li>
-
+					
+	         <!-- 알림 -->
+          <li class="nav-item" style="float: right;  margin-top: 7px;" th:if="${session.acc_no != null}">
+            <button type="button"
+              th:attr="onclick=|location.href='http://localhost:9093/scontents/notice/${session.acc_no}'|"
+              style="border: none;">
+              <img src="/css/images/on_alarm.png" class="bar_icon" title="댓글 알림">
+            </button>
+          </li>
 				</ul>
 				<!-- right side end -->
 

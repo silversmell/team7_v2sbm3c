@@ -94,7 +94,7 @@
   	padding-bottom: 20px;
   	text-align: center;
   	width: 100%;
-  	background-color: white;
+  	background-color: rgb(238, 238, 238);
   }
 
   .content-top {
@@ -600,6 +600,7 @@
   	color: #ffffff;
   	text-align: center;
   	padding: 20px 0;
+  	margin-top: 0px auto;
   }
 
   /* 네비게이션 바 스타일 */
@@ -630,7 +631,7 @@
   .container_main {
   	width: 98%;
   	margin: 5px auto;
-  	background-color: rgb(234, 234, 234);
+  	background-color: white;
   }
 
   .menu_line {
@@ -781,7 +782,7 @@
 
   .container {
   	width: 80%;
-  	background-color: #f0f0f0;
+  	background-color: rgb(255, 255, 255);
   	border-radius: 10px;
   	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   	padding: 20px;
@@ -832,10 +833,12 @@
   }
 
   .right-panel {
-  	width: 60%;
-  	background-color: rgb(255, 255, 255);
+  	width: 80%;
+  	background-color: white;
   	border: none 10px;
   	padding: 20px;
+  	margin-top: 40px;
+  	min-height: 82vh; 
   }
 
   .suggestions {
