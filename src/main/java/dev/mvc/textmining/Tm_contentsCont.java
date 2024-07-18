@@ -481,7 +481,7 @@ public class Tm_contentsCont {
   @GetMapping(value="/tm_update_file/{memberno}")
   public String tm_update_file(HttpSession session, RedirectAttributes ra, Model model,
 		  							                  @PathVariable("memberno") int memberno,
-                                      @RequestParam(name="cate_no", defaultValue = "2") int cate_no, 
+                                      @RequestParam(name="cate_no", defaultValue = "5") int cate_no, 
                                       int tcon_no, int now_page) {
     
     System.out.println("-> acc_no: " + session.getAttribute("acc_no"));
@@ -501,7 +501,7 @@ public class Tm_contentsCont {
         String silze_label = Tool.unit(size);
         tm_imageVO .get(i).setFlabel(silze_label);
       }
-      model.addAttribute("tm_imageVO ", tm_imageVO );
+      model.addAttribute("tm_imageVO", tm_imageVO);
       
       model.addAttribute("now_page", now_page);
       model.addAttribute("cate_no", cate_no);
@@ -539,12 +539,12 @@ public class Tm_contentsCont {
       // 삭제할 파일 정보를 읽어옴, 기존에 등록된 레코드 저장용
       ArrayList<Tm_imageVO> timage_old = this.tm_contentsProc.tm_read_image(tcon_no);
       
-      for (Tm_imageVO timage: timage_old) {
+      for (Tm_imageVO tm_imageVO: timage_old) {
         // -------------------------------------------------------------------
         // 파일 삭제 시작
         // -------------------------------------------------------------------
-        String file_upload_name = timage.getFile_upload_name();
-        String file_thumb_name = timage.getFile_thumb_name();
+        String file_upload_name = tm_imageVO.getFile_upload_name();
+        String file_thumb_name = tm_imageVO.getFile_thumb_name();
         
         String upDir = Tcontents.getUploadDir();
         Tool.deleteFile(upDir, file_upload_name);
@@ -608,6 +608,7 @@ public class Tm_contentsCont {
       ra.addAttribute("cate_no", cate_no);
       ra.addAttribute("tcon_no", tcon_no);
       ra.addAttribute("now_page", now_page);
+      ra.addAttribute("tm_imageVO", tm_imageVO);
       
       return "redirect:/textmining/tm_read";
     
@@ -624,7 +625,7 @@ public class Tm_contentsCont {
                                   Model model, 
                                   RedirectAttributes ra,
                                   @PathVariable("memberno") int memberno,
-                                  @RequestParam(name="cate_no", defaultValue = "2") int cate_no, 
+                                  @RequestParam(name="cate_no", defaultValue = "5") int cate_no, 
                                   int tcon_no, int now_page) {
     
     System.out.println("-> acc_no: " + session.getAttribute("acc_no"));
