@@ -17,7 +17,7 @@
 	<div class='menu_line'></div>
 	
 	<div style="width: 60%; margin: 0px auto ">
-	  <form name="cancel_frm" id="delete_frm" th:object="${accountVO}" method="post" action="/account/cancel">
+	  <form name="cancel_frm" id="cancel_frm" th:object="${accountVO}" method="post" action="/account/cancel">
 	    <input type="hidden" name="acc_no" th:value="${accountVO.acc_no}">
 	    
 	    <div class="msg_warning">회원 탈퇴 후 회원 정보는 복구 할 수 없습니다.<br><br>탈퇴하시겠습니까?</div>

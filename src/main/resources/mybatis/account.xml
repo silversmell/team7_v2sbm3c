@@ -89,6 +89,15 @@
 		INSERT INTO ACC_LOG(acc_log_no, acc_no, acc_log_ip, acc_log_time)
 		VALUES(ACC_LOG_SEQ.nextval, #{acc_no}, #{acc_log_ip}, CURRENT_TIMESTAMP)
 	</insert>
+	
+	<!-- 로그인 내역 -->
+	<select id="myLogs" resultType="dev.mvc.account.AccLogVO" parameterType="int">
+		SELECT acc_log_no, acc_no, acc_log_ip, acc_log_time
+		FROM acc_log
+		WHERE acc_no = #{acc_no}
+		AND ROWNUM &lt;= 50
+		ORDER BY acc_log_time DESC
+	</select>
 
 	<!-- 선택된 해시태그 조회(회원 정보 조회) -->
 	<select id="selectedTags" resultType="String" parameterType="int">
@@ -140,14 +149,12 @@
 		WHERE acc_id=#{acc_id}
 	</update>
 
-	<!-- 회원 정보 삭제(관리자, 회원 목록) -->
-	<delete id="delete" parameterType="int">
-		DELETE FROM account
+	<!-- 회원 탈퇴(마이페이지) -->
+	<update id="cancel" parameterType="int">
+		UPDATE account
+		SET acc_grade=99
 		WHERE acc_no=#{acc_no}
-	</delete>
-
-	<!-- 회원 탈퇴(사용자, 마이페이지) -->
-
+	</update>
 
 	<!-- 내가 쓴 공유 게시글 -->
 	<select id="myScontents"

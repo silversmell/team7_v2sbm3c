@@ -96,7 +96,7 @@
 		SELECT l.adm_log_no, a.adm_no, a.adm_id, l.adm_log_ip, l.adm_log_time
 		FROM admin_log l
 		INNER JOIN admin a ON a.adm_no = l.adm_no
-		ORDER BY l.adm_log_time
+		ORDER BY l.adm_log_time DESC
 	</select>
 	
 	<!-- 관리자 로그 검색 -->
@@ -116,7 +116,7 @@
 	            AND TO_TIMESTAMP(#{end_date} || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
 	        </if>
 		</where>
-		ORDER BY l.adm_log_time
+		ORDER BY l.adm_log_time DESC
 	</select>
 	
 	<!-- 검색된 레코드 갯수 -->
@@ -136,7 +136,7 @@
 	            AND TO_TIMESTAMP(#{end_date} || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
 	        </if>
 		</where>
-		ORDER BY l.adm_log_time
+		ORDER BY l.adm_log_time DESC
 	</select>
 	
 	<!-- 관리자 로그 목록 (검색 + 페이징) -->
@@ -208,7 +208,7 @@
 				AND TO_TIMESTAMP(#{end_date} || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
 			</if>
 		</where>
-		ORDER BY acc_date
+		ORDER BY acc_grade ASC, acc_date DESC
 	</select>
 	
 	<!-- 회원 정보 조회(회원 목록) -->
@@ -223,16 +223,32 @@
 	<!-- 회원 정보 수정(회원 목록) -->
 	<update id="accUpdate" parameterType="dev.mvc.account.AccountVO">
 		UPDATE account
-		SET acc_name=#{acc_name}, acc_tel=#{acc_tel}, acc_age=#{acc_age}
+		SET acc_name=#{acc_name}, acc_grade=#{acc_grade}
 		WHERE acc_no=#{acc_no}
 	</update>
+	
+	<!-- 회원 프로필 사진 삭제 -->
+	<update id="accDeletePic" parameterType="int">
+		UPDATE account
+		SET acc_img = NULL,
+		    acc_saved_img = NULL,
+		    acc_thumb_img = NULL,
+		    acc_img_size = NULL
+		WHERE acc_no = #{acc_no}
+	</update>
+	
+	<!-- 회원 정보 삭제(관리자, 회원 목록) -->
+	<delete id="accDelete" parameterType="int">
+		DELETE FROM account
+		WHERE acc_no=#{acc_no}
+	</delete>
 
 	<!-- 회원 로그 목록 -->
 	<select id="accLogList" resultMap="accLogResultMap">
 		SELECT l.acc_log_no, a.acc_no, a.acc_id, l.acc_log_ip, l.acc_log_time
 		FROM acc_log l
 		INNER JOIN account a ON a.acc_no = l.acc_no
-		ORDER BY l.acc_log_time
+		ORDER BY l.acc_log_time DESC
 	</select>
 
 	<!-- 회원 로그 검색 -->
@@ -253,7 +269,7 @@
 		HH24:MI:SS')
 			</if>
 		</where>
-		ORDER BY l.acc_log_time
+		ORDER BY l.acc_log_time DESC
 	</select>
 
 	<!-- 검색된 레코드 갯수 -->

@@ -20,10 +20,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import dev.mvc.account.AccountProc;
 import dev.mvc.account.AccountProcInter;
 import dev.mvc.account.AccountVO;
+import dev.mvc.account.PicUpload;
 import dev.mvc.category.CategoryProcInter;
 import dev.mvc.category.CategoryVO;
 import dev.mvc.recommend.HashtagVO;
@@ -31,6 +33,7 @@ import dev.mvc.recommend.RecommendVO;
 import dev.mvc.tool.MailTool;
 import dev.mvc.tool.Security;
 import dev.mvc.tool.Tool;
+import dev.mvc.tool.Upload;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -645,7 +648,7 @@ public class AdminCont {
 	 * @return
 	 */
 	@GetMapping(value = "/acc_read")
-	public String accRead(HttpSession session, Model model, int acc_no) {
+	public String acc_read(HttpSession session, Model model, int acc_no) {
 
 		AccountVO accountVO = this.adminProc.accRead(acc_no);
 
@@ -655,7 +658,6 @@ public class AdminCont {
 		accountVO.setImg_size_label(img_size_label);
 
 		model.addAttribute("accountVO", accountVO);
-		System.out.println("aaaaaa ----- " + accountVO.getAcc_tel());
 
 		/* 해시태그 폼 */
 		List<HashtagVO> hashtag_list = this.accountProc.hashtagList(); // 해시태그 목록 조회
@@ -685,18 +687,33 @@ public class AdminCont {
 	 * 
 	 * @param model
 	 * @param accountVO
+	 * @param recommendVO
+	 * @param selected_hashtags
 	 * @return
 	 */
 	@PostMapping(value = "/acc_update")
-	public String accUpdate(Model model, AccountVO accountVO) {
+	public String acc_update(Model model, AccountVO accountVO, RecommendVO recommendVO,
+			@RequestParam(value = "selected_hashtags", required = false) List<Integer> selected_hashtags) {
+		
+		System.out.println("====>" + accountVO.getAcc_grade());
 
 		int checkName_cnt = this.accountProc.checkName(accountVO.getAcc_name());
 		if (checkName_cnt <= 1) {
 			int cnt = this.adminProc.accUpdate(accountVO);
 			if (cnt == 1) { // 수정 성공
 
+				// 기존의 추천 해시태그 삭제
+				this.accountProc.deleteRecommend(accountVO.getAcc_no());
+
+				// 새로운 해시태그 추천 추가
+				for (Integer tag_no : selected_hashtags) {
+					recommendVO.setAcc_no(accountVO.getAcc_no());
+					recommendVO.setTag_no(tag_no);
+					this.accountProc.insertRecommend(recommendVO);
+				}
+				
 				model.addAttribute("code", "update_success");
-				model.addAttribute("cnt", cnt);
+				model.addAttribute("cnt", 2);
 			} else {
 				model.addAttribute("code", "update_fail");
 				model.addAttribute("cnt", cnt);
@@ -705,8 +722,37 @@ public class AdminCont {
 			model.addAttribute("code", "duplicate_name");
 			model.addAttribute("cnt", 0);
 		}
+		
 
-		return "account/msg";
+		return "admin/msg";
+	}
+
+	/**
+	 * 프로필 사진 업데이트
+	 * 
+	 * @param model
+	 * @param accountVO
+	 * @param acc_no
+	 * @return
+	 */
+	@PostMapping(value = "/acc_delete_pic")
+	public String acc_delete_pic(Model model, int acc_no) {
+		System.out.println("---> RequestParam acc_no: " + acc_no);
+		
+		AccountVO accountVO = this.adminProc.accRead(acc_no);
+
+		int cnt = this.adminProc.accDeletePic(acc_no);
+		
+		if(cnt != 0) {
+			model.addAttribute("accountVO", accountVO);
+			model.addAttribute("code", "file_delete_success");
+			model.addAttribute("cnt", 2);
+		} else {
+			model.addAttribute("code", "file_delete_fail");
+			model.addAttribute("cnt", 2);
+		}
+
+		return "/admin/msg";
 	}
 	
 
@@ -774,6 +820,40 @@ public class AdminCont {
 		model.addAttribute("no", no);
 
 		return "admin/acc_log_list";
+	}
+	
+	/**
+	 * 회원 정보 삭제 페이지
+	 * 
+	 * @param model
+	 * @param acc_no
+	 * @return
+	 */
+	@GetMapping(value = "/acc_delete")
+	public String accDelete(Model model, int acc_no) {
+		AccountVO accountVO = this.accountProc.read(acc_no);
+		model.addAttribute("accountVO", accountVO);
+
+		return "admin/acc_delete";
+	}
+
+	/**
+	 * 회원 정보 삭제 처리
+	 * 
+	 * @param model
+	 * @param acc_no
+	 * @return
+	 */
+	@PostMapping(value = "/acc_delete")
+	public String delete_proc(Model model, Integer acc_no) {
+		int cnt = this.adminProc.accDelete(acc_no);
+
+		if (cnt == 1) { // 삭제 성공
+			return "redirect:/admin/acc_list";
+		} else {
+			model.addAttribute("code", "delete_fail");
+			return "admin/msg";
+		}
 	}
 
 

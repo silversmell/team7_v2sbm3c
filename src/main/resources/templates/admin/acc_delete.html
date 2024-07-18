@@ -5,11 +5,11 @@
 <div layout:fragment="content">
 	<script>
 		function send() {
-			document.getElementById('cancel_frm').submit();
+			document.getElementById('delete_frm').submit();
 		}    
 	</script>
 
-	<div class="title_line">회원 탈퇴&nbsp;>&nbsp;<span th:text="@{|${accountVO.acc_name} 님|}"></span></div>
+	<div class="title_line">회원 삭제&nbsp;>&nbsp;<span th:text="@{|${accountVO.acc_name} 님|}"></span></div>
 	<aside class="aside_right">
 		<span class='menu_divide'>&nbsp;</span>
 	</aside>
@@ -17,13 +17,13 @@
 	<div class='menu_line'></div>
 	
 	<div style="width: 60%; margin: 0px auto ">
-	  <form name="cancel_frm" id="delete_frm" th:object="${accountVO}" method="post" action="/account/cancel">
+	  <form name="delete_frm" id="delete_frm" th:object="${accountVO}" method="post" action="/admin/acc_delete">
 	    <input type="hidden" name="acc_no" th:value="${accountVO.acc_no}">
 	    
-	    <div class="msg_warning">회원 탈퇴 후 회원 정보는 복구 할 수 없습니다.<br><br>탈퇴하시겠습니까?</div>
+	    <div class="msg_warning">회원 삭제 후 회원 정보는 복구 할 수 없습니다.<br><br>삭제하시겠습니까?</div>
 	    
 	    <div class="content_body_bottom">
-	      <button type="button" onclick="send();" class="btn btn-secondary btn-sm">회원탈퇴</button>
+	      <button type="button" onclick="send();" class="btn btn-secondary btn-sm">회원삭제</button>
 	      <button type="button" onclick="history.back();" class="btn btn-secondary btn-sm">취소</button>
 	    </div>
 

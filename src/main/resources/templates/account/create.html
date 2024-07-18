@@ -59,28 +59,6 @@
 			</div>
 			<span id="acc_name_msg"></span>
 
-			<!-- 해시태그 -->
-			<div class="form-group">
-			    <label style="margin-top: 10px;">나의 취향 선택하기</label>
-			    <div class="hashtag-flex-container">
-			        <!-- 각 tag_code에 대한 해시태그 목록 반복 -->
-			        <th:block th:each="tag_code : ${tag_codes}">
-			            <fieldset>
-			                <legend th:text="${tag_code}" style="color: lightgray;"></legend>
-			                <!-- 현재 tag_code에 해당하는 해시태그 목록 가져오기 -->
-			                <th:block th:each="hashtag : ${hashtag_list}">
-			                    <!-- tag_code가 현재 반복 중인 tag_code와 같은 경우에만 해당하는 해시태그를 출력 -->
-			                    <label class="hashtag-checkbox">
-			                        <!-- name 속성을 변경하여 선택된 체크박스들이 서버로 전송되도록 함 -->
-			                        <input type="checkbox" name="selected_hashtags" th:if="${hashtag.tag_code == tag_code}" th:value="${hashtag.tag_no}" th:text="${hashtag.tag_name}">
-			                    </label>
-			                </th:block>
-			            </fieldset>
-			        </th:block>
-			    </div>
-			</div>
-			<span id="hashtag_msg"></span>
-
 		</form>
 	</div>
 

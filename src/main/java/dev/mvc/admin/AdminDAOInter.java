@@ -141,6 +141,22 @@ public interface AdminDAOInter {
 	public int accUpdate(AccountVO accountVO);
 	
 	/**
+	 * 회원 프로필 사진 삭제 
+	 * 
+	 * @param acc_no
+	 * @return
+	 */
+	public int accDeletePic(int acc_no);
+	
+	/**
+	 * 회원 정보 삭제(관리자, 회원 목록)
+	 * 
+	 * @param acc_no
+	 * @return
+	r */
+	public int accDelete(int acc_no);
+	
+	/**
 	 * 회원 로그 전체 조회
 	 * 
 	 * @return

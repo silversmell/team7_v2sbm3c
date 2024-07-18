@@ -155,6 +155,15 @@ UPDATE account
 SET acc_img = 'test', acc_saved_img = 'test', acc_thumb_img = 'test', acc_img_size = 100
 WHERE acc_no=4;
 
+-- 프로필 사진 삭제하기
+UPDATE account
+SET acc_img = NULL,
+    acc_saved_img = NULL,
+    acc_thumb_img = NULL
+WHERE acc_no = 2;
+
+commit;
+
 --------------------------------------------------------------------------------
 
 -- 현재 비밀번호 확인
@@ -185,6 +194,13 @@ WHERE acc_id='user2' AND acc_pw='1111';
 SELECT COUNT(acc_no) as cnt
 FROM account
 WHERE acc_id='user2' AND acc_pw='1234';
+
+-- 로그인 내역
+SELECT acc_log_no, acc_no, acc_log_ip, acc_log_time
+FROM acc_log
+WHERE acc_no = 2
+AND ROWNUM <= 50
+ORDER BY acc_log_time desc;
 
 --------------------------------------------------------------------------------
 
