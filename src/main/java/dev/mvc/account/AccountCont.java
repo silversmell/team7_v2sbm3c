@@ -176,18 +176,8 @@ public class AccountCont {
 	 * @param recommendVO
 	 * @return
 	 */
-	@GetMapping(value = "/create") // http://localhost:9093/account/create
-	public String create(Model model, AccountVO accountVO, RecommendVO recommendVO) {
-		List<HashtagVO> hashtag_list = this.accountProc.hashtagList(); // 해시태그 목록 조회
-		model.addAttribute("hashtag_list", hashtag_list); // 모델에 해시태그 목록 추가
-		// System.out.println("hashtags: " + hashtag_list.get(0).getTag_name()); //
-		// '브라운'
-
-		String[] tagCodeList = this.accountProc.tagCodeList().split(",");
-		List<String> tag_codes = Arrays.asList(tagCodeList);
-		model.addAttribute("tag_codes", tag_codes);
-
-		// System.out.println("--> tag_codes: " + tag_codes.get(0)); // '분위기'
+	@GetMapping(value = "/create")
+	public String create(Model model, AccountVO accountVO) {
 
 		return "account/create"; // /templates/account/create.html
 	}
@@ -202,14 +192,11 @@ public class AccountCont {
 	 */
 	@PostMapping(value = "/create")
 	@ResponseBody
-	public ResponseEntity<Map<String, Object>> create_proc(AccountVO accountVO, RecommendVO recommendVO,
-			@RequestParam(value = "selected_hashtags", required = false) List<Integer> selected_hashtags) {
+	public ResponseEntity<Map<String, Object>> create_proc(AccountVO accountVO) {
 		Map<String, Object> response = new HashMap<>();
 
 		int checkID_cnt = this.accountProc.checkID(accountVO.getAcc_id());
 		int checkName_cnt = this.accountProc.checkName(accountVO.getAcc_name());
-
-		System.out.println("====> selected_hashtags: " + selected_hashtags);
 
 		if ((checkID_cnt == 0) && (checkName_cnt == 0)) {
 			accountVO.setAcc_grade(15); // 15: 일반 회원
@@ -219,17 +206,6 @@ public class AccountCont {
 				response.put("code", "create_success");
 				response.put("acc_id", accountVO.getAcc_id());
 				response.put("acc_name", accountVO.getAcc_name());
-
-				// 선택된 해시태그 저장
-				System.out.println("====> selected_hashtags: " + selected_hashtags);
-				for (Integer tag_no : selected_hashtags) {
-					System.out.println("accountVO.getAcc_no() = " + accountVO.getAcc_no());
-					System.out.println("tag_no = " + tag_no);
-
-					recommendVO.setAcc_no(accountVO.getAcc_no());
-					recommendVO.setTag_no(tag_no);
-					this.accountProc.insertRecommend(recommendVO);
-				}
 			} else {
 				response.put("code", "create_fail");
 				response.put("cnt", 0);
@@ -265,7 +241,7 @@ public class AccountCont {
 
 		return "account/msg"; // /templates/account/msg.html
 	}
-	
+
 	/**
 	 * 로그인 폼 (쿠키 기반)
 	 * 
@@ -402,7 +378,7 @@ public class AccountCont {
 		session.invalidate(); // 모든 세션 변수 삭제
 		return "redirect:/";
 	}
-	
+
 	/**
 	 * 마이페이지
 	 * 
@@ -413,35 +389,41 @@ public class AccountCont {
 	@GetMapping(value = "/mypage")
 	public String mypage(HttpSession session, Model model) {
 
-		int acc_no = (int) session.getAttribute("acc_no");
-		AccountVO accountVO = this.accountProc.read(acc_no);
+		Integer acc_no = (Integer) session.getAttribute("acc_no");
 
-		/* 프로필 사진 불러오기 */
-		long acc_img_size = accountVO.getAcc_img_size();
-		String img_size_label = Tool.unit(acc_img_size);
-		accountVO.setImg_size_label(img_size_label);
+		if (acc_no != null) {
+			AccountVO accountVO = this.accountProc.read(acc_no);
 
-		model.addAttribute("accountVO", accountVO);
+			/* 프로필 사진 불러오기 */
+			long acc_img_size = accountVO.getAcc_img_size();
+			String img_size_label = Tool.unit(acc_img_size);
+			accountVO.setImg_size_label(img_size_label);
 
-		/* 해시태그 폼 */
-		List<HashtagVO> hashtag_list = this.accountProc.hashtagList(); // 해시태그 목록 조회
-		model.addAttribute("hashtag_list", hashtag_list); // 모델에 해시태그 목록 추가
+			model.addAttribute("accountVO", accountVO);
 
-		String[] tagCodeList = this.accountProc.tagCodeList().split(",");
-		List<String> tag_codes = Arrays.asList(tagCodeList);
-		model.addAttribute("tag_codes", tag_codes);
+			/* 해시태그 폼 */
+			List<HashtagVO> hashtag_list = this.accountProc.hashtagList(); // 해시태그 목록 조회
+			model.addAttribute("hashtag_list", hashtag_list); // 모델에 해시태그 목록 추가
 
-		/* 회원가입 시 선택한 해시태그들 */
-		String selectedTagsStr = this.accountProc.selectedTags(acc_no);
-		List<String> selected_tags;
+			String[] tagCodeList = this.accountProc.tagCodeList().split(",");
+			List<String> tag_codes = Arrays.asList(tagCodeList);
+			model.addAttribute("tag_codes", tag_codes);
 
-		if (selectedTagsStr != null) {
-			String[] selectedTags = selectedTagsStr.split(",");
-			selected_tags = Arrays.asList(selectedTags);
+			/* 회원가입 시 선택한 해시태그들 */
+			String selectedTagsStr = this.accountProc.selectedTags(acc_no);
+			List<String> selected_tags;
+
+			if (selectedTagsStr != null) {
+				String[] selectedTags = selectedTagsStr.split(",");
+				selected_tags = Arrays.asList(selectedTags);
+			} else {
+				selected_tags = new ArrayList<>(); // 선택한 해시태그가 없을 경우 빈 리스트로 초기화
+			}
+			model.addAttribute("selected_tags", selected_tags);
+
 		} else {
-			selected_tags = new ArrayList<>(); // 선택한 해시태그가 없을 경우 빈 리스트로 초기화
+			return "redirect:/account/login";
 		}
-		model.addAttribute("selected_tags", selected_tags);
 
 		return "account/mypage";
 	}
@@ -709,37 +691,32 @@ public class AccountCont {
 	}
 
 	/**
-	 * 회원 정보 삭제 페이지
+	 * 로그인 내역
 	 * 
+	 * @param session
 	 * @param model
-	 * @param acc_no
 	 * @return
 	 */
-	@GetMapping(value = "/delete")
-	public String delete(Model model, int acc_no) {
-		AccountVO accountVO = this.accountProc.read(acc_no);
-		model.addAttribute("accountVO", accountVO);
+	@GetMapping(value = "/logs")
+	public String my_logs(HttpSession session, Model model) {
+		int acc_no = (int) session.getAttribute("acc_no");
 
-		return "account/delete";
+		ArrayList<AccLogVO> logs = this.accountProc.myLogs(acc_no);
+		model.addAttribute("logs", logs);
+
+		return "account/my_logs";
 	}
 
 	/**
-	 * 회원 정보 삭제 처리
+	 * 회원 목록
 	 * 
 	 * @param model
-	 * @param acc_no
 	 * @return
 	 */
-	@PostMapping(value = "/delete")
-	public String delete_proc(Model model, Integer acc_no) {
-		int cnt = this.accountProc.delete(acc_no);
+	@GetMapping(value = "/acc_list")
+	public String acc_list(HttpSession session, Model model) {
 
-		if (cnt == 1) { // 삭제 성공
-			return "redirect:/account/list";
-		} else {
-			model.addAttribute("code", "delete_fail");
-			return "account/msg";
-		}
+		return "admin/acc_list";
 	}
 
 	/* 마이페이지 */
@@ -1041,7 +1018,7 @@ public class AccountCont {
 	}
 
 	/**
-	 * 북마크 삭제 
+	 * 북마크 삭제
 	 * 
 	 * @param session
 	 * @param cate_no
@@ -1050,18 +1027,17 @@ public class AccountCont {
 	 */
 	@GetMapping("/deletemark")
 	@ResponseBody
-	public Map<String, Object> deleteMark(HttpSession session,
-							 @RequestParam("cate_no") int cate_no,
-							 @RequestParam("con_no") int con_no) {
+	public Map<String, Object> deleteMark(HttpSession session, @RequestParam("cate_no") int cate_no,
+			@RequestParam("con_no") int con_no) {
 
 		Integer acc_no = (Integer) session.getAttribute("acc_no");
 		Map<String, Object> response = new HashMap<>();
 		response.put("cnt", 0);
-		
-		if(acc_no != null) {
-	        Map<String, Object> map = new HashMap<>();
-	        map.put("acc_no", acc_no);
-	        
+
+		if (acc_no != null) {
+			Map<String, Object> map = new HashMap<>();
+			map.put("acc_no", acc_no);
+
 			if (cate_no == 1) {
 				map.put("scon_no", con_no);
 				this.accountProc.deleteShareMark(map);
@@ -1069,14 +1045,13 @@ public class AccountCont {
 				map.put("qcon_no", con_no);
 				this.accountProc.deleteQnaMark(map);
 			}
-			
+
 			response.put("cnt", 1);
 		}
-		
+
 		return response;
 	}
 
-	
 	/**
 	 * 북마크 저장
 	 * 
@@ -1087,18 +1062,17 @@ public class AccountCont {
 	 */
 	@GetMapping("/insertmark")
 	@ResponseBody
-	public Map<String, Object> insertMark(HttpSession session,
-							 @RequestParam("cate_no") int cate_no,
-							 @RequestParam("con_no") int con_no) {
+	public Map<String, Object> insertMark(HttpSession session, @RequestParam("cate_no") int cate_no,
+			@RequestParam("con_no") int con_no) {
 
 		Integer acc_no = (Integer) session.getAttribute("acc_no");
 		Map<String, Object> response = new HashMap<>();
 		response.put("cnt", 0);
-		
-		if(acc_no != null) {
-	        Map<String, Object> map = new HashMap<>();
-	        map.put("acc_no", acc_no);
-	        
+
+		if (acc_no != null) {
+			Map<String, Object> map = new HashMap<>();
+			map.put("acc_no", acc_no);
+
 			if (cate_no == 1) {
 				map.put("scon_no", con_no);
 				this.accountProc.insertShareMark(map);
@@ -1106,11 +1080,30 @@ public class AccountCont {
 				map.put("qcon_no", con_no);
 				this.accountProc.insertQnaMark(map);
 			}
-			
+
 			response.put("cnt", 1);
 		}
-		
+
 		return response;
 	}
-	
+
+	/**
+	 * 회원 탈퇴
+	 * 
+	 * @param model
+	 * @param acc_no
+	 * @return
+	 */
+	@PostMapping(value = "/cancel")
+	public String cancel(Model model, Integer acc_no) {
+		int cnt = this.accountProc.cancel(acc_no);
+
+		if (cnt == 1) { // 삭제 성공
+			return "redirect:/";
+		} else {
+			model.addAttribute("code", "delete_fail");
+			return "account/msg";
+		}
+	}
+
 }

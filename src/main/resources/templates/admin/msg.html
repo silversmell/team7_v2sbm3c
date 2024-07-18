@@ -41,6 +41,14 @@
 					<div th:case="file_upload_success">
 						<span class="span_success">프로필 사진이 변경되었습니다.</span>
 					</div>
+					
+					<div th:case="file_delete_success">
+						<span class="span_success">프로필 사진이 정상적으로 삭제되었습니다.</span>
+					</div>
+					
+					<div th:case="file_delete_fail">
+							<span class="span_success">프로필 사진 삭제에 실패하였습니다.</span>
+						</div>
 
 					<div th:case="check_upload_file_fail">
 						<span class="span_fail">이미지 파일이 아닙니다.</span>
@@ -118,10 +126,10 @@
 						<button type="button" onclick="history.back()" class="btn btn-secondary btn-sm">다시 시도</button>
 					</div>
 					<div th:case="1" style="display: inline-block; margin-right: 5px;">
-						<button type="button" onclick="location.href='/'" class="btn btn-secondary btn-sm">닫기</button>
+						<button type="button" onclick="location.href='/admin'" class="btn btn-secondary btn-sm">닫기</button>
 					</div>
 					<div th:case="2">
-						<button type="button" th:attr="onclick=|location.href='./read?acc_no=${accountVO.acc_no}'|"
+						<button type="button" th:attr="onclick=|location.href='/admin/acc_read?acc_no=${accountVO.acc_no}'|"
 							class="btn btn-secondary btn-sm">확인</button>
 					</div>
 				</li>

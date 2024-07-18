@@ -100,6 +100,14 @@ public interface AccountProcInter {
 	 * @return 추가된 레코드 갯수
 	 */
 	public int recordLog(AccLogVO AccLogVO);
+	
+	/**
+	 * 로그인 내역 
+	 * 
+	 * @param acc_no
+	 * @return
+	 */
+	public ArrayList<AccLogVO> myLogs(int acc_no);
 
 	/**
 	 * 로그인된 회원 계정인지 검사
@@ -172,14 +180,13 @@ public interface AccountProcInter {
 	 * @return
 	 */
 	public int resetPasswd(HashMap<String, Object> map);
-
-	/**
-	 * 회원 정보 삭제(관리자, 회원 목록)
+	
+	/** 회원 탈퇴(마이페이지)
 	 * 
 	 * @param acc_no
 	 * @return
 	 */
-	public int delete(int acc_no);
+	public int cancel(int acc_no);
 
 	/**
 	 * 내가 쓴 공유 게시글

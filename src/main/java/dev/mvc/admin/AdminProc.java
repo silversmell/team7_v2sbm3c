@@ -298,6 +298,18 @@ public class AdminProc implements AdminProcInter {
 	}
 	
 	@Override
+	public int accDeletePic(int acc_no) {
+		int cnt = this.adminDAO.accDeletePic(acc_no);
+		return cnt;
+	}
+	
+	@Override
+	public int accDelete(int acc_no) {
+		int cnt = this.adminDAO.accDelete(acc_no);
+		return cnt;
+	}
+	
+	@Override
 	public ArrayList<Map<String, Object>> accLogList() {
 		ArrayList<Map<String, Object>> list = this.adminDAO.accLogList();
 		return list;
@@ -352,8 +364,6 @@ public class AdminProc implements AdminProcInter {
 		ArrayList<Map<String, Object>> list = this.adminDAO.accPagingList(map);
 		return list;
 	}
-
-
 
 
 	

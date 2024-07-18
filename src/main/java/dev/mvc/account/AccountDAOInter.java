@@ -101,6 +101,13 @@ public interface AccountDAOInter {
 	public int recordLog(AccLogVO AccLogVO);
 	
 	/**
+	 * 로그인 내역
+	 * 
+	 * @return
+	 */
+	public ArrayList<AccLogVO> myLogs(int acc_no);
+	
+	/**
 	 * 선택된 해시태그 조회(회원 정보 조회)
 	 * 
 	 * @param acc_no
@@ -155,14 +162,13 @@ public interface AccountDAOInter {
 	 * @return
 	 */
 	public int resetPasswd(HashMap<String, Object> map);
-
-	/**
-	 * 회원 정보 삭제(관리자, 회원 목록)
+	
+	/** 회원 탈퇴(마이페이지)
 	 * 
 	 * @param acc_no
 	 * @return
-	r */
-	public int delete(int acc_no);
+	 */
+	public int cancel(int acc_no);
 	
 	/**
 	 * 내가 쓴 공유 게시글

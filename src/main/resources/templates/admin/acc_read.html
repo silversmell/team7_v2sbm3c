@@ -3,13 +3,11 @@
 <html layout:decorate="~{layout}"> <!-- layout.html 상속-->
 
 <div layout:fragment="content">
-	<script type="text/javascript" th:src="@{/js/account/read.js}"></script>
+	<script type="text/javascript" th:src="@{/js/admin/read.js}"></script>
 
 	<div class="title_line">회원 정보 조회 및 수정 <span th:text="@{|${accountVO.acc_name} (${accountVO.acc_id})|}"></span></div>
 	<aside class="aside_right">
 		<a href="javascript:location.reload();">새로고침</a>
-		<span class='menu_divide'>│</span>
-		<a th:href="@{|./acc_delete?acc_no=${accountVO.acc_no}|}">회원 삭제</a>
 		<span class='menu_divide'>│</span>
 		<a href='./acc_list'>목록</a>
 	</aside>
@@ -17,84 +15,93 @@
 	<div class='menu_line'></div>
 
 
-	<div style="width: 60%; margin: 0px auto ">
-		<form name="update_frm" id="update_frm" th:object="${accountVO}" method="post" action="/account/update">
+	<div style="width: 50%; margin: 0px auto ">
+
+		<form name="pic_update_frm" id="pic_update_frm" th:object="${accountVO}" method="post"
+			action="/admin/acc_delete_pic" onsubmit="return checkImg()" enctype="multipart/form-data">
+			<input type="hidden" name="acc_no" th:value="${accountVO.acc_no}">
+
+			<div style="margin-bottom: 20px;">
+				<label class="profile-label">프로필 사진</label>
+				<div style="display: flex;">
+					<div th:if="${accountVO.acc_img.endsWith('jpg') or accountVO.acc_img.endsWith('png')}">
+						<img th:src="@{|/contents/storage/${accountVO.acc_thumb_img}|}"
+							style="width: 110px; height: 110px; border-radius: 15%;">
+					</div>
+					<div th:unless="${accountVO.acc_img.endsWith('jpg') or accountVO.acc_img.endsWith('png')}">
+						<img class="nopic" src="/admin/images/nopic.png">
+					</div>
+					<div style="margin-top: 82px; margin-left: 20px;">
+						<button type="submit" class="btn btn-secondary btn-sm">삭제</button>
+					</div>
+				</div>
+			</div>
+
+		</form>
+
+		<hr>
+
+		<form name="update_frm" id="update_frm" th:object="${accountVO}" method="post" action="/admin/acc_update">
 			<input type="hidden" name="acc_no" th:value="${accountVO.acc_no}">
 			<input type="hidden" id="my_acc_name" th:value="${accountVO.acc_name}">
 
-			<div style="margin-bottom: 20px;">
-				<div th:if="${accountVO.acc_img.endsWith('jpg') or accountVO.acc_img.endsWith('png')}"
-					style="width: 100%;">
-					<img th:src="@{|/contents/storage/${accountVO.acc_thumb_img}|}" style="width: 100px; height: 100px; border-radius: 15%;">
-				</div>
-				<div th:unless="${accountVO.acc_img.endsWith('jpg') or accountVO.acc_img.endsWith('png')}"
-					style="width: 100%;">
-					<img class="nopic" src="/admin/images/nopic.png">
-				</div>
-			</div>
-			
-			<div class="form-group" style="margin-top: 15px;">
+			<div class="form-group" style="margin-top: 30px;">
 				<label class="profile-label" for="acc_id">아이디</label>
 				<span id="acc_id" th:text="${accountVO.acc_id}">
 			</div>
-			
-			<div class="form-group form-group-horizontal" style="width: 100%;">
-			    <label class="profile-label" for="acc_name">이름</label>
-			    <input type='text' name='acc_name' id='acc_name' th:value='${accountVO.acc_name}' required="required"
-			        class="form-control form-control-sm">
-			    <button type="button" id="btn_checkName" onclick="checkName()" class="btn btn-primary btn-sm">중복확인</button>
-			    <span id='acc_name_msg'></span>
+
+			<div class="form-group form-group-horizontal">
+				<label class="profile-label" for="acc_name">이름</label>
+				<input type='text' name='acc_name' id='acc_name' th:value='${accountVO.acc_name}' required="required"
+					class="form-control form-control-sm custom-input">
+				<button type="button" id="btn_checkName" onclick="checkName()"
+					class="btn btn-primary btn-sm custom-button">중복확인</button>
+
+				<div style="padding: 3px; margin-left: 10px;">
+					<span id='acc_name_msg'></span>
+				</div>
 			</div>
 
-			
-			<div class="form-group form-group-horizontal" style="margin-bottom: 10px; width: 180px;">
-			    <label class="profile-label" for="acc_grade">회원 상태</label>
-			    <select name="acc_grade" id="acc_grade" class="form-control form-control-sm" style="text-align: center;" required="required">
-			        <option value="" disabled selected hidden>-</option>
-			        <option value="member" th:selected="${accountVO.acc_grade == 15}">일반회원</option>
-			        <option value="dormant" th:selected="${accountVO.acc_grade == 25}">휴면회원</option>
-			        <option value="pause" th:selected="${accountVO.acc_grade == 35}">정지회원</option>
-			        <option value="withdrawn" th:selected="${accountVO.acc_grade == 99}">탈퇴회원</option>
-			    </select>
-				
 
-				<!--
-				<button type="button" onclick="location.href='./update_acc_grade'"
-					class="btn btn-primary btn-sm">상태 변경</button> -->
+
+			<div class="form-group form-group-horizontal" style="margin-bottom: 20px; width: 180px;">
+				<label class="profile-label" for="acc_grade">회원 상태</label>
+				<select name="acc_grade" id="acc_grade" class="form-control form-control-sm" style="text-align: center;"
+					required="required">
+					<option value="" disabled selected hidden>-</option>
+					<option value="1" th:selected="${accountVO.acc_grade == 1}">매니저</option>
+					<option value="15" th:selected="${accountVO.acc_grade == 15}">일반회원</option>
+					<option value="25" th:selected="${accountVO.acc_grade == 25}">휴면회원</option>
+					<option value="35" th:selected="${accountVO.acc_grade == 35}">정지회원</option>
+					<option value="99" th:selected="${accountVO.acc_grade == 99}">탈퇴회원</option>
+				</select>
 			</div>
-			
-			
-			
-			
 
 			<hr>
 
-			<div class="form-group" style="margin-top: 10px;">
+			<div class="form-group" style="margin-top: 30px;">
 				<label class="profile-label" for="acc_tel">전화번호</label>
 				<span th:if="${accountVO.acc_tel != ''}" id="acc_tel" th:text="${accountVO.acc_tel}"></span>
 				<span th:if="${accountVO.acc_tel == ''}" id="acc_tel">정보 없음</span>
 			</div>
-			
-			<div class="form-group" style="margin-top: 10px;">
+
+			<div class="form-group">
 				<label class="profile-label" for="acc_age">연령대</label>
 				<span th:if="${accountVO.acc_age != ''}" id="acc_age" th:text="${accountVO.acc_age}"></span>
 				<span th:if="${accountVO.acc_age == ''}" id="acc_age">정보 없음</span>
 			</div>
 
-			<hr>
+			<hr style="margin-bottom: 30px;">
 
 			<!-- 해시태그 -->
-			<span class="profile-label">추천 해시태그</span>
-			<div class="form-group">
+			<span class="profile-label">추천된 해시태그</span>
+			<div class="form-group" style="margin-top: 10px;">
 				<div class="hashtag-flex-container">
 					<th:block th:each="tag_code : ${tag_codes}">
 						<fieldset>
-							<legend th:text="${tag_code}" style="color: lightgray;"></legend>
 							<th:block th:each="hashtag : ${hashtag_list}">
-								<!-- tag_code가 현재 반복 중인 tag_code와 같은 경우에만 해당하는 해시태그를 출력 -->
 								<th:block th:if="${hashtag.tag_code == tag_code}">
 									<label class="hashtag-checkbox">
-										<!-- name 속성을 변경하여 선택된 체크박스들이 서버로 전송되도록 함 -->
 										<input type="checkbox" name="selected_hashtags" th:value="${hashtag.tag_no}"
 											th:checked="${selected_tags.contains(hashtag.tag_name)}">
 										<span th:text="${hashtag.tag_name}"></span>
@@ -106,8 +113,12 @@
 				</div>
 			</div>
 			<span id="hashtag_msg"></span>
+			
+			<hr>
+			
+			<a th:href="@{|./acc_delete?acc_no=${accountVO.acc_no}|}" style="color: rgb(85, 85, 85); text-decoration: underline;">회원 삭제</a>
 
-			<div class="bottom_reset">
+			<div class="content_body_bottom">
 				<button type="button" onclick="send();" class="btn btn-secondary btn-sm">저장</button>
 				<button type="button" onclick="history.back();" class="btn btn-secondary btn-sm">취소</button>
 			</div>
