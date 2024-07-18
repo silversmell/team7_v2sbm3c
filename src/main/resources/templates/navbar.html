@@ -113,17 +113,26 @@
 						<ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 							<li class="nav-item" th:if="${session.acc_no != null}">
 								<a class="nav-link"
-									th:href="@{|http://localhost:9093/textmining/tm_list_all?cate_no=5|}"
+									th:href="@{|http://localhost:9093/textmining/tm_read?tcon_no=1&now_page=1|}"
 									th:text="'Dalle AI'">
 								</a>
 							</li>
 
 							<li class="nav-item" th:if="${session.acc_no != null}">
 								<a class="nav-link"
-									th:href="@{|http://localhost:9093/textmining/tm_list_all?cate_no=5|}"
+									th:href="@{|http://localhost:9093/textmining/tm_read?tcon_no=3&now_page=1|}"
 									th:text="'Summary AI'">
 								</a>
 							</li>
+							
+							<!-- 
+             <li class="nav-item" th:if="${session.acc_no != null}">
+                <a class="nav-link"
+                  th:href="@{|http://localhost:9093/textmining/tm_list_all?cate_no=5|}"
+                  th:text="'전체목록'">
+                </a>
+              </li>
+              -->
 						</ul>
 					</li>
 

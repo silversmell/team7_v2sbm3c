@@ -43,7 +43,7 @@ public class Tm_contentsVO {
   
   /** 질문 게시글 제목 */
   @NotEmpty(message="텍스트마이닝 제목은 필수입력 항목입니다.")
-  @Size(min=1, max=30, message="텍스트마이닝 제목의 입력글자 수는 최소 1자에서 최대 30자(한글 10자) 가능합니다.")
+  @Size(min=1, max=100, message="텍스트마이닝 제목의 입력글자 수는 최소 1자에서 최대 30자(한글 10자) 가능합니다.")
   private String tcon_name="";
   
   /** 질문 게시글 내용 */
