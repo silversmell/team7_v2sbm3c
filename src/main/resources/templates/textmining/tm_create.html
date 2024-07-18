@@ -21,7 +21,7 @@
   
   <div class='menu_line'></div>
   
-  <form name='frm' method='post' th:object="${qna_contentsVO}" action='/textmining/tm_create' enctype="multipart/form-data">
+  <form name='frm' method='post' th:object="${tm_contentsVO}" action='/textmining/tm_create' enctype="multipart/form-data">
     <input type="hidden" name="cate_no" th:value="${categoryVO.cate_no}">
     <input type="hidden" name="tcon_no" th:value="${tm_contentsVO.tcon_no}">
     <input type="hidden" name="now_page" th:value="${now_page}">
@@ -39,7 +39,7 @@
     
     <div>
        <label>이미지</label>
-       <input type='file' class="form-control" name='fnamesMF' id='file1MF' value='' placeholder="파일 선택" multiple="multiple" style='width: 50%;'>
+       <input type='file' class="form-control" name='fnamesMF' id='file1MF' value='' placeholder="파일 선택" multiple="multiple" style='width: 50%;' required="required">
     </div>
     
     <div style="text-align: left;" class="content_body_bottom">
