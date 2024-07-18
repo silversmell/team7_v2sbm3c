@@ -1,9 +1,16 @@
 package dev.mvc.recommend;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -66,5 +73,35 @@ public class RecommendCont {
 		
 		return "recommend/list";
 	}
+	
+	/**
+	 * OpenAI 추천 기능
+	 * @param session
+	 * @return
+	 */
+	@GetMapping(value="/desk")
+	public String taste(HttpSession session, Model model, int acc_no) {
+		// Integer acc_no = (Integer) session.getAttribute("acc_no");
+		List<String> filenames = getFilenamesFromDirectory("src/main/resources/static/recommend/images");
+		
+        // Shuffle the filenames list
+        Collections.shuffle(filenames);
+		
+		model.addAttribute("acc_no", acc_no);
+		model.addAttribute("filenames", filenames);
+		
+		return "recommend/desk";
+	}
+	
+    private List<String> getFilenamesFromDirectory(String directory) {
+        try (Stream<Path> paths = Files.walk(Paths.get(directory), 1)) {
+            return paths.filter(Files::isRegularFile)
+                        .map(path -> path.getFileName().toString())
+                        .collect(Collectors.toList());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return List.of(); // Empty list in case of an error
+        }
+    }
 
 }

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>데스크테리어 추천 시스템</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script type="text/javascript" th:src="@{/js/recommend/desk.js}"></script>
+
+    <style>
+        .img {
+            width: 150px;
+            height: 120px;
+        }
+        .selected {
+            border: 3px solid #770000;
+        }
+        .brighten {
+            filter: brightness(140%);
+        }
+        .img-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .img-container div {
+            flex: 1 0 20%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <form id="frm">
+        <input type="hidden" id="desk" name="desk" value="">
+        <input type="hidden" id="acc_no" name="acc_no" th:value="${acc_no}">
+    </form>
+
+    <div style="width: 90%; margin: 30px auto; text-align: center;">
+        <h3>ChatGPT 기반의 데스크테리어 컨셉 추천 시스템</h3>
+        <b>관심있는 이미지를 8개를 선택하세요.<span id='data_selected_panel' data-selected='0'></span></b>
+    </div>
+
+    <div style="width: 90%; margin: 30px auto; text-align: center;">
+        <div class="img-container">
+            <div th:each="filename, iterStat : ${filenames}">
+                <img th:id="${iterStat.index}" name="recommend" th:src="@{/recommend/images/{filename}(filename=${filename})}"
+                     class="img" onclick="applyCSS(event)" data-value="0" th:data-filename="${filename}">
+            </div>
+        </div>
+    
+        <br><br>
+        <div id="result"></div>
+        <br>
+        <div style="display: flex; justify-content: center;">
+            <button type="button" id="send" class="btn btn-info btn-sm">추천 받기</button>
+            <button type="button" id="close" class="btn btn-info btn-sm" style="display: none;" onclick="window.close();">닫기</button>
+        </div>
+        <div id="processing"></div>
+    </div>
+</body>
+</html>
