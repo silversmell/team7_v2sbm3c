@@ -34,7 +34,7 @@ public class Qcontents {
         String path = "";
         if (File.separator.equals("\\")) { // windows, 개발 환경의 파일 업로드 폴더
             // path = "C:/kd/deploy/team7/qcontents/storage";
-             path = "C:\\kd\\ws_python\\openai\\static\\member_img\\";
+             path = "C:\\kd\\ws_python\\openai\\"; // /static/meberimg
              System.out.println("Windows 10: " + path);
             
         } else { // Linux, AWS, 서비스용 배치 폴더 
