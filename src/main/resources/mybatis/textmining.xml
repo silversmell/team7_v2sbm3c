@@ -49,7 +49,7 @@
   </select> 
   
   <!-- 이미지 조회 -->
-  <select id="tm_read_image" resultType="dev.mvc.textmining.Tm_contentsVO" parameterType="Integer">
+  <select id="tm_read_image" resultType="dev.mvc.textmining.Tm_imageVO" parameterType="Integer">
     SELECT file_no, tcon_no, file_origin_name, file_upload_name, file_thumb_name, file_size, file_date
     FROM tm_image
     WHERE tcon_no=#{tcon_no}
@@ -182,8 +182,8 @@
   
    <!-- 댓글 등록 -->
   <insert id="tm_create_comment" parameterType="dev.mvc.textmining.Tm_commentVO">
-    INSERT INTO tm_comment(tcmt_no, acc_no, qcon_no, tcmt_contents, tcmt_date)
-    VALUES(tna_comment_seq.nextval, #{acc_no}, #{tcon_no}, #{tcmt_contents}, sysdate)
+    INSERT INTO tm_comment(tcmt_no, acc_no, tcon_no, tcmt_contents, tcmt_date)
+    VALUES(tm_comment_seq.nextval, #{acc_no}, #{tcon_no}, #{tcmt_contents}, sysdate)
   </insert>
   
   <!-- 특정 글에 따른 댓글 목록 -->
@@ -217,10 +217,10 @@
           SELECT acc_id, tcmt_no, tcon_no, acc_no, tcmt_contents, tcmt_date, rownum as r
           FROM (
                 SELECT  a.acc_id, 
-                         t.tcmt_no, t.tcon_no, t.acc_no, t.qcmt_contents, t.tcmt_date
+                         t.tcmt_no, t.tcon_no, t.acc_no, t.tcmt_contents, t.tcmt_date
                 FROM account a, tm_comment t
                 WHERE (a.acc_no = t.acc_no) AND t.tcon_no=#{tcon_no}
-                ORDER BY t.tcmt_no DESC
+                ORDER BY t.tcmt_no ASC
           )
     )
     WHERE r &lt;= 500
@@ -434,9 +434,9 @@
   <select id = "acc_profile_img" resultType="dev.mvc.account.AccountVO" parameterType="int">
     SELECT ac.acc_no, ac.acc_id, ac.acc_img, ac.acc_saved_img, ac.acc_thumb_img, acc_img_size
     FROM tm_contents tc INNER JOIN account ac
-    ON tm.acc_no = ac.acc_no
-    WHERE tm.tcon_no=#{tcon_no}
-    ORDER BY tm.tcon_no desc
+    ON tc.acc_no = ac.acc_no
+    WHERE tc.tcon_no=#{tcon_no}
+    ORDER BY tc.tcon_no desc
   </select>
   
   <!-- 선택한 답글의 회원 아이디 조회 -->

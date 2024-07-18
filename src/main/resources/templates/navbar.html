@@ -91,13 +91,13 @@
 
 							<li class="nav-item" th:if="${session.acc_no != null}">
 								<a class="nav-link" th:href="@{|http://192.168.12.159:9093/qcontents/summary|}"
-									th:text="요약하기" style="display: inline-block;">
+									th:text="'글/댓글/답글 요약하기'" style="display: inline-block;">
 								</a>
 							</li>
 
 							<li class="nav-item" th:if="${session.acc_no != null}">
 								<a class="nav-link" th:href="@{|http://192.168.12.159:9093/qcontents/member_img|}"
-									th:text="'이미지 만들기'" style="display: inline-block;">
+									th:text="'나만의 이미지 만들기'" style="display: inline-block;">
 								</a>
 							</li>
 						</ul>

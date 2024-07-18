@@ -40,6 +40,8 @@ import dev.mvc.admin.AdminProc;
 import dev.mvc.category.CategoryProcInter;
 import dev.mvc.category.CategoryVO;
 import dev.mvc.category.CategoryVOMenu;
+import dev.mvc.qna_contents.Qna_contentsVO;
+import dev.mvc.qna_contents.Qna_imageVO;
 import dev.mvc.share_contentsdto.NotificationVO;
 import dev.mvc.tool.Tool;
 import dev.mvc.tool.Upload;
@@ -270,9 +272,9 @@ public class Tm_contentsCont {
 
     // 필터링된 이미지 리스트
     ArrayList<Tm_imageVO> filteredImages = new ArrayList<>();
-    for (Tm_contentsVO tm_ContentsVO : list) {
-      if (imageMap.containsKey(tm_ContentsVO.getTcon_no())) {
-        filteredImages.add(imageMap.get(tm_ContentsVO.getTcon_no()));
+    for (Tm_contentsVO tmContents : list) {
+      if (imageMap.containsKey(tmContents.getTcon_no())) {
+        filteredImages.add(imageMap.get(tmContents.getTcon_no()));
       } else {
         filteredImages.add(null); // 이미지가 없는 경우
       }
@@ -312,7 +314,7 @@ public class Tm_contentsCont {
    */
   @GetMapping(value = "/tm_read")
   public String tm_read(Model model, HttpSession session,
-                         @RequestParam(name = "cate_no", defaultValue = "2") int cate_no, 
+                         @RequestParam(name = "cate_no", defaultValue = "5") int cate_no, 
                          @RequestParam(name = "tcon_no") int tcon_no,
                          @RequestParam(name = "now_page") int now_page) {
 
@@ -331,7 +333,7 @@ public class Tm_contentsCont {
         model.addAttribute("acc_no",acc_no);
        
         // 질문 이미지 가져오기
-        ArrayList<Tm_imageVO> tm_imageVO = this.tm_contentsProc.tm_read_image(tcon_no);
+        List<Tm_imageVO> tm_imageVO = this.tm_contentsProc.tm_read_image(tcon_no);
         model.addAttribute("tm_imageVO", tm_imageVO);
         
         // 댓글 수 가져오기
@@ -358,6 +360,9 @@ public class Tm_contentsCont {
         
         // 질문글 작성자 프로필 이미지
         AccountVO acc_profile_img = this.tm_contentsProc.acc_profile_img(tcon_no);
+        if (acc_profile_img != null) {
+          model.addAttribute("acc_profile_img", acc_profile_img);
+        }
 
         // 모델에 필요한 정보 추가
         model.addAttribute("acc_id", session.getAttribute("acc_id"));
@@ -367,6 +372,7 @@ public class Tm_contentsCont {
         model.addAttribute("now_page", now_page);
         model.addAttribute("user_name", user_name);
         model.addAttribute("acc_profile_img", acc_profile_img);
+        model.addAttribute("tm_imageVO", tm_imageVO);
 
         // 조회수 업데이트 old ver.
         // this.qnacontentsProc.qna_update_view(qcon_no);
@@ -489,13 +495,13 @@ public class Tm_contentsCont {
       Tm_contentsVO tm_contentsVO = this.tm_contentsProc.tm_read(tcon_no);
       model.addAttribute("tm_contentsVO", tm_contentsVO);
       
-      ArrayList<Tm_imageVO> timage = this.tm_contentsProc.tm_read_image(tcon_no);
-      for (int i = 1; i < timage.size(); i++) {
-        long size = timage.get(i).getFile_size();
+      ArrayList<Tm_imageVO> tm_imageVO  = this.tm_contentsProc.tm_read_image(tcon_no);
+      for (int i = 1; i < tm_imageVO .size(); i++) {
+        long size = tm_imageVO .get(i).getFile_size();
         String silze_label = Tool.unit(size);
-        timage.get(i).setFlabel(silze_label);
+        tm_imageVO .get(i).setFlabel(silze_label);
       }
-      model.addAttribute("timage", timage);
+      model.addAttribute("tm_imageVO ", tm_imageVO );
       
       model.addAttribute("now_page", now_page);
       model.addAttribute("cate_no", cate_no);

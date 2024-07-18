@@ -12,7 +12,7 @@
   </div>
 
   <aside class="aside_right">
-    <a th:href="@{|/qcontents/qna_list_all?cate_no=2|}">전체 목록</a>   
+    <a th:href="@{|/textmining/tm_list_all?cate_no=5|}">전체 목록</a>   
     <span class='menu_divide' >│</span>
     <a href="javascript:history.back();">돌아가기</a> 
     <span class='menu_divide'>│</span>
@@ -21,20 +21,20 @@
   
   <div class='menu_line'></div>
   
-  <form name='frm' method='post' th:object="${qna_contentsVO}" action='/qcontents/qna_create' enctype="multipart/form-data">
+  <form name='frm' method='post' th:object="${qna_contentsVO}" action='/textmining/tm_create' enctype="multipart/form-data">
     <input type="hidden" name="cate_no" th:value="${categoryVO.cate_no}">
-    <input type="hidden" name="qcon_no" th:value="${qna_contentsVO.qcon_no}">
+    <input type="hidden" name="tcon_no" th:value="${tm_contentsVO.tcon_no}">
     <input type="hidden" name="now_page" th:value="${now_page}">
     
     <div>
        <label>제목</label>
-       <input type='text' name='qcon_name' value='' required="required" 
+       <input type='text' name='tcon_name' value='' required="required" 
                  autofocus="autofocus" class="form-control" style='width: 100%;'>
     </div>
     
     <div>
        <label>내용</label>
-       <textarea name='qcon_contents' required="required" class="form-control" rows="12" style='width: 100%;'></textarea>
+       <textarea name='tcon_contents' required="required" class="form-control" rows="12" style='width: 100%;'></textarea>
     </div>
     
     <div>
@@ -42,15 +42,9 @@
        <input type='file' class="form-control" name='fnamesMF' id='file1MF' value='' placeholder="파일 선택" multiple="multiple" style='width: 50%;'>
     </div>
     
-    <div>
-       <label>패스워드</label>
-       <input type='password' name='qcon_passwd' value='1234' required="required" 
-                 class="form-control" style='width: 50%;'>
-    </div>
-    
     <div style="text-align: left;" class="content_body_bottom">
       <button type="submit" class="btn btn-info btn-sm">등록</button>
-      <button type="button" th:attr="onclick=|location.href='./qna_list_all?cate_no=${categoryVO.cate_no}'|" class="btn btn-info btn-sm">취소</button>
+      <button type="button" th:attr="onclick=|location.href='./tm_list_all?cate_no=${categoryVO.cate_no}'|" class="btn btn-info btn-sm">취소</button>
     </div>
     
   </form>
