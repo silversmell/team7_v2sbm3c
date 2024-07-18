@@ -67,7 +67,7 @@ public class CategoryCont {
       // 페이징 버튼 목록
       int search_count = this.categoryProc.cate_list_search_count(word);
       String paging = this.categoryProc.pagingBox(now_page, 
-          word, "/category/cate_list_search", search_count, this.record_per_page, this.page_per_block);
+          word, "/admin/cate_list_search", search_count, this.record_per_page, this.page_per_block);
       model.addAttribute("paging", paging);
       model.addAttribute("now_page", now_page);
       model.addAttribute("word", word);
@@ -100,7 +100,7 @@ public class CategoryCont {
           int search_count = this.categoryProc.cate_list_search_count(word);
           
           // 페이징 및 기타 데이터 모델에 추가
-          String paging = this.categoryProc.pagingBox(now_page, word, "/category/cate_list_search", search_count, this.record_per_page, this.page_per_block);
+          String paging = this.categoryProc.pagingBox(now_page, word, "/admin/cate_list_search", search_count, this.record_per_page, this.page_per_block);
           model.addAttribute("list", list);
           model.addAttribute("paging", paging);
           model.addAttribute("now_page", now_page);
@@ -115,7 +115,7 @@ public class CategoryCont {
       model.addAttribute("cnt", cnt);
       
       if (cnt == 1) { // 등록 성공 시 목록 페이지로 리다이렉트
-          return "redirect:/category/cate_list_search?word=" + Tool.encode(word) + "&now_page=" + now_page;
+          return "redirect:/admin/cate_list_search?word=" + Tool.encode(word) + "&now_page=" + now_page;
       } else { // 등록 실패 시 오류 메시지 페이지로 이동
           model.addAttribute("code", "cate_create_fail");
           return "category/msg";
@@ -261,7 +261,7 @@ public class CategoryCont {
     model.addAttribute("cnt", cnt);
     
     if (cnt == 1) { // 수정 성공
-      return "redirect:/category/cate_update/" + categoryVO.getCate_no() + "?word=" + Tool.encode(word) + "&now_page=" + now_page;
+      return "redirect:/admin/cate_update/" + categoryVO.getCate_no() + "?word=" + Tool.encode(word) + "&now_page=" + now_page;
     } else { // 수정 실패
       model.addAttribute("code", "update_fail");
       return "category/msg"; // /templates/category/msg.html
@@ -288,7 +288,7 @@ public class CategoryCont {
     if (categoryVO == null) {
       // 카테고리가 존재하지 않는 경우 처리
       // 예를 들어, 존재하지 않는 카테고리 처리 로직 추가
-      return "redirect:/category/cate_list_search"; // 예시: 목록 페이지로 리다이렉트
+      return "redirect:/admin/cate_list_search"; // 예시: 목록 페이지로 리다이렉트
     }
     
     // 페이징 목록
@@ -347,7 +347,7 @@ public class CategoryCont {
     // ----------------------------------------------------------------------------------------------------------
     
     if (cnt == 1) { // 삭제 성공
-      return "redirect:/category/cate_list_search?word=" + Tool.encode(word) + "&now_page=" + now_page;
+      return "redirect:/admin/cate_list_search?word=" + Tool.encode(word) + "&now_page=" + now_page;
     } else { // 삭제 실패
       model.addAttribute("code", "delete_fail");
       return "category/msg"; // /templates/category/msg.html
@@ -371,7 +371,7 @@ public class CategoryCont {
     
     this.categoryProc.cate_update_seqno_forward(cate_no);
     
-    return "redirect:/category/cate_list_search?word=" + Tool.encode(word) + "&now_page=" + now_page;
+    return "redirect:/admin/cate_list_search?word=" + Tool.encode(word) + "&now_page=" + now_page;
   }
   
   /**
@@ -391,7 +391,7 @@ public class CategoryCont {
     
     this.categoryProc.cate_update_seqno_backward(cate_no);
     
-    return "redirect:/category/cate_list_search?word=" + Tool.encode(word) + "&now_page=" + now_page;
+    return "redirect:/admin/cate_list_search?word=" + Tool.encode(word) + "&now_page=" + now_page;
   }
   
   /**
@@ -410,7 +410,7 @@ public class CategoryCont {
     this.categoryProc.cate_update_visible_y(cate_no);
     
     model.addAttribute("outputMode", "public"); // 공개 모드
-    return "redirect:/category/cate_list_search?word=" + Tool.encode(word); // /templates/category/cate_list_search
+    return "redirect:/admin/cate_list_search?word=" + Tool.encode(word); // /templates/category/cate_list_search
   }
   
   /**
@@ -429,7 +429,7 @@ public class CategoryCont {
     this.categoryProc.cate_update_visible_n(cate_no);
     
     model.addAttribute("outputMode", "private"); // 비공개 모드
-    return "redirect:/category/cate_list_search?word=" + Tool.encode(word); // /templates/category/cate_list_search
+    return "redirect:/admin/cate_list_search?word=" + Tool.encode(word); // /templates/category/cate_list_search
   }
   
 

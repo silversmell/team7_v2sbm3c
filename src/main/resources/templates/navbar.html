@@ -264,10 +264,9 @@
 								style="display: inline-block; margin-right: 5px;"></a>
 							<a class="nav-link" th:href="@{|/admin/create|}" th:text="@{|회원 가입|}"
 								style="display: inline-block;"></a>
+							<a class="nav-link" href="/" th:text="회원" style="display: inline-block;"></a>
 						</span>
 						<span th:if="${session.adm_no != null}">
-							<a class="nav-link" th:href="@{|/admin/read?adm_no=${session.adm_no}|}"
-								style="display: inline-block;">마이페이지</a>
 							<a class="nav-link" th:href="@{|/admin/logout|}" th:text="@{|${session.adm_id}님&nbsp;&nbsp;로그아웃|}"
 								style="display: inline-block;"></a>
 						</span>

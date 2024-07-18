@@ -9,7 +9,7 @@
   <div class="menu_line"></div>
 
   <div style="width: 80%; margin: 0px auto;">
-    <form name="frm" th:object="${categoryVO}" method="post" action="/category/cate_create">
+    <form name="frm" th:object="${categoryVO}" method="post" action="/admin/cate_create">
       <div style="margin-right: 5px; width: 30%; float: left;">
       
         <input type="text" name="cate_name" value="" autofocus="autofocus"
@@ -29,7 +29,7 @@
       
       <div style="width: 12%; float: left; margin-top: 3px; margin-left: 5px;">
         <button type="submit" class="btn btn-secondary btn-sm">등록</button>
-        <button type="button" onclick="location.href='/category/list_all'" class="btn btn-secondary btn-sm">취소</button>
+        <button type="button" onclick="location.href='/admin/list_all'" class="btn btn-secondary btn-sm">취소</button>
       </div>
     </form>  
   </div>

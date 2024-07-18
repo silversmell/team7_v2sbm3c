@@ -17,7 +17,7 @@
   <div class="menu_line"></div>
   
   <div style="display: flex; justify-content: center;">
-    <form name="frm" th:object="${categoryVO}" method="post" action="/category/cate_create">
+    <form name="frm" th:object="${categoryVO}" method="post" action="/admin/cate_create">
       <div style="margin-right: 5px; width: 38%; float: left;">
         <input type="text" name="cate_name" value="" 
                class="form-control fom-control-sm" style="width: 100%;" th:field="*{cate_name}" placeholder="카테고리명">
@@ -36,7 +36,7 @@
       
       <div style="margin-top: 3px; width: 18%; float: left;">
         <button type="submit" class="btn btn-secondary btn-sm">등록</button>
-        <button type="button" onclick="location.href='/category/cate_list_search'" class="btn btn-secondary btn-sm">취소</button>
+        <button type="button" onclick="location.href='/admin/cate_list_search'" class="btn btn-secondary btn-sm">취소</button>
       </div>
     
     </form> 

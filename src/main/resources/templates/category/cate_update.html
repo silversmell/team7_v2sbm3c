@@ -8,17 +8,17 @@
     수정
   </div>
   <aside class="aside_right">
-    <a th:href="@{|/category/cate_list_search?word=${word}&now_page=${now_page}|}">목록</a>
+    <a th:href="@{|/admin/cate_list_search?word=${word}&now_page=${now_page}|}">목록</a>
     <span class="menu_devide">│</span>
-    <a th:href="@{|/category/cate_delete/${categoryVO.cate_no}?word=${word}&now_page=${now_page}|}">삭제</a>
+    <a th:href="@{|/admin/cate_delete/${categoryVO.cate_no}?word=${word}&now_page=${now_page}|}">삭제</a>
     <span class="menu_devide">│</span>
-    <a href="/category/cate_list_search">등록</a>
+    <a href="/admin/cate_list_search">등록</a>
     <span class="menu_devide">│</span>
     <a href="javascript: location.reload();">새로 고침</a>
   </aside>
   <div class="menu_line"></div>
     
-  <form name="frm" th:object="${categoryVO}" method="post" action="/category/cate_update" style="width: 50%; margin: 5px auto;">
+  <form name="frm" th:object="${categoryVO}" method="post" action="/admin/cate_update" style="width: 50%; margin: 5px auto;">
     <input type="hidden" name="cate_no" th:value="${categoryVO.cate_no}">
     <input type="hidden" name="word" th:value="${word}">
     <input type="hidden" name="now_page" th:value="${now_page}">
@@ -58,7 +58,7 @@
     
     <div class="content_body_bottom">
       <button type="submit" class="btn btn-secondary btn-sm">저장</button>
-      <button type="button" th:attr="onclick=|location.href='/category/cate_list_search?word=${word}&now_page=${now_page}'|" class="btn btn-secondary btn-sm">취소</button>      
+      <button type="button" th:attr="onclick=|location.href='/admin/cate_list_search?word=${word}&now_page=${now_page}'|" class="btn btn-secondary btn-sm">취소</button>      
     </div>
     
   </form>  

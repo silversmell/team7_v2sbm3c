@@ -19,21 +19,21 @@
     <tbody>
       <tr th:each="categoryVO, status:${list}">
         <td class="td_bs" th:text="|${no - status.index}|"></td>
-        <td class="td_bs"><a th:href="@{|/category/cate_read/${categoryVO.cate_no}?word=${word}&now_page=${now_page}|}" style="display: block;" th:text="${categoryVO.cate_name}"></a></td>
+        <td class="td_bs"><a th:href="@{|/admin/cate_read/${categoryVO.cate_no}?word=${word}&now_page=${now_page}|}" style="display: block;" th:text="${categoryVO.cate_name}"></a></td>
         <td class="td_bs" th:text="${categoryVO.cate_cnt}"></td>
         <td class="td_bs" th:text="${categoryVO.cate_seqno}" style="margin-right: 3px;"></td>
         <td class="td_bs">
           <span th:text="${categoryVO.cate_seqno}" style="margin-right: 3px;"></span>          
           <span th:if="${categoryVO.cate_visible == 'Y'}">
-            <a th:href="@{|/category/cate_update_visible_n/${categoryVO.cate_no}?word=${word}&now_page=${now_page}|}"><img src="/category/images/show.png" class="icon" title="출력"></a> <!-- /static/category/images/show.png -->
+            <a th:href="@{|/admin/cate_update_visible_n/${categoryVO.cate_no}?word=${word}&now_page=${now_page}|}"><img src="/category/images/show.png" class="icon" title="출력"></a> <!-- /static/category/images/show.png -->
           </span>
           <span th:unless="${categoryVO.cate_visible == 'Y'}">
-            <a th:href="@{|/category/cate_update_visible_y/${categoryVO.cate_no}?word=${word}&now_page=${now_page}|}"><img src="/category/images/hide.png" class="icon" title="숨김"></a>
+            <a th:href="@{|/admin/cate_update_visible_y/${categoryVO.cate_no}?word=${word}&now_page=${now_page}|}"><img src="/category/images/hide.png" class="icon" title="숨김"></a>
           </span>          
-          <a th:href="@{|/category/cate_update_seqno_forward/${categoryVO.cate_no}?word=${word}&now_page=${now_page}|}"><img src="/category/images/decrease.png" class="icon"></a>
-          <a th:href="@{|/category/cate_update_seqno_backward/${categoryVO.cate_no}?word=${word}&now_page=${now_page}|}"><img src="/category/images/increase.png" class="icon"></a>
-          <a th:href="@{|/category/cate_update/${categoryVO.cate_no}?word=${word}&now_page=${now_page}|}"><img src="/category/images/update.png" class="icon"></a>
-          <a th:href="@{|/category/cate_delete/${categoryVO.cate_no}?word=${word}&now_page=${now_page}|}"><img src="/category/images/delete.png" class="icon"></a>
+          <a th:href="@{|/admin/cate_update_seqno_forward/${categoryVO.cate_no}?word=${word}&now_page=${now_page}|}"><img src="/category/images/decrease.png" class="icon"></a>
+          <a th:href="@{|/admin/cate_update_seqno_backward/${categoryVO.cate_no}?word=${word}&now_page=${now_page}|}"><img src="/category/images/increase.png" class="icon"></a>
+          <a th:href="@{|/admin/cate_update/${categoryVO.cate_no}?word=${word}&now_page=${now_page}|}"><img src="/category/images/update.png" class="icon"></a>
+          <a th:href="@{|/admin/cate_delete/${categoryVO.cate_no}?word=${word}&now_page=${now_page}|}"><img src="/category/images/delete.png" class="icon"></a>
         </td>
       </tr>
     </tbody>
