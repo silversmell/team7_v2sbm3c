@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 
-<html layout:decorate="~{layout}"> <!-- layout.html 상속-->
+<html layout:decorate="~{layout}">
+<!-- layout.html 상속-->
 
 <div layout:fragment="content">
 	<script type="text/javascript" th:src="@{/js/account/login.js}"></script>
@@ -13,39 +14,49 @@
 		<span class='menu_divide'>│</span>
 		<a href="./create">회원 가입</a>
 		<span class='menu_divide'>│</span>
-		<a href="#">아이디 찾기</a>
-		<span class='menu_divide'>│</span>
-		<a href="./find_passwd">비밀번호 찾기</a>
+
 	</aside>
 
 	<div class="menu_line"></div>
 
-	<div style="width: 60%; margin: 0px auto">
+	<div style="width: 30%; margin: 0px auto">
 		<!-- 회원가입 폼 -->
 		<form name="login_frm" id="login_frm" th:object="${accountVO}" method="post" action="/account/login">
 			<input type='hidden' name='url' id='url' th:value='${url}'><!--  이동할 주소 -->
 			<!-- 아이디(이메일) -->
-			<div style="display: flex; align-items: center;">
-				<label for="acc_id" style="margin-right: 10px;">아이디(이메일)</label>
-				<input type="text" name="acc_id" id="acc_id" th:value="${ck_id}" autofocus="autofocus"
-					class="form-control fom-control-sm" style="width: 50%;">
-				<label><input type="checkbox" name="acc_id_save" id="acc_id_save" value="Y"
-						th:checked="${ck_id_save == 'Y'}">저장</label>
-			</div>
-			<span id="acc_id_msg"></span>
+			<div>
+				<div class="form-group" style="display: flex; align-items: center; gap: 2px;">
+					<label for="acc_id" style="margin-right: 10px;">아이디(이메일)</label>
+					<input type="text" name="acc_id" id="acc_id" th:value="${ck_id}" autofocus="autofocus"
+						class="form-control fom-control-sm">
+					<div style="text-align: right;">
+						<label style="margin-left: 10px;"><input type="checkbox" class="checkbox" name="acc_id_save"
+								id="acc_id_save" value="Y" th:checked="${ck_id_save == 'Y'}">저장</label>
+					</div>
+				</div>
 
-			<!-- 패스워드 -->
-			<div class="form-group" style="display: flex; align-items: center;">
-				<label for="acc_pw" style="margin-right: 10px;">패스워드</label>
-				<input type="password" name="acc_pw" id="acc_pw" th:value="${ck_passwd}" required="required"
-					placeholder="패스워드" class="form-control fom-control-sm" style="width: 50%; margin: 10px;">
-			</div>
-			<span id="acc_pw_msg"></span>
+				<span id="acc_id_msg"></span>
 
-			<!-- 버튼 -->
-			<div class="content_body_bottom">
-				<button type="button" onclick="send();" class="btn btn-secondary btn-sm">로그인</button>
-				<button type="button" onclick="location.href='/'" class="btn btn-secondary btn-sm">취소</button>
+				<!-- 패스워드 -->
+				<div class="form-group" style="display: flex; align-items: center; padding-right: 50px;">
+					<label for="acc_pw" style="margin-right: 10px;">비밀번호</label>
+					<input type="password" name="acc_pw" id="acc_pw" th:value="${ck_passwd}" required="required"
+						placeholder="" class="form-control fom-control-sm">
+				</div>
+				<span id="acc_pw_msg"></span>
+
+				<hr>
+				
+				<div style="text-align: right;">
+					<a href="./find_passwd" style="color: rgb(85, 85, 85); text-decoration: underline;">비밀번호 찾기</a>
+				</div>
+
+				<!-- 버튼 -->
+				<div class="content_body_bottom">
+					<button type="button" onclick="send();" class="btn btn-secondary btn-sm">로그인</button>
+					<button type="button" onclick="location.href='/'" class="btn btn-secondary btn-sm">취소</button>
+				</div>
+
 			</div>
 
 		</form>

@@ -1,4 +1,4 @@
-  /* ver 2.5 2024_0718 */
+  /* ver 2.5 2024_0719 */
 
   /* 폰트 선언 */
   @font-face {
@@ -16,6 +16,10 @@
     /* top right bottom left */
     padding: 0px;
     color: #555555;
+  }
+  
+  .checkbox {
+	  accent-color: #35C5F0;
   }
 
   /* 이미지 사용시 경로 지정
