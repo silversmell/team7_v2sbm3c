@@ -7,65 +7,62 @@
 
 	<div class="title_line">회원가입</div>
 
-	<!-- 메뉴 -->
-	<aside class="aside_right">
-		<a href="javascript:location.reload();">새로고침</a>
-		<span class='menu_divide'>│</span>
-		<a href="./login">로그인</a>
-	</aside>
-
-	<div class="menu_line"></div>
-
-	<div style="width: 60%; margin: 0px auto">
+	<div style="width: 30%; margin: 0px auto">
 		<!-- 회원가입 폼 -->
 		<form name="create_frm" id="create_frm" th:object="${accountVO}" method="post" action="/account/create">
-			
+
 			<!-- 아이디(이메일) -->
-			<div id="acc_id_div" style="display: flex; align-items: center;">
-			    <label for="acc_id" style="margin-right: 10px;">아이디(이메일)</label>
-			    <input type="text" name="acc_id" id="acc_id" value="" autofocus="autofocus"
-			        class="form-control fom-control-sm" style="width: 50%;" th:field="*{acc_id}">
-			    <button type="button" id="btn_checkID" onclick="checkID()" class="btn btn-primary btn-sm"
-			        style="margin-top: 4px; margin-left: 10px;">중복확인</button>
-			    <button type="button" id="btn_sendMail" onclick="send_mail();" class="btn btn-primary btn-sm"
-			        style="margin-top: 4px; margin-left: 10px;" disabled>메일 인증</button>
+			<div class="form-group" style="display: flex; align-items: center; margin-top: 50px;">
+				<label for="acc_id" class="profile-label" style="margin-right: 10px;">아이디</label>
+				<input type="text" name="acc_id" id="acc_id" value="" autofocus="autofocus"
+					placeholder="noname@example.com" class="form-control form-control-sm" style="width: 60%;"
+					th:field="*{acc_id}">
 			</div>
-			<span id="acc_id_msg"></span>
-			
+			<div id="check_button" style="display: flex; gap: 3px;">
+				<span id="acc_id_msg" style="width: 260px;"></span>
+				<button type="button" id="btn_checkID" onclick="checkID()" style="height: 30px;"
+					class="btn btn-secondary btn-sm">중복확인</button>
+				<button type="button" id="btn_sendMail" onclick="send_mail();" style="height: 30px;"
+					class="btn btn-secondary btn-sm" disabled>메일 인증</button>
+			</div>
 			
 			<!-- 패스워드 -->
-			<div class="form-group" style="display: flex; align-items: center;">
-				<label for="acc_pw" style="margin-right: 10px;">패스워드</label>
+			<div class="form-group" style="display: flex; align-items: center; margin-top: 20px; width: 100%;">
+				<label for="acc_pw" class="profile-label" style="margin-right: 10px;">패스워드</label>
 				<input type="password" name="acc_pw" id="acc_pw" value="1234" required="required" placeholder="패스워드"
-					class="form-control fom-control-sm" style="width: 50%; margin: 10px;">
+					class="form-control form-control-sm" style="width: 60%; height: 30px;">
 			</div>
 
 			<!-- 패스워드 확인 -->
-			<div class="form-group" style="display: flex; align-items: center;">
-				<label for="check_pw" style="margin-right: 10px;">패스워드</label>
+			<div class="form-group" style="display: flex; align-items: center; margin-top: 20px; width: 100%;">
+				<label for="check_pw" class="profile-label" style="margin-right: 10px;">패스워드 확인</label>
 				<input type="password" name="check_pw" id="check_pw" value="1234" required="required"
-					placeholder="패스워드 확인" class="form-control fom-control-sm" style="width: 50%; margin: 10px;">
+					placeholder="패스워드 확인" class="form-control form-control-sm" style="width: 60%; height: 30px;">
 			</div>
 			<span id="check_pw_msg"></span>
 
-
 			<!-- 이름(닉네임) -->
-			<div class="form-group" style="display: flex; align-items: center;">
-				<label for="acc_name" style="margin-right: 10px;">이름(닉네임)</label>
-				<input type="text" name="acc_name" id="acc_name" value="" required="required" placeholder="이름(닉네임)"
-					class="form-control fom-control-sm" style="width: 50%; margin: 10px;">
-				<button type="button" id="btn_checkName" onclick="checkName()" class="btn btn-primary btn-sm"
-					style="margin-top: 4px; margin-left: 10px;">중복확인</button>
+			<div class="form-group" style="display: flex; align-items: center; margin-top: 20px; width: 100%;">
+				<label for="acc_name" class="profile-label" style="margin-right: 10px;">이름(닉네임)</label>
+				<input type="text" name="acc_name" id="acc_name" value="" required="required" placeholder=""
+					class="form-control form-control-sm" style="width: 60%; height: 30px;">
+
 			</div>
-			<span id="acc_name_msg"></span>
+			<div style="display: flex;">
+				<span id="acc_name_msg" style="width: 330px;"></span>
+				<button type="button" id="btn_checkName" onclick="checkName()" style="height: 30px;"
+					class="btn btn-secondary btn-sm">중복확인</button>
+			</div>
 
 		</form>
 	</div>
 
 	<!-- 버튼 -->
-	<div class="content_body_bottom">
-		<button type="button" onclick="send();" class="btn btn-secondary btn-sm">가입</button>
-		<button type="button" onclick="history.back();" class="btn btn-secondary btn-sm">취소</button>
+	<div class="mypage_bottom" style="display: flex; justify-content: center; gap: 10px; margin-top: 20px;">
+		<button type="button" onclick="send();" class="btn btn-secondary btn-sm"
+			style="width: 100px; height: 30px;">가입</button>
+		<button type="button" onclick="history.back();" class="btn btn-secondary btn-sm"
+			style="width: 100px; height: 30px;">취소</button>
 	</div>
 
 </div>

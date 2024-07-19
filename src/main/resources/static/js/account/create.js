@@ -71,9 +71,9 @@ function addVerifyField() {
         <span id="verify_code_msg"></span>
     `;
 
-	let acc_id_msg = document.getElementById("acc_id_msg");
-	if (acc_id_msg) {
-		acc_id_msg.parentNode.insertBefore(verifyDiv, acc_id_msg.nextSibling);
+	let check_button = document.getElementById("check_button");
+	if (check_button) {
+		check_button.parentNode.insertBefore(verifyDiv, check_button.nextSibling);
 		console.log("인증번호 입력창 생성");
 	}
 }
@@ -226,7 +226,6 @@ function checkTag() {
 	return true; // 선택된 해시태그가 있는 경우 회원가입 진행
 }
 
-
 /* 회원 가입 처리 */
 function send() {
 	let acc_id = document.getElementById("acc_id");
@@ -272,21 +271,11 @@ function send() {
 		return false;	// 회원가입 진행 중지 
 	}
 
-	// 해시태그 체크 여부 확인
-	if (!checkTag()) {	// 선택된 해시태그 없음
-		return false; // 회원가입 진행 중지
-	}
-
-	// 선택된 해시태그 가져오기
-	let selected_hashtags = document.querySelectorAll('input[name="selected_hashtags"]:checked');
-	let selected_hashtags_values = Array.from(selected_hashtags).map(checkbox => checkbox.value);
-
 	// FormData 생성
 	let formData = new FormData();
 	formData.append('acc_id', acc_id.value);
 	formData.append('acc_pw', acc_pw.value);
 	formData.append('acc_name', acc_name.value);
-	formData.append('selected_hashtags', selected_hashtags_values.join(','));
 
 	/* fetch 시작 */
 	// 회원가입 데이터 전송

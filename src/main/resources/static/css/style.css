@@ -17,11 +17,16 @@
   	padding: 0px;
   	color: #555555;
   }
-  
+
   a:hover {
-	cursor: pointer;
-	text-decoration: underline;
+  	cursor: pointer;
+  	text-decoration: underline;
   }
+
+  input[type="checkbox"]:checked {
+  	accent-color: #35C5F0;
+  }
+
 
   /* 이미지 사용시 경로 지정
   /static/css/images/top_1900_300.jpg
@@ -101,9 +106,9 @@
   	width: 100%;
   	background-color: rgb(234, 234, 234);
   }
-  
+
   .mypage_bottom {
-	clear: both;
+  	clear: both;
   	padding-top: 20px;
   	padding-right: 20px;
   	padding-bottom: 20px;
@@ -800,7 +805,7 @@
   	border: none 10px;
   	padding: 20px;
   	margin-top: 40px;
-  	min-height: 82vh; 
+  	min-height: 82vh;
   }
 
   .right-panel .container {
@@ -809,9 +814,9 @@
   	border: none 10px;
   	padding: 20px;
   	margin-top: 40px;
-  	min-height: 82vh; 
+  	min-height: 82vh;
   }
-  
+
   .container {
   	width: 80%;
   	background-color: rgb(255, 255, 255);

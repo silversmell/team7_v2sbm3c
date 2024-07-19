@@ -1086,9 +1086,24 @@ public class AccountCont {
 
 		return response;
 	}
+	
+	/**
+	 * 회원 탈퇴 페이지
+	 * 
+	 * @param model
+	 * @param acc_no
+	 * @return
+	 */
+	@GetMapping(value = "/delete")
+	public String delete(Model model, int acc_no) {
+		AccountVO accountVO = this.accountProc.read(acc_no);
+		model.addAttribute("accountVO", accountVO);
+
+		return "account/delete";
+	}
 
 	/**
-	 * 회원 탈퇴
+	 * 회원 탈퇴 처리
 	 * 
 	 * @param model
 	 * @param acc_no
