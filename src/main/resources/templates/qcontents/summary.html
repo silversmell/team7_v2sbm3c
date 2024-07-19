@@ -45,7 +45,7 @@
         formData.append("article", article);
         formData.append("acc_no", acc_no);
 
-        fetch("http://192.168.12.159:5000/qcontents/summary", {
+        fetch("http://192.168.12.159:5001/qcontents/summary", {
           "method": "post", 
           "headers": {"Content-Type": "application/json"},
           body: JSON.stringify({article, acc_no})
