@@ -316,11 +316,11 @@ public class Tm_contentsCont {
   public String tm_read(Model model, HttpSession session,
                          @RequestParam(name = "cate_no", defaultValue = "5") int cate_no, 
                          @RequestParam(name = "tcon_no") int tcon_no,
+                         @RequestParam(name = "acc_no", defaultValue = "1") int acc_no,
                          @RequestParam(name = "now_page") int now_page) {
 
 	  
-      if (this.accountProc.isMember(session)) {
-        Integer acc_no = (Integer) session.getAttribute("acc_no");
+        // Integer acc_no = (Integer) session.getAttribute("acc_no");
         
         // 카테고리 가져오기
         CategoryVO categoryVO = this.categoryProc.cate_read(cate_no);
@@ -391,9 +391,6 @@ public class Tm_contentsCont {
         }
 
         return "textmining/tm_read";
-      } else {
-        return "redirect:/account/login";
-      }
   }
   
   /**
