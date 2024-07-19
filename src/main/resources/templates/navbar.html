@@ -55,7 +55,7 @@
 							</li>
 
 							<li class="nav-item">
-								<a class="nav-link" th:href="@{|/qcontents/qna_list_all?cate_no=2|}"
+								<a class="nav-link" th:href="@{|http://192.168.12.159:9093/qcontents/qna_list_all?cate_no=2|}"
 									th:text="'질문 게시판'"></a>
 							</li>
 						</ul>
@@ -96,19 +96,18 @@
 							data-bs-toggle="dropdown" aria-expanded="false" th:if="${session.acc_no != null}"
 							th:text="'텍스트 마이닝'">
 						</a>
-
+						
 						<ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <li class="nav-item" th:if="${session.acc_no != null}">
+                <a class="nav-link" th:href="@{|http://192.168.12.159:9093/textmining/tm_read?tcon_no=3&now_page=1|}"
+                  th:text="'Summary AI'">
+                </a>
+              </li>
+						
 							<li class="nav-item" th:if="${session.acc_no != null}">
 								<a class="nav-link"
-									th:href="@{|http://localhost:9093/textmining/tm_read?tcon_no=1&now_page=1|}"
+									th:href="@{|http://192.168.12.159:9093/textmining/tm_read?tcon_no=1&now_page=1|}"
 									th:text="'Dalle AI'">
-								</a>
-							</li>
-
-							<li class="nav-item" th:if="${session.acc_no != null}">
-								<a class="nav-link"
-									th:href="@{|http://localhost:9093/textmining/tm_read?tcon_no=3&now_page=1|}"
-									th:text="'Summary AI'">
 								</a>
 							</li>
 
@@ -133,14 +132,14 @@
 						<ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 							<li class="nav-item" th:if="${session.acc_no != null}">
 								<a class="nav-link"
-									th:href="@{|http://localhost:9093/qcontents/summary_log?acc_no=${session.acc_no}|}"
+									th:href="@{|http://192.168.12.159:9093/qcontents/summary_log?acc_no=${session.acc_no}|}"
 									th:text="'요약 로그'">
 								</a>
 							</li>
 
 							<li class="nav-item" th:if="${session.acc_no != null}">
 								<a class="nav-link"
-									th:href="@{|http://localhost:9093/qcontents/member_img_log?acc_no=${session.acc_no}|}"
+									th:href="@{|http://192.168.12.159:9093/qcontents/member_img_log?acc_no=${session.acc_no}|}"
 									th:text="'이미지 로그'">
 								</a>
 							</li>
