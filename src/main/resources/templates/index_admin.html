@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout}"> <!-- layout.html 상속 -->
-  <div layout:fragment="content" style="width: 80%; margin: 50px auto; text-align: center; display: flex; justify-content: space-between;">
-    <!-- 왼쪽 영역 -->
-    <div style="width: 45%; background-color: #f0f0f0; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); padding: 20px;">
-      <h2 style="margin-bottom: 20px;">관리자</h2>
-      <p>----------------------------------------------</p>
+  <div layout:fragment="content" style="width: 100%; margin: 30px auto; text-align: center; display: flex; justify-content: space-between;">
+    <div th:if="${session.adm_no == null}"
+	style="width: 100%; background-color: #f0f0f0; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); padding: 20px;">
+      <!-- 추가된 iframe -->
+	  <h2>로그인이 필요합니다</h2>
     </div>
-    
-    <!-- 오른쪽 영역 -->
-    <div style="width: 45%; background-color: #f0f0f0; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); padding: 20px;">
-      <h2 style="margin-bottom: 20px;">관리자</h2>
-	  <p>----------------------------------------------</p>
-    </div>
+	
+	<div th:if="${session.adm_no != null}"
+	style="width: 100%; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+	  <!-- 추가된 iframe -->
+	  <iframe src="http://192.168.12.160:3000/issue/find_all" style="width: 100%; height: 700px; border: none; border-radius: 10px;"></iframe>
+	</div>
   </div>
 </html>
