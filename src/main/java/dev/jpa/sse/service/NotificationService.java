@@ -112,7 +112,7 @@ public class NotificationService {
     	Optional<AccountVO> acc = accountRepository.findByAccno(accno);
     	String accid = acc.get().getAccId();
     	//System.out.println(accid);
-    	if(!NotificationController.sseEmitters.containsKey(accid)) {
+    	if(!NotificationController.sseEmitters.containsKey(accid)) { // 만약에 accid가 없다면
     		System.out.println("sseEmitters 들어옴");
     		NotificationController.sseEmitters.put(accid, subscribe(accid));
     	}
