@@ -820,14 +820,14 @@
               
               <div th:if="${tm_imageVO != null and tm_imageVO.size() > 0}"
                 style='margin: 0px auto; width: 75%;'>
-                <span style="font-size: 1.5em; font-weight: normal; text-align: left;" th:utext="${tm_contentsVO.tcon_contents}"></span><br>
-                <div style="white-space: pre-wrap;"></div>
+                <span style="font-size: 1.5em; font-weight: normal; text-align: left;" th:text="${tm_contentsVO.tcon_contents}"></span><br>
+                <div style="white-space: pre-line;"></div>
               </div>
               
               <div th:if="${tm_imageVO == null or tm_imageVO.size() == 0}"
                 style='margin: 0px auto; width: 75%;'>
-                <span style="font-size: 1.5em; font-weight: normal; text-align: left;" th:utext="${tm_contentsVO.tcon_contents}"></span><br>
-                <div style="white-space: pre-wrap;"></div>
+                <span style="font-size: 1.5em; font-weight: normal; text-align: left;" th:text="${tm_contentsVO.tcon_contents}"></span><br>
+                <div style="white-space: pre-line;"></div>
               </div>
               
               <li th:if="${tm_imageVO != null and tm_imageVO.size() > 0}" class="li_none"
